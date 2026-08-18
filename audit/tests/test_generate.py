@@ -181,7 +181,8 @@ def test_the_repo_commit_is_recorded():
 def test_the_row_schema_is_pinned():
     """A downstream analysis reads these columns; changing one is a breaking change."""
     assert ROW_FIELDS == (
-        "game_id", "question_id", "question_set", "family", "mode", "persona", "reading",
+        "game_id", "upstream_question_id", "question_set", "family", "mode", "persona",
+        "reading",
         "sample_index", "batch_index", "batch_size", "seed",
         "continuation", "answer", "value", "tag",
         "temperature", "top_p", "top_k", "min_p", "repetition_penalty",
@@ -194,10 +195,10 @@ def test_the_row_schema_is_pinned():
 def test_every_row_carries_its_whole_provenance(tokenizer, sampling):
     engine = ScriptedEngine(["I will give $30 to Agent 2."])
     rows = generate.run([(DICTATOR, "free")], engine, sampling, tokenizer,
-                        samples_per_prompt=1)
+                        samples_per_prompt=1, reading="stated", batch_size=8)
     row = rows[0]
     assert row.game_id == DICTATOR
-    assert row.question_id == "altruism_0"
+    assert row.upstream_question_id == "altruism_0"
     assert row.question_set == "altruism_v3" and row.family == "dictator"
     assert row.mode == "free" and row.persona == "" and row.reading == "stated"
     assert row.seed == 7 and row.sample_index == 0 and row.batch_index == 0
@@ -226,7 +227,7 @@ def test_every_row_carries_its_whole_provenance(tokenizer, sampling):
 def test_one_row_per_sample_per_pair(tokenizer, sampling):
     engine = ScriptedEngine(["I will give $30 to Agent 2."])
     rows = generate.run([(DICTATOR, "free"), (TRUST, "stub")], engine, sampling,
-                        tokenizer, samples_per_prompt=3)
+                        tokenizer, samples_per_prompt=3, reading="stated", batch_size=8)
     assert len(rows) == 6
     assert [r.game_id for r in rows] == [DICTATOR] * 3 + [TRUST] * 3
     assert [r.sample_index for r in rows] == [0, 1, 2, 0, 1, 2]
@@ -234,7 +235,8 @@ def test_one_row_per_sample_per_pair(tokenizer, sampling):
 
 def test_the_engine_is_handed_exactly_the_rendered_prompts(tokenizer, sampling):
     engine = ScriptedEngine(["$30."])
-    generate.run([(DICTATOR, "stub")], engine, sampling, tokenizer, samples_per_prompt=2)
+    generate.run([(DICTATOR, "stub")], engine, sampling, tokenizer, samples_per_prompt=2,
+                 reading="stated", batch_size=8)
     prompts, _seed = engine.calls[0]
     expected = elicit.render(by_id(DICTATOR), "stub", tokenizer).text
     assert prompts == [expected, expected]
@@ -244,7 +246,7 @@ def test_the_scored_answer_includes_the_modes_prefill(tokenizer, sampling):
     """"40 to Agent 2." only names a recipient once the stub is put back in front."""
     engine = ScriptedEngine(["40 to Agent 2."])
     row = generate.run([(DICTATOR, "stub")], engine, sampling, tokenizer,
-                       samples_per_prompt=1)[0]
+                       samples_per_prompt=1, reading="stated", batch_size=8)[0]
     assert row.continuation == "40 to Agent 2."
     assert row.answer == "I will give $40 to Agent 2."
     assert row.value == 40.0 and row.tag == "a2_anchor"
@@ -255,7 +257,7 @@ def test_an_unparsed_answer_keeps_its_row_and_its_tag(tokenizer, sampling):
                              "I cannot answer that.",
                              "Interesting question."])
     rows = generate.run([(DICTATOR, "free")], engine, sampling, tokenizer,
-                        samples_per_prompt=3, batch_size=3)
+                        samples_per_prompt=3, reading="stated", batch_size=3)
     assert len(rows) == 3
     assert [(r.value, r.tag) for r in rows] == [
         (30.0, "a2_anchor"), (None, "refusal"), (None, "unparsed")]
@@ -265,9 +267,9 @@ def test_the_chosen_reading_bounds_the_score(tokenizer, sampling):
     engine = ScriptedEngine(["I would give $60 to Agent 2."])
     contradictory = "altruism_v1/dictator"
     stated = generate.run([(contradictory, "free")], engine, sampling, tokenizer,
-                          samples_per_prompt=1)[0]
+                          samples_per_prompt=1, reading="stated", batch_size=8)[0]
     implied = generate.run([(contradictory, "free")], engine, sampling, tokenizer,
-                           samples_per_prompt=1, reading="implied")[0]
+                           samples_per_prompt=1, reading="implied", batch_size=8)[0]
     assert (stated.value, stated.reading) == (60.0, "stated")
     # $60 is unpayable out of a $10 endowment, so it resolves to nothing, not a guess
     assert (implied.value, implied.reading) == (None, "implied")
@@ -277,14 +279,14 @@ def test_a_reading_the_game_does_not_declare_fails_before_generating(tokenizer, 
     engine = ScriptedEngine(["I will give $30 to Agent 2."])
     with pytest.raises(KeyError):
         generate.run([(DICTATOR, "free")], engine, sampling, tokenizer,
-                     samples_per_prompt=1, reading="implied")
+                     samples_per_prompt=1, reading="implied", batch_size=8)
     assert engine.calls == []
 
 
 def test_batches_are_seeded_from_the_run_seed_and_recorded(tokenizer, sampling):
     engine = ScriptedEngine(["I will give $30 to Agent 2."])
     rows = generate.run([(DICTATOR, "free")], engine, sampling, tokenizer,
-                        samples_per_prompt=5, batch_size=2)
+                        samples_per_prompt=5, reading="stated", batch_size=2)
     assert [seed for _prompts, seed in engine.calls] == [7, 8, 9]
     assert [r.batch_index for r in rows] == [0, 0, 1, 1, 2]
     assert {r.seed for r in rows} == {7}
@@ -294,7 +296,7 @@ def test_a_run_is_reproducible_from_its_seed(tokenizer, sampling):
     def once(seed):
         return generate.run([(DICTATOR, "stub")], SeededEngine(),
                             Sampling(**dict(VALID_SAMPLING, seed=seed)), tokenizer,
-                            samples_per_prompt=4, batch_size=2)
+                            samples_per_prompt=4, reading="stated", batch_size=2)
 
     assert once(7) == once(7)
     assert [r.answer for r in once(7)] != [r.answer for r in once(11)]
@@ -305,7 +307,7 @@ def test_batch_size_is_part_of_the_configuration(tokenizer, sampling):
     def once(batch_size):
         return [r.answer for r in generate.run(
             [(DICTATOR, "stub")], SeededEngine(), sampling, tokenizer,
-            samples_per_prompt=4, batch_size=batch_size)]
+            samples_per_prompt=4, reading="stated", batch_size=batch_size)]
 
     assert once(4) != once(2)
 
@@ -321,17 +323,17 @@ def test_an_engine_that_returns_the_wrong_number_of_answers_fails_loudly(
 
     with pytest.raises(RuntimeError):
         generate.run([(DICTATOR, "free")], Short(), sampling, tokenizer,
-                     samples_per_prompt=2)
+                     samples_per_prompt=2, reading="stated", batch_size=8)
 
 
 @pytest.mark.parametrize("kwargs", [
-    dict(samples_per_prompt=0),
+    dict(samples_per_prompt=0, batch_size=8),
     dict(samples_per_prompt=1, batch_size=0),
 ])
 def test_a_run_that_would_produce_nothing_is_refused(tokenizer, sampling, kwargs):
     with pytest.raises(ConfigError):
         generate.run([(DICTATOR, "free")], ScriptedEngine(["x"]), sampling, tokenizer,
-                     **kwargs)
+                     reading="stated", **kwargs)
 
 
 @pytest.mark.parametrize("pair", [("altruism_v3/chess", "free"), (DICTATOR, "cot")])
@@ -340,12 +342,118 @@ def test_an_undeclared_game_or_mode_is_refused(tokenizer, pair):
         generate.plan([pair], tokenizer, samples_per_prompt=1)
 
 
+# --- nothing that moves a number may default ------------------------------------
+
+@pytest.mark.parametrize("omitted", ["reading", "batch_size"])
+def test_run_refuses_to_choose_a_reading_or_a_batch_size(tokenizer, sampling, omitted):
+    """A default would be recorded on the row as though someone had chosen it."""
+    kwargs = dict(samples_per_prompt=1, reading="stated", batch_size=8)
+    del kwargs[omitted]
+    with pytest.raises(TypeError):
+        generate.run([(DICTATOR, "free")], ScriptedEngine(["x"]), sampling, tokenizer,
+                     **kwargs)
+
+
+def test_the_reading_is_not_a_detail(tokenizer, sampling):
+    """On the v1 Dictator the two readings are $4.50 and $1.69 apart in aggregate."""
+    answers = ["I would give $60 to Agent 2.", "I would give $6 to Agent 2."]
+    values = {}
+    for reading in ("stated", "implied"):
+        rows = generate.run([("altruism_v1/dictator", "free")], ScriptedEngine(answers),
+                            sampling, tokenizer, samples_per_prompt=2,
+                            reading=reading, batch_size=2)
+        values[reading] = [row.value for row in rows]
+    assert values == {"stated": [60.0, 6.0], "implied": [None, 6.0]}
+
+
+# --- incremental output ----------------------------------------------------------
+
+def test_rows_are_handed_over_batch_by_batch(tokenizer, sampling):
+    """A run must not be all-or-nothing: at n=200 one OOM would cost everything."""
+    seen = []
+    rows = generate.run([(DICTATOR, "free")], ScriptedEngine(["I will give $30."]),
+                        sampling, tokenizer, samples_per_prompt=5, reading="stated",
+                        batch_size=2, on_rows=seen.append)
+    assert [len(batch) for batch in seen] == [2, 2, 1]
+    assert [row for batch in seen for row in batch] == rows
+
+
+def test_a_failing_callback_stops_the_run(tokenizer, sampling):
+    """Persistence failing silently would be the same loss with a green log."""
+    def explode(_rows):
+        raise IOError("disk full")
+
+    with pytest.raises(IOError):
+        generate.run([(DICTATOR, "free")], ScriptedEngine(["x"]), sampling, tokenizer,
+                     samples_per_prompt=2, reading="stated", batch_size=1,
+                     on_rows=explode)
+
+
+def test_the_writer_keeps_what_ran_when_the_run_dies(tmp_path, tokenizer, sampling):
+    """Two batches land on disk before the third raises; both survive."""
+    calls = []
+
+    def explode_on_third(rows):
+        calls.append(rows)
+        if len(calls) == 3:
+            raise RuntimeError("CUDA out of memory")
+        writer.write(rows)
+
+    path = tmp_path / "partial.csv"
+    with generate.RowWriter(path) as writer:
+        with pytest.raises(RuntimeError):
+            generate.run([(DICTATOR, "free")], ScriptedEngine(["I will give $30."]),
+                         sampling, tokenizer, samples_per_prompt=6, reading="stated",
+                         batch_size=2, on_rows=explode_on_third)
+        assert writer.written == 4
+
+    with path.open(encoding="utf-8", newline="") as handle:
+        survived = list(csv.DictReader(handle))
+    assert len(survived) == 4
+    assert {row["value"] for row in survived} == {"30.0"}
+
+
+def test_the_writer_appends_across_calls(tmp_path, tokenizer, sampling):
+    rows = generate.run([(DICTATOR, "free")], ScriptedEngine(["I will give $30."]),
+                        sampling, tokenizer, samples_per_prompt=4, reading="stated",
+                        batch_size=4)
+    path = tmp_path / "grown.csv"
+    with generate.RowWriter(path) as writer:
+        assert writer.write(rows[:2]) == 2
+        assert writer.write(rows[2:]) == 4
+    with path.open(encoding="utf-8", newline="") as handle:
+        reader = csv.DictReader(handle)
+        assert tuple(reader.fieldnames) == ROW_FIELDS
+        assert len(list(reader)) == 4
+
+
+def test_a_closed_writer_refuses_rows(tmp_path):
+    writer = generate.RowWriter(tmp_path / "closed.csv")
+    with pytest.raises(RuntimeError):
+        writer.write([])
+
+
+# --- the colliding upstream id ----------------------------------------------------
+
+def test_the_upstream_question_id_is_named_for_what_it_is(tokenizer, sampling):
+    """v1 and v3 both call the Dictator `altruism_0`; only game_id separates them."""
+    engine = ScriptedEngine(["I will give $6 to Agent 2."])
+    rows = []
+    for game_id in ("altruism_v1/dictator", "altruism_v3/dictator"):
+        rows.extend(generate.run([(game_id, "free")], engine, sampling, tokenizer,
+                                 samples_per_prompt=1, reading="stated", batch_size=1))
+    assert {row.upstream_question_id for row in rows} == {"altruism_0"}
+    assert {row.game_id for row in rows} == {"altruism_v1/dictator",
+                                             "altruism_v3/dictator"}
+    assert "question_id" not in ROW_FIELDS
+
+
 # --- writer --------------------------------------------------------------------
 
 def test_the_writer_round_trips_every_column(tmp_path, tokenizer, sampling):
     engine = ScriptedEngine(["I will give $30 to Agent 2.", "I cannot answer that."])
     rows = generate.run([(DICTATOR, "free")], engine, sampling, tokenizer,
-                        samples_per_prompt=2, batch_size=2)
+                        samples_per_prompt=2, reading="stated", batch_size=2)
     path = generate.write_rows(tmp_path / "runs" / "out.csv", rows)
 
     with path.open(encoding="utf-8", newline="") as handle:

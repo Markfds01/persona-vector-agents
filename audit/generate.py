@@ -34,7 +34,8 @@ import subprocess
 from contextlib import contextmanager
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Dict, Iterable, List, NamedTuple, Optional, Sequence, Tuple
+from typing import (Callable, Dict, Iterable, List, NamedTuple, Optional,
+                    Sequence, Tuple)
 
 from audit import elicit, games
 from audit.games import Game
@@ -302,10 +303,21 @@ def provenance(engine, tokenizer) -> Provenance:
 
 @dataclass(frozen=True)
 class Row:
-    """One generation, scored, with the whole configuration that produced it."""
+    """One generation, scored, with the whole configuration that produced it.
+
+    `game_id` is the unambiguous key: one game is one question scored one way.
+    `upstream_question_id` is not — `altruism_v1/dictator` and
+    `altruism_v3/dictator` both carry `altruism_0`, so pooling two question sets
+    and grouping on it silently merges $10-stake and $100-stake games. It is kept
+    under that name, rather than renamed away, because it is what joins these rows
+    to the committed judge CSVs; `games.py` owns the value and is not this
+    branch's to change.
+    """
 
     game_id: str
-    question_id: str
+    # upstream's own label ("altruism_0"): the join key into their committed judge
+    # CSVs, and ambiguous by their design — v1 and v3 both use it. Group by game_id.
+    upstream_question_id: str
     question_set: str
     family: str
     mode: str
@@ -372,18 +384,33 @@ def plan(pairs: Iterable[Tuple[str, str]], tokenizer, samples_per_prompt: int,
 
 
 def run(pairs: Iterable[Tuple[str, str]], engine, sampling: Sampling, tokenizer,
-        samples_per_prompt: int, persona: Optional[elicit.Persona] = None,
-        reading: str = "stated", batch_size: int = 8) -> List[Row]:
+        samples_per_prompt: int, *, reading: str, batch_size: int,
+        persona: Optional[elicit.Persona] = None, on_rows: Optional[Callable] = None
+        ) -> List[Row]:
     """Generate and score every (game_id, mode) pair, `samples_per_prompt` times.
 
     `engine` is the caller's; this function never chooses or substitutes one.
     Deterministic given `sampling.seed`, `batch_size` and the task order.
 
-    `samples_per_prompt` has no default, and should not get one. Measured: n=50
-    resolves nothing below $13-16 per game — two runs of a byte-identical
-    configuration differ by $6-11 on their own. The standard is n=200 (SE of a
-    mean $1.44, typical run-to-run gap $1.63, 95% of gaps under $4.00 on the
-    Dictator), carried as `preset(name).recommended_samples_per_prompt`.
+    Nothing that moves a number defaults, and that includes the three arguments
+    below. A default would be recorded on the row as though someone had chosen it:
+
+    * `reading` — `games.py` keeps both readings of a contradictory question and
+      picks no winner. Defaulting here would pick one; on the v1 Dictator that is
+      $4.50 against $1.69.
+    * `batch_size` — batches are seeded `seed + batch_index`, so composition
+      determines the draws.
+    * `samples_per_prompt` — measured, n=50 resolves nothing below $13-16 per
+      game: two runs of a byte-identical configuration differ by $6-11 on their
+      own. The standard is n=200 (SE of a mean $1.44, typical run-to-run gap
+      $1.63, 95% of gaps under $4.00 on the Dictator), carried as
+      `preset(name).recommended_samples_per_prompt`.
+
+    `on_rows` is called with each batch's rows as they are scored, before the next
+    batch is generated; an exception from it stops the run. Pass `RowWriter.write`
+    to keep a long run on disk — at n=200 a single OOM otherwise costs every
+    generation since the start, on a device that can lose 20 GiB to another tenant
+    mid-run.
     """
     if batch_size < 1:
         raise ConfigError("batch_size must be >= 1, got %d" % batch_size)
@@ -405,31 +432,67 @@ def run(pairs: Iterable[Tuple[str, str]], engine, sampling: Sampling, tokenizer,
         if len(continuations) != len(batch):
             raise RuntimeError("engine returned %d continuations for %d prompts"
                                % (len(continuations), len(batch)))
-        for task, continuation in zip(batch, continuations):
-            rows.append(_row(task, continuation, batch_index, batch_size, sampling,
-                             record, reading))
+        batch_rows = [_row(task, continuation, batch_index, batch_size, sampling,
+                           record, reading)
+                      for task, continuation in zip(batch, continuations)]
+        if on_rows is not None:
+            on_rows(batch_rows)
+        rows.extend(batch_rows)
     return rows
 
 
-def write_rows(path, rows: Sequence[Row]) -> Path:
-    """Write the rows as CSV with `ROW_FIELDS` as its header.
+class RowWriter:
+    """A CSV that grows as the rows are produced, so a killed run keeps what ran.
+
+    Header once, then append and flush per call — hand `write` to `run`'s
+    `on_rows`. Use it as a context manager.
 
     An unresolved answer keeps its row and its tag; `value` is left empty. It is
     never a zero.
     """
-    path = Path(path)
-    path.parent.mkdir(parents=True, exist_ok=True)
-    with path.open("w", encoding="utf-8", newline="") as handle:
-        writer = csv.DictWriter(handle, fieldnames=ROW_FIELDS)
-        writer.writeheader()
+
+    def __init__(self, path):
+        self.path = Path(path)
+        self.written = 0
+        self._handle = None
+        self._writer = None
+
+    def __enter__(self) -> "RowWriter":
+        self.path.parent.mkdir(parents=True, exist_ok=True)
+        self._handle = self.path.open("w", encoding="utf-8", newline="")
+        self._writer = csv.DictWriter(self._handle, fieldnames=ROW_FIELDS)
+        self._writer.writeheader()
+        self._handle.flush()
+        return self
+
+    def __exit__(self, *_exception):
+        self._handle.close()
+        self._handle = self._writer = None
+        return False
+
+    def write(self, rows: Iterable[Row]) -> int:
+        """Append `rows`, flush, and return the running total."""
+        if self._writer is None:
+            raise RuntimeError("RowWriter is closed; use it as a context manager")
+        rows = list(rows)
         for row in rows:
             if not isinstance(row, Row):
-                raise TypeError("write_rows takes Row objects, got %s" % type(row).__name__)
+                raise TypeError("RowWriter takes Row objects, got %s" % type(row).__name__)
             record = dataclasses.asdict(row)
             if record["value"] is None:
                 record["value"] = ""
-            writer.writerow(record)
-    return path
+            self._writer.writerow(record)
+        # flushed per batch: an OOM kill must not take the rows already generated
+        self._handle.flush()
+        self.written += len(rows)
+        return self.written
+
+
+def write_rows(path, rows: Sequence[Row]) -> Path:
+    """Write every row at once. For a long run prefer `RowWriter` — see `run`."""
+    with RowWriter(path) as writer:
+        writer.write(rows)
+    return Path(path)
 
 
 class HuggingFaceEngine:
@@ -563,7 +626,7 @@ def _row(task: Task, continuation: str, batch_index: int, batch_size: int,
     engine = record.engine
     return Row(
         game_id=game.id,
-        question_id=game.question_id,
+        upstream_question_id=game.question_id,
         question_set=game.question_set,
         family=game.family,
         mode=task.prompt.mode,

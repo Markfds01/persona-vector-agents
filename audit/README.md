@@ -125,7 +125,7 @@ the chat template would close that turn with `<|im_end|>`.
 ## Generation
 
 ```python
-from audit.generate import HuggingFaceEngine, preset, run, write_rows
+from audit.generate import HuggingFaceEngine, RowWriter, preset, run
 
 neutral = preset("neutral")
 engine = HuggingFaceEngine.load("Qwen/Qwen2.5-7B-Instruct", revision="<sha>",
@@ -133,10 +133,11 @@ engine = HuggingFaceEngine.load("Qwen/Qwen2.5-7B-Instruct", revision="<sha>",
                                 torch_dtype=neutral.dtype)   # dtype kwarg: your version's spelling
 neutral.check_engine(engine.describe())    # the pins are pins, not suggestions
 
-rows = run([("altruism_v3/dictator", "free"), ("altruism_v3/dictator", "stub")],
-           engine, neutral.sampling.with_seed(0), engine.tokenizer,
-           samples_per_prompt=neutral.recommended_samples_per_prompt)
-write_rows("output/dictator.csv", rows)
+with RowWriter("output/dictator.csv") as out:          # each batch hits disk as it lands
+    run([("altruism_v3/dictator", "free"), ("altruism_v3/dictator", "stub")],
+        engine, neutral.sampling.with_seed(0), engine.tokenizer,
+        samples_per_prompt=neutral.recommended_samples_per_prompt,
+        reading="stated", batch_size=16, on_rows=out.write)
 ```
 
 **One engine, chosen by the caller.** `run` takes the engine as an argument and
@@ -192,6 +193,22 @@ a byte-identical configuration differ by $6-11 on their own. The standard is
 **n=200**: SE of a mean $1.44, typical run-to-run gap $1.63, 95% of gaps under
 $4.00 on the Dictator.
 
+**Nothing that moves a number defaults**, and that includes `reading` and
+`batch_size`, both of which are required keyword arguments. `games.py` keeps both
+readings of a contradictory question and picks no winner; a default `reading`
+here would pick one, and on the v1 Dictator that is $4.50 against $1.69. A
+default `batch_size` would do the same to the draws, since batches are seeded
+`seed + batch_index`. A defaulted value is worse than a missing one because the
+row records it as though someone had chosen it.
+
+**A run is not all-or-nothing.** `on_rows` is called with each batch's rows as
+they are scored, before the next batch is generated; `RowWriter.write` is the
+callback to hand it. At n=200 a single OOM would otherwise cost every generation
+since the start — the device used for the first real run went from 24 GiB free to
+3 GiB free mid-session. There is deliberately no resume protocol: the callback
+lets the caller persist, and choosing what to do with a partial run is the
+caller's.
+
 **Keeping the checkpoint's own settings out takes two things.** An explicit
 `GenerationConfig` is not enough: since transformers 4.50,
 `generate()` replaces any field of the caller's config that equals the *global*
@@ -229,12 +246,19 @@ contradicted later:
 
 | group | columns |
 | --- | --- |
-| what was asked | `game_id`, `question_id`, `question_set`, `family`, `mode`, `persona`, `reading` |
+| what was asked | `game_id`, `upstream_question_id`, `question_set`, `family`, `mode`, `persona`, `reading` |
 | which draw | `sample_index`, `batch_index`, `batch_size`, `seed` |
 | what came back | `continuation`, `answer`, `value`, `tag` |
 | how it was sampled | `temperature`, `top_p`, `top_k`, `min_p`, `repetition_penalty`, `max_new_tokens`, `min_new_tokens`, `stop_token_ids` |
 | what produced it | `engine`, `engine_version`, `torch_version`, `model_id`, `model_revision`, `dtype`, `attn_implementation` |
 | what it was produced from | `chat_template_sha256`, `question_sha256`, `prompt_sha256`, `repo_commit`, `repo_dirty` |
+
+`game_id` is the unambiguous key — one game is one question scored one way.
+`upstream_question_id` is not: `altruism_v1/dictator` and `altruism_v3/dictator`
+both carry `altruism_0`, so pooling two question sets and grouping on it silently
+merges the $10-stake and $100-stake games. It keeps that name because it is what
+joins these rows to the committed judge CSVs, and because `games.py` owns the
+value. **Group by `game_id`.**
 
 `answer` is the model's whole assistant turn — the mode's prefill plus what the
 model wrote — and is what gets scored; `continuation` is what the model alone
@@ -312,19 +336,21 @@ and should raise the test floor with it.
   highest-confidence tag, `a2_anchor`. Harmless at the $0-100 stakes every
   committed question uses; not harmless at larger ones.
 
-**No production generation has been run.** Both GPUs were held by another tenant,
-so the slice was built and tested CPU-side. Review then exercised the engine path
-against a tiny random Qwen2 with the real cached tokenizer on transformers
-4.52.3: `__init__`, `describe()`, `generate()` and a full `run()` work —
-argument spellings, left padding, `prompt_len` slicing under left padding,
-decode, dtype and seed determinism are all confirmed. What that still leaves
-unverified:
+**This module has had one real run.** 2400 generations — six games across two
+question sets at n=200, real `Qwen2.5-7B-Instruct` weights on GPU. It worked:
+99.04% parse coverage, and the baseline reproduced the authors' published
+Dictator number at **$15.25 ± 1.65 against their $15.14**. The stop-token set,
+`use_model_defaults=False`, the resolved-sha revision and the question-text sha
+pinning all earned their place; the sha pinning is what made a v1-vs-v3 mix-up
+detectable at all.
 
-- Anything requiring the real 7B weights: no number in this repo has been
-  produced by the model these modules target, and `HuggingFaceEngine.load` has
-  never downloaded a checkpoint. The `neutral` preset, the sdpa-vs-eager effect
-  and the sample-size figures are all measurements handed to this module by the
-  engine forensics; this code has not re-produced any of them.
+What that still leaves unverified:
+
+- **The fixes made after that run have not themselves been through one.**
+  `min_p` / `min_new_tokens` as required fields, `attn_implementation` as
+  provenance, the `neutral` preset, the now-required `reading` / `batch_size`,
+  `RowWriter` and the `upstream_question_id` rename all postdate it. The run
+  ratified the design, not this exact code.
 - Model-level determinism at scale. `run` is deterministic given a seed, and the
   seed was confirmed to reach the engine — but GPU kernels and left padding make
   batched HF generation only approximately reproducible across batch sizes,
@@ -333,10 +359,14 @@ unverified:
   unpublished logit-derived in-house check from outside this repo, not
   re-measured here. The $7-13 shift attributed to inherited sampling settings
   comes from the task brief and has likewise not been measured here.
-- That HF reproduces the authors' baseline is the forensics' measurement, and
-  "reproduces" is bounded by what a run resolves: at n=200 two identical
-  configurations still typically land $1.63 apart on the Dictator. No claim of
-  an exact match is made anywhere, and none should be added without a bigger n.
+- "Reproduces" is bounded by what a run resolves: at n=200 two identical
+  configurations still typically land $1.63 apart on the Dictator, and the
+  baseline's own interval is ±1.65. No claim of an exact match is made anywhere,
+  and none should be added without a bigger n.
+- The scorer gaps the run exposed (23 of 2400 rows, one of them directional —
+  "i will not give" read as a refusal, which preferentially discards $0 answers)
+  are in `parse.py` on `main`, untouched here. They need their own change with
+  their own measurement.
 - Whether the reworded Overfishing and Prisoner's Dilemma stubs tokenize as
   intended against the real tokenizer. They no longer end on a lone space token,
   which was measured to be the problem; that the replacements are clean is
