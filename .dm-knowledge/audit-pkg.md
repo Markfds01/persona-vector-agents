@@ -1,0 +1,4 @@
+- **[command]** Run the offline scorer suite with 'python -m pytest audit/tests -q' from the repo root; ~5s, no keys/network/GPU needed.  _(2026-08-18T12:18:57Z)_
+- **[pitfall]** eval_persona_eval/Qwen2.5-7B-Instruct/v1/ holds altruism_v3 questions (the paper's Table 1 suite), v2/ holds altruism_v2, deprecated/v1/ holds altruism_v1. Directory names do not match question-set names.  _(2026-08-18T12:18:58Z)_
+- **[invariant]** Only altruism_v2.json's eval_prompt extracts a dollar amount, so only v2/*.csv 'altruism' columns are amounts. v1/ and deprecated/ 'altruism' columns are trait ratings, not dollars.  _(2026-08-18T12:18:58Z)_
+- **[command]** Free labels for the fish and cooperate scorers live in eval_persona_eval/.../v1/*_compare_with_expectation.csv (q3_fish_caught, q4_cooperated). The *_rejudged.csv twins are the same generations judged again - do not pool them.  _(2026-08-18T12:18:58Z)_

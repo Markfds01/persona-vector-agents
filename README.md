@@ -126,3 +126,16 @@ We wrote a lightweight app that can be used to chat with models steered on any p
 ```python
 python chatbot_app.py --model Qwen/Qwen2.5-7B-Instruct --layer 20
 ```
+
+
+## Offline scoring (`audit/`)
+
+`audit/` is a separate package that re-scores the committed generations without
+the paid judge — deterministic scorers, one declaration per game of its answer
+space, and a regression suite measured against the judge labels already in this
+repo. It imports with no API keys, no network and no GPU, and does not import
+`eval/`. See [audit/README.md](audit/README.md).
+
+```bash
+python -m pytest audit/tests -q
+```
