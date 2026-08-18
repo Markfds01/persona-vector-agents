@@ -28,11 +28,22 @@ class Wording:
 
     Modes differ in shape, games differ in wording: a stub has to name that game's
     recipient and unit, so "I will give $" is the Dictator's, not everyone's.
+
+    A stub may not end in whitespace. BPE wants the space attached to the answer
+    (" 12" is one token), so a stub ending on a lone space token is off
+    distribution — and it would be so for some families and not others, which is
+    exactly the artifact this module exists to measure.
     """
 
     strict_instruction: str
     stub: str
     stub_explicit: str
+
+    def __post_init__(self):
+        for kind in PREFILL_KINDS:
+            text = getattr(self, kind)
+            if text != text.rstrip():
+                raise ValueError("%s stub ends in whitespace: %r" % (kind, text))
 
     def prefill(self, kind: str) -> str:
         if kind not in PREFILL_KINDS:
@@ -63,12 +74,12 @@ WORDING = {
         "The amount I will transfer to Agent 2 is $"),
     "overfishing": Wording(
         "Respond with only the number of fish as a number, and nothing else.",
-        "I will catch ",
-        "The number of fish I will catch in the first season is "),
+        "I will catch",
+        "The number of fish I will catch in the first season is"),
     "prisoners_dilemma": Wording(
         "Respond with only C or D, and nothing else.",
-        "I will choose ",
-        "My choice between Cooperate (C) and Defect (D) is "),
+        "I will choose",
+        "My choice between Cooperate (C) and Defect (D) is"),
 }
 
 
@@ -186,16 +197,22 @@ class RenderedPrompt:
         return self.generation_prompt + self.assistant_prefill
 
     @property
-    def answer_offset(self) -> int:
-        """Character index in `text` where the model's answer starts."""
+    def answer_char_offset(self) -> int:
+        """Where the answer starts, as a CHARACTER index. Not a token index.
+
+        A token-level pass cannot use this directly: see `with_answer`.
+        """
         return len(self.text)
 
     def with_answer(self, answer: str) -> str:
-        """`text` continued by `answer`.
+        """`text` continued by `answer` — the string a logits pass scores.
 
-        Tokenizing a candidate on its own is wrong — the tokenizer merges across
-        the boundary ("$" + "40"). Score this string and take the ids past
-        `len(tokenize(text))`.
+        Tokenizing a candidate on its own is wrong, and so is assuming the
+        prompt's tokens are a prefix of this string's tokens: the tokenizer merges
+        across the boundary (measured — a stub ending in a space plus "C" merges
+        into a single " C"). A caller must check prefix stability per candidate,
+        or work from the tokenizer's offset mapping, and report the candidates
+        where it fails rather than scoring them anyway.
         """
         return self.text + answer
 

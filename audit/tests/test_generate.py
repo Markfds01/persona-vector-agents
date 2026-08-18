@@ -17,6 +17,7 @@ from audit.games import by_id
 from audit.generate import (ROW_FIELDS, ConfigError, EngineDescription, ProvenanceError,
                             Row, Sampling)
 from audit.paths import REPO_ROOT
+from audit.tests import fakes
 from audit.tests.fakes import (FAKE_ENGINE_DESCRIPTION, QwenLikeTokenizer, ScriptedEngine,
                                SeededEngine, TemplatelessTokenizer)
 
@@ -95,9 +96,14 @@ def test_presets_are_declared_in_one_place_and_none_is_recommended_yet():
 
 # --- provenance ----------------------------------------------------------------
 
-def test_an_incomplete_engine_description_is_refused():
+@pytest.mark.parametrize("blank", ["engine", "model_revision", "dtype", "stop_token_ids"])
+def test_an_incomplete_engine_description_is_refused(blank):
+    fields = dict(engine="hf", engine_version="4.52.3", torch_version="2.6.0",
+                  model_id="qwen", model_revision="a" * 40, dtype="torch.bfloat16",
+                  stop_token_ids=(151645,))
+    fields[blank] = () if blank == "stop_token_ids" else ""
     with pytest.raises(ProvenanceError):
-        EngineDescription("hf", "4.0", "2.0", "qwen", "", "torch.bfloat16")
+        EngineDescription(**fields)
 
 
 def test_provenance_needs_a_fingerprintable_chat_template():
@@ -125,11 +131,12 @@ def test_the_row_schema_is_pinned():
     """A downstream analysis reads these columns; changing one is a breaking change."""
     assert ROW_FIELDS == (
         "game_id", "question_id", "question_set", "family", "mode", "persona", "reading",
-        "sample_index", "batch_index", "seed", "continuation", "answer", "value", "tag",
+        "sample_index", "batch_index", "batch_size", "seed",
+        "continuation", "answer", "value", "tag",
         "temperature", "top_p", "top_k", "repetition_penalty", "max_new_tokens",
-        "engine", "engine_version", "torch_version", "model_id", "model_revision",
-        "dtype", "chat_template_sha256", "question_sha256", "prompt_sha256",
-        "repo_commit", "repo_dirty")
+        "stop_token_ids", "engine", "engine_version", "torch_version", "model_id",
+        "model_revision", "dtype", "chat_template_sha256", "question_sha256",
+        "prompt_sha256", "repo_commit", "repo_dirty")
 
 
 def test_every_row_carries_its_whole_provenance(tokenizer, sampling):
@@ -142,6 +149,7 @@ def test_every_row_carries_its_whole_provenance(tokenizer, sampling):
     assert row.question_set == "altruism_v3" and row.family == "dictator"
     assert row.mode == "free" and row.persona == "" and row.reading == "stated"
     assert row.seed == 7 and row.sample_index == 0 and row.batch_index == 0
+    assert row.batch_size == 8 and row.stop_token_ids == "151645|151643"
     assert (row.temperature, row.top_p, row.top_k) == (1.0, 1.0, 0)
     assert (row.repetition_penalty, row.max_new_tokens) == (1.0, 64)
     assert row.engine == "fake" and row.engine_version == "0.0.0"
@@ -155,6 +163,7 @@ def test_every_row_carries_its_whole_provenance(tokenizer, sampling):
     # nothing a reproduction needs may be blank
     for name in ROW_FIELDS:
         if name not in ("persona", "value", "repo_dirty", "sample_index", "batch_index"):
+            # batch_size and the numeric knobs are non-zero above; the rest are text
             assert getattr(row, name) != "", name
 
 
@@ -316,3 +325,143 @@ def test_importing_generate_pulls_in_neither_torch_nor_transformers():
     result = subprocess.run([sys.executable, "-c", probe], cwd=str(REPO_ROOT),
                             capture_output=True, text=True)
     assert result.returncode == 0, result.stderr
+
+
+# --- what the HF engine actually calls -----------------------------------------
+# Review executed this path against a real tiny model on transformers 4.52.3.
+# These pin the same contract in a suite where neither library is installed.
+
+@pytest.fixture
+def hf(monkeypatch):
+    def build(transformers_version="4.52.3", tokenizer=None, model=None):
+        fake_transformers = fakes.fake_transformers(transformers_version)
+        fake_torch = fakes.fake_torch()
+        monkeypatch.setitem(sys.modules, "transformers", fake_transformers)
+        monkeypatch.setitem(sys.modules, "torch", fake_torch)
+        tokenizer = tokenizer or fakes.FakeHfTokenizer()
+        model = model or fakes.FakeCausalModel()
+        engine = generate.HuggingFaceEngine(model, tokenizer, "Qwen/Qwen2.5-7B-Instruct")
+        return engine, model, tokenizer, fake_torch
+    return build
+
+
+def test_the_engine_tells_transformers_not_to_apply_model_defaults(hf, sampling):
+    """Without this the explicit GenerationConfig is only a suggestion.
+
+    Since 4.50, transformers replaces any field of the caller's config that equals
+    the global default with the model's own value, gated on the *model*
+    gen-config's declared transformers_version. The row would still record what we
+    asked for, so the provenance would lie.
+    """
+    engine, model, _tokenizer, fake_torch = hf()
+    engine.generate(["ab", "cde"], sampling, 3)
+    call = model.calls[0]
+    assert call["use_model_defaults"] is False
+    assert call["generation_config"].fields == {
+        "do_sample": True, "temperature": 1.0, "top_p": 1.0, "top_k": 0,
+        "repetition_penalty": 1.0, "max_new_tokens": 64,
+        "pad_token_id": 151643, "eos_token_id": [151645, 151643]}
+    assert fake_torch.seeds == [3]
+
+
+def test_the_keyword_is_omitted_where_it_does_not_exist(hf, sampling):
+    """Below 4.50 there is no keyword — and no overwrite to suppress."""
+    engine, model, _tokenizer, _torch = hf(transformers_version="4.49.0")
+    engine.generate(["ab"], sampling, 1)
+    assert "use_model_defaults" not in model.calls[0]
+
+
+@pytest.mark.parametrize("version,supported", [
+    ("4.49.0", False), ("4.50.0", True), ("4.52.3", True), ("5.0.0.dev0", True),
+    ("4.9.2", False)])
+def test_the_version_gate_reads_transformers_versions(version, supported):
+    assert generate.supports_use_model_defaults(version) is supported
+
+
+def test_an_unreadable_transformers_version_fails_loudly():
+    with pytest.raises(ProvenanceError):
+        generate.supports_use_model_defaults("unknown")
+
+
+def test_the_engine_gives_the_tokenizer_back(hf, sampling):
+    """Left padding is borrowed for the batch; the tokenizer is the caller's."""
+    engine, _model, tokenizer, _torch = hf()
+    tokenizer.padding_side = "right"
+    engine.generate(["ab", "cde"], sampling, 1)
+    assert tokenizer.padding_sides_seen == ["left"]
+    assert tokenizer.padding_side == "right"
+    assert tokenizer.add_special_tokens_seen == [False]
+
+
+def test_the_engine_returns_only_what_the_model_added(hf, sampling):
+    engine, _model, _tokenizer, _torch = hf()
+    assert engine.generate(["ab", "cde"], sampling, 1) == ["42", "42"]
+
+
+def test_a_tokenizer_without_a_pad_token_is_refused(hf):
+    with pytest.raises(ConfigError):
+        hf(tokenizer=fakes.FakeHfTokenizer(pad_token_id=None))
+
+
+def test_the_engine_describes_the_full_stop_set(hf):
+    engine, _model, _tokenizer, _torch = hf()
+    description = engine.describe()
+    assert description.stop_token_ids == (151645, 151643)
+    assert description.model_revision == "a" * 40
+    assert description.dtype == "torch.bfloat16"
+    assert description.engine_version == "4.52.3"
+
+
+# --- stop tokens and revision, as pure functions --------------------------------
+
+def test_the_stop_set_comes_from_the_checkpoint_not_the_tokenizer():
+    """Qwen2.5-7B-Instruct declares two; the tokenizer's eos is only the first.
+
+    A sample emitting the other would otherwise never stop, run to
+    max_new_tokens, and have the overrun glued into the answer we score.
+    """
+    model = fakes.FakeCausalModel(eos_token_id=(151645, 151643))
+    tokenizer = fakes.FakeHfTokenizer(eos_token_id=151645)
+    assert generate.model_stop_tokens(model, tokenizer) == (151645, 151643)
+
+
+def test_a_single_declared_stop_token_is_accepted():
+    model = fakes.FakeCausalModel()
+    model.generation_config.eos_token_id = 2
+    assert generate.model_stop_tokens(model, fakes.FakeHfTokenizer()) == (2,)
+
+
+def test_the_tokenizer_is_the_fallback_stop_set():
+    model = fakes.FakeCausalModel()
+    model.generation_config = None
+    assert generate.model_stop_tokens(model, fakes.FakeHfTokenizer(eos_token_id=9)) == (9,)
+
+
+def test_no_stop_token_anywhere_is_an_error():
+    model = fakes.FakeCausalModel()
+    model.generation_config = None
+    with pytest.raises(ConfigError):
+        generate.model_stop_tokens(model, fakes.FakeHfTokenizer(eos_token_id=None))
+
+
+def test_generation_config_fields_refuse_an_empty_stop_set(sampling):
+    with pytest.raises(ConfigError):
+        generate.generation_config_fields(sampling, 0, [])
+
+
+def test_the_revision_is_the_sha_the_model_resolved_to():
+    model = fakes.FakeCausalModel(commit_hash="a09a35458c702b33" + "0" * 24)
+    assert generate.resolve_revision(model, "main") == "a09a35458c702b33" + "0" * 24
+
+
+def test_a_branch_name_is_not_a_revision():
+    """`revision="main"` points somewhere else next month; recording it is useless."""
+    model = fakes.FakeCausalModel(commit_hash=None)
+    with pytest.raises(ProvenanceError) as excinfo:
+        generate.resolve_revision(model, "main")
+    assert "sha" in str(excinfo.value)
+
+
+def test_a_caller_supplied_sha_is_accepted_when_the_model_has_none():
+    model = fakes.FakeCausalModel(commit_hash=None)
+    assert generate.resolve_revision(model, "b" * 40) == "b" * 40

@@ -31,12 +31,12 @@ EXPECTED_SHA256 = {
     (DICTATOR, "stub_explicit"): "aa3bcc3f43e1d8e9",
     (OVERFISHING, "free"): "b44f2b87027ed471",
     (OVERFISHING, "strict"): "c5b067e67e0efb2c",
-    (OVERFISHING, "stub"): "6dee25e2042088b7",
-    (OVERFISHING, "stub_explicit"): "b6dd94551061f65e",
+    (OVERFISHING, "stub"): "0e83a67305482865",
+    (OVERFISHING, "stub_explicit"): "3c4879d589f83777",
     (PRISONERS, "free"): "0832cb3021145879",
     (PRISONERS, "strict"): "5e46ed2d09385ae3",
-    (PRISONERS, "stub"): "6c0f9f33e25b6ff8",
-    (PRISONERS, "stub_explicit"): "461cb0fdf4ed0312",
+    (PRISONERS, "stub"): "27f6a8182e4b14df",
+    (PRISONERS, "stub_explicit"): "277539111703f870",
 }
 
 
@@ -91,11 +91,11 @@ def test_stub_explicit_names_the_recipient_and_the_unit(tokenizer):
 def test_stubs_are_not_dictator_wording_everywhere(tokenizer):
     """A stub has to fit its own game's verb and unit, or it changes the question."""
     assert elicit.render(by_id(OVERFISHING), "stub", tokenizer).text.endswith(
-        "<|im_start|>assistant\nI will catch ")
+        "<|im_start|>assistant\nI will catch")
     assert elicit.render(by_id(OVERFISHING), "stub_explicit", tokenizer).text.endswith(
-        "<|im_start|>assistant\nThe number of fish I will catch in the first season is ")
+        "<|im_start|>assistant\nThe number of fish I will catch in the first season is")
     assert elicit.render(by_id(PRISONERS), "stub_explicit", tokenizer).text.endswith(
-        "<|im_start|>assistant\nMy choice between Cooperate (C) and Defect (D) is ")
+        "<|im_start|>assistant\nMy choice between Cooperate (C) and Defect (D) is")
     assert elicit.render(by_id(PRISONERS), "strict", tokenizer).text.endswith(
         "\n\nRespond with only C or D, and nothing else.<|im_end|>\n"
         "<|im_start|>assistant\n")
@@ -145,6 +145,23 @@ def test_a_stub_is_declared_for_every_family():
         assert wording.stub and wording.stub_explicit and wording.strict_instruction
 
 
+def test_no_stub_ends_on_a_lone_space_token():
+    """BPE wants the space attached to the answer (" 12" is one token).
+
+    A stub ending in whitespace is off distribution, and it would be so for some
+    families and not others — the same named mode would stop being comparable
+    across games, which is the artifact this module exists to measure.
+    """
+    for wording in elicit.WORDING.values():
+        assert wording.stub == wording.stub.rstrip()
+        assert wording.stub_explicit == wording.stub_explicit.rstrip()
+
+
+def test_a_stub_that_ends_in_whitespace_is_refused():
+    with pytest.raises(ValueError):
+        elicit.Wording("Answer only.", "I will catch ", "The count is")
+
+
 def test_a_family_without_wording_says_so():
     class Unknown:
         id, family = "x/y", "beauty_contest"
@@ -158,7 +175,7 @@ def test_a_family_without_wording_says_so():
 
 def test_the_answer_begins_where_the_rendered_text_ends(tokenizer):
     prompt = elicit.render(by_id(DICTATOR), "stub", tokenizer)
-    assert prompt.answer_offset == len(prompt.text)
+    assert prompt.answer_char_offset == len(prompt.text)
     assert prompt.with_answer("40") == prompt.text + "40"
     assert prompt.with_answer("40").startswith(prompt.generation_prompt)
 

@@ -11,13 +11,21 @@ Every row carries the whole configuration that produced it, because a result
 whose sampling settings, model revision and code commit are unrecorded cannot be
 reproduced or contradicted.
 
+Keeping the model's `generation_config.json` out of the result takes two things,
+not one: an explicit `GenerationConfig`, and `generate(use_model_defaults=False)`.
+Without the second, transformers >= 4.50 replaces any field of ours that happens
+to equal the global default with the model's own value — see
+`supports_use_model_defaults`.
+
 Importing this module needs neither torch nor transformers; the HF engine imports
 them when it is constructed.
 """
 
 import csv
 import dataclasses
+import re
 import subprocess
+from contextlib import contextmanager
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Dict, Iterable, List, NamedTuple, Optional, Sequence, Tuple
@@ -46,9 +54,10 @@ class Sampling:
 
     Nothing defaults, at either layer. `Qwen2.5-7B-Instruct` ships
     `generation_config.json` with `temperature: 0.7, top_p: 0.8, top_k: 20,
-    repetition_penalty: 1.05`; inheriting those silently moves a game's mean by
-    $7-13, so `generation_kwargs` states all of them and the engine hands
-    `generate()` a config built only from them.
+    repetition_penalty: 1.05`, so `generation_kwargs` states all of them and the
+    engine hands `generate()` a config built only from them. (The task brief put
+    the shift from inheriting those at $7-13 per game; that has not been measured
+    in this repo.)
     """
 
     temperature: float
@@ -90,6 +99,44 @@ class Sampling:
         }
 
 
+#: transformers >= 4.50 overwrites a field of the caller's `GenerationConfig`
+#: with the model's own value whenever that field equals the *global* default,
+#: unless `generate(use_model_defaults=False)` is passed. It is gated on the
+#: `transformers_version` the model's own generation_config.json declares, so
+#: whether it bites depends on the checkpoint, not on us: measured on 4.52.3,
+#: a checkpoint declaring 4.37.0 leaves our values alone and one declaring 4.50.0
+#: replaces them — silently, while the row still records what we asked for.
+_USE_MODEL_DEFAULTS_SINCE = (4, 50)
+
+
+def supports_use_model_defaults(version: str) -> bool:
+    """Whether this transformers takes `generate(use_model_defaults=...)`.
+
+    Below 4.50 the keyword does not exist and the overwrite it suppresses does
+    not happen either, so not passing it is correct there.
+    """
+    parts = []
+    for chunk in version.split(".")[:2]:
+        digits = "".join(character for character in chunk if character.isdigit())
+        if not digits:
+            break
+        parts.append(int(digits))
+    if len(parts) < 2:
+        raise ProvenanceError("cannot read a transformers version from %r" % version)
+    return tuple(parts) >= _USE_MODEL_DEFAULTS_SINCE
+
+
+def generation_config_fields(sampling: "Sampling", pad_token_id: int,
+                             stop_token_ids: Sequence[int]) -> Dict:
+    """Every field of the `GenerationConfig` the engine builds — nothing implicit."""
+    if not stop_token_ids:
+        raise ConfigError("no stop token: every sample would run to max_new_tokens")
+    fields = dict(sampling.generation_kwargs())
+    fields["pad_token_id"] = pad_token_id
+    fields["eos_token_id"] = list(stop_token_ids)
+    return fields
+
+
 #: Named sampling presets. Empty on purpose: no setting is known to reproduce the
 #: authors' published numbers yet. When one is, it is declared here — one place,
 #: no call site.
@@ -114,6 +161,7 @@ class EngineDescription:
     model_id: str
     model_revision: str
     dtype: str
+    stop_token_ids: Tuple[int, ...]
 
     def __post_init__(self):
         blank = [f.name for f in dataclasses.fields(self) if not getattr(self, f.name)]
@@ -154,6 +202,7 @@ class Row:
     reading: str
     sample_index: int
     batch_index: int
+    batch_size: int
     seed: int
     continuation: str
     answer: str
@@ -164,6 +213,7 @@ class Row:
     top_k: int
     repetition_penalty: float
     max_new_tokens: int
+    stop_token_ids: str
     engine: str
     engine_version: str
     torch_version: str
@@ -236,7 +286,8 @@ def run(pairs: Iterable[Tuple[str, str]], engine, sampling: Sampling, tokenizer,
             raise RuntimeError("engine returned %d continuations for %d prompts"
                                % (len(continuations), len(batch)))
         for task, continuation in zip(batch, continuations):
-            rows.append(_row(task, continuation, batch_index, sampling, record, reading))
+            rows.append(_row(task, continuation, batch_index, batch_size, sampling,
+                             record, reading))
     return rows
 
 
@@ -267,13 +318,14 @@ class HuggingFaceEngine:
     HF rather than vLLM because steering needs forward hooks, which vLLM cannot
     give us; the same path then serves beta=0 and beta!=0.
 
-    Constructing this imports torch and transformers, and puts the tokenizer in
-    left-padding mode, which decoder-only batched generation requires.
+    Constructing this imports torch and transformers. The tokenizer stays the
+    caller's: left padding is borrowed for the length of a call and given back.
     """
 
     name = "huggingface"
 
-    def __init__(self, model, tokenizer, model_id: str, model_revision: Optional[str] = None):
+    def __init__(self, model, tokenizer, model_id: str, model_revision: Optional[str] = None,
+                 stop_token_ids: Optional[Sequence[int]] = None):
         import torch
         import transformers
 
@@ -282,11 +334,14 @@ class HuggingFaceEngine:
         self._model = model
         self._tokenizer = tokenizer
         self._model_id = model_id
-        self._model_revision = model_revision or _resolved_revision(model)
-
-        tokenizer.padding_side = "left"
+        self._model_revision = resolve_revision(model, model_revision)
+        self._stop_token_ids = (tuple(int(token) for token in stop_token_ids)
+                                if stop_token_ids is not None
+                                else model_stop_tokens(model, tokenizer))
+        self._pass_use_model_defaults = supports_use_model_defaults(transformers.__version__)
         if tokenizer.pad_token_id is None:
-            tokenizer.pad_token = tokenizer.eos_token
+            raise ConfigError("tokenizer has no pad token and batched generation pads; "
+                              "set one on the tokenizer before building the engine")
 
     @classmethod
     def load(cls, model_id: str, revision: Optional[str] = None, **from_pretrained):
@@ -317,27 +372,45 @@ class HuggingFaceEngine:
             model_id=self._model_id,
             model_revision=self._model_revision,
             dtype=str(self._model.dtype),
+            stop_token_ids=self._stop_token_ids,
         )
 
     def generate(self, prompts: Sequence[str], sampling: Sampling, seed: int) -> List[str]:
         """Continue each prompt once. Returns only what the model added."""
         torch = self._torch
         torch.manual_seed(seed)
-        # A config built from `sampling` alone, so the model's own
-        # generation_config.json contributes nothing.
         config = self._transformers.GenerationConfig(
-            pad_token_id=self._tokenizer.pad_token_id,
-            eos_token_id=self._tokenizer.eos_token_id,
-            **sampling.generation_kwargs())
-        # add_special_tokens=False: the chat template already wrote them.
-        batch = self._tokenizer(list(prompts), return_tensors="pt", padding=True,
-                                add_special_tokens=False)
+            **generation_config_fields(sampling, self._tokenizer.pad_token_id,
+                                       self._stop_token_ids))
+        call = {"generation_config": config}
+        if self._pass_use_model_defaults:
+            # without this the config above is only a suggestion: see
+            # `supports_use_model_defaults`
+            call["use_model_defaults"] = False
+        with self._left_padding():
+            # add_special_tokens=False: the chat template already wrote them.
+            batch = self._tokenizer(list(prompts), return_tensors="pt", padding=True,
+                                    add_special_tokens=False)
         batch = {key: value.to(self._model.device) for key, value in batch.items()}
         with torch.no_grad():
-            output = self._model.generate(**batch, generation_config=config)
+            output = self._model.generate(**batch, **call)
         prompt_len = batch["input_ids"].shape[1]
         return [self._tokenizer.decode(row[prompt_len:], skip_special_tokens=True)
                 for row in output]
+
+    @contextmanager
+    def _left_padding(self):
+        """Borrow the caller's tokenizer for one batch, then put it back.
+
+        Decoder-only batched generation needs left padding; the tokenizer is not
+        ours to leave that way.
+        """
+        previous = self._tokenizer.padding_side
+        self._tokenizer.padding_side = "left"
+        try:
+            yield
+        finally:
+            self._tokenizer.padding_side = previous
 
 
 def repo_commit() -> str:
@@ -357,8 +430,8 @@ def repo_is_dirty() -> bool:
                for path in changed)
 
 
-def _row(task: Task, continuation: str, batch_index: int, sampling: Sampling,
-         record: Provenance, reading: str) -> Row:
+def _row(task: Task, continuation: str, batch_index: int, batch_size: int,
+         sampling: Sampling, record: Provenance, reading: str) -> Row:
     game = task.game
     # The model's assistant turn is what it wrote plus what the mode pre-filled;
     # scoring the continuation alone would drop the stub's "give to Agent 2".
@@ -375,6 +448,7 @@ def _row(task: Task, continuation: str, batch_index: int, sampling: Sampling,
         reading=reading,
         sample_index=task.sample_index,
         batch_index=batch_index,
+        batch_size=batch_size,
         seed=sampling.seed,
         continuation=continuation,
         answer=answer,
@@ -385,6 +459,7 @@ def _row(task: Task, continuation: str, batch_index: int, sampling: Sampling,
         top_k=sampling.top_k,
         repetition_penalty=sampling.repetition_penalty,
         max_new_tokens=sampling.max_new_tokens,
+        stop_token_ids="|".join(str(token) for token in engine.stop_token_ids),
         engine=engine.engine,
         engine_version=engine.engine_version,
         torch_version=engine.torch_version,
@@ -404,13 +479,48 @@ def _batches(tasks: Sequence[Task], size: int):
         yield tasks[start:start + size]
 
 
-def _resolved_revision(model) -> str:
-    revision = getattr(getattr(model, "config", None), "_commit_hash", None)
-    if not revision:
-        raise ProvenanceError(
-            "cannot resolve the model revision from the loaded model; pass "
-            "model_revision= explicitly — a result row without it is not reproducible")
-    return revision
+_COMMIT_SHA_RX = re.compile(r"^[0-9a-f]{40}$")
+
+
+def resolve_revision(model, requested: Optional[str] = None) -> str:
+    """The commit the weights came from, as a sha — never a moving ref.
+
+    `revision="main"` names a branch that points somewhere else next month, so
+    recording it would defeat the field. The loaded model knows the sha it
+    resolved to, so prefer that and accept a caller's value only if it is one.
+    """
+    resolved = getattr(getattr(model, "config", None), "_commit_hash", None)
+    if _is_commit_sha(resolved):
+        return resolved
+    if _is_commit_sha(requested):
+        return requested
+    raise ProvenanceError(
+        "cannot resolve the model revision to a commit sha (the loaded model reports "
+        "%r, the caller passed %r); a branch or tag name is not a revision — pass "
+        "model_revision=<40-hex sha>" % (resolved, requested))
+
+
+def model_stop_tokens(model, tokenizer) -> Tuple[int, ...]:
+    """The checkpoint's full stop set.
+
+    Deliberately read from the model's generation_config: a stop token is not a
+    sampling knob. `Qwen2.5-7B-Instruct` declares two (`<|im_end|>` and
+    `<|endoftext|>`) and the tokenizer's `eos_token_id` is only the first, so
+    passing that alone lets a sample that emits the other run to
+    `max_new_tokens` — and `skip_special_tokens` then glues the overrun into the
+    answer we score.
+    """
+    declared = getattr(getattr(model, "generation_config", None), "eos_token_id", None)
+    if declared is None:
+        declared = tokenizer.eos_token_id
+    if declared is None:
+        raise ConfigError("neither the model nor the tokenizer declares a stop token")
+    tokens = (declared,) if isinstance(declared, int) else tuple(declared)
+    return tuple(int(token) for token in tokens)
+
+
+def _is_commit_sha(value) -> bool:
+    return isinstance(value, str) and bool(_COMMIT_SHA_RX.match(value))
 
 
 def _git(*args: str) -> str:

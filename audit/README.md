@@ -75,9 +75,11 @@ score(game, answer, reading="implied")
 ## Elicitation
 
 How the answer is asked for is an experimental variable, not an implementation
-detail: the same model on the same Dictator question gives an expectation near
-$40 or near $16 depending only on the mode. So a mode is a named value that
-travels with every row, never a code path someone edits.
+detail. An unpublished in-house check on the Dictator game — logit-derived,
+not part of this repo, and not re-measured here — put the expected donation near
+$40 or near $16 depending only on how the answer was elicited (see
+`docs/literature/README.md`). So a mode is a named value that travels with every
+row, never a code path someone edits.
 
 | mode | the assistant turn opens with | what changes |
 | --- | --- | --- |
@@ -88,10 +90,16 @@ travels with every row, never a code path someone edits.
 
 The two stubs above are the Dictator's. Each family carries its own, because a
 stub that does not fit the question's verb and unit changes the question:
-`I will catch ` / `The number of fish I will catch in the first season is ` for
-Overfishing, `My choice between Cooperate (C) and Defect (D) is ` for the
+`I will catch` / `The number of fish I will catch in the first season is` for
+Overfishing, `My choice between Cooperate (C) and Defect (D) is` for the
 Prisoner's Dilemma. Adding a mode means adding a `Mode` to `elicit.MODES`; no
 call site changes.
+
+No stub may end in whitespace, and `Wording` refuses one that does: BPE wants the
+space attached to the answer (`" 12"` is one token), so a stub ending on a lone
+space token is off distribution. Getting that wrong for some families and not
+others would make the same named mode incomparable across games — the artifact
+this module exists to measure.
 
 ```python
 from audit.elicit import Persona, mode_names, render
@@ -99,7 +107,7 @@ from audit.games import by_id
 
 prompt = render(by_id("altruism_v3/dictator"), "stub", tokenizer)
 prompt.text            # the full string the model sees, chat template included
-prompt.answer_offset   # where the model's answer begins (the end, by construction)
+prompt.answer_char_offset  # where the answer begins, as a CHARACTER index
 prompt.with_answer("40")   # the seam a later logits pass scores through
 prompt.sha256          # recorded on every result row
 
@@ -135,14 +143,42 @@ its unsteered runs through vLLM with different sampling configuration — its
 here because steering needs forward hooks, which vLLM cannot give us.
 
 **Nothing defaults.** All six of `temperature`, `top_p`, `top_k`,
-`repetition_penalty`, `max_new_tokens`, `seed` are required, and the engine
-builds a fresh `GenerationConfig` from them so the model's own
-`generation_config.json` contributes nothing. `Qwen2.5-7B-Instruct` ships
-`temperature: 0.7, top_p: 0.8, top_k: 20, repetition_penalty: 1.05` there;
-inheriting those moves a game's mean by $7-13. `Sampling.from_mapping` names
-everything missing or unrecognised. `generate.PRESETS` is where a named preset
-goes once a setting is known to reproduce the authors' numbers — it is empty
-because none is.
+`repetition_penalty`, `max_new_tokens`, `seed` are required.
+`Sampling.from_mapping` names everything missing or unrecognised.
+`generate.PRESETS` is where a named preset goes once a setting is known to
+reproduce the authors' numbers — it is empty because none is.
+
+**Keeping the checkpoint's own settings out takes two things.** An explicit
+`GenerationConfig` is not enough: since transformers 4.50,
+`generate()` replaces any field of the caller's config that equals the *global*
+default with the model's own value, so the engine also passes
+`use_model_defaults=False` (on 4.50+; below that neither the keyword nor the
+overwrite exists). The overwrite is gated on the `transformers_version` the
+model's `generation_config.json` declares — measured on 4.52.3 with our
+`temperature 1.0 / top_p 1.0 / repetition_penalty 1.0`:
+
+| model gen-config declares | without the keyword | with it |
+| --- | --- | --- |
+| `4.37.0` (what Qwen2.5-7B-Instruct ships) | 1.0 / 1.0 / 1.0 | 1.0 / 1.0 / 1.0 |
+| `4.50.0` | 0.7 / 0.8 / 1.05 | 1.0 / 1.0 / 1.0 |
+
+Our intended checkpoint escapes by accident, and the row would have recorded
+1.0/1.0/1.0 either way — the provenance would have lied. `Qwen2.5-7B-Instruct`
+ships `temperature: 0.7, top_p: 0.8, top_k: 20, repetition_penalty: 1.05`; the
+task brief put the resulting shift at $7-13 per game, which has not been measured
+in this repo.
+
+**Stop tokens are not sampling knobs.** They are read from the checkpoint's
+`generation_config`, deliberately: `Qwen2.5-7B-Instruct` declares two
+(`<|im_end|>` and `<|endoftext|>`) and the tokenizer's `eos_token_id` is only the
+first, so passing that alone would let a sample emitting the other run to
+`max_new_tokens` and have the overrun glued into the scored answer. The resolved
+set is recorded as `stop_token_ids`.
+
+**The revision is a sha, never a ref.** `revision="main"` is accepted when
+loading but is not what gets recorded: the revision resolves from the loaded
+model's `_commit_hash`, and a value that is not a 40-hex sha is a
+`ProvenanceError`.
 
 **Every row carries its provenance**, so a result can be reproduced or
 contradicted later:
@@ -150,9 +186,9 @@ contradicted later:
 | group | columns |
 | --- | --- |
 | what was asked | `game_id`, `question_id`, `question_set`, `family`, `mode`, `persona`, `reading` |
-| which draw | `sample_index`, `batch_index`, `seed` |
+| which draw | `sample_index`, `batch_index`, `batch_size`, `seed` |
 | what came back | `continuation`, `answer`, `value`, `tag` |
-| how it was sampled | `temperature`, `top_p`, `top_k`, `repetition_penalty`, `max_new_tokens` |
+| how it was sampled | `temperature`, `top_p`, `top_k`, `repetition_penalty`, `max_new_tokens`, `stop_token_ids` |
 | what produced it | `engine`, `engine_version`, `torch_version`, `model_id`, `model_revision`, `dtype` |
 | what it was produced from | `chat_template_sha256`, `question_sha256`, `prompt_sha256`, `repo_commit`, `repo_dirty` |
 
@@ -163,8 +199,8 @@ row and its tag with an empty `value`. It is never a zero.
 
 Determinism: `run` seeds each batch `seed + batch_index`, because one seed for a
 whole run would hand every repeat of a prompt the same draw. Batch composition
-therefore changes which draws a prompt gets, so `batch_size` is part of the
-configuration and `batch_index` is on every row.
+therefore changes which draws a prompt gets, so `batch_size` and `batch_index`
+are both columns.
 
 ## Tests
 
@@ -232,21 +268,29 @@ and should raise the test floor with it.
   highest-confidence tag, `a2_anchor`. Harmless at the $0-100 stakes every
   committed question uses; not harmless at larger ones.
 
-**Nothing in `generate.py` has been run against a model.** Both GPUs were held by
-another tenant, so the whole slice was built and tested CPU-side. What that
-leaves unverified:
+**No production generation has been run.** Both GPUs were held by another tenant,
+so the slice was built and tested CPU-side. Review then exercised the engine path
+against a tiny random Qwen2 with the real cached tokenizer on transformers
+4.52.3: `__init__`, `describe()`, `generate()` and a full `run()` work —
+argument spellings, left padding, `prompt_len` slicing under left padding,
+decode, dtype and seed determinism are all confirmed. What that still leaves
+unverified:
 
-- `HuggingFaceEngine.load` and `.generate` — argument spellings against the
-  installed `transformers` (which is not even installed in the dev environment),
-  whether `GenerationConfig(temperature=0.0, do_sample=False)` warns, left-padded
-  batch decoding, and `model.config._commit_hash` actually carrying the revision.
-- Model-level determinism. `run` is deterministic given a seed — the tests prove
-  the seed reaches the engine and that everything else in the path is
-  reproducible — but that `torch.manual_seed(seed)` yields identical tokens on
-  the same hardware is an assumption. GPU kernels and left padding both make
-  batched HF generation only approximately reproducible across batch sizes.
-- The measured mode effect. The $40-vs-$16 spread that motivates `elicit.py` was
-  measured in an earlier investigation, not re-measured here.
+- Anything requiring the real 7B weights: no number in this repo has been
+  produced by the model these modules target, and `HuggingFaceEngine.load` has
+  never downloaded a checkpoint.
+- Model-level determinism at scale. `run` is deterministic given a seed, and the
+  seed was confirmed to reach the engine — but GPU kernels and left padding make
+  batched HF generation only approximately reproducible across batch sizes,
+  which is why `batch_size` is a recorded column rather than a detail.
+- The mode effect. The $40-vs-$16 spread that motivates `elicit.py` is an
+  unpublished logit-derived in-house check from outside this repo, not
+  re-measured here. The $7-13 shift attributed to inherited sampling settings
+  comes from the task brief and has likewise not been measured here.
+- Whether the reworded Overfishing and Prisoner's Dilemma stubs tokenize as
+  intended against the real tokenizer. They no longer end on a lone space token,
+  which was measured to be the problem; that the replacements are clean is
+  reasoned, not measured.
 
 **A fake tokenizer cannot catch a real chat-template change.** The byte
 assertions pin our own composition — message order, the strict instruction, each
@@ -257,3 +301,9 @@ recorded on every row.
 **The stub wording is measured only for the Dictator.** The other five families'
 stubs follow the same shape against each question's own verb and unit; whether
 they move those games the way the Dictator's move it is unmeasured.
+
+**`with_answer` is a string seam, not a token seam.** The prompt's tokens are not
+guaranteed to be a prefix of the continued string's tokens — measured, a stub
+ending in a space plus `"C"` merges into a single `" C"`. A logits pass has to
+check prefix stability per candidate or work from an offset mapping, and report
+the candidates where it fails. `answer_char_offset` is a character index.

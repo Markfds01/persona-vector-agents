@@ -3,7 +3,9 @@
 Not collected by pytest: it is a helper module, not a test module.
 """
 
+import contextlib
 import random
+import types
 
 from audit.generate import EngineDescription
 
@@ -62,6 +64,7 @@ FAKE_ENGINE_DESCRIPTION = EngineDescription(
     model_id="fake/model",
     model_revision="0" * 40,
     dtype="torch.float32",
+    stop_token_ids=(151645, 151643),
 )
 
 
@@ -99,3 +102,96 @@ class SeededEngine:
     def generate(self, prompts, sampling, seed):
         rng = random.Random(seed)
         return ["%d to Agent 2." % rng.randint(0, 100) for _ in prompts]
+
+
+# --- enough of torch/transformers to pin what the HF engine calls --------------
+# The engine path itself was exercised against a real tiny model during review;
+# these fakes keep that contract asserted in a suite with neither installed.
+
+class FakeGenerationConfig:
+    """Records the fields the engine builds it from."""
+
+    def __init__(self, **fields):
+        self.fields = dict(fields)
+
+
+def fake_transformers(version="4.52.3"):
+    module = types.ModuleType("transformers")
+    module.__version__ = version
+    module.GenerationConfig = FakeGenerationConfig
+    return module
+
+
+def fake_torch(version="2.6.0"):
+    module = types.ModuleType("torch")
+    module.__version__ = version
+    module.seeds = []
+    module.manual_seed = module.seeds.append
+    module.no_grad = contextlib.nullcontext
+    return module
+
+
+class FakeTensor:
+    """A batch of id rows, with the two operations the engine performs on one."""
+
+    def __init__(self, rows):
+        self.rows = [list(row) for row in rows]
+
+    @property
+    def shape(self):
+        return (len(self.rows), len(self.rows[0]) if self.rows else 0)
+
+    def to(self, _device):
+        return self
+
+    def __iter__(self):
+        return iter(self.rows)
+
+
+class FakeHfTokenizer:
+    """One id per character, padded on whichever side it is asked for."""
+
+    chat_template = "{# fake: engine-path tokenizer #}"
+
+    def __init__(self, pad_token_id=151643, eos_token_id=151645):
+        self.pad_token_id = pad_token_id
+        self.eos_token_id = eos_token_id
+        self.padding_side = "right"
+        #: the padding side in force at each call — the engine must borrow "left"
+        self.padding_sides_seen = []
+        self.add_special_tokens_seen = []
+
+    def __call__(self, prompts, return_tensors=None, padding=None, add_special_tokens=None):
+        self.padding_sides_seen.append(self.padding_side)
+        self.add_special_tokens_seen.append(add_special_tokens)
+        width = max(len(prompt) for prompt in prompts)
+        rows = []
+        for prompt in prompts:
+            ids = [ord(character) for character in prompt]
+            pad = [self.pad_token_id] * (width - len(ids))
+            rows.append(pad + ids if self.padding_side == "left" else ids + pad)
+        mask = [[1] * width for _ in prompts]
+        return {"input_ids": FakeTensor(rows), "attention_mask": FakeTensor(mask)}
+
+    def decode(self, ids, skip_special_tokens=False):
+        return "".join(chr(token) for token in ids if token < 0x110000)
+
+
+class FakeCausalModel:
+    """Appends a fixed continuation to every row and records its generate kwargs."""
+
+    #: the ids the fake always appends, decoding to "42"
+    CONTINUATION = (ord("4"), ord("2"))
+
+    def __init__(self, commit_hash="a" * 40, eos_token_id=(151645, 151643),
+                 dtype="torch.bfloat16"):
+        self.config = types.SimpleNamespace(_commit_hash=commit_hash)
+        self.generation_config = types.SimpleNamespace(eos_token_id=list(eos_token_id))
+        self.device = "cpu"
+        self.dtype = dtype
+        #: [kwargs] — one entry per generate() call, minus the batch tensors
+        self.calls = []
+
+    def generate(self, input_ids=None, attention_mask=None, **kwargs):
+        self.calls.append(kwargs)
+        return FakeTensor([list(row) + list(self.CONTINUATION) for row in input_ids])
