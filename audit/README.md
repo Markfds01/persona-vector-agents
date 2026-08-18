@@ -13,8 +13,8 @@ credential validation is lazy — but line 2 sets `os.environ["HF_HOME"] = 'hf_c
 as an import side effect, repointing the HuggingFace cache at a repo-relative
 path for the rest of the process.
 
-This first slice is scorers, answer spaces and the regression suite. Generation,
-logits and steering are not here.
+Two slices are here: scorers and answer spaces, and the elicitation + generation
+path that produces new rows. Logits and steering are not.
 
 ## Layout
 
@@ -23,6 +23,8 @@ logits and steering are not here.
 | `parse.py` | the deterministic scorers |
 | `games.py` | per-game declaration: question source, answer space, which scorer |
 | `paths.py` | the only place that knows where the upstream data files live |
+| `elicit.py` | the exact string the model sees, per (game, elicitation mode) |
+| `generate.py` | one explicit engine, explicit sampling, self-describing result rows |
 | `tests/` | the regression suite, built from committed generations + judge labels |
 
 ## Scorers
@@ -70,6 +72,100 @@ space.readings()      # (('stated', 0-100), ('implied', 0-10))
 score(game, answer, reading="implied")
 ```
 
+## Elicitation
+
+How the answer is asked for is an experimental variable, not an implementation
+detail: the same model on the same Dictator question gives an expectation near
+$40 or near $16 depending only on the mode. So a mode is a named value that
+travels with every row, never a code path someone edits.
+
+| mode | the assistant turn opens with | what changes |
+| --- | --- | --- |
+| `free` | *(nothing)* | the paper's prompt verbatim, answered in prose |
+| `strict` | *(nothing)* | the user turn gains "Respond with only ..., and nothing else." |
+| `stub` | `I will give $` | assistant turn pre-filled with a short opener |
+| `stub_explicit` | `The amount I will give to Agent 2 is $` | opener names recipient and unit |
+
+The two stubs above are the Dictator's. Each family carries its own, because a
+stub that does not fit the question's verb and unit changes the question:
+`I will catch ` / `The number of fish I will catch in the first season is ` for
+Overfishing, `My choice between Cooperate (C) and Defect (D) is ` for the
+Prisoner's Dilemma. Adding a mode means adding a `Mode` to `elicit.MODES`; no
+call site changes.
+
+```python
+from audit.elicit import Persona, mode_names, render
+from audit.games import by_id
+
+prompt = render(by_id("altruism_v3/dictator"), "stub", tokenizer)
+prompt.text            # the full string the model sees, chat template included
+prompt.answer_offset   # where the model's answer begins (the end, by construction)
+prompt.with_answer("40")   # the seam a later logits pass scores through
+prompt.sha256          # recorded on every result row
+
+mode_names()           # ('free', 'strict', 'stub', 'stub_explicit')
+render(game, "free", tokenizer, Persona("pos", 0))   # upstream persona prefix, off by default
+```
+
+`tokenizer` is a parameter, not a download: `render` only needs
+`apply_chat_template(messages, tokenize=False, add_generation_prompt=True) -> str`,
+so `elicit.py` imports and runs with no model, no GPU, no network, and the tests
+assert the rendered bytes against a fake. A stubbed assistant turn is appended
+after the generation prompt rather than passed as an assistant message, because
+the chat template would close that turn with `<|im_end|>`.
+
+## Generation
+
+```python
+from audit.generate import HuggingFaceEngine, Sampling, run, write_rows
+
+engine = HuggingFaceEngine.load("Qwen/Qwen2.5-7B-Instruct", revision="<sha>")
+sampling = Sampling(temperature=1.0, top_p=1.0, top_k=0, repetition_penalty=1.0,
+                    max_new_tokens=600, seed=0)
+rows = run([("altruism_v3/dictator", "free"), ("altruism_v3/dictator", "stub")],
+           engine, sampling, engine.tokenizer, samples_per_prompt=100)
+write_rows("output/dictator.csv", rows)
+```
+
+**One engine, chosen by the caller.** `run` takes the engine as an argument and
+never selects one. Upstream's `eval/eval_persona.py` picks the inference engine
+with `if vector is not None`, so its steered runs go through HF `generate()` and
+its unsteered runs through vLLM with different sampling configuration — its
+&beta;=0 point is not comparable with its own steered points. HF is the engine
+here because steering needs forward hooks, which vLLM cannot give us.
+
+**Nothing defaults.** All six of `temperature`, `top_p`, `top_k`,
+`repetition_penalty`, `max_new_tokens`, `seed` are required, and the engine
+builds a fresh `GenerationConfig` from them so the model's own
+`generation_config.json` contributes nothing. `Qwen2.5-7B-Instruct` ships
+`temperature: 0.7, top_p: 0.8, top_k: 20, repetition_penalty: 1.05` there;
+inheriting those moves a game's mean by $7-13. `Sampling.from_mapping` names
+everything missing or unrecognised. `generate.PRESETS` is where a named preset
+goes once a setting is known to reproduce the authors' numbers — it is empty
+because none is.
+
+**Every row carries its provenance**, so a result can be reproduced or
+contradicted later:
+
+| group | columns |
+| --- | --- |
+| what was asked | `game_id`, `question_id`, `question_set`, `family`, `mode`, `persona`, `reading` |
+| which draw | `sample_index`, `batch_index`, `seed` |
+| what came back | `continuation`, `answer`, `value`, `tag` |
+| how it was sampled | `temperature`, `top_p`, `top_k`, `repetition_penalty`, `max_new_tokens` |
+| what produced it | `engine`, `engine_version`, `torch_version`, `model_id`, `model_revision`, `dtype` |
+| what it was produced from | `chat_template_sha256`, `question_sha256`, `prompt_sha256`, `repo_commit`, `repo_dirty` |
+
+`answer` is the model's whole assistant turn — the mode's prefill plus what the
+model wrote — and is what gets scored; `continuation` is what the model alone
+produced. Scoring goes through `games.score`, so an unresolved answer keeps its
+row and its tag with an empty `value`. It is never a zero.
+
+Determinism: `run` seeds each batch `seed + batch_index`, because one seed for a
+whole run would hand every repeat of a prompt the same draw. Batch composition
+therefore changes which draws a prompt gets, so `batch_size` is part of the
+configuration and `batch_index` is on every row.
+
 ## Tests
 
 ```bash
@@ -77,7 +173,10 @@ python -m pytest audit/tests -q
 ```
 
 Runs in about five seconds. No keys, no network, no GPU — verified by running it
-with the keys unset and outbound connections blocked.
+with the keys unset and outbound connections blocked. `elicit.py` and
+`generate.py` are covered without a model at all: the elicitation tests render
+against a fake tokenizer and assert the bytes, and the generation tests drive
+`run` with a fake engine.
 
 The repo ships generations with the paid judge's value beside each one, so the
 suite measures agreement rather than asserting it. It consumes 2,420 labelled
@@ -132,3 +231,29 @@ and should raise the test floor with it.
   four-digit figure truncates: `"$1000 to Agent 2"` resolves to 100.0 with the
   highest-confidence tag, `a2_anchor`. Harmless at the $0-100 stakes every
   committed question uses; not harmless at larger ones.
+
+**Nothing in `generate.py` has been run against a model.** Both GPUs were held by
+another tenant, so the whole slice was built and tested CPU-side. What that
+leaves unverified:
+
+- `HuggingFaceEngine.load` and `.generate` — argument spellings against the
+  installed `transformers` (which is not even installed in the dev environment),
+  whether `GenerationConfig(temperature=0.0, do_sample=False)` warns, left-padded
+  batch decoding, and `model.config._commit_hash` actually carrying the revision.
+- Model-level determinism. `run` is deterministic given a seed — the tests prove
+  the seed reaches the engine and that everything else in the path is
+  reproducible — but that `torch.manual_seed(seed)` yields identical tokens on
+  the same hardware is an assumption. GPU kernels and left padding both make
+  batched HF generation only approximately reproducible across batch sizes.
+- The measured mode effect. The $40-vs-$16 spread that motivates `elicit.py` was
+  measured in an earlier investigation, not re-measured here.
+
+**A fake tokenizer cannot catch a real chat-template change.** The byte
+assertions pin our own composition — message order, the strict instruction, each
+stub, the persona system turn — against a transcription of Qwen2.5-Instruct's
+template. An upstream template edit is caught instead by `chat_template_sha256`,
+recorded on every row.
+
+**The stub wording is measured only for the Dictator.** The other five families'
+stubs follow the same shape against each question's own verb and unit; whether
+they move those games the way the Dictator's move it is unmeasured.
