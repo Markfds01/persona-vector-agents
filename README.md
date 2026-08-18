@@ -2,6 +2,8 @@
 
 This code replicates results for our CS 2360R project.
 
+Paper: "Persona Vectors in Games: Measuring and Steering Strategies via Activation Vectors" - [local PDF](docs/persona-vectors-in-games-2603.21398.pdf), [arXiv:2603.21398](https://arxiv.org/abs/2603.21398).
+
 
 ### Trait artifacts
 
