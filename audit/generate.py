@@ -2,10 +2,16 @@
 
 The engine and every sampling parameter are the caller's explicit choice. Nothing
 here picks either from an incidental condition: upstream's `eval/eval_persona.py`
-selects the inference engine with `if vector is not None`, so its steered runs go
-through HF `generate()` and its unsteered runs through vLLM, with different
-sampling configuration — its beta=0 point is not comparable with its own steered
-points. One path, always.
+selects the inference engine with `if vector is not None` (line 269), so its
+steered runs go through HF `generate()` and its unsteered runs through vLLM, with
+different sampling configuration — its beta=0 point is not comparable with its
+own steered points. At coef 0 it takes the vLLM branch and sets `vector = None`
+(lines 347-354), which makes the HF branch unreachable there: their published
+baseline is a vLLM number. One path, always.
+
+Forensics measured that HF alone reproduces that baseline, so this module needs
+no vLLM arm — see `NEUTRAL`, and see `run` for how much of "reproduces" is
+resolvable at a given sample size.
 
 Every row carries the whole configuration that produced it, because a result
 whose sampling settings, model revision and code commit are unrecorded cannot be
@@ -43,9 +49,26 @@ class ProvenanceError(RuntimeError):
     """Something a result row must record could not be determined."""
 
 
+def _require_number(name, value, low=None, high=None, exclusive_low=False):
+    if isinstance(value, bool) or not isinstance(value, (int, float)):
+        raise ConfigError("%s must be a number, got %r" % (name, value))
+    if low is not None and (value <= low if exclusive_low else value < low):
+        raise ConfigError("%s must be %s %s, got %r"
+                          % (name, ">" if exclusive_low else ">=", low, value))
+    if high is not None and value > high:
+        raise ConfigError("%s must be <= %s, got %r" % (name, high, value))
+
+
+def _require_int(name, value, low=None):
+    if isinstance(value, bool) or not isinstance(value, int):
+        raise ConfigError("%s must be an integer, got %r" % (name, value))
+    if low is not None and value < low:
+        raise ConfigError("%s must be >= %d, got %r" % (name, low, value))
+
+
 #: Every knob that moves a number. All required, none defaulted.
-SAMPLING_FIELDS = ("temperature", "top_p", "top_k", "repetition_penalty",
-                   "max_new_tokens", "seed")
+SAMPLING_FIELDS = ("temperature", "top_p", "top_k", "min_p", "repetition_penalty",
+                   "max_new_tokens", "min_new_tokens", "seed")
 
 
 @dataclass(frozen=True)
@@ -63,18 +86,29 @@ class Sampling:
     temperature: float
     top_p: float
     top_k: int
+    min_p: float
     repetition_penalty: float
     max_new_tokens: int
+    min_new_tokens: int
     seed: int
 
     def __post_init__(self):
         _require_number("temperature", self.temperature, low=0.0)
         _require_number("top_p", self.top_p, low=0.0, high=1.0, exclusive_low=True)
         _require_int("top_k", self.top_k, low=0)
+        _require_number("min_p", self.min_p, low=0.0, high=1.0)
         _require_number("repetition_penalty", self.repetition_penalty, low=0.0,
                         exclusive_low=True)
         _require_int("max_new_tokens", self.max_new_tokens, low=1)
+        _require_int("min_new_tokens", self.min_new_tokens, low=0)
         _require_int("seed", self.seed, low=0)
+        if self.min_new_tokens > self.max_new_tokens:
+            raise ConfigError("min_new_tokens %d exceeds max_new_tokens %d"
+                              % (self.min_new_tokens, self.max_new_tokens))
+
+    def with_seed(self, seed: int) -> "Sampling":
+        """The same configuration at another seed — what a preset is varied by."""
+        return dataclasses.replace(self, seed=seed)
 
     @classmethod
     def from_mapping(cls, mapping: Dict) -> "Sampling":
@@ -88,14 +122,21 @@ class Sampling:
         return cls(**{name: mapping[name] for name in SAMPLING_FIELDS})
 
     def generation_kwargs(self) -> Dict:
-        """Exactly what the engine passes to `generate()` — nothing else is inherited."""
+        """Exactly what the engine passes to `generate()` — nothing else is inherited.
+
+        `do_sample` is derived rather than stored: `temperature=0` means greedy,
+        as it does in vLLM. Storing the two separately would let a caller ask for
+        sampling at temperature zero, which is not a configuration.
+        """
         return {
             "do_sample": self.temperature > 0,
             "temperature": self.temperature,
             "top_p": self.top_p,
             "top_k": self.top_k,
+            "min_p": self.min_p,
             "repetition_penalty": self.repetition_penalty,
             "max_new_tokens": self.max_new_tokens,
+            "min_new_tokens": self.min_new_tokens,
         }
 
 
@@ -137,18 +178,87 @@ def generation_config_fields(sampling: "Sampling", pad_token_id: int,
     return fields
 
 
-#: Named sampling presets. Empty on purpose: no setting is known to reproduce the
-#: authors' published numbers yet. When one is, it is declared here — one place,
-#: no call site.
-PRESETS = {}
+@dataclass(frozen=True)
+class Preset:
+    """A named, complete run configuration: what to sample, and what to load.
+
+    A preset pins everything measured to move a result, which is more than the
+    sampling knobs. It deliberately does not pin the seed — vary it per run with
+    `Sampling.with_seed` — or `samples_per_prompt`, which the caller passes;
+    `recommended_samples_per_prompt` says what the operator standardised on.
+    """
+
+    name: str
+    sampling: Sampling
+    dtype: str
+    attn_implementation: str
+    recommended_samples_per_prompt: int
+    rationale: str
+
+    def check_engine(self, description: "EngineDescription") -> None:
+        """Raise unless the loaded model matches the pins.
+
+        Asking for bf16 + sdpa and silently getting something else is a wrong
+        result, not a warning.
+        """
+        mismatches = []
+        if _dtype_name(description.dtype) != _dtype_name(self.dtype):
+            mismatches.append("dtype is %s, preset pins %s"
+                              % (description.dtype, self.dtype))
+        if description.attn_implementation != self.attn_implementation:
+            mismatches.append("attn_implementation is %s, preset pins %s"
+                              % (description.attn_implementation, self.attn_implementation))
+        if mismatches:
+            raise ConfigError("engine does not match preset %r: %s"
+                              % (self.name, "; ".join(mismatches)))
 
 
-def preset(name: str) -> Sampling:
+#: The one measured configuration. "neutral" because no knob in it biases the
+#: answer distribution: each sits at the value that leaves the model's own
+#: distribution alone (`top_p` 1.0, `top_k` 0, `min_p` 0.0, no repetition penalty).
+#:
+#: It is semantically identical to the vLLM `SamplingParams` that produced the
+#: authors' published baseline — their coef 0 path IS vLLM, so that baseline is a
+#: vLLM number — and, unlike theirs, it is internally consistent across beta by
+#: construction, because one engine serves every point. Forensics measured that
+#: HF alone reproduces that baseline; no vLLM arm is needed. "Reproduces" is not
+#: "matches exactly": see `run` on what a given sample size can resolve.
+#:
+#: `attn_implementation` is pinned because it is not cosmetic. Swapping only
+#: sdpa -> eager moved the Overfishing mode from 50 to 55 (KS D=0.815), and a
+#: forward-pass probe put the two kernels 3.4 logits apart with no padding
+#: involved — enough to flip the first token's argmax. It is therefore recorded
+#: on every row, exactly like a sampling knob. The pinned value is the one the
+#: rest of this preset was measured under.
+NEUTRAL = Preset(
+    name="neutral",
+    sampling=Sampling(temperature=1.0, top_p=1.0, top_k=0, min_p=0.0,
+                      repetition_penalty=1.0, max_new_tokens=1000, min_new_tokens=1,
+                      seed=0),
+    dtype="bfloat16",
+    attn_implementation="sdpa",
+    recommended_samples_per_prompt=200,
+    rationale=("semantically identical to the vLLM SamplingParams behind the authors' "
+               "published baseline, and internally consistent across beta because one "
+               "engine serves every point"),
+)
+
+#: Named presets, declared here and nowhere else. There is deliberately no
+#: `as_published` preset: nobody has asked for one, and it would encode a
+#: configuration we would then have to keep true.
+PRESETS = {NEUTRAL.name: NEUTRAL}
+
+
+def preset(name: str) -> Preset:
     try:
         return PRESETS[name]
     except KeyError:
-        raise ConfigError("no sampling preset %r; declared presets: %s"
-                          % (name, sorted(PRESETS)))
+        raise ConfigError("no preset %r; declared presets: %s" % (name, sorted(PRESETS)))
+
+
+def _dtype_name(value: str) -> str:
+    """`torch.bfloat16` and `bfloat16` name the same dtype."""
+    return value.split(".")[-1]
 
 
 @dataclass(frozen=True)
@@ -161,6 +271,7 @@ class EngineDescription:
     model_id: str
     model_revision: str
     dtype: str
+    attn_implementation: str
     stop_token_ids: Tuple[int, ...]
 
     def __post_init__(self):
@@ -211,8 +322,10 @@ class Row:
     temperature: float
     top_p: float
     top_k: int
+    min_p: float
     repetition_penalty: float
     max_new_tokens: int
+    min_new_tokens: int
     stop_token_ids: str
     engine: str
     engine_version: str
@@ -220,6 +333,7 @@ class Row:
     model_id: str
     model_revision: str
     dtype: str
+    attn_implementation: str
     chat_template_sha256: str
     question_sha256: str
     prompt_sha256: str
@@ -264,6 +378,12 @@ def run(pairs: Iterable[Tuple[str, str]], engine, sampling: Sampling, tokenizer,
 
     `engine` is the caller's; this function never chooses or substitutes one.
     Deterministic given `sampling.seed`, `batch_size` and the task order.
+
+    `samples_per_prompt` has no default, and should not get one. Measured: n=50
+    resolves nothing below $13-16 per game — two runs of a byte-identical
+    configuration differ by $6-11 on their own. The standard is n=200 (SE of a
+    mean $1.44, typical run-to-run gap $1.63, 95% of gaps under $4.00 on the
+    Dictator), carried as `preset(name).recommended_samples_per_prompt`.
     """
     if batch_size < 1:
         raise ConfigError("batch_size must be >= 1, got %d" % batch_size)
@@ -325,7 +445,8 @@ class HuggingFaceEngine:
     name = "huggingface"
 
     def __init__(self, model, tokenizer, model_id: str, model_revision: Optional[str] = None,
-                 stop_token_ids: Optional[Sequence[int]] = None):
+                 stop_token_ids: Optional[Sequence[int]] = None,
+                 attn_implementation: Optional[str] = None):
         import torch
         import transformers
 
@@ -335,6 +456,7 @@ class HuggingFaceEngine:
         self._tokenizer = tokenizer
         self._model_id = model_id
         self._model_revision = resolve_revision(model, model_revision)
+        self._attn_implementation = resolve_attn_implementation(model, attn_implementation)
         self._stop_token_ids = (tuple(int(token) for token in stop_token_ids)
                                 if stop_token_ids is not None
                                 else model_stop_tokens(model, tokenizer))
@@ -372,6 +494,7 @@ class HuggingFaceEngine:
             model_id=self._model_id,
             model_revision=self._model_revision,
             dtype=str(self._model.dtype),
+            attn_implementation=self._attn_implementation,
             stop_token_ids=self._stop_token_ids,
         )
 
@@ -457,8 +580,10 @@ def _row(task: Task, continuation: str, batch_index: int, batch_size: int,
         temperature=sampling.temperature,
         top_p=sampling.top_p,
         top_k=sampling.top_k,
+        min_p=sampling.min_p,
         repetition_penalty=sampling.repetition_penalty,
         max_new_tokens=sampling.max_new_tokens,
+        min_new_tokens=sampling.min_new_tokens,
         stop_token_ids="|".join(str(token) for token in engine.stop_token_ids),
         engine=engine.engine,
         engine_version=engine.engine_version,
@@ -466,6 +591,7 @@ def _row(task: Task, continuation: str, batch_index: int, batch_size: int,
         model_id=engine.model_id,
         model_revision=engine.model_revision,
         dtype=engine.dtype,
+        attn_implementation=engine.attn_implementation,
         chat_template_sha256=record.chat_template_sha256,
         question_sha256=game.question_sha256,
         prompt_sha256=task.prompt.sha256,
@@ -500,6 +626,22 @@ def resolve_revision(model, requested: Optional[str] = None) -> str:
         "model_revision=<40-hex sha>" % (resolved, requested))
 
 
+def resolve_attn_implementation(model, requested: Optional[str] = None) -> str:
+    """Which attention kernel the loaded model actually uses.
+
+    Read from the model, so the row records what ran rather than what was asked
+    for. Not cosmetic and not incidental — see `NEUTRAL`.
+    """
+    resolved = getattr(getattr(model, "config", None), "_attn_implementation", None)
+    if isinstance(resolved, str) and resolved:
+        return resolved
+    if isinstance(requested, str) and requested:
+        return requested
+    raise ProvenanceError(
+        "cannot tell which attention implementation the model loaded with; pass "
+        "attn_implementation= explicitly — the choice moves results (see NEUTRAL)")
+
+
 def model_stop_tokens(model, tokenizer) -> Tuple[int, ...]:
     """The checkpoint's full stop set.
 
@@ -531,19 +673,3 @@ def _git(*args: str) -> str:
                               % (" ".join(args), REPO_ROOT, result.stderr.strip()))
     return result.stdout.strip()
 
-
-def _require_number(name, value, low=None, high=None, exclusive_low=False):
-    if isinstance(value, bool) or not isinstance(value, (int, float)):
-        raise ConfigError("%s must be a number, got %r" % (name, value))
-    if low is not None and (value <= low if exclusive_low else value < low):
-        raise ConfigError("%s must be %s %s, got %r"
-                          % (name, ">" if exclusive_low else ">=", low, value))
-    if high is not None and value > high:
-        raise ConfigError("%s must be <= %s, got %r" % (name, high, value))
-
-
-def _require_int(name, value, low=None):
-    if isinstance(value, bool) or not isinstance(value, int):
-        raise ConfigError("%s must be an integer, got %r" % (name, value))
-    if low is not None and value < low:
-        raise ConfigError("%s must be >= %d, got %r" % (name, low, value))

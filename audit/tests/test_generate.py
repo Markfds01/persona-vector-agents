@@ -6,6 +6,7 @@ carries what it takes to reproduce it, and that an unparsed answer survives.
 """
 
 import csv
+import dataclasses
 import re
 import subprocess
 import sys
@@ -24,8 +25,9 @@ from audit.tests.fakes import (FAKE_ENGINE_DESCRIPTION, QwenLikeTokenizer, Scrip
 DICTATOR = "altruism_v3/dictator"
 TRUST = "altruism_v3/trust"
 
-VALID_SAMPLING = dict(temperature=1.0, top_p=1.0, top_k=0, repetition_penalty=1.0,
-                      max_new_tokens=64, seed=7)
+VALID_SAMPLING = dict(temperature=1.0, top_p=1.0, top_k=0, min_p=0.0,
+                      repetition_penalty=1.0, max_new_tokens=64, min_new_tokens=1,
+                      seed=7)
 
 
 @pytest.fixture
@@ -51,8 +53,8 @@ def test_a_missing_sampling_parameter_is_an_error(omitted):
 
 def test_an_unrecognised_sampling_parameter_is_an_error():
     with pytest.raises(ConfigError) as excinfo:
-        Sampling.from_mapping(dict(VALID_SAMPLING, min_p=0.1))
-    assert "min_p" in str(excinfo.value)
+        Sampling.from_mapping(dict(VALID_SAMPLING, typical_p=0.9))
+    assert "typical_p" in str(excinfo.value)
 
 
 @pytest.mark.parametrize("omitted", generate.SAMPLING_FIELDS)
@@ -69,6 +71,10 @@ def test_sampling_cannot_be_constructed_partially(omitted):
     ("top_p", 1.5),
     ("top_k", -1),
     ("top_k", 0.5),
+    ("min_p", -0.1),
+    ("min_p", 1.1),
+    ("min_new_tokens", -1),
+    ("min_new_tokens", 65),
     ("repetition_penalty", 0.0),
     ("max_new_tokens", 0),
     ("max_new_tokens", True),
@@ -81,26 +87,71 @@ def test_an_out_of_range_sampling_parameter_is_rejected(field, value):
 
 def test_generation_kwargs_state_every_knob(sampling):
     kwargs = sampling.generation_kwargs()
-    assert set(kwargs) == {"do_sample", "temperature", "top_p", "top_k",
-                           "repetition_penalty", "max_new_tokens"}
+    assert set(kwargs) == {"do_sample", "temperature", "top_p", "top_k", "min_p",
+                           "repetition_penalty", "max_new_tokens", "min_new_tokens"}
     assert kwargs["do_sample"] is True
     assert Sampling(**dict(VALID_SAMPLING, temperature=0.0)).generation_kwargs()[
         "do_sample"] is False
 
 
-def test_presets_are_declared_in_one_place_and_none_is_recommended_yet():
-    assert generate.PRESETS == {}
-    with pytest.raises(ConfigError):
-        generate.preset("paper")
+def test_a_seed_is_varied_without_disturbing_the_rest(sampling):
+    assert sampling.with_seed(11) == Sampling(**dict(VALID_SAMPLING, seed=11))
+    assert sampling.seed == 7
+
+
+# --- the measured preset --------------------------------------------------------
+
+def test_the_neutral_preset_is_the_measured_configuration():
+    """Every knob at the value that leaves the model's own distribution alone."""
+    chosen = generate.preset("neutral")
+    assert chosen.sampling.generation_kwargs() == {
+        "do_sample": True, "temperature": 1.0, "top_p": 1.0, "top_k": 0, "min_p": 0.0,
+        "repetition_penalty": 1.0, "max_new_tokens": 1000, "min_new_tokens": 1}
+    assert chosen.dtype == "bfloat16"
+    assert chosen.attn_implementation == "sdpa"
+    assert chosen.recommended_samples_per_prompt == 200
+
+
+def test_the_preset_does_not_pin_a_seed():
+    """A preset is a configuration; the seed is per run."""
+    varied = generate.preset("neutral").sampling.with_seed(99)
+    assert varied.seed == 99
+    assert generate.preset("neutral").sampling.seed == 0
+
+
+def test_there_is_no_as_published_preset():
+    """It would encode a configuration nobody asked for and we would owe upkeep on."""
+    assert sorted(generate.PRESETS) == ["neutral"]
+    with pytest.raises(ConfigError) as excinfo:
+        generate.preset("as_published")
+    assert "neutral" in str(excinfo.value)
+
+
+def test_a_preset_refuses_an_engine_that_does_not_match_its_pins():
+    chosen = generate.preset("neutral")
+    matching = dataclasses.replace(FAKE_ENGINE_DESCRIPTION, dtype="torch.bfloat16",
+                                   attn_implementation="sdpa")
+    chosen.check_engine(matching)   # does not raise
+
+    for wrong in (dict(dtype="torch.float16"), dict(attn_implementation="eager")):
+        with pytest.raises(ConfigError):
+            chosen.check_engine(dataclasses.replace(matching, **wrong))
+
+
+def test_the_dtype_pin_ignores_the_torch_prefix():
+    chosen = generate.preset("neutral")
+    chosen.check_engine(dataclasses.replace(
+        FAKE_ENGINE_DESCRIPTION, dtype="bfloat16", attn_implementation="sdpa"))
 
 
 # --- provenance ----------------------------------------------------------------
 
-@pytest.mark.parametrize("blank", ["engine", "model_revision", "dtype", "stop_token_ids"])
+@pytest.mark.parametrize("blank", ["engine", "model_revision", "dtype",
+                                   "attn_implementation", "stop_token_ids"])
 def test_an_incomplete_engine_description_is_refused(blank):
     fields = dict(engine="hf", engine_version="4.52.3", torch_version="2.6.0",
                   model_id="qwen", model_revision="a" * 40, dtype="torch.bfloat16",
-                  stop_token_ids=(151645,))
+                  attn_implementation="sdpa", stop_token_ids=(151645,))
     fields[blank] = () if blank == "stop_token_ids" else ""
     with pytest.raises(ProvenanceError):
         EngineDescription(**fields)
@@ -133,9 +184,10 @@ def test_the_row_schema_is_pinned():
         "game_id", "question_id", "question_set", "family", "mode", "persona", "reading",
         "sample_index", "batch_index", "batch_size", "seed",
         "continuation", "answer", "value", "tag",
-        "temperature", "top_p", "top_k", "repetition_penalty", "max_new_tokens",
-        "stop_token_ids", "engine", "engine_version", "torch_version", "model_id",
-        "model_revision", "dtype", "chat_template_sha256", "question_sha256",
+        "temperature", "top_p", "top_k", "min_p", "repetition_penalty",
+        "max_new_tokens", "min_new_tokens", "stop_token_ids",
+        "engine", "engine_version", "torch_version", "model_id", "model_revision",
+        "dtype", "attn_implementation", "chat_template_sha256", "question_sha256",
         "prompt_sha256", "repo_commit", "repo_dirty")
 
 
@@ -150,8 +202,9 @@ def test_every_row_carries_its_whole_provenance(tokenizer, sampling):
     assert row.mode == "free" and row.persona == "" and row.reading == "stated"
     assert row.seed == 7 and row.sample_index == 0 and row.batch_index == 0
     assert row.batch_size == 8 and row.stop_token_ids == "151645|151643"
-    assert (row.temperature, row.top_p, row.top_k) == (1.0, 1.0, 0)
-    assert (row.repetition_penalty, row.max_new_tokens) == (1.0, 64)
+    assert (row.temperature, row.top_p, row.top_k, row.min_p) == (1.0, 1.0, 0, 0.0)
+    assert (row.repetition_penalty, row.max_new_tokens, row.min_new_tokens) == (1.0, 64, 1)
+    assert row.attn_implementation == "sdpa"
     assert row.engine == "fake" and row.engine_version == "0.0.0"
     assert row.torch_version == "0.0.0" and row.dtype == "torch.float32"
     assert row.model_id == "fake/model" and row.model_revision == "0" * 40
@@ -162,7 +215,8 @@ def test_every_row_carries_its_whole_provenance(tokenizer, sampling):
     assert re.fullmatch(r"[0-9a-f]{40}", row.repo_commit)
     # nothing a reproduction needs may be blank
     for name in ROW_FIELDS:
-        if name not in ("persona", "value", "repo_dirty", "sample_index", "batch_index"):
+        if name not in ("persona", "value", "repo_dirty", "sample_index", "batch_index",
+                        "min_p", "top_k"):
             # batch_size and the numeric knobs are non-zero above; the rest are text
             assert getattr(row, name) != "", name
 
@@ -358,8 +412,8 @@ def test_the_engine_tells_transformers_not_to_apply_model_defaults(hf, sampling)
     call = model.calls[0]
     assert call["use_model_defaults"] is False
     assert call["generation_config"].fields == {
-        "do_sample": True, "temperature": 1.0, "top_p": 1.0, "top_k": 0,
-        "repetition_penalty": 1.0, "max_new_tokens": 64,
+        "do_sample": True, "temperature": 1.0, "top_p": 1.0, "top_k": 0, "min_p": 0.0,
+        "repetition_penalty": 1.0, "max_new_tokens": 64, "min_new_tokens": 1,
         "pad_token_id": 151643, "eos_token_id": [151645, 151643]}
     assert fake_torch.seeds == [3]
 
@@ -409,7 +463,31 @@ def test_the_engine_describes_the_full_stop_set(hf):
     assert description.stop_token_ids == (151645, 151643)
     assert description.model_revision == "a" * 40
     assert description.dtype == "torch.bfloat16"
+    assert description.attn_implementation == "sdpa"
     assert description.engine_version == "4.52.3"
+    generate.preset("neutral").check_engine(description)
+
+
+def test_the_engine_reports_the_kernel_the_model_actually_loaded(hf):
+    """sdpa vs eager moved the Overfishing mode 50 -> 55; it is not cosmetic."""
+    engine, _model, _tokenizer, _torch = hf(model=fakes.FakeCausalModel(
+        attn_implementation="eager"))
+    assert engine.describe().attn_implementation == "eager"
+    with pytest.raises(ConfigError):
+        generate.preset("neutral").check_engine(engine.describe())
+
+
+def test_the_kernel_is_read_from_the_model_not_the_request():
+    model = fakes.FakeCausalModel(attn_implementation="flash_attention_2")
+    assert generate.resolve_attn_implementation(model, "sdpa") == "flash_attention_2"
+
+
+def test_a_model_that_will_not_say_which_kernel_it_uses():
+    model = fakes.FakeCausalModel()
+    model.config._attn_implementation = None
+    assert generate.resolve_attn_implementation(model, "sdpa") == "sdpa"
+    with pytest.raises(ProvenanceError):
+        generate.resolve_attn_implementation(model)
 
 
 # --- stop tokens and revision, as pure functions --------------------------------

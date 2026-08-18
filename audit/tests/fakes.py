@@ -64,6 +64,7 @@ FAKE_ENGINE_DESCRIPTION = EngineDescription(
     model_id="fake/model",
     model_revision="0" * 40,
     dtype="torch.float32",
+    attn_implementation="sdpa",
     stop_token_ids=(151645, 151643),
 )
 
@@ -184,8 +185,9 @@ class FakeCausalModel:
     CONTINUATION = (ord("4"), ord("2"))
 
     def __init__(self, commit_hash="a" * 40, eos_token_id=(151645, 151643),
-                 dtype="torch.bfloat16"):
-        self.config = types.SimpleNamespace(_commit_hash=commit_hash)
+                 dtype="torch.bfloat16", attn_implementation="sdpa"):
+        self.config = types.SimpleNamespace(_commit_hash=commit_hash,
+                                            _attn_implementation=attn_implementation)
         self.generation_config = types.SimpleNamespace(eos_token_id=list(eos_token_id))
         self.device = "cpu"
         self.dtype = dtype

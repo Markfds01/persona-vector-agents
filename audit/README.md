@@ -125,28 +125,72 @@ the chat template would close that turn with `<|im_end|>`.
 ## Generation
 
 ```python
-from audit.generate import HuggingFaceEngine, Sampling, run, write_rows
+from audit.generate import HuggingFaceEngine, preset, run, write_rows
 
-engine = HuggingFaceEngine.load("Qwen/Qwen2.5-7B-Instruct", revision="<sha>")
-sampling = Sampling(temperature=1.0, top_p=1.0, top_k=0, repetition_penalty=1.0,
-                    max_new_tokens=600, seed=0)
+neutral = preset("neutral")
+engine = HuggingFaceEngine.load("Qwen/Qwen2.5-7B-Instruct", revision="<sha>",
+                                attn_implementation=neutral.attn_implementation,
+                                torch_dtype=neutral.dtype)   # dtype kwarg: your version's spelling
+neutral.check_engine(engine.describe())    # the pins are pins, not suggestions
+
 rows = run([("altruism_v3/dictator", "free"), ("altruism_v3/dictator", "stub")],
-           engine, sampling, engine.tokenizer, samples_per_prompt=100)
+           engine, neutral.sampling.with_seed(0), engine.tokenizer,
+           samples_per_prompt=neutral.recommended_samples_per_prompt)
 write_rows("output/dictator.csv", rows)
 ```
 
 **One engine, chosen by the caller.** `run` takes the engine as an argument and
 never selects one. Upstream's `eval/eval_persona.py` picks the inference engine
-with `if vector is not None`, so its steered runs go through HF `generate()` and
-its unsteered runs through vLLM with different sampling configuration — its
-&beta;=0 point is not comparable with its own steered points. HF is the engine
-here because steering needs forward hooks, which vLLM cannot give us.
+with `if vector is not None` (line 269), so its steered runs go through HF
+`generate()` and its unsteered runs through vLLM with different sampling
+configuration — its &beta;=0 point is not comparable with its own steered
+points. At coef 0 it takes the vLLM branch and sets `vector = None` (lines
+347-354), which makes the HF branch unreachable there: **their published
+baseline is a vLLM number.** HF is the engine here because steering needs
+forward hooks, which vLLM cannot give us.
 
-**Nothing defaults.** All six of `temperature`, `top_p`, `top_k`,
-`repetition_penalty`, `max_new_tokens`, `seed` are required.
-`Sampling.from_mapping` names everything missing or unrecognised.
-`generate.PRESETS` is where a named preset goes once a setting is known to
-reproduce the authors' numbers — it is empty because none is.
+**Nothing defaults.** All eight of `temperature`, `top_p`, `top_k`, `min_p`,
+`repetition_penalty`, `max_new_tokens`, `min_new_tokens`, `seed` are required.
+`Sampling.from_mapping` names everything missing or unrecognised. `do_sample` is
+derived rather than stored — `temperature=0` means greedy, as in vLLM — so
+"sample at temperature zero" is not expressible.
+
+**One preset: `neutral`.** It is the configuration the engine forensics measured,
+and it is the only one declared:
+
+| | |
+| --- | --- |
+| sampling | `temperature 1.0`, `top_p 1.0`, `top_k 0`, `min_p 0.0`, `repetition_penalty 1.0`, `max_new_tokens 1000`, `min_new_tokens 1` (so `do_sample=True`) |
+| load | `bfloat16`, `attn_implementation="sdpa"`, left padding, a pad token |
+| n | `recommended_samples_per_prompt = 200` |
+
+"Neutral" because no knob in it biases the answer distribution: each sits where
+it leaves the model's own distribution alone. It is semantically identical to the
+vLLM `SamplingParams` behind the authors' published baseline, and unlike theirs
+it is internally consistent across &beta; by construction, because one engine
+serves every point. **Forensics measured that HF alone reproduces that baseline**
+— no vLLM arm is needed. Read "reproduces", not "matches exactly": see the
+sample-size note below for what a run can actually resolve.
+
+A preset pins no seed (`sampling.with_seed(n)`) and no `samples_per_prompt` (the
+caller passes it). `check_engine` refuses a model whose dtype or attention
+implementation does not match the pins. There is deliberately **no
+`as_published` preset**: nobody asked for one, and it would encode a
+configuration we would then owe upkeep on.
+
+**The attention implementation is a pinned parameter, not a detail.** Swapping
+only sdpa &rarr; eager moved the Overfishing mode from 50 to 55 (KS D=0.815), and
+a forward-pass probe put the two kernels 3.4 logits apart with no padding
+involved — enough to flip the first token's argmax. It is resolved from the
+loaded model (`config._attn_implementation`, so the row records what ran, not
+what was asked for) and recorded as `attn_implementation`, exactly like a
+sampling knob.
+
+**How much a run resolves.** `samples_per_prompt` has no default and should not
+get one. Measured: **n=50 resolves nothing below $13-16 per game** — two runs of
+a byte-identical configuration differ by $6-11 on their own. The standard is
+**n=200**: SE of a mean $1.44, typical run-to-run gap $1.63, 95% of gaps under
+$4.00 on the Dictator.
 
 **Keeping the checkpoint's own settings out takes two things.** An explicit
 `GenerationConfig` is not enough: since transformers 4.50,
@@ -188,8 +232,8 @@ contradicted later:
 | what was asked | `game_id`, `question_id`, `question_set`, `family`, `mode`, `persona`, `reading` |
 | which draw | `sample_index`, `batch_index`, `batch_size`, `seed` |
 | what came back | `continuation`, `answer`, `value`, `tag` |
-| how it was sampled | `temperature`, `top_p`, `top_k`, `repetition_penalty`, `max_new_tokens`, `stop_token_ids` |
-| what produced it | `engine`, `engine_version`, `torch_version`, `model_id`, `model_revision`, `dtype` |
+| how it was sampled | `temperature`, `top_p`, `top_k`, `min_p`, `repetition_penalty`, `max_new_tokens`, `min_new_tokens`, `stop_token_ids` |
+| what produced it | `engine`, `engine_version`, `torch_version`, `model_id`, `model_revision`, `dtype`, `attn_implementation` |
 | what it was produced from | `chat_template_sha256`, `question_sha256`, `prompt_sha256`, `repo_commit`, `repo_dirty` |
 
 `answer` is the model's whole assistant turn — the mode's prefill plus what the
@@ -278,7 +322,9 @@ unverified:
 
 - Anything requiring the real 7B weights: no number in this repo has been
   produced by the model these modules target, and `HuggingFaceEngine.load` has
-  never downloaded a checkpoint.
+  never downloaded a checkpoint. The `neutral` preset, the sdpa-vs-eager effect
+  and the sample-size figures are all measurements handed to this module by the
+  engine forensics; this code has not re-produced any of them.
 - Model-level determinism at scale. `run` is deterministic given a seed, and the
   seed was confirmed to reach the engine — but GPU kernels and left padding make
   batched HF generation only approximately reproducible across batch sizes,
@@ -287,6 +333,10 @@ unverified:
   unpublished logit-derived in-house check from outside this repo, not
   re-measured here. The $7-13 shift attributed to inherited sampling settings
   comes from the task brief and has likewise not been measured here.
+- That HF reproduces the authors' baseline is the forensics' measurement, and
+  "reproduces" is bounded by what a run resolves: at n=200 two identical
+  configurations still typically land $1.63 apart on the Dictator. No claim of
+  an exact match is made anywhere, and none should be added without a bigger n.
 - Whether the reworded Overfishing and Prisoner's Dilemma stubs tokenize as
   intended against the real tokenizer. They no longer end on a lone space token,
   which was measured to be the problem; that the replacements are clean is
