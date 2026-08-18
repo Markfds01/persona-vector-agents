@@ -1,8 +1,15 @@
 """Agreement between the free scorers and the paid gpt-4.1-mini judge.
 
 The labels are the judge values committed in this repo, so the whole thing runs
-offline in a couple of seconds. Every figure below is measured on conditions the
-scorers were never tuned on; `TUNING_COEFFICIENT` is excluded throughout.
+offline in a couple of seconds.
+
+Which figures exclude `TUNING_COEFFICIENT`, the condition the scorers were tuned
+on: the `altruism_v2` amount figures do (the `v2_held_out` fixture drops it), and
+`test_tuned_condition_still_reproduces_the_judge` asserts on it deliberately. The
+per-question fish and cooperate figures do NOT - `per_question_labels` globs all
+seven conditions. Those are a different question set from the tuning rows, but
+the figures are not tuning-free, and each test states the excluded-condition
+number alongside.
 
 "Agrees" means `round(judge) == ours`, the judge being a soft expectation over
 its own token distribution and therefore rarely a clean integer (it is never
@@ -100,11 +107,14 @@ def test_tuned_condition_still_reproduces_the_judge(v2_by_coefficient):
 
 
 def test_fish_agreement_against_the_per_question_judge(per_question_labels):
-    """Measured: 209/210 resolve, 194 of those agree = 92.82%.
+    """Measured: 209/210 rows resolve, 192 of those agree = 91.87%.
 
-    Below the amount scorer, and below the 96.7% the investigation measured on its
-    own n=30 run. The residual is trailing-sentence contamination: a response that
-    decides on 50 and then explains "the total is then 100" can resolve to 100.
+    Includes the tuning condition (see the module docstring); dropping it gives
+    163/179 = 91.06%. Both are below the amount scorer, and below the 96.7% the
+    investigation measured on its own n=30 run. The 17 disagreements break down as
+    8 hedged-range midpoint deltas, 6 trailing-sentence contaminations (decides on
+    50, then explains "the total is 100", resolves to 100) and 3 rows that read the
+    digit in "Agent 2" as a catch count.
     """
     rows = per_question_labels["q3_fish_caught"]
     scored = _scored(rows, OVERFISHING)
@@ -116,9 +126,11 @@ def test_fish_agreement_against_the_per_question_judge(per_question_labels):
 
 
 def test_cooperate_agreement_against_the_per_question_judge(per_question_labels):
-    """Measured: 210/210 resolve, 206 agree = 98.10%.
+    """Measured: 210/210 rows resolve, 206 agree = 98.10%.
 
-    The binary judge reports p(cooperate) in [0, 1], so its label is thresholded.
+    Includes the tuning condition (see the module docstring); dropping it gives
+    176/180 = 97.78%. The binary judge reports p(cooperate) in [0, 1], so its label
+    is thresholded.
     """
     rows = per_question_labels["q4_cooperated"]
     scored = _scored(rows, PRISONERS_DILEMMA)

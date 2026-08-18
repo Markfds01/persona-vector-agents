@@ -21,8 +21,9 @@ V2_DIR = EVAL_DIR / "v2"
 #: Its `*_compare_with_expectation.csv` files carry per-question extraction judges.
 TABLE1_DIR = EVAL_DIR / "v1"
 
-#: The scorers were tuned on the Dictator rows of this condition only. Every
-#: agreement figure asserted by the suite excludes it.
+#: The scorers were tuned on the `altruism_v2` Dictator rows of this condition.
+#: `v2_held_out` drops it; `per_question_labels` does NOT (it returns all seven
+#: conditions). Tests that include it say so.
 TUNING_COEFFICIENT = 0.0
 
 _COEFFICIENT_RX = re.compile(r"coef(-?\d+(?:\.\d+)?)")
@@ -85,6 +86,7 @@ def v2_held_out(v2_by_coefficient):
 def per_question_labels():
     """{judge column: [LabelledRow]} from the Table-1 per-question extraction judges.
 
+    All seven steering conditions, `TUNING_COEFFICIENT` included.
     `*_rejudged.csv` is skipped: same generations, judged a second time.
     """
     files = sorted(TABLE1_DIR.glob("altruism_steer_*_compare_with_expectation.csv"))

@@ -2,9 +2,16 @@
 
 A self-contained package for re-scoring the committed generations without the
 paid judge. It imports with no API keys, no network and no GPU, and it never
-imports `eval/`, `judge.py`, `config.py` or `generate_vec*.py` (`config.setup_credentials()`
-runs at import time and raises without `OPENAI_API_KEY` and `HF_TOKEN`). Upstream
-data files are read directly and never modified.
+imports `eval/`, `judge.py`, `config.py` or `generate_vec*.py`. Upstream data
+files are read directly and never modified.
+
+Why nothing of theirs is imported: `judge.py:12`, `eval/eval_persona.py:34`,
+`eval/eval_persona_batch.py:50`, `eval/run_judges.py:37` and `training.py:20` all
+call `setup_credentials()` at module import, which raises without both
+`OPENAI_API_KEY` and `HF_TOKEN`. Importing `config.py` itself does not raise —
+credential validation is lazy — but line 2 sets `os.environ["HF_HOME"] = 'hf_cache'`
+as an import side effect, repointing the HuggingFace cache at a repo-relative
+path for the rest of the process.
 
 This first slice is scorers, answer spaces and the regression suite. Generation,
 logits and steering are not here.
@@ -72,17 +79,22 @@ python -m pytest audit/tests -q
 Runs in about five seconds. No keys, no network, no GPU — verified by running it
 with the keys unset and outbound connections blocked.
 
-The repo ships 2,200 generations with the paid judge's value beside each one, so
-the suite measures agreement rather than asserting it. Held out means every
-steering condition except `coef0.0`, the one the scorers were tuned on.
+The repo ships generations with the paid judge's value beside each one, so the
+suite measures agreement rather than asserting it. It consumes 2,420 labelled
+rows: 2,200 `altruism_v2` rows (11 steering conditions x 200) plus 220 Table-1
+rows carrying per-question extraction judges. Held out means every steering
+condition except `coef0.0`, the one the scorers were tuned on.
 
-| set | n | measured |
-| --- | --- | --- |
-| `altruism_v2`, 10 held-out steering conditions | 2,000 | 97.6% resolve; **95.6%** of those match the judge exactly |
-| — condition means | 10 | r = 0.9992, largest gap $2.46 |
-| Overfishing, per-question judge | 210 | 99.5% resolve; 92.8% exact |
-| Prisoner's Dilemma, per-question judge | 210 | 100% resolve; 98.1% exact |
-| naive last-number regex, same rows | 2,000 | 20.8% exact (the scorers: 93.3%) |
+| set | n | measured | tuning condition |
+| --- | --- | --- | --- |
+| `altruism_v2`, 10 held-out steering conditions | 2,000 | 97.6% resolve; **95.6%** of those match the judge exactly | excluded |
+| — condition means | 10 | r = 0.9992, largest gap $2.46 | excluded |
+| Overfishing, per-question judge | 210 | 99.5% resolve; 91.9% exact | included (excluded: 91.1%) |
+| Prisoner's Dilemma, per-question judge | 210 | 100% resolve; 98.1% exact | included (excluded: 97.8%) |
+| naive last-number regex, same rows | 2,000 | 20.8% exact (the scorers: 93.3%) | excluded |
+
+The two per-question rows come from a different question set than the tuning
+rows, but they are not tuning-free, so both figures are given.
 
 "Exact" is `round(judge) == ours`; the judge is a soft expectation over its own
 token distribution and is never more than $0.48 from an integer here.
@@ -92,7 +104,31 @@ each carries its measurement in a comment. If a change moves one of these
 numbers, re-measure and say so — the agreement figure is the only reason this
 code is trusted.
 
-**Known weak spot.** The fish scorer resolves a trailing sentence in place of the
-decision ("I will catch 50 fish… so the total is 100"), which is most of the gap
-between 92.8% and the amount scorer's 95.6%. It is not fixed here: this slice
-ports the validated behavior unchanged.
+## Known limits
+
+None of these are fixed here. This slice ports the validated behavior unchanged,
+because the measured agreement above is the reason the code is trusted and a
+behavior change in the same commit would invalidate it.
+
+**The fish scorer is the weak one** — 91.9% against the amount scorer's 95.6%.
+Its 17 disagreements are three distinct failures, not one:
+
+| n | failure |
+| --- | --- |
+| 8 | hedged-range midpoint deltas — "around 45 or 47", "40-50"; gaps of $0.3 to $20 |
+| 6 | trailing-sentence contamination — decides on 50, then explains "the total is 100", resolves to 100 |
+| 3 | reads the digit in an agent label as a count — "I will catch 50 fish alongside Agent 2" resolves to 2 |
+
+The third is the worst of them and the least obvious. A fix should start there,
+and should raise the test floor with it.
+
+**Two inherited quirks that a run with different stakes would hit:**
+
+- `extract_cooperate` tags "I'd cooperate" as `mixed`, because the bare-letter
+  branch of the defect pattern matches the `d` in `I'd`. The value is still right
+  (the later mention wins) and 9 of 210 Prisoner's Dilemma rows land on that tag,
+  so `mixed` is not evidence of a genuinely ambiguous response.
+- The amount and fish patterns match `\d{1,3}` with no right-hand boundary, so a
+  four-digit figure truncates: `"$1000 to Agent 2"` resolves to 100.0 with the
+  highest-confidence tag, `a2_anchor`. Harmless at the $0-100 stakes every
+  committed question uses; not harmless at larger ones.
