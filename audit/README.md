@@ -125,28 +125,89 @@ the chat template would close that turn with `<|im_end|>`.
 ## Generation
 
 ```python
-from audit.generate import HuggingFaceEngine, Sampling, run, write_rows
+from audit.generate import HuggingFaceEngine, RowWriter, preset, run
 
-engine = HuggingFaceEngine.load("Qwen/Qwen2.5-7B-Instruct", revision="<sha>")
-sampling = Sampling(temperature=1.0, top_p=1.0, top_k=0, repetition_penalty=1.0,
-                    max_new_tokens=600, seed=0)
-rows = run([("altruism_v3/dictator", "free"), ("altruism_v3/dictator", "stub")],
-           engine, sampling, engine.tokenizer, samples_per_prompt=100)
-write_rows("output/dictator.csv", rows)
+neutral = preset("neutral")
+engine = HuggingFaceEngine.load("Qwen/Qwen2.5-7B-Instruct", revision="<sha>",
+                                attn_implementation=neutral.attn_implementation,
+                                torch_dtype=neutral.dtype)   # dtype kwarg: your version's spelling
+neutral.check_engine(engine.describe())    # the pins are pins, not suggestions
+
+with RowWriter("output/dictator.csv") as out:          # each batch hits disk as it lands
+    run([("altruism_v3/dictator", "free"), ("altruism_v3/dictator", "stub")],
+        engine, neutral.sampling.with_seed(0), engine.tokenizer,
+        samples_per_prompt=neutral.recommended_samples_per_prompt,
+        reading="stated", batch_size=16, on_rows=out.write)
 ```
 
 **One engine, chosen by the caller.** `run` takes the engine as an argument and
 never selects one. Upstream's `eval/eval_persona.py` picks the inference engine
-with `if vector is not None`, so its steered runs go through HF `generate()` and
-its unsteered runs through vLLM with different sampling configuration — its
-&beta;=0 point is not comparable with its own steered points. HF is the engine
-here because steering needs forward hooks, which vLLM cannot give us.
+with `if vector is not None` (line 269), so its steered runs go through HF
+`generate()` and its unsteered runs through vLLM with different sampling
+configuration — its &beta;=0 point is not comparable with its own steered
+points. At coef 0 it takes the vLLM branch and sets `vector = None` (lines
+347-354), which makes the HF branch unreachable there: **their published
+baseline is a vLLM number.** HF is the engine here because steering needs
+forward hooks, which vLLM cannot give us.
 
-**Nothing defaults.** All six of `temperature`, `top_p`, `top_k`,
-`repetition_penalty`, `max_new_tokens`, `seed` are required.
-`Sampling.from_mapping` names everything missing or unrecognised.
-`generate.PRESETS` is where a named preset goes once a setting is known to
-reproduce the authors' numbers — it is empty because none is.
+**Nothing defaults.** All eight of `temperature`, `top_p`, `top_k`, `min_p`,
+`repetition_penalty`, `max_new_tokens`, `min_new_tokens`, `seed` are required.
+`Sampling.from_mapping` names everything missing or unrecognised. `do_sample` is
+derived rather than stored — `temperature=0` means greedy, as in vLLM — so
+"sample at temperature zero" is not expressible.
+
+**One preset: `neutral`.** It is the configuration the engine forensics measured,
+and it is the only one declared:
+
+| | |
+| --- | --- |
+| sampling | `temperature 1.0`, `top_p 1.0`, `top_k 0`, `min_p 0.0`, `repetition_penalty 1.0`, `max_new_tokens 1000`, `min_new_tokens 1` (so `do_sample=True`) |
+| load | `bfloat16`, `attn_implementation="sdpa"`, left padding, a pad token |
+| n | `recommended_samples_per_prompt = 200` |
+
+"Neutral" because no knob in it biases the answer distribution: each sits where
+it leaves the model's own distribution alone. It is semantically identical to the
+vLLM `SamplingParams` behind the authors' published baseline, and unlike theirs
+it is internally consistent across &beta; by construction, because one engine
+serves every point. **Forensics measured that HF alone reproduces that baseline**
+— no vLLM arm is needed. Read "reproduces", not "matches exactly": see the
+sample-size note below for what a run can actually resolve.
+
+A preset pins no seed (`sampling.with_seed(n)`) and no `samples_per_prompt` (the
+caller passes it). `check_engine` refuses a model whose dtype or attention
+implementation does not match the pins. There is deliberately **no
+`as_published` preset**: nobody asked for one, and it would encode a
+configuration we would then owe upkeep on.
+
+**The attention implementation is a pinned parameter, not a detail.** Swapping
+only sdpa &rarr; eager moved the Overfishing mode from 50 to 55 (KS D=0.815), and
+a forward-pass probe put the two kernels 3.4 logits apart with no padding
+involved — enough to flip the first token's argmax. It is resolved from the
+loaded model (`config._attn_implementation`, so the row records what ran, not
+what was asked for) and recorded as `attn_implementation`, exactly like a
+sampling knob.
+
+**How much a run resolves.** `samples_per_prompt` has no default and should not
+get one. Measured: **n=50 resolves nothing below $13-16 per game** — two runs of
+a byte-identical configuration differ by $6-11 on their own. The standard is
+**n=200**: SE of a mean $1.44, typical run-to-run gap $1.63, 95% of gaps under
+$4.00 on the Dictator.
+
+**Nothing that moves a number defaults**, and that includes `reading` and
+`batch_size`, both of which are required keyword arguments. `games.py` keeps both
+readings of a contradictory question and picks no winner; a default `reading`
+here would pick one, and on the v1 Dictator that is $4.50 against $1.69. A
+default `batch_size` would do the same to the draws, since batches are seeded
+`seed + batch_index`. A defaulted value is worse than a missing one because the
+row records it as though someone had chosen it.
+
+**A run is not all-or-nothing.** `on_rows` is called with each batch's rows as
+they are scored, before the next batch is generated; `RowWriter.write` is the
+callback to hand it. At n=200 a single OOM would otherwise cost every generation
+since the start — the device used for the first real run went from 24 GiB free to
+3 GiB free mid-session. There is deliberately no resume protocol: the callback
+lets the caller persist, and choosing what to do with a partial run is the
+caller's.
 
 **Keeping the checkpoint's own settings out takes two things.** An explicit
 `GenerationConfig` is not enough: since transformers 4.50,
@@ -185,12 +246,19 @@ contradicted later:
 
 | group | columns |
 | --- | --- |
-| what was asked | `game_id`, `question_id`, `question_set`, `family`, `mode`, `persona`, `reading` |
+| what was asked | `game_id`, `upstream_question_id`, `question_set`, `family`, `mode`, `persona`, `reading` |
 | which draw | `sample_index`, `batch_index`, `batch_size`, `seed` |
 | what came back | `continuation`, `answer`, `value`, `tag` |
-| how it was sampled | `temperature`, `top_p`, `top_k`, `repetition_penalty`, `max_new_tokens`, `stop_token_ids` |
-| what produced it | `engine`, `engine_version`, `torch_version`, `model_id`, `model_revision`, `dtype` |
+| how it was sampled | `temperature`, `top_p`, `top_k`, `min_p`, `repetition_penalty`, `max_new_tokens`, `min_new_tokens`, `stop_token_ids` |
+| what produced it | `engine`, `engine_version`, `torch_version`, `model_id`, `model_revision`, `dtype`, `attn_implementation` |
 | what it was produced from | `chat_template_sha256`, `question_sha256`, `prompt_sha256`, `repo_commit`, `repo_dirty` |
+
+`game_id` is the unambiguous key — one game is one question scored one way.
+`upstream_question_id` is not: `altruism_v1/dictator` and `altruism_v3/dictator`
+both carry `altruism_0`, so pooling two question sets and grouping on it silently
+merges the $10-stake and $100-stake games. It keeps that name because it is what
+joins these rows to the committed judge CSVs, and because `games.py` owns the
+value. **Group by `game_id`.**
 
 `answer` is the model's whole assistant turn — the mode's prefill plus what the
 model wrote — and is what gets scored; `continuation` is what the model alone
@@ -268,17 +336,21 @@ and should raise the test floor with it.
   highest-confidence tag, `a2_anchor`. Harmless at the $0-100 stakes every
   committed question uses; not harmless at larger ones.
 
-**No production generation has been run.** Both GPUs were held by another tenant,
-so the slice was built and tested CPU-side. Review then exercised the engine path
-against a tiny random Qwen2 with the real cached tokenizer on transformers
-4.52.3: `__init__`, `describe()`, `generate()` and a full `run()` work —
-argument spellings, left padding, `prompt_len` slicing under left padding,
-decode, dtype and seed determinism are all confirmed. What that still leaves
-unverified:
+**This module has had one real run.** 2400 generations — six games across two
+question sets at n=200, real `Qwen2.5-7B-Instruct` weights on GPU. It worked:
+99.04% parse coverage, and the baseline reproduced the authors' published
+Dictator number at **$15.25 ± 1.65 against their $15.14**. The stop-token set,
+`use_model_defaults=False`, the resolved-sha revision and the question-text sha
+pinning all earned their place; the sha pinning is what made a v1-vs-v3 mix-up
+detectable at all.
 
-- Anything requiring the real 7B weights: no number in this repo has been
-  produced by the model these modules target, and `HuggingFaceEngine.load` has
-  never downloaded a checkpoint.
+What that still leaves unverified:
+
+- **The fixes made after that run have not themselves been through one.**
+  `min_p` / `min_new_tokens` as required fields, `attn_implementation` as
+  provenance, the `neutral` preset, the now-required `reading` / `batch_size`,
+  `RowWriter` and the `upstream_question_id` rename all postdate it. The run
+  ratified the design, not this exact code.
 - Model-level determinism at scale. `run` is deterministic given a seed, and the
   seed was confirmed to reach the engine — but GPU kernels and left padding make
   batched HF generation only approximately reproducible across batch sizes,
@@ -287,6 +359,14 @@ unverified:
   unpublished logit-derived in-house check from outside this repo, not
   re-measured here. The $7-13 shift attributed to inherited sampling settings
   comes from the task brief and has likewise not been measured here.
+- "Reproduces" is bounded by what a run resolves: at n=200 two identical
+  configurations still typically land $1.63 apart on the Dictator, and the
+  baseline's own interval is ±1.65. No claim of an exact match is made anywhere,
+  and none should be added without a bigger n.
+- The scorer gaps the run exposed (23 of 2400 rows, one of them directional —
+  "i will not give" read as a refusal, which preferentially discards $0 answers)
+  are in `parse.py` on `main`, untouched here. They need their own change with
+  their own measurement.
 - Whether the reworded Overfishing and Prisoner's Dilemma stubs tokenize as
   intended against the real tokenizer. They no longer end on a lone space token,
   which was measured to be the problem; that the replacements are clean is
