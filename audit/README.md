@@ -13,8 +13,9 @@ credential validation is lazy — but line 2 sets `os.environ["HF_HOME"] = 'hf_c
 as an import side effect, repointing the HuggingFace cache at a repo-relative
 path for the rest of the process.
 
-Two slices are here: scorers and answer spaces, and the elicitation + generation
-path that produces new rows. Logits and steering are not.
+Three slices are here: scorers and answer spaces, the elicitation + generation
+path that produces new rows, and activation steering on top of that path. A
+logits pass is not.
 
 ## Layout
 
@@ -25,6 +26,7 @@ path that produces new rows. Logits and steering are not.
 | `paths.py` | the only place that knows where the upstream data files live |
 | `elicit.py` | the exact string the model sees, per (game, elicitation mode) |
 | `generate.py` | one explicit engine, explicit sampling, self-describing result rows |
+| `steer.py` | the authors' activation steering, applied to that engine |
 | `tests/` | the regression suite, built from committed generations + judge labels |
 
 ## Scorers
@@ -270,17 +272,160 @@ whole run would hand every repeat of a prompt the same draw. Batch composition
 therefore changes which draws a prompt gets, so `batch_size` and `batch_index`
 are both columns.
 
+## Steering
+
+`steer.py` applies the authors' activation steering to the engine above. It is a
+*reproduction*, not a reimplementation: if the vector lands anywhere other than
+where `activation_steer.ActivationSteerer` puts it, every steered number is
+incomparable with theirs and nothing downstream notices.
+
+```python
+from audit import generate, steer
+
+steering = steer.Steering("persona_vectors/Qwen2.5-7B-Instruct/altruism_response_avg_diff.pt",
+                          layer=20, coeff=2.0, positions="all")
+engine = generate.HuggingFaceEngine(model, tokenizer, "Qwen/Qwen2.5-7B-Instruct")
+
+steer.sweep([("altruism_v3/dictator", "free")], engine, model,
+            [steer.Steering(path, 20, c) for c in (0.0, 5.0, -5.0, 2.0, -2.0)],
+            generate.preset("neutral").sampling, tokenizer, samples_per_prompt=200,
+            reading="stated", batch_size=20, out_dir="data/audit-steer/rows")
+```
+
+`layer` is upstream's 1-based `--layer`, kept in their spelling: it indexes the
+vector file directly (`vector[20]`) and the layer list at `layer - 1`
+(`model.model.layers[19]`), and those are the same tensor — `hidden_states[20]`.
+`Steering` validates at construction; `sweep` writes one flushed CSV per
+coefficient and never defaults `reading`, `batch_size` or `samples_per_prompt`.
+
+### What is matched exactly
+
+- **The dtype order.** The vector is cast to the model's parameter dtype *before*
+  it is scaled: `coeff * bfloat16(v)`, not `bfloat16(coeff * v)`. The two differ
+  in the last bf16 mantissa bit. A test pins the order against
+  `ActivationSteerer`'s own arithmetic.
+- **`positions="all"`** — the mode `scripts/eval_steering.sh` uses — adds at every
+  position of every forward pass, prompt tokens and each decode step alike. The
+  hook is installed around the whole `generate()` call, where they install it.
+- **Tuple layer outputs.** A decoder block returning `(hidden, attn_weights)`
+  keeps its second entry; only the first is steered.
+- **`positions="prompt"`'s flaw.** They detect a decode step as `t.shape[1] == 1`,
+  which misfires on a one-token prompt. Reproduced as-is and commented, because
+  the point is parity. Unused by their steering script.
+
+### Where it deliberately differs
+
+- **Hook site resolution.** `ActivationSteerer` searches five architecture
+  spellings and takes the first match; it reaches `model.layers` on Qwen2 only
+  because there is no `transformer.h`. `hooked_module` resolves the explicit path
+  and *raises* unless it is the same object their search returns.
+  `upstream_layer_list` reproduces their search so a test can assert identity
+  rather than assume it.
+- **The vector is copied.** `torch.as_tensor` returns the *same* object when dtype
+  and device already match, so theirs can alias a caller's tensor and carry its
+  `requires_grad` into the hook. `detach().clone()` removes both. Cannot move a
+  number.
+- **`activation_steer` is never imported by a run.** Importing it sets
+  `HF_HOME=hf_cache`, repointing the model cache mid-process. Only the tests
+  import it, in a process that loads no weights; a test asserts `steer.py`'s
+  source never does.
+
+### The four checks, run on real weights before any sweep number was used
+
+`Qwen2.5-7B-Instruct`, bf16, sdpa, one GPU.
+
+| check | result |
+| --- | --- |
+| **beta = 0 is a byte-exact no-op** | token ids identical to no hook at all, at a fixed seed and batch. Positive controls: the unhooked run is itself reproducible, the hook fired 366 times at coeff 0, and coeff 2 changes the ids — without those the check is void, because an uninstalled hook also passes it. Also identical through `SteeredEngine` at the string level. |
+| **hook site** | the hooked module *is* `model.model.layers[19]`, and its captured output is byte-equal to `hidden_states[20]` and to neither `[19]` nor `[21]`. 29 hidden states for 28 layers; the vector file is 29 x 3584. |
+| **projection cross-check** | `cal_projection.py`'s `(a·b).sum()/b.norm()` recomputed from our activations, teacher-forced on their exact committed prompt+answer text, against their committed `..._proj_layer20` column: **r = 0.99997** over 300 rows, OLS slope 0.9991, mean offset −0.0025 (SD 0.012, max 0.043). The same check at layer 19 gives r = 0.940 and at layer 21 r = 0.991, so it discriminates. Layer, vector and orientation all confirmed; the residual is bf16 kernel noise. |
+| **direction** | the positive arm is strictly increasing at every step, $12.96 at beta 0 to $76.68 at +5 (+12.90 per unit beta, r = 0.999). See the sweep below for the negative arm, which is not monotonic — in ours or in theirs. |
+
+The hook site and the dtype order are pinned permanently and offline: the tests
+import `ActivationSteerer` itself on a few-hundred-parameter CPU model and assert
+object identity of the hook target and bitwise equality of the delta.
+
+### The one game this has been run on
+
+`altruism_v3/dictator`, mode `free`, `neutral` preset, seed 0, batch 20, reading
+`stated`, n=200 per coefficient — 2,200 generations in 59.4 minutes (590,078
+generated tokens, 165.5 tok/s). Coefficients were run outward from zero so an
+eviction would leave both arms; none occurred, and every coefficient completed
+200/200 on its first attempt.
+
+| beta | parsed/200 | ours | theirs `v1/` n=50 | theirs `v2/` n=50 |
+| ---: | ---: | --- | --- | --- |
+| −5 | 196 | 30.11 ± 3.69 (SD 26.20, SE 1.87) | 25.41 [18.63, 32.19] | 36.48 [28.36, 44.60] |
+| −4 | 198 | 26.06 ± 3.62 (SD 25.82, SE 1.84) | 25.18 [18.26, 32.11] | 32.81 [25.14, 40.48] |
+| −3 | 197 | 23.87 ± 3.68 (SD 26.19, SE 1.87) | 24.06 [16.75, 31.37] | 19.44 [12.31, 26.57] |
+| −2 | 199 | 13.52 ± 3.04 (SD 21.74, SE 1.54) | 14.57 [8.13, 21.01] | 16.52 [10.36, 22.68] |
+| −1 | 196 | 11.37 ± 2.73 (SD 19.36, SE 1.38) | 14.73 [8.58, 20.89] | 8.82 [3.90, 13.74] |
+| 0 | 200 | 12.96 ± 2.87 (SD 20.59, SE 1.46) | 15.14 [9.34, 20.94] | 15.14 [9.34, 20.94] |
+| +1 | 196 | 26.62 ± 3.47 (SD 24.62, SE 1.76) | 31.73 [24.39, 39.08] | 29.83 [21.59, 38.07] |
+| +2 | 198 | 38.14 ± 3.64 (SD 25.93, SE 1.84) | 41.31 [34.61, 48.00] | 44.82 [38.21, 51.42] |
+| +3 | 194 | 53.89 ± 3.61 (SD 25.47, SE 1.83) | 48.88 [42.39, 55.36] | 53.15 [45.82, 60.47] |
+| +4 | 194 | 65.71 ± 4.49 (SD 31.68, SE 2.27) | 64.62 [56.75, 72.50] | 66.67 [58.21, 75.12] |
+| +5 | 190 | 76.68 ± 4.73 (SD 33.05, SE 2.40) | 75.30 [65.23, 85.38] | 80.78 [71.31, 90.25] |
+
+**Which of their files is the comparator, established by question text and not by
+filename.** `v1/` and `v2/` are different question *sets*, but their Dictator
+question is byte-identical to the one we ran (`ac8f242ed284c309`), so both are
+valid n=50 runs of exactly our prompt and both are given. `v1/` is what
+`scripts/eval_steering.sh` writes. `deprecated/v1/` is **not** a comparator — that
+one really is the `altruism_v1` Dictator (`fa72234d97e5c4b6`, $10 stake, n=10).
+
+**Every one of the eleven intervals overlaps theirs, in both sets** (r = 0.9905
+against `v1/`, mean gap $2.56; r = 0.9866 against `v2/`, mean gap $3.72). Their own
+two n=50 runs of the identical prompt differ from *each other* by $4.40 on average
+and $11.07 at worst — more than our distance to either. At n=50 "their published
+number" is not one target, which is the documented reason the standard here is
+n=200.
+
+**The negative arm is not monotonic, in ours or in theirs.** Ours bottoms out at
+beta −1 and climbs back to 30.11 at −5; their `v1/` run bottoms at −2 and their
+`v2/` at −1. Reproducing that turning point is stronger evidence of a correct hook
+than the monotonic positive arm is — a wrong layer or a mis-scaled vector would not
+put the kink in the same place.
+
+What the turnaround is: their committed `coherence` judge falls monotonically down
+the negative arm (95 → 79 in `v1/`, 95 → 77 in `v2/`) while the positive arm holds
+at 92–96, and the amount starts climbing at exactly beta −3, where coherence drops
+below ~89. What it is **not** shown to be: coherence was not measured on *our*
+generations — that needs the paid judge, and this run made no API calls — and our
+parse coverage does not deteriorate on the negative arm (98% at −5 against 95% at
++5), so the answers are not becoming unreadable; they still name a number. The
+coherence-collapse reading is consistent with their labels, not demonstrated by
+this run.
+
+### Result rows
+
+Steered rows carry `generate.ROW_FIELDS` plus eight columns — `steer_coeff`,
+`steer_layer`, `steer_module_index`, `steer_module_path`, `steer_positions`,
+`steer_vector`, `steer_vector_sha256`, `steer_delta_dtype` — written by
+`SteeredRowWriter`, which flushes per batch like `RowWriter`.
+
+**These eight columns belong on `generate.Row`.** They live in `steer.py` only
+because the task that added this module was scoped not to touch `generate.py`,
+and the cost is that `SteeredRowWriter` duplicates about twenty lines of
+`RowWriter` and has to be kept in step with it. Moving them is the first thing to
+do here.
+
 ## Tests
 
 ```bash
 python -m pytest audit/tests -q
 ```
 
-Runs in about five seconds. No keys, no network, no GPU — verified by running it
+Runs in about seven seconds. No keys, no network, no GPU — verified by running it
 with the keys unset and outbound connections blocked. `elicit.py` and
 `generate.py` are covered without a model at all: the elicitation tests render
 against a fake tokenizer and assert the bytes, and the generation tests drive
 `run` with a fake engine.
+
+`tests/test_steer.py` is the one module that needs torch, because a forward hook
+cannot be exercised against a stub. It uses a few-hundred-parameter CPU model —
+still no GPU, no network, no keys — and **skips whole** (visibly, as a skip) when
+torch is absent, so the rest of the suite still runs in a torch-free environment.
 
 The repo ships generations with the paid judge's value beside each one, so the
 suite measures agreement rather than asserting it. It consumes 2,420 labelled
@@ -324,6 +469,11 @@ Its 17 disagreements are three distinct failures, not one:
 
 The third is the worst of them and the least obvious. A fix should start there,
 and should raise the test floor with it.
+
+**The eight steering columns are in the wrong module.** `SteeredRowWriter`
+duplicates about twenty lines of `generate.RowWriter` so that a steered row can
+carry its coefficient, layer and vector. They belong on `generate.Row`; until they
+move, the two writers have to be kept in step by hand.
 
 **Two inherited quirks that a run with different stakes would hit:**
 
