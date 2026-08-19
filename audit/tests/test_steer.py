@@ -6,7 +6,8 @@ module's hook site, dtype order and position policy are the ones upstream uses,
 which is a property of tiny tensors, not of a 7B model.
 
 Skipped whole if torch is absent: the rest of the audit suite runs without it,
-and a forward hook cannot be exercised against a stub.
+and a forward hook cannot be exercised against a stub. The `generate()` tests at
+the end additionally need `transformers` and skip without it.
 """
 
 import csv
@@ -128,28 +129,44 @@ def test_no_layer_list_is_refused(vector_file):
 
 # --- beta = 0 is a no-op --------------------------------------------------------
 
-def test_coeff_zero_is_bit_identical_to_no_hook(model, vector_file):
-    """The strongest cheap check: a zero coefficient must change nothing at all."""
+def assert_noop_with_controls(model, vector_file, activations):
+    """coeff 0 changes nothing, plus the controls that make that mean something.
+
+    Deliberately one test and not four. The no-op assertion on its own also passes
+    when `__enter__` never registers the hook, so the proof that a hook WAS
+    installed and that a nonzero coefficient DOES move the output has to fail in
+    the same test, not in a sibling that could stay green.
+    """
     block = model.model.layers[LAYER - 1]
-    activations = hidden()
     with torch.no_grad():
         unhooked = block(activations)[0]
+
     zero = steer.Steering(str(vector_file), LAYER, 0.0)
     with steer.ActivationSteering(model, zero), torch.no_grad():
-        hooked = block(activations)[0]
-    assert torch.equal(hooked, unhooked)
+        assert len(block._forward_hooks) == 1, "no hook was installed; the check is void"
+        at_zero = block(activations)[0]
+    assert torch.equal(at_zero, unhooked)
+
+    nonzero = steer.Steering(str(vector_file), LAYER, 2.0)
+    with steer.ActivationSteering(model, nonzero) as installed, torch.no_grad():
+        assert len(block._forward_hooks) == 1
+        moved = block(activations)[0]
+    assert torch.equal(moved, unhooked + installed.delta)
+    assert not torch.equal(moved, unhooked), "the hook changed nothing; the check is void"
+
+
+def test_coeff_zero_is_bit_identical_to_no_hook(model, vector_file):
+    assert_noop_with_controls(model, vector_file, hidden())
 
 
 def test_coeff_zero_is_bit_identical_in_bfloat16(vector_file):
-    model = TinyModel(dtype=torch.bfloat16)
-    block = model.model.layers[LAYER - 1]
-    activations = hidden(dtype=torch.bfloat16)
-    with torch.no_grad():
-        unhooked = block(activations)[0]
-    zero = steer.Steering(str(vector_file), LAYER, 0.0)
-    with steer.ActivationSteering(model, zero), torch.no_grad():
-        hooked = block(activations)[0]
-    assert torch.equal(hooked, unhooked)
+    assert_noop_with_controls(TinyModel(dtype=torch.bfloat16), vector_file,
+                              hidden(dtype=torch.bfloat16))
+
+
+def test_coeff_zero_is_bit_identical_at_a_width_one_decode_step(model, vector_file):
+    """The decode-step shape, which is where a positions bug would actually bite."""
+    assert_noop_with_controls(model, vector_file, hidden(width=1))
 
 
 def test_hook_is_removed_on_exit(model, steering):
@@ -183,6 +200,30 @@ def test_all_positions_adds_the_delta_at_every_position(model, steering):
     with steer.ActivationSteering(model, steering) as installed, torch.no_grad():
         hooked = block(activations)[0]
     # compared against the sum, not against the difference: (x + d) - x is not d
+    assert torch.equal(hooked, unhooked + installed.delta)
+
+
+def test_all_positions_adds_at_a_width_one_decode_step(model, steering):
+    """`all` means all: a decode step is one position, not an exemption."""
+    block = model.model.layers[LAYER - 1]
+    decode_step = hidden(width=1)
+    with torch.no_grad():
+        unhooked = block(decode_step)[0]
+    with steer.ActivationSteering(model, steering) as installed, torch.no_grad():
+        hooked = block(decode_step)[0]
+    assert hooked.shape == (2, 1, HIDDEN)
+    assert torch.equal(hooked, unhooked + installed.delta)
+
+
+def test_prompt_positions_adds_when_the_forward_is_wider_than_one(model, vector_file):
+    """The other half of their tell — only the skip branch used to be covered."""
+    prompt_only = steer.Steering(str(vector_file), LAYER, 2.0, positions="prompt")
+    block = model.model.layers[LAYER - 1]
+    activations = hidden(width=5)
+    with torch.no_grad():
+        unhooked = block(activations)[0]
+    with steer.ActivationSteering(model, prompt_only) as installed, torch.no_grad():
+        hooked = block(activations)[0]
     assert torch.equal(hooked, unhooked + installed.delta)
 
 
@@ -568,6 +609,96 @@ def test_projection_refuses_an_empty_answer_span():
 def test_span_stability_reports_a_merging_seam():
     assert steer.projection_span_is_stable(CharTokenizer(), "abc!", "de")
     assert not steer.projection_span_is_stable(MergingTokenizer(), "abc!", "de")
+
+
+# --- a real generate(), with a KV cache and real decode steps ----------------------
+# The tests above drive one block by hand. These drive `model.generate()` on a
+# real Qwen2 of a few thousand parameters, so the prompt forward and every
+# cached width-1 decode step run the same way they do at 7B. That is the property
+# the GPU run pinned and nothing offline did.
+
+QWEN_HIDDEN = 32
+QWEN_PROMPT = [[1, 2, 3, 4, 5]]
+
+
+def tiny_qwen():
+    """A real `Qwen2ForCausalLM`, small enough to run in milliseconds on the CPU."""
+    transformers = pytest.importorskip("transformers")
+    config = transformers.Qwen2Config(
+        vocab_size=64, hidden_size=QWEN_HIDDEN, intermediate_size=64,
+        num_hidden_layers=LAYERS, num_attention_heads=4, num_key_value_heads=2,
+        max_position_embeddings=64)
+    torch.manual_seed(3)
+    return transformers.Qwen2ForCausalLM(config).eval()
+
+
+@pytest.fixture
+def qwen_vector_file(tmp_path):
+    torch.manual_seed(4)
+    path = tmp_path / "qwen_response_avg_diff.pt"
+    torch.save(torch.randn(VECTOR_ROWS, QWEN_HIDDEN), path)
+    return path
+
+
+def qwen_generate(model, steering=None, new_tokens=8):
+    ids = torch.tensor(QWEN_PROMPT)
+    if steering is None:
+        with torch.no_grad():
+            return model.generate(ids, max_new_tokens=new_tokens, do_sample=False,
+                                  use_cache=True)
+    with steer.ActivationSteering(model, steering), torch.no_grad():
+        return model.generate(ids, max_new_tokens=new_tokens, do_sample=False,
+                              use_cache=True)
+
+
+def test_a_real_generate_is_byte_identical_at_coeff_zero(qwen_vector_file):
+    """The GPU gate, offline: greedy decode with a cache, token ids compared."""
+    model = tiny_qwen()
+    baseline = qwen_generate(model)
+    assert torch.equal(qwen_generate(model), baseline), "generate is not reproducible"
+
+    at_zero = qwen_generate(model, steer.Steering(str(qwen_vector_file), LAYER, 0.0))
+    assert torch.equal(at_zero, baseline)
+
+    # controls, in the same test: without these a hook that never installed passes
+    moved = qwen_generate(model, steer.Steering(str(qwen_vector_file), LAYER, 30.0))
+    assert not torch.equal(moved, baseline), "the hook did not reach generate()"
+
+
+def test_the_hook_fires_on_the_prompt_and_on_every_decode_step(qwen_vector_file):
+    """Where `positions` is decided: one wide forward, then one per new token."""
+    model = tiny_qwen()
+    widths = []
+    observer = model.model.layers[LAYER - 1].register_forward_hook(
+        lambda _m, _i, out: widths.append(
+            (out[0] if isinstance(out, tuple) else out).shape[1]))
+    try:
+        qwen_generate(model, steer.Steering(str(qwen_vector_file), LAYER, 1.0),
+                      new_tokens=6)
+    finally:
+        observer.remove()
+    assert widths == [len(QWEN_PROMPT[0])] + [1] * 5
+
+
+def test_steering_a_real_generate_leaves_no_hook_behind(qwen_vector_file):
+    model = tiny_qwen()
+    qwen_generate(model, steer.Steering(str(qwen_vector_file), LAYER, 1.0))
+    assert all(not layer._forward_hooks for layer in model.model.layers)
+
+
+def test_the_engine_reads_the_vector_file_once_per_engine(qwen_vector_file, monkeypatch):
+    """A reread per batch would let a mid-run file swap in under a stale sha."""
+    model = tiny_qwen()
+    steering = steer.Steering(str(qwen_vector_file), LAYER, 1.0)
+    reads = []
+    original = torch.load
+    monkeypatch.setattr(torch, "load", lambda *a, **k: (reads.append(a[0]),
+                                                        original(*a, **k))[1])
+    engine = steer.SteeredEngine(ProbeEngine(model.model.layers[LAYER - 1]), model,
+                                 steering)
+    for _batch in range(3):
+        engine.generate(["a", "b"], object(), 0)
+    assert len(reads) == 1
 
 
 # --- the module must not drag upstream's import side effects in --------------------

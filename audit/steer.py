@@ -57,6 +57,13 @@ STEERING_FIELDS = ("steer_coeff", "steer_layer", "steer_module_index",
                    "steer_module_path", "steer_positions", "steer_vector",
                    "steer_vector_sha256", "steer_delta_dtype")
 
+#: A name in both sets would be silently overwritten by `record.update(columns)`,
+#: losing a result field. Checked at import because it is a static property.
+_COLLISIONS = tuple(name for name in STEERING_FIELDS if name in ROW_FIELDS)
+if _COLLISIONS:
+    raise ImportError("steering columns collide with generate.ROW_FIELDS and would "
+                      "overwrite result data: %s" % (_COLLISIONS,))
+
 
 class SteeringError(ConfigError):
     """A steering setup that would not reproduce what it claims to reproduce."""
@@ -144,10 +151,14 @@ def upstream_layer_list(model):
 def hooked_module(model, layer: int):
     """The module upstream hooks for `--layer <layer>`, with its attribute path.
 
-    Returns `(path, module)`. Raises unless the explicit `model.layers` path and
-    upstream's search land on the same object: a silently different hook site is
-    the one failure that would invalidate every steered number without showing up
-    anywhere else.
+    Returns `(path, module)`, always from upstream's own search, so the hook site
+    is theirs by construction.
+
+    On a model that exposes `model.layers` — Qwen2 and every other Llama-shaped
+    checkpoint, which is all this audit runs — the explicit path is looked up too
+    and disagreement raises. On an architecture that does not (a GPT-2-style
+    `transformer.h`, say) there is nothing to cross-check against and the search
+    result stands unverified.
     """
     path, layers = upstream_layer_list(model)
     if not -len(layers) <= layer - 1 < len(layers):
@@ -258,21 +269,26 @@ class SteeredEngine:
 
     def __init__(self, engine, model, steering: Steering, vector=None):
         self._engine = engine
-        self._model = model
-        self.steering = steering
-        self._vector = vector
-        # built once so a bad layer, dtype or vector fails before any generation
-        self._probe = ActivationSteering(model, steering, vector)
+        # Built once here, then reused for every batch: a bad layer, dtype or
+        # vector fails before any generation, and the vector file is read exactly
+        # once. Rebuilding per call would reread it, so a file swapped mid-run
+        # would be applied while `steer_vector_sha256` still reported the first
+        # read — the rows would name a vector that had stopped being the one used.
+        self._steering = ActivationSteering(model, steering, vector)
+
+    @property
+    def steering(self) -> Steering:
+        return self._steering.steering
 
     @property
     def columns(self) -> Dict[str, object]:
-        return self._probe.columns
+        return self._steering.columns
 
     def describe(self) -> generate.EngineDescription:
         return self._engine.describe()
 
     def generate(self, prompts: Sequence[str], sampling, seed: int) -> List[str]:
-        with ActivationSteering(self._model, self.steering, self._vector):
+        with self._steering:
             return self._engine.generate(prompts, sampling, seed)
 
 

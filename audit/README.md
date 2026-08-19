@@ -349,9 +349,11 @@ object identity of the hook target and bitwise equality of the delta.
 
 `altruism_v3/dictator`, mode `free`, `neutral` preset, seed 0, batch 20, reading
 `stated`, n=200 per coefficient — 2,200 generations in 59.4 minutes (590,078
-generated tokens, 165.5 tok/s). Coefficients were run outward from zero so an
-eviction would leave both arms; none occurred, and every coefficient completed
-200/200 on its first attempt.
+generated tokens, 165.5 tok/s). Coefficients were run **sign-paired, widest pair
+first**: 0, then ±5, ±2, ±3, ±1, ±4. The pairing is what would have left both arms
+of the curve intact had the run been evicted part-way; it is not an outward
+progression, and nothing depends on it being one. No eviction occurred, and every
+coefficient completed 200/200 on its first attempt.
 
 | beta | parsed/200 | ours | theirs `v1/` n=50 | theirs `v2/` n=50 |
 | ---: | ---: | --- | --- | --- |
@@ -359,13 +361,13 @@ eviction would leave both arms; none occurred, and every coefficient completed
 | −4 | 198 | 26.06 ± 3.62 (SD 25.82, SE 1.84) | 25.18 [18.26, 32.11] | 32.81 [25.14, 40.48] |
 | −3 | 197 | 23.87 ± 3.68 (SD 26.19, SE 1.87) | 24.06 [16.75, 31.37] | 19.44 [12.31, 26.57] |
 | −2 | 199 | 13.52 ± 3.04 (SD 21.74, SE 1.54) | 14.57 [8.13, 21.01] | 16.52 [10.36, 22.68] |
-| −1 | 196 | 11.37 ± 2.73 (SD 19.36, SE 1.38) | 14.73 [8.58, 20.89] | 8.82 [3.90, 13.74] |
+| −1 | 196 | 11.36 ± 2.73 (SD 19.36, SE 1.38) | 14.73 [8.58, 20.89] | 8.82 [3.90, 13.74] |
 | 0 | 200 | 12.96 ± 2.87 (SD 20.59, SE 1.46) | 15.14 [9.34, 20.94] | 15.14 [9.34, 20.94] |
-| +1 | 196 | 26.62 ± 3.47 (SD 24.62, SE 1.76) | 31.73 [24.39, 39.08] | 29.83 [21.59, 38.07] |
-| +2 | 198 | 38.14 ± 3.64 (SD 25.93, SE 1.84) | 41.31 [34.61, 48.00] | 44.82 [38.21, 51.42] |
+| +1 | 196 | 26.62 ± 3.47 (SD 24.63, SE 1.76) | 31.73 [24.39, 39.08] | 29.83 [21.59, 38.07] |
+| +2 | 198 | 38.14 ± 3.63 (SD 25.93, SE 1.84) | 41.31 [34.61, 48.00] | 44.82 [38.21, 51.42] |
 | +3 | 194 | 53.89 ± 3.61 (SD 25.47, SE 1.83) | 48.88 [42.39, 55.36] | 53.15 [45.82, 60.47] |
 | +4 | 194 | 65.71 ± 4.49 (SD 31.68, SE 2.27) | 64.62 [56.75, 72.50] | 66.67 [58.21, 75.12] |
-| +5 | 190 | 76.68 ± 4.73 (SD 33.05, SE 2.40) | 75.30 [65.23, 85.38] | 80.78 [71.31, 90.25] |
+| +5 | 190 | 76.68 ± 4.73 (SD 33.05, SE 2.40) | 75.30 [65.23, 85.37] | 80.78 [71.31, 90.25] |
 
 **Which of their files is the comparator, established by question text and not by
 filename.** `v1/` and `v2/` are different question *sets*, but their Dictator
@@ -404,6 +406,13 @@ Steered rows carry `generate.ROW_FIELDS` plus eight columns — `steer_coeff`,
 `steer_vector`, `steer_vector_sha256`, `steer_delta_dtype` — written by
 `SteeredRowWriter`, which flushes per batch like `RowWriter`.
 
+One caveat on provenance: the rows above were produced by the pre-review
+`steer.py`, which rebuilt the steering (and reread the vector file) once per batch.
+The committed module builds it once per engine instead. Same file, same
+coefficient, same cast, so the delta tensor is identical and the numbers stand —
+but the committed code is not byte-identical to what ran, and the sweep has not
+been repeated.
+
 **These eight columns belong on `generate.Row`.** They live in `steer.py` only
 because the task that added this module was scoped not to touch `generate.py`,
 and the cost is that `SteeredRowWriter` duplicates about twenty lines of
@@ -416,16 +425,25 @@ do here.
 python -m pytest audit/tests -q
 ```
 
-Runs in about seven seconds. No keys, no network, no GPU — verified by running it
+Runs in about nine seconds. No keys, no network, no GPU — verified by running it
 with the keys unset and outbound connections blocked. `elicit.py` and
 `generate.py` are covered without a model at all: the elicitation tests render
 against a fake tokenizer and assert the bytes, and the generation tests drive
 `run` with a fake engine.
 
 `tests/test_steer.py` is the one module that needs torch, because a forward hook
-cannot be exercised against a stub. It uses a few-hundred-parameter CPU model —
-still no GPU, no network, no keys — and **skips whole** (visibly, as a skip) when
+cannot be exercised against a stub. It **skips whole** (visibly, as a skip) when
 torch is absent, so the rest of the suite still runs in a torch-free environment.
+Most of it drives a few-hundred-parameter CPU model; four tests build a real
+`Qwen2ForCausalLM` of a few thousand parameters and run `generate()` with a KV
+cache, so the prompt forward and every width-1 decode step are exercised the way
+they are at 7B. Those four also need `transformers` and skip without it. Still no
+GPU, no network, no keys — the whole module runs in about three seconds.
+
+The hook semantics are mutation-tested, not just asserted: detaching the hook in
+`__enter__` fails 9 tests (including all three no-op tests), skipping width-1 in
+`positions="all"` fails 2, scaling before the dtype cast fails 2, and hooking
+`layers[layer]` instead of `layers[layer - 1]` fails 33.
 
 The repo ships generations with the paid judge's value beside each one, so the
 suite measures agreement rather than asserting it. It consumes 2,420 labelled
