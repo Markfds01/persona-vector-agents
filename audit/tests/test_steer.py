@@ -19,6 +19,7 @@ import pytest
 torch = pytest.importorskip("torch")
 
 from audit import elicit, generate, steer  # noqa: E402  (after the skip guard)
+from audit.paths import REPO_ROOT  # noqa: E402
 from audit.tests import fakes  # noqa: E402
 
 HIDDEN = 8
@@ -480,7 +481,7 @@ def test_rows_path_names_the_coefficient(tmp_path, vector_file):
     for coeff, label in ((-5.0, "-5"), (0.0, "0"), (2.5, "2.5")):
         steering = steer.Steering(str(vector_file), 20, coeff)
         path = steer.rows_path(tmp_path, steering, "altruism_v3/dictator", "free")
-        assert path.name == "altruism_v3-dictator_free_layer20_all_coef%s.csv" % label
+        assert path.name == "altruism_v3-dictator_free_layer20_all_raw_coef%s.csv" % label
 
 
 # --- the sweep --------------------------------------------------------------------
@@ -609,6 +610,222 @@ def test_projection_refuses_an_empty_answer_span():
 def test_span_stability_reports_a_merging_seam():
     assert steer.projection_span_is_stable(CharTokenizer(), "abc!", "de")
     assert not steer.projection_span_is_stable(MergingTokenizer(), "abc!", "de")
+
+
+# --- the norm convention ----------------------------------------------------------
+# Raw is upstream and the default. Unit is opt-in. Neither is "the right one": raw
+# keeps a measured separation as the unit of beta, unit puts differently-built
+# directions on one scale. These tests pin both, and pin that turning the switch on
+# cannot disturb raw.
+
+#: the shipped altruism vector at the layer the audit actually steers, so the
+#: tolerance figures below are the real ones and not a random 8-wide stand-in
+REAL_VECTOR = str(REPO_ROOT / "persona_vectors" / "Qwen2.5-7B-Instruct"
+                  / "altruism_response_avg_diff.pt")
+REAL_HIDDEN = 3584
+REAL_LAYER = 20
+QWEN_LAYERS = 28
+
+
+class DtypeOnlyModel(torch.nn.Module):
+    """Enough model for `ActivationSteering`: a layer list, a hidden size, a dtype.
+
+    Lets the norm arithmetic be checked against the real 3584-wide vector at its
+    real layer without building the 51M parameters of Linear it would take to hold
+    it. Only the vector maths is under test here, never a forward pass.
+    """
+
+    def __init__(self, hidden=REAL_HIDDEN, dtype=torch.bfloat16):
+        super().__init__()
+        self.model = Inner([torch.nn.Identity() for _ in range(QWEN_LAYERS)])
+        self.marker = torch.nn.Parameter(torch.zeros(1, dtype=dtype))
+        self.config = types.SimpleNamespace(hidden_size=hidden)
+
+
+def real_norm():
+    return float(torch.load(REAL_VECTOR, weights_only=False)[REAL_LAYER].float().norm())
+
+
+def test_steering_fields_are_pinned():
+    """The result schema is a promise; adding to it is a deliberate act."""
+    assert steer.STEERING_FIELDS == (
+        "steer_coeff", "steer_layer", "steer_module_index", "steer_module_path",
+        "steer_positions", "steer_norm_mode", "steer_vector", "steer_vector_sha256",
+        "steer_vector_norm", "steer_delta_dtype")
+
+
+def test_steering_fields_never_collide_with_row_fields():
+    assert not set(steer.STEERING_FIELDS) & set(generate.ROW_FIELDS)
+
+
+def test_raw_is_the_default_because_upstream_has_no_switch(vector_file):
+    assert steer.Steering(str(vector_file), LAYER, 1.0).norm == "raw"
+
+
+def test_asking_for_raw_changes_nothing_at_all(model, vector_file):
+    """The switch must not perturb the path the parity tests assert."""
+    implicit = steer.ActivationSteering(model, steer.Steering(str(vector_file), LAYER, 2.7))
+    explicit = steer.ActivationSteering(
+        model, steer.Steering(str(vector_file), LAYER, 2.7, norm="raw"))
+    assert torch.equal(implicit.delta, explicit.delta)
+    assert torch.equal(implicit.delta, 2.7 * steer.Steering(
+        str(vector_file), LAYER, 2.7).load_vector().to(implicit.vector.dtype))
+
+
+def test_raw_still_matches_upstreams_arithmetic_bitwise(vector_file):
+    upstream = pytest.importorskip("activation_steer")
+    model = TinyModel(dtype=torch.bfloat16)
+    stored = steer.Steering(str(vector_file), LAYER, 2.7).load_vector()
+    theirs = upstream.ActivationSteerer(model, stored, coeff=2.7, layer_idx=LAYER - 1,
+                                        positions="all")
+    ours = steer.ActivationSteering(
+        model, steer.Steering(str(vector_file), LAYER, 2.7, norm="raw"))
+    assert torch.equal(ours.delta, 2.7 * theirs.vector)
+
+
+def test_unit_delta_is_the_coefficient_times_the_direction(vector_file):
+    model = TinyModel(dtype=torch.float32)
+    stored = steer.Steering(str(vector_file), LAYER, 3.0).load_vector()
+    unit = steer.ActivationSteering(
+        model, steer.Steering(str(vector_file), LAYER, 3.0, norm="unit"))
+    expected = 3.0 * (stored.float() / stored.float().norm()).to(torch.float32)
+    assert torch.equal(unit.delta, expected)
+    assert unit.vector.norm().item() == pytest.approx(1.0, abs=1e-6)
+
+
+def test_vector_norm_records_the_shipped_length_in_both_modes(vector_file):
+    """Not 1.0 under `unit` — it is the number that converts between conventions."""
+    model = TinyModel()
+    stored = steer.Steering(str(vector_file), LAYER, 1.0).load_vector()
+    shipped = float(stored.float().norm())
+    for mode in steer.NORM_MODES:
+        installed = steer.ActivationSteering(
+            model, steer.Steering(str(vector_file), LAYER, 1.0, norm=mode))
+        assert installed.vector_norm == pytest.approx(shipped, rel=1e-6)
+
+
+@pytest.mark.parametrize("dtype,max_relative,max_one_minus_cosine", [
+    # bf16 keeps 8 mantissa bits, so normalise-then-cast rounds where cast-then-scale
+    # does not. Measured on the shipped altruism vector at beta_raw 1, 2 and 5:
+    # ||unit - raw|| / ||raw|| peaks at 3.3e-3 and 1 - cos peaks at 4.6e-6.
+    (torch.bfloat16, 5e-3, 1e-5),
+    # the same comparison in float32 is exact to rounding, which is what shows the
+    # bf16 gap is the cast and not the algebra. Measured: 4.6e-8 and 0.0.
+    (torch.float32, 1e-6, 1e-12),
+])
+def test_the_two_conventions_agree_in_real_arithmetic(dtype, max_relative,
+                                                      max_one_minus_cosine):
+    """`beta_unit = beta_raw * ||v||` — equal in exact arithmetic, not bitwise.
+
+    A tolerance and not an equality, on purpose: `unit` divides in float32 and then
+    casts, `raw` casts and then scales, so the two round a different number of
+    times. Measured as the relative norm of the difference and as the angle between
+    them, both scale-free; an elementwise relative bound would be dominated by the
+    near-zero components, where a half-ULP is a large fraction of a small number.
+    """
+    model = DtypeOnlyModel(dtype=dtype)
+    norm = real_norm()
+    for beta_raw in (1.0, 2.0, 5.0):
+        raw = steer.ActivationSteering(
+            model, steer.Steering(REAL_VECTOR, REAL_LAYER, beta_raw)).delta.float()
+        unit = steer.ActivationSteering(
+            model, steer.Steering(REAL_VECTOR, REAL_LAYER, beta_raw * norm,
+                                  norm="unit")).delta.float()
+        assert (unit - raw).norm().item() / raw.norm().item() < max_relative
+        cosine = torch.nn.functional.cosine_similarity(unit, raw, dim=0).item()
+        assert 1.0 - cosine < max_one_minus_cosine
+        # and not bitwise, in bf16 — the docstring's claim, asserted
+        if dtype is torch.bfloat16:
+            assert not torch.equal(unit, raw)
+
+
+def test_unit_divides_in_float32_before_it_casts():
+    """The order matters and is not observable in float32, so pin it in bf16.
+
+    Dividing the bf16-rounded vector is a different tensor from rounding the
+    float32 quotient: measured on the shipped altruism vector, 938 of 3584 elements
+    (26%) differ. Only the float32-first order is correct — the other quantises the
+    direction twice.
+    """
+    model = DtypeOnlyModel(dtype=torch.bfloat16)
+    stored = torch.load(REAL_VECTOR, weights_only=False)[REAL_LAYER]
+    norm = real_norm()
+    unit = steer.ActivationSteering(
+        model, steer.Steering(REAL_VECTOR, REAL_LAYER, 1.0, norm="unit"))
+
+    divided_in_float32 = (stored.float() / norm).to(torch.bfloat16)
+    cast_first = (stored.to(torch.bfloat16).float() / norm).to(torch.bfloat16)
+    assert torch.equal(unit.vector, divided_in_float32)
+    assert not torch.equal(divided_in_float32, cast_first), (
+        "this vector no longer distinguishes the two orders; pick another")
+    assert not torch.equal(unit.vector, cast_first)
+
+
+def test_the_shipped_vector_norm_is_what_the_docs_say():
+    """10.5083 for altruism at layer 20 — quoted in `NORM_MODES` and the README."""
+    assert real_norm() == pytest.approx(10.5083, abs=5e-5)
+
+
+def test_a_zero_vector_cannot_be_unit_normalised(model, tmp_path):
+    path = tmp_path / "zeros.pt"
+    torch.save(torch.zeros(VECTOR_ROWS, HIDDEN), path)
+    with pytest.raises(steer.SteeringError, match="zero vector"):
+        steer.ActivationSteering(model, steer.Steering(str(path), LAYER, 1.0, norm="unit"))
+
+
+def test_an_unknown_norm_mode_is_refused(vector_file):
+    with pytest.raises(steer.SteeringError, match="norm must be one of"):
+        steer.Steering(str(vector_file), LAYER, 1.0, norm="l2")
+
+
+def test_the_columns_carry_the_mode_and_the_measured_norm(model, vector_file):
+    stored = steer.Steering(str(vector_file), LAYER, 1.0).load_vector()
+    for mode in steer.NORM_MODES:
+        columns = steer.ActivationSteering(
+            model, steer.Steering(str(vector_file), LAYER, 1.0, norm=mode)).columns
+        assert columns["steer_norm_mode"] == mode
+        assert columns["steer_vector_norm"] == pytest.approx(
+            float(stored.float().norm()), rel=1e-6)
+
+
+def test_mixing_norm_modes_in_one_sweep_is_refused(tmp_path, model, vector_file):
+    """Results are keyed by coefficient, so two conventions would be conflated."""
+    steerings = [steer.Steering(str(vector_file), LAYER, 1.0, norm=mode)
+                 for mode in steer.NORM_MODES]
+    with pytest.raises(steer.SteeringError, match="varies the coefficient and nothing else"):
+        steer.sweep([("altruism_v3/dictator", "free")],
+                    ProbeEngine(model.model.layers[0]), model, steerings,
+                    generate.NEUTRAL.sampling, fakes.QwenLikeTokenizer(),
+                    samples_per_prompt=1, reading="stated", batch_size=1,
+                    out_dir=tmp_path)
+
+
+def test_the_two_conventions_do_not_overwrite_each_others_rows(tmp_path, vector_file):
+    """Raw and unit at the same coefficient are two experiments, not one."""
+    paths = {steer.rows_path(tmp_path, steer.Steering(str(vector_file), LAYER, 2.0,
+                                                      norm=mode),
+                             "altruism_v3/dictator", "free")
+             for mode in steer.NORM_MODES}
+    assert len(paths) == len(steer.NORM_MODES)
+
+
+def test_a_sweep_records_the_convention_on_every_row(tmp_path, model, vector_file):
+    """A finished sweep must be relabellable without regenerating anything."""
+    engine = ProbeEngine(model.model.layers[LAYER - 1], continuation="I will give $12.")
+    stored = steer.Steering(str(vector_file), LAYER, 1.0).load_vector()
+    for mode in steer.NORM_MODES:
+        results = steer.sweep(
+            [("altruism_v3/dictator", "free")], engine, model,
+            [steer.Steering(str(vector_file), LAYER, 1.0, norm=mode)],
+            generate.NEUTRAL.sampling, fakes.QwenLikeTokenizer(), samples_per_prompt=2,
+            reading="stated", batch_size=2, out_dir=tmp_path)
+        path, _rows = results[1.0]
+        with path.open(encoding="utf-8", newline="") as handle:
+            written = list(csv.DictReader(handle))
+        assert {row["steer_norm_mode"] for row in written} == {mode}
+        norms = {float(row["steer_vector_norm"]) for row in written}
+        assert len(norms) == 1
+        assert norms.pop() == pytest.approx(float(stored.float().norm()), rel=1e-6)
 
 
 # --- a real generate(), with a KV cache and real decode steps ----------------------

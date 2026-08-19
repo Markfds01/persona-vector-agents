@@ -345,6 +345,50 @@ The hook site and the dtype order are pinned permanently and offline: the tests
 import `ActivationSteerer` itself on a few-hundred-parameter CPU model and assert
 object identity of the hook target and bitwise equality of the delta.
 
+### The norm convention
+
+`Steering(..., norm=...)` chooses how the vector's length is treated. **`"raw"` is
+the default and is upstream's behaviour** — they have no such switch — so nothing
+about the reproduction changes unless you ask for it.
+
+| mode | delta | when |
+| --- | --- | --- |
+| `raw` (default) | `coeff * v` | reproducing them; comparing coefficients within one vector |
+| `unit` | `coeff * v / ‖v‖` | comparing directions built by *different* methods |
+
+Neither is the correct one; they answer different questions.
+
+`raw` keeps the measured norm, and that norm is a measurement rather than an
+accident: it is how far the positive and negative prompts moved the layer-20
+activations apart. It gives beta a real anchor — **beta = 1 adds exactly the
+separation the prompt manipulation produced** — and it is on-distribution by
+construction.
+
+`unit` divides that out, which is what you want when the norms of the vectors
+being compared measure *different quantities* and so are not a common scale: a
+trait vector's norm measures prompt-induced separation, a decision vector's
+measures decision-conditioned separation, and a shared beta axis silently compares
+them at whatever ratio their norms happen to have.
+
+As a fact about the shipped data rather than a verdict on their method: the six
+`*_response_avg_diff.pt` vectors at layer 20 range from **9.0739** (retaliation) to
+**14.3173** (forgiveness), so one beta axis spans a 57.8% difference in applied
+magnitude across traits. Altruism, the one steered here, is **10.5083**. Measured
+in this repo, not quoted.
+
+Both the mode and the measured norm go on every row (`steer_norm_mode`,
+`steer_vector_norm`), so a finished sweep converts between conventions without
+regenerating anything: **`beta_unit = beta_raw * ‖v‖`**, in either direction.
+`steer_vector_norm` is always the shipped length, never 1.0, because that is the
+number the conversion needs.
+
+The two are equal in exact arithmetic but **not bitwise** at the equivalent
+coefficient: `unit` divides in float32 and then casts, `raw` casts and then scales,
+so they round a different number of times. Measured on the altruism vector at
+beta_raw 1, 2 and 5, in bf16: `‖unit − raw‖ / ‖raw‖` peaks at 3.3e-3 and the angle
+between them at 1 − cos = 4.6e-6. In float32 the same comparison gives 4.6e-8 and
+exactly zero, which is what shows the bf16 gap is the cast and not the algebra.
+
 ### The one game this has been run on
 
 `altruism_v3/dictator`, mode `free`, `neutral` preset, seed 0, batch 20, reading
@@ -401,19 +445,33 @@ this run.
 
 ### Result rows
 
-Steered rows carry `generate.ROW_FIELDS` plus eight columns — `steer_coeff`,
+Steered rows carry `generate.ROW_FIELDS` plus ten columns — `steer_coeff`,
 `steer_layer`, `steer_module_index`, `steer_module_path`, `steer_positions`,
-`steer_vector`, `steer_vector_sha256`, `steer_delta_dtype` — written by
-`SteeredRowWriter`, which flushes per batch like `RowWriter`.
+`steer_norm_mode`, `steer_vector`, `steer_vector_sha256`, `steer_vector_norm`,
+`steer_delta_dtype` — written by `SteeredRowWriter`, which flushes per batch like
+`RowWriter`. The tuple is pinned literally in the tests and checked disjoint from
+`ROW_FIELDS` at import, since a collision would be silently overwritten.
 
-One caveat on provenance: the rows above were produced by the pre-review
-`steer.py`, which rebuilt the steering (and reread the vector file) once per batch.
-The committed module builds it once per engine instead. Same file, same
-coefficient, same cast, so the delta tensor is identical and the numbers stand —
-but the committed code is not byte-identical to what ran, and the sweep has not
-been repeated.
+A sweep varies the coefficient and nothing else: `sweep` refuses steerings that
+differ in vector, layer, positions or norm mode, because its results are keyed by
+coefficient and would otherwise conflate two experiments. The norm mode is in the
+output filename for the same reason.
 
-**These eight columns belong on `generate.Row`.** They live in `steer.py` only
+Two caveats on provenance, neither of which moves a number.
+
+The rows above were produced by the pre-review `steer.py`, which rebuilt the
+steering (and reread the vector file) once per batch; the committed module builds
+it once per engine. Same file, same coefficient, same cast, so the delta tensor is
+identical — but the committed code is not byte-identical to what ran, and the sweep
+has not been repeated.
+
+They also predate the norm switch, so they carry the earlier eight-column steering
+schema without `steer_norm_mode` / `steer_vector_norm`, and their filenames lack
+the `_raw_` segment the current `rows_path` writes. Every one of them is `raw` by
+construction, that being the only behaviour the code then had. Re-running is the
+only way to get the two new columns onto them, and it was not worth the GPU time.
+
+**These ten columns belong on `generate.Row`.** They live in `steer.py` only
 because the task that added this module was scoped not to touch `generate.py`,
 and the cost is that `SteeredRowWriter` duplicates about twenty lines of
 `RowWriter` and has to be kept in step with it. Moving them is the first thing to
@@ -438,12 +496,21 @@ Most of it drives a few-hundred-parameter CPU model; four tests build a real
 `Qwen2ForCausalLM` of a few thousand parameters and run `generate()` with a KV
 cache, so the prompt forward and every width-1 decode step are exercised the way
 they are at 7B. Those four also need `transformers` and skip without it. Still no
-GPU, no network, no keys — the whole module runs in about three seconds.
+GPU, no network, no keys — the whole module runs in about four seconds.
 
-The hook semantics are mutation-tested, not just asserted: detaching the hook in
-`__enter__` fails 9 tests (including all three no-op tests), skipping width-1 in
-`positions="all"` fails 2, scaling before the dtype cast fails 2, and hooking
-`layers[layer]` instead of `layers[layer - 1]` fails 33.
+The semantics are mutation-tested, not just asserted. Each row is a real edit to
+`steer.py` and the tests that then fail:
+
+| mutation | tests failed |
+| --- | ---: |
+| `__enter__` registers a no-op instead of the hook | 9 (incl. all three no-op tests) |
+| `positions="all"` skips a width-1 decode step | 2 |
+| scale before the dtype cast instead of after | 4 |
+| hook `layers[layer]` instead of `layers[layer - 1]` | 42 |
+| `norm="unit"` silently falls back to raw | 4 |
+| `steer_vector_norm` reported as 1.0 | 2 |
+| `raw` normalises too | 7 |
+| `unit` casts to bf16 before dividing, not after | 1 |
 
 The repo ships generations with the paid judge's value beside each one, so the
 suite measures agreement rather than asserting it. It consumes 2,420 labelled

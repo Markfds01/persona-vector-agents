@@ -50,12 +50,38 @@ UPSTREAM_LAYER_ATTRS = ("transformer.h", "encoder.layer", "model.layers",
 #: The position policies upstream implements. `eval_steering.sh` uses "all".
 POSITIONS = ("all", "prompt", "response")
 
+#: How the vector's length is treated. Upstream has no such switch — it always
+#: scales the shipped vector as-is — so "raw" is the default and reproduces them.
+#:
+#: Neither convention is the correct one; they answer different questions.
+#:
+#: "raw" keeps the measured norm, and that norm is a measurement, not an accident:
+#: it is how far the positive and negative prompts moved the layer-20 activations
+#: apart. It gives beta a real anchor — beta=1 adds exactly the separation the
+#: prompt manipulation produced — and it is on-distribution by construction.
+#:
+#: "unit" divides it out, which is what you want when comparing directions built by
+#: DIFFERENT methods, because then the norms measure different quantities and are
+#: not a common scale: a trait vector's norm measures prompt-induced separation, a
+#: decision vector's measures decision-conditioned separation, and putting both on
+#: one beta axis silently compares them at whatever ratio their norms happen to have.
+#:
+#: A fact about the shipped data rather than a verdict on their method: the six
+#: `*_response_avg_diff.pt` vectors at layer 20 range from 9.0739 (retaliation) to
+#: 14.3173 (forgiveness), so their shared beta axis spans a 57.8% difference in
+#: applied magnitude across traits. Measured here, not quoted.
+NORM_MODES = ("raw", "unit")
+
 #: The provenance columns a steered row carries on top of `generate.ROW_FIELDS`.
 #: These belong on `generate.Row` — see this module's entry in `audit/README.md`;
 #: adding them there was out of scope for the task that wrote this file.
+#: `steer_norm_mode` and `steer_vector_norm` are both recorded so a finished sweep
+#: can be relabelled between conventions without regenerating anything:
+#: `beta_unit = beta_raw * steer_vector_norm`, in either direction.
 STEERING_FIELDS = ("steer_coeff", "steer_layer", "steer_module_index",
-                   "steer_module_path", "steer_positions", "steer_vector",
-                   "steer_vector_sha256", "steer_delta_dtype")
+                   "steer_module_path", "steer_positions", "steer_norm_mode",
+                   "steer_vector", "steer_vector_sha256", "steer_vector_norm",
+                   "steer_delta_dtype")
 
 #: A name in both sets would be silently overwritten by `record.update(columns)`,
 #: losing a result field. Checked at import because it is a static property.
@@ -82,6 +108,8 @@ class Steering:
     layer: int
     coeff: float
     positions: str = "all"
+    #: "raw" (upstream, the default) or "unit". See `NORM_MODES`.
+    norm: str = "raw"
 
     def __post_init__(self):
         if not isinstance(self.layer, int) or isinstance(self.layer, bool):
@@ -95,6 +123,9 @@ class Steering:
         if self.positions not in POSITIONS:
             raise SteeringError("positions must be one of %s, got %r"
                                 % (list(POSITIONS), self.positions))
+        if self.norm not in NORM_MODES:
+            raise SteeringError("norm must be one of %s, got %r"
+                                % (list(NORM_MODES), self.norm))
         if not Path(self.vector_path).is_file():
             raise SteeringError("no steering vector at %s" % self.vector_path)
 
@@ -179,6 +210,12 @@ class ActivationSteering:
 
     Installs one forward hook on the layer `hooked_module` resolves and adds
     `coeff * vector` to that layer's output for as long as the block runs.
+
+    Under the default `norm="raw"` that is upstream's arithmetic exactly, down to
+    the bit. Under `norm="unit"` the vector is scaled to length 1 in float32 first,
+    so `coeff` becomes a multiple of the unit direction rather than of the measured
+    separation; `vector_norm` records the shipped length either way, and
+    `beta_unit = beta_raw * vector_norm` converts between them.
     """
 
     def __init__(self, model, steering: Steering, vector=None):
@@ -196,6 +233,20 @@ class ActivationSteering:
         if hidden is not None and source.numel() != hidden:
             raise SteeringError("steering vector has %d elements, model hidden_size is %d"
                                 % (source.numel(), hidden))
+        # Measured in float32 on the vector AS SHIPPED, in either mode: this is the
+        # number that converts a coefficient between conventions afterwards, so it
+        # must not become 1.0 just because "unit" was asked for.
+        self.vector_norm = float(source.detach().float().norm())
+        if steering.norm == "unit":
+            if self.vector_norm == 0.0:
+                raise SteeringError("cannot unit-normalise a zero vector (%s layer %d)"
+                                    % (steering.vector_path, steering.layer))
+            # Normalised in float32, before the cast. Deliberately NOT bit-identical
+            # to raw at coeff * ||v||: dividing and then casting rounds twice where
+            # cast-then-scale rounds once, so the two agree to bf16 precision, not
+            # exactly. `test_the_two_conventions_agree_in_real_arithmetic` states the
+            # measured size of that gap.
+            source = source.detach().float() / self.vector_norm
         # cast first, scale second — upstream's order, and the two disagree in bf16
         self.vector = source.detach().clone().to(dtype=parameter.dtype,
                                                  device=parameter.device)
@@ -211,8 +262,10 @@ class ActivationSteering:
             "steer_module_index": self.steering.module_index,
             "steer_module_path": self.module_path,
             "steer_positions": self.steering.positions,
+            "steer_norm_mode": self.steering.norm,
             "steer_vector": _repo_relative(self.steering.vector_path),
             "steer_vector_sha256": self.steering.vector_sha256,
+            "steer_vector_norm": self.vector_norm,
             "steer_delta_dtype": str(self.delta.dtype),
         }
 
@@ -348,10 +401,15 @@ class SteeredRowWriter:
 
 
 def rows_path(directory, steering: Steering, game_id: str, mode: str) -> Path:
-    """Where one coefficient's rows go. The coefficient is in the name and the file."""
-    return Path(directory) / ("%s_%s_layer%d_%s_coef%s.csv"
+    """Where one coefficient's rows go. The coefficient is in the name and the file.
+
+    The norm mode is in the name too: raw and unit at the same coefficient are two
+    different experiments, and without it the second would overwrite the first.
+    """
+    return Path(directory) / ("%s_%s_layer%d_%s_%s_coef%s.csv"
                               % (game_id.replace("/", "-"), mode, steering.layer,
-                                 steering.positions, _coefficient_label(steering.coeff)))
+                                 steering.positions, steering.norm,
+                                 _coefficient_label(steering.coeff)))
 
 
 def sweep(pairs, engine, model, steerings: Sequence[Steering], sampling, tokenizer,
@@ -372,6 +430,15 @@ def sweep(pairs, engine, model, steerings: Sequence[Steering], sampling, tokeniz
     pairs = list(pairs)
     if not pairs:
         raise SteeringError("a sweep needs at least one (game_id, mode) pair")
+    # A sweep is one experiment varied by coefficient, and its results are keyed by
+    # coefficient. Two steerings differing in anything else would be conflated under
+    # one key, so they belong in two sweeps.
+    fixed = {(s.vector_path, s.layer, s.positions, s.norm) for s in steerings}
+    if len(fixed) > 1:
+        raise SteeringError(
+            "a sweep varies the coefficient and nothing else, but these steerings "
+            "differ in vector, layer, positions or norm mode: %s"
+            % sorted("vector=%s layer=%d positions=%s norm=%s" % entry for entry in fixed))
     results = {}
     for steering in steerings:
         if steering.coeff in results:
