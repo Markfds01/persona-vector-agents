@@ -66,7 +66,7 @@ assigned by **fraction of the endowment**, never by dollars.
 
 Surface wording moves the decision far more than the stake does: the share giving
 at least half runs from 0.106 (second-person "allocate") to 0.489 ("hand over"),
-a 4.7× spread with the payoff structure held identical. This is the confound that
+a 4.6× spread (0.106 to 0.489) with the payoff structure held identical. This is the confound that
 forces cell-balancing in §5.
 
 ---
@@ -147,7 +147,7 @@ fraction of its norm is 0.7% for `prompt_avg` and 1.3% for `prompt_last` — ker
 jitter, not information — against 32% for `response_avg`.
 
 A prompt-side pole difference can therefore only encode *which cells fell into
-each pole*. Given the 4.7× wording spread, it does exactly that. The
+each pole*. Given the 4.6× wording spread, it does exactly that. The
 cell-balanced control proves it: `prompt_avg`'s layer-20 norm collapses from 2.81
 to 0.064 and `prompt_last` from 3.86 to 0.067, both into the jitter floor, while
 `response_avg` holds 7.04 → 6.87.
@@ -169,7 +169,7 @@ not of the outcome labelling.
 
 A naive difference of means pools all 452 altruistic rows against all 939
 self-interested rows. But the poles are **not evenly distributed across cells**:
-the "hand over" wording produces 4.7× the altruistic share that "allocate" does.
+the "hand over" wording produces 4.6× the altruistic share that "allocate" does.
 So a pooled difference partly measures *which prompt text* was more represented in
 each pole — a surface-wording direction wearing a decision label.
 
@@ -234,14 +234,20 @@ real one, because the two directions are built from the same rows.
 Measured here, Null A's cosine to the real vector at layer 20 is **+0.2423**. That
 is not an unlucky draw. The deviations of these activations are anisotropic,
 occupying roughly 8 effective dimensions, so *any* difference of means over this
-row set lands partly in the same subspace. The empirical cosine null for these
-vectors has sd **0.0808** — about 5x the theoretical `1/sqrt(3584) = 0.0167` — and
-it is target-dependent. **Never quote the theoretical cosine null for activation
-difference vectors.**
+row set lands partly in the same subspace. Scoring 1000 independent label
+permutations against the real vector gives an empirical cosine null with sd
+**0.3464**, 95% range [-0.620, +0.623] — twenty times the theoretical
+`1/sqrt(3584) = 0.0167`. Against that, +0.2423 is a 0.7-sigma draw, i.e. ordinary.
+**Never quote the theoretical cosine null for activation difference vectors** — and
+**never reuse a null across targets**: the same 1000 permutations scored against the
+*trait* vector give sd 0.0808, because a null's width is the overlap between the
+target and the subspace these deviations occupy. Judged against the wrong one of
+those two numbers, +0.2423 flips from typical to a 3-sigma event.
 
 Now combine that with the second measured fact, which only appears once the sweep
-is run: **the real vector saturates.** It reaches its full behavioural effect at
-unit beta 10.51 ($38.75) and is flat or slightly declining out to 52.54 ($38.70).
+is run: **the real vector's dose-response curve turns over.** It delivers 83% of its
+eventual movement by unit beta 10.51 ($38.75), rises to a peak at 21.02 ($44.14) and
+declines from there to 52.54 ($38.70).
 
 The two facts together make the extreme comparison uninformative:
 
@@ -251,18 +257,25 @@ component of Null A along the real direction, at unit beta 52.54
     = 0.2423 x 52.54
     = 12.73 unit-beta
 
-real vector's saturation point
-    = 10.51 unit-beta
+real vector at 10.51  ->  83% of peak movement delivered
+real vector at 21.02  ->  the peak
 
-12.73 > 10.51
+10.51 < 12.73 < 21.02
 ```
 
-At the top of the sweep, Null A delivers a **supra-saturating dose of the real
-direction** on top of its orthogonal remainder. Whatever else it is doing, it is
-pushing the real direction harder than the real arm's own effect ceiling. A "null"
-in that configuration cannot distinguish *"the decision direction did it"* from
-*"any direction did it"* — and if it happens to match or exceed the real arm there,
-that is the expected outcome, not evidence against the direction.
+At the top of the sweep, Null A is therefore steering the real direction at
+**12.73 unit-beta — a large dose, above the 83% point and just below the real arm's
+peak**, on top of its orthogonal remainder. Whatever else it is doing, a substantial
+part of what it does to the game is what the real direction does to the game. A
+"null" in that configuration cannot distinguish *"the decision direction did it"*
+from *"any direction did it"* — and if it happens to match or exceed the real arm
+there, that is the expected outcome, not evidence against the direction.
+
+*(Corrected after the run: the original text put the real vector's saturation at
+10.51 and called 12.73 supra-saturating. The rows show the arm still rising at 10.51
+— +21.02 is +5.39 [+2.78, +8.01], p = 6.2e-05 above it. The contamination argument
+and the need for Null B are unchanged; only the description of where 12.73 falls on
+the curve was wrong.)*
 
 ### Null B — the orthogonalised null
 
@@ -298,10 +311,12 @@ direction doing the work".
 1. **Report the cosine between every null and its target.** One line of code. A
    permutation null is not orthogonal, and the amount by which it is not is exactly
    what determines whether it is usable at the coefficient you chose.
-2. **Find each arm's saturation point before choosing where to compare.** If any
-   arm is flat at that coefficient, the comparison measures the flatness, not the
-   mechanism. Where one curve saturates and another does not, no single coefficient
-   is a fair comparison and the one you pick decides the answer.
+2. **Find where each arm peaks before choosing where to compare.** If any arm is
+   flat or falling at that coefficient, the comparison measures that, not the
+   mechanism. Where one curve turns over and another does not, no single coefficient
+   is a fair comparison and the one you pick decides the answer. Locating the turn
+   needs interior points: read at 0 and ±52.54 alone, this arm looks flat from the
+   first step, and it is not.
 
 In this run both rules mattered: read at unit beta 52.54 the evidence says the
 decision separation is not the mechanism; read at 10.51, where the real arm is

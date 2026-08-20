@@ -4,10 +4,18 @@ Why this control is needed. The within-cell shuffled-label vector is not
 orthogonal to the real one: cos = 0.2423 at layer 20, which is exactly the
 anisotropy the extraction task measured (any difference-of-means over these rows
 lands partly in the same ~8-dimensional subspace). Steered at unit beta 52.54 the
-null therefore delivers 0.2423 * 52.54 = 12.73 unit-beta ALONG the real direction
-- and the real arm reaches its full effect by unit beta 10.51. So the plain null
-carries a supra-saturating dose of the real signal and cannot separate "the
-decision direction did it" from "any direction did it".
+null therefore delivers 0.2423 * 52.54 = 12.73 unit-beta ALONG the real direction.
+The real arm peaks at unit beta 21.02, and by 10.51 it has already delivered 83% of
+that peak movement, so 12.73 sits above the 83% point and below the peak - a large,
+near-maximal dose of the real signal, in the region where the arm is still rising.
+So the plain null cannot separate "the decision direction did it" from "any
+direction did it".
+
+NOTE: this paragraph was corrected after the run. The original text said the real
+arm saturated at 10.51 and called 12.73 "supra-saturating"; the rows show the arm
+still rising to a peak at 21.02 (+21.02 vs +10.51 is +5.39 [+2.78, +8.01],
+p = 6.2e-05). The arithmetic and the conclusion are unchanged - only the claim about
+where 12.73 falls relative to the curve. Nothing this script computes depended on it.
 
 Removing the real component fixes that: this vector is the shuffled-label
 direction's residual after projecting out the real one, so it is exactly

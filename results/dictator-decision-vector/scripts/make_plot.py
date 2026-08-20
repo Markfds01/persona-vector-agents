@@ -1,13 +1,14 @@
-"""The steering arms on one matched intervention axis, with saturation marked.
+"""The steering arms on one matched intervention axis, with the decision arm's peak marked.
 
 Left: mean dollars given. Right: P(gives exactly $0) - one of the two poles the
 decision vector was constructed from, so the contrast the test is really about.
 
-The decision vector reaches its full effect at |unit beta| = 10.51 and is flat
-beyond it. That line is drawn on both panels, because it is what makes the extreme
-comparison uninformative: past it the decision arm cannot move further, so any arm
-that is still climbing will catch up regardless of what it encodes. The measurement
-that separates mechanism from magnitude is the one at +-10.51, not the one at the edge.
+The decision arm rises to a measured peak at |unit beta| = 21.02 and declines
+significantly beyond it (+52.54 vs +21.02: -5.44 [-7.19, -3.70], p = 2.2e-09). That
+line is drawn on both panels, because it is what makes the extreme comparison
+uninformative: past the peak the decision arm is going backwards, so any arm still
+climbing will catch up regardless of what it encodes. The measurement that separates
+mechanism from magnitude is the one at +-10.51, not the one at the edge.
 """
 import json
 from pathlib import Path
@@ -18,7 +19,8 @@ import matplotlib.pyplot as plt
 OUT = Path("/home/marco/dockmaster/data/steer-decision")
 UNIT = 10.508308410644531
 OUR_NORM = 6.872108459472656
-SAT = UNIT  # the decision vector's saturation point, measured in section 4
+PEAK = 2 * UNIT  # the decision arm's measured peak, +-21.02 (README, "The comparison")
+TEST = UNIT      # +-10.51: the coefficient the mechanism test is read at
 
 table = json.loads((OUT / "comparison.json").read_text())["table"]
 poles = json.loads((OUT / "pole_curves.json").read_text())
@@ -72,20 +74,20 @@ for ax, data, ykey, lokey, hikey, base, ylab, title, basetxt, ylim, texty in pan
                     capsize=3, markersize=6, linewidth=lw, label=label, zorder=4)
     ax.axhline(base, color="#999999", linewidth=0.9, linestyle=(0, (2, 3)), zorder=1)
     ax.text(-56, texty, basetxt, fontsize=8.5, color="#666666")
-    # the saturation band: inside it the decision vector is still responding
-    ax.axvspan(-SAT, SAT, color="#1b6ca8", alpha=0.055, zorder=0)
-    for s in (-SAT, SAT):
+    # inside this band the decision arm is still rising towards its peak
+    ax.axvspan(-PEAK, PEAK, color="#1b6ca8", alpha=0.055, zorder=0)
+    for s in (-PEAK, PEAK):
         ax.axvline(s, color="#1b6ca8", linewidth=1.1, linestyle=(0, (4, 3)),
                    alpha=0.75, zorder=2)
     ax.set_ylabel(ylab)
     ax.set_title(title, fontsize=12, loc="left")
     ax.set_ylim(ylim)
 
-axes[0].annotate("decision vector is\nfully saturated beyond here",
-                 xy=(SAT, 60), xytext=(21.5, 68), fontsize=8.5, color="#1b6ca8",
+axes[0].annotate("decision arm peaks at $\\pm$21.02\nand declines beyond",
+                 xy=(PEAK, 45.5), xytext=(-7, 64), fontsize=8.5, color="#1b6ca8",
                  ha="left", arrowprops=dict(arrowstyle="->", color="#1b6ca8", lw=1))
 axes[1].annotate("at $\\pm$10.51 the orthogonal null\nis indistinguishable from baseline",
-                 xy=(SAT, 0.548), xytext=(15, 0.80), fontsize=8.5, color="#7a3b9e",
+                 xy=(TEST, 0.548), xytext=(15, 0.80), fontsize=8.5, color="#7a3b9e",
                  ha="left", arrowprops=dict(arrowstyle="->", color="#7a3b9e", lw=1))
 
 for ax in axes:
@@ -103,7 +105,7 @@ for ax in axes:
 
 axes[0].legend(loc="upper left", fontsize=8.8, framealpha=0.95)
 
-fig.suptitle("Steering the Dictator game at matched intervention size: below saturation "
+fig.suptitle("Steering the Dictator game at matched intervention size: below the peak "
              "the decision direction does what its orthogonal complement cannot",
              fontsize=13, y=0.995)
 fig.text(0.5, 0.008,
@@ -113,8 +115,8 @@ fig.text(0.5, 0.008,
          "Every arm is steered at unit norm, so a given x is the same edit magnitude for "
          "each. Our raw beta = unit beta / %.4f; theirs = unit beta / %.4f. "
          "beta=0 is one shared no-op run (verified byte-identical across arms).\n"
-         "Shaded band: below the decision vector's saturation point. The orthogonal null "
-         "was run at 4 coefficients; +-31.52 was not run." % (OUR_NORM, UNIT),
+         "Shaded band: below the decision arm's measured peak at +-21.02, where it is still "
+         "rising. The orthogonal null was run at 4 coefficients; +-31.52 was not run." % (OUR_NORM, UNIT),
          ha="center", fontsize=8.4, color="#444444")
 
 fig.tight_layout(rect=(0, 0.10, 1, 0.962))
