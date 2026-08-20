@@ -1,0 +1,1950 @@
+{
+  "decision": {
+    "-5": {
+      "n_rows": 200,
+      "n_parsed": 196,
+      "parse_coverage": 0.98,
+      "tags": {
+        "a2_anchor": 159,
+        "a2_near": 17,
+        "answer_is": 2,
+        "bare": 7,
+        "bare_int": 9,
+        "complement": 2,
+        "unparsed": 4
+      },
+      "mean": 1.030612244897959,
+      "sd": 10.075564837899703,
+      "se": 0.7196832027071217,
+      "ci": [
+        -0.3887498831108951,
+        2.449974372906813
+      ],
+      "median": 0.0,
+      "n_distinct_amounts": 3,
+      "modal_amount": 0.0,
+      "modal_share": 0.9846938775510204,
+      "top4": [
+        [
+          0.0,
+          193,
+          0.9846938775510204
+        ],
+        [
+          100.0,
+          2,
+          0.01020408163265306
+        ],
+        [
+          2.0,
+          1,
+          0.00510204081632653
+        ]
+      ],
+      "entropy_nats": 0.08890292035417637,
+      "entropy_normalised": 0.08092292546805281,
+      "share_zero": 0.9846938775510204,
+      "share_half": 0.0,
+      "share_full": 0.01020408163265306,
+      "degeneracy": {
+        "n": 200,
+        "mean_chars": 757.035,
+        "mean_words": 145.95,
+        "mean_distinct_trigram_ratio": 0.888622071287721,
+        "share_trigram_repeated_5x": 0.33,
+        "share_with_non_latin_script": 0.005
+      }
+    },
+    "-4": {
+      "n_rows": 200,
+      "n_parsed": 199,
+      "parse_coverage": 0.995,
+      "tags": {
+        "a2_anchor": 159,
+        "a2_near": 22,
+        "bare": 7,
+        "bare_int": 8,
+        "complement": 2,
+        "keep": 1,
+        "unparsed": 1
+      },
+      "mean": 3.5175879396984926,
+      "sd": 18.468877512638002,
+      "se": 1.3092240146310183,
+      "ci": [
+        0.935775300443114,
+        6.099400578953871
+      ],
+      "median": 0.0,
+      "n_distinct_amounts": 2,
+      "modal_amount": 0.0,
+      "modal_share": 0.964824120603015,
+      "top4": [
+        [
+          0.0,
+          192,
+          0.964824120603015
+        ],
+        [
+          100.0,
+          7,
+          0.035175879396984924
+        ]
+      ],
+      "entropy_nats": 0.15229737511282787,
+      "entropy_normalised": 0.219718667815683,
+      "share_zero": 0.964824120603015,
+      "share_half": 0.0,
+      "share_full": 0.035175879396984924,
+      "degeneracy": {
+        "n": 200,
+        "mean_chars": 743.805,
+        "mean_words": 141.565,
+        "mean_distinct_trigram_ratio": 0.9082277875473477,
+        "share_trigram_repeated_5x": 0.205,
+        "share_with_non_latin_script": 0.01
+      }
+    },
+    "-3": {
+      "n_rows": 200,
+      "n_parsed": 199,
+      "parse_coverage": 0.995,
+      "tags": {
+        "a2_anchor": 166,
+        "a2_near": 19,
+        "answer_is": 1,
+        "bare": 6,
+        "bare_int": 6,
+        "complement": 1,
+        "unparsed": 1
+      },
+      "mean": 2.512562814070352,
+      "sd": 15.690136931657598,
+      "se": 1.1122443174859231,
+      "ci": [
+        0.3191975803640026,
+        4.705928047776702
+      ],
+      "median": 0.0,
+      "n_distinct_amounts": 2,
+      "modal_amount": 0.0,
+      "modal_share": 0.9748743718592965,
+      "top4": [
+        [
+          0.0,
+          194,
+          0.9748743718592965
+        ],
+        [
+          100.0,
+          5,
+          0.02512562814070352
+        ]
+      ],
+      "entropy_nats": 0.11736677236039109,
+      "entropy_normalised": 0.16932446044948007,
+      "share_zero": 0.9748743718592965,
+      "share_half": 0.0,
+      "share_full": 0.02512562814070352,
+      "degeneracy": {
+        "n": 200,
+        "mean_chars": 747.64,
+        "mean_words": 139.33,
+        "mean_distinct_trigram_ratio": 0.9294057632519521,
+        "share_trigram_repeated_5x": 0.195,
+        "share_with_non_latin_script": 0.005
+      }
+    },
+    "-2": {
+      "n_rows": 200,
+      "n_parsed": 198,
+      "parse_coverage": 0.99,
+      "tags": {
+        "a2_anchor": 158,
+        "a2_near": 23,
+        "answer_is": 1,
+        "bare": 12,
+        "bare_int": 3,
+        "complement": 1,
+        "unparsed": 2
+      },
+      "mean": 3.0303030303030303,
+      "sd": 17.185435071242996,
+      "se": 1.2213156893572792,
+      "ci": [
+        0.6217719656967522,
+        5.438834094909309
+      ],
+      "median": 0.0,
+      "n_distinct_amounts": 2,
+      "modal_amount": 0.0,
+      "modal_share": 0.9696969696969697,
+      "top4": [
+        [
+          0.0,
+          192,
+          0.9696969696969697
+        ],
+        [
+          100.0,
+          6,
+          0.030303030303030304
+        ]
+      ],
+      "entropy_nats": 0.13579395875159386,
+      "entropy_normalised": 0.19590927087360493,
+      "share_zero": 0.9696969696969697,
+      "share_half": 0.0,
+      "share_full": 0.030303030303030304,
+      "degeneracy": {
+        "n": 200,
+        "mean_chars": 775.56,
+        "mean_words": 142.395,
+        "mean_distinct_trigram_ratio": 0.9343612223050761,
+        "share_trigram_repeated_5x": 0.17,
+        "share_with_non_latin_script": 0.005
+      }
+    },
+    "-1": {
+      "n_rows": 200,
+      "n_parsed": 198,
+      "parse_coverage": 0.99,
+      "tags": {
+        "a2_anchor": 156,
+        "a2_near": 28,
+        "answer_is": 1,
+        "bare": 8,
+        "bare_int": 2,
+        "keep": 2,
+        "refusal": 1,
+        "unparsed": 1,
+        "verb_obj": 1
+      },
+      "mean": 1.3686868686868687,
+      "sd": 10.694200206835848,
+      "se": 0.7600037149825734,
+      "ci": [
+        -0.13010052322406773,
+        2.867474260597805
+      ],
+      "median": 0.0,
+      "n_distinct_amounts": 5,
+      "modal_amount": 0.0,
+      "modal_share": 0.9747474747474747,
+      "top4": [
+        [
+          0.0,
+          193,
+          0.9747474747474747
+        ],
+        [
+          100.0,
+          2,
+          0.010101010101010102
+        ],
+        [
+          1.0,
+          1,
+          0.005050505050505051
+        ],
+        [
+          50.0,
+          1,
+          0.005050505050505051
+        ]
+      ],
+      "entropy_nats": 0.15147157200886457,
+      "entropy_normalised": 0.0941145792817694,
+      "share_zero": 0.9747474747474747,
+      "share_half": 0.005050505050505051,
+      "share_full": 0.010101010101010102,
+      "degeneracy": {
+        "n": 200,
+        "mean_chars": 947.47,
+        "mean_words": 169.01,
+        "mean_distinct_trigram_ratio": 0.9466257291504454,
+        "share_trigram_repeated_5x": 0.2,
+        "share_with_non_latin_script": 0.01
+      }
+    },
+    "0": {
+      "n_rows": 200,
+      "n_parsed": 200,
+      "parse_coverage": 1.0,
+      "tags": {
+        "a2_anchor": 166,
+        "a2_near": 8,
+        "answer_is": 1,
+        "bare": 11,
+        "bare_int": 1,
+        "complement": 1,
+        "keep": 3,
+        "verb_obj": 9
+      },
+      "mean": 12.965,
+      "sd": 20.59013216843366,
+      "se": 1.4559422081826712,
+      "ci": [
+        10.093945234521847,
+        15.836054765478153
+      ],
+      "median": 0.0,
+      "n_distinct_amounts": 14,
+      "modal_amount": 0.0,
+      "modal_share": 0.61,
+      "top4": [
+        [
+          0.0,
+          122,
+          0.61
+        ],
+        [
+          50.0,
+          35,
+          0.175
+        ],
+        [
+          20.0,
+          15,
+          0.075
+        ],
+        [
+          10.0,
+          7,
+          0.035
+        ]
+      ],
+      "entropy_nats": 1.3738939018524177,
+      "entropy_normalised": 0.5206002485943396,
+      "share_zero": 0.61,
+      "share_half": 0.175,
+      "share_full": 0.005,
+      "degeneracy": {
+        "n": 200,
+        "mean_chars": 1272.095,
+        "mean_words": 220.57,
+        "mean_distinct_trigram_ratio": 0.9567584223105512,
+        "share_trigram_repeated_5x": 0.15,
+        "share_with_non_latin_script": 0.02
+      }
+    },
+    "1": {
+      "n_rows": 200,
+      "n_parsed": 197,
+      "parse_coverage": 0.985,
+      "tags": {
+        "a2_anchor": 168,
+        "a2_near": 7,
+        "answer_is": 1,
+        "bare": 6,
+        "complement": 2,
+        "unparsed": 3,
+        "verb_obj": 13
+      },
+      "mean": 38.74873096446701,
+      "sd": 16.469562554247474,
+      "se": 1.1734077465814747,
+      "ci": [
+        36.43460517761614,
+        41.062856751317874
+      ],
+      "median": 50.0,
+      "n_distinct_amounts": 16,
+      "modal_amount": 50.0,
+      "modal_share": 0.5228426395939086,
+      "top4": [
+        [
+          50.0,
+          103,
+          0.5228426395939086
+        ],
+        [
+          30.0,
+          25,
+          0.12690355329949238
+        ],
+        [
+          25.0,
+          17,
+          0.08629441624365482
+        ],
+        [
+          0.0,
+          15,
+          0.07614213197969544
+        ]
+      ],
+      "entropy_nats": 1.7098033830838764,
+      "entropy_normalised": 0.6166812154175703,
+      "share_zero": 0.07614213197969544,
+      "share_half": 0.5228426395939086,
+      "share_full": 0.0,
+      "degeneracy": {
+        "n": 200,
+        "mean_chars": 1270.65,
+        "mean_words": 215.855,
+        "mean_distinct_trigram_ratio": 0.9733120624825585,
+        "share_trigram_repeated_5x": 0.04,
+        "share_with_non_latin_script": 0.05
+      }
+    },
+    "2": {
+      "n_rows": 200,
+      "n_parsed": 197,
+      "parse_coverage": 0.985,
+      "tags": {
+        "a2_anchor": 170,
+        "a2_near": 2,
+        "answer_is": 5,
+        "bare": 7,
+        "keep": 1,
+        "unparsed": 3,
+        "verb_obj": 12
+      },
+      "mean": 44.142131979695435,
+      "sd": 8.724239135460262,
+      "se": 0.621576301790615,
+      "ci": [
+        42.91629573252593,
+        45.36796822686494
+      ],
+      "median": 50.0,
+      "n_distinct_amounts": 9,
+      "modal_amount": 50.0,
+      "modal_share": 0.5786802030456852,
+      "top4": [
+        [
+          50.0,
+          114,
+          0.5786802030456852
+        ],
+        [
+          40.0,
+          34,
+          0.17258883248730963
+        ],
+        [
+          30.0,
+          28,
+          0.14213197969543148
+        ],
+        [
+          35.0,
+          8,
+          0.04060913705583756
+        ]
+      ],
+      "entropy_nats": 1.2974533347544408,
+      "entropy_normalised": 0.5904964600056466,
+      "share_zero": 0.0,
+      "share_half": 0.5786802030456852,
+      "share_full": 0.0,
+      "degeneracy": {
+        "n": 200,
+        "mean_chars": 1015.565,
+        "mean_words": 173.69,
+        "mean_distinct_trigram_ratio": 0.979207377107964,
+        "share_trigram_repeated_5x": 0.005,
+        "share_with_non_latin_script": 0.015
+      }
+    },
+    "3": {
+      "n_rows": 200,
+      "n_parsed": 196,
+      "parse_coverage": 0.98,
+      "tags": {
+        "a2_anchor": 167,
+        "a2_near": 3,
+        "answer_is": 4,
+        "bare": 9,
+        "unparsed": 4,
+        "verb_obj": 13
+      },
+      "mean": 42.224489795918366,
+      "sd": 8.749541364970595,
+      "se": 0.6249672403550425,
+      "ci": [
+        40.99192687258007,
+        43.45705271925666
+      ],
+      "median": 40.0,
+      "n_distinct_amounts": 9,
+      "modal_amount": 50.0,
+      "modal_share": 0.46938775510204084,
+      "top4": [
+        [
+          50.0,
+          92,
+          0.46938775510204084
+        ],
+        [
+          30.0,
+          45,
+          0.22959183673469388
+        ],
+        [
+          40.0,
+          39,
+          0.1989795918367347
+        ],
+        [
+          35.0,
+          11,
+          0.05612244897959184
+        ]
+      ],
+      "entropy_nats": 1.3871527259843004,
+      "entropy_normalised": 0.6313204122566294,
+      "share_zero": 0.0,
+      "share_half": 0.46938775510204084,
+      "share_full": 0.0,
+      "degeneracy": {
+        "n": 200,
+        "mean_chars": 886.815,
+        "mean_words": 152.58,
+        "mean_distinct_trigram_ratio": 0.9815890294360259,
+        "share_trigram_repeated_5x": 0.0,
+        "share_with_non_latin_script": 0.005
+      }
+    },
+    "4": {
+      "n_rows": 200,
+      "n_parsed": 193,
+      "parse_coverage": 0.965,
+      "tags": {
+        "a2_anchor": 148,
+        "a2_near": 2,
+        "bare": 9,
+        "unparsed": 7,
+        "verb_obj": 34
+      },
+      "mean": 41.70725388601036,
+      "sd": 9.26735698246348,
+      "se": 0.6670789523788107,
+      "ci": [
+        40.391509700907896,
+        43.02299807111283
+      ],
+      "median": 40.0,
+      "n_distinct_amounts": 11,
+      "modal_amount": 50.0,
+      "modal_share": 0.37305699481865284,
+      "top4": [
+        [
+          50.0,
+          72,
+          0.37305699481865284
+        ],
+        [
+          40.0,
+          45,
+          0.23316062176165803
+        ],
+        [
+          30.0,
+          44,
+          0.22797927461139897
+        ],
+        [
+          35.0,
+          18,
+          0.09326424870466321
+        ]
+      ],
+      "entropy_nats": 1.5827551765036743,
+      "entropy_normalised": 0.6600601762964323,
+      "share_zero": 0.0,
+      "share_half": 0.37305699481865284,
+      "share_full": 0.0,
+      "degeneracy": {
+        "n": 200,
+        "mean_chars": 786.95,
+        "mean_words": 136.51,
+        "mean_distinct_trigram_ratio": 0.9816309057901872,
+        "share_trigram_repeated_5x": 0.0,
+        "share_with_non_latin_script": 0.015
+      }
+    },
+    "5": {
+      "n_rows": 200,
+      "n_parsed": 186,
+      "parse_coverage": 0.93,
+      "tags": {
+        "a2_anchor": 111,
+        "a2_near": 3,
+        "answer_is": 6,
+        "bare": 15,
+        "unparsed": 14,
+        "verb_obj": 51
+      },
+      "mean": 38.69892473118279,
+      "sd": 8.64577377930702,
+      "se": 0.6339388909313185,
+      "ci": [
+        37.44824574553014,
+        39.94960371683545
+      ],
+      "median": 40.0,
+      "n_distinct_amounts": 9,
+      "modal_amount": 30.0,
+      "modal_share": 0.3978494623655914,
+      "top4": [
+        [
+          30.0,
+          74,
+          0.3978494623655914
+        ],
+        [
+          50.0,
+          56,
+          0.3010752688172043
+        ],
+        [
+          40.0,
+          42,
+          0.22580645161290322
+        ],
+        [
+          35.0,
+          8,
+          0.043010752688172046
+        ]
+      ],
+      "entropy_nats": 1.3605613928490239,
+      "entropy_normalised": 0.619218175002614,
+      "share_zero": 0.0,
+      "share_half": 0.3010752688172043,
+      "share_full": 0.0,
+      "degeneracy": {
+        "n": 200,
+        "mean_chars": 731.96,
+        "mean_words": 128.025,
+        "mean_distinct_trigram_ratio": 0.9805839447638188,
+        "share_trigram_repeated_5x": 0.01,
+        "share_with_non_latin_script": 0.01
+      }
+    }
+  },
+  "null": {
+    "-5": {
+      "n_rows": 200,
+      "n_parsed": 194,
+      "parse_coverage": 0.97,
+      "tags": {
+        "a2_anchor": 133,
+        "a2_near": 22,
+        "bare": 5,
+        "complement": 2,
+        "unparsed": 6,
+        "verb_obj": 32
+      },
+      "mean": 24.103092783505154,
+      "sd": 41.863084146050774,
+      "se": 3.005594280755804,
+      "ci": [
+        18.17506397897997,
+        30.031121588030338
+      ],
+      "median": 0.0,
+      "n_distinct_amounts": 6,
+      "modal_amount": 0.0,
+      "modal_share": 0.6597938144329897,
+      "top4": [
+        [
+          0.0,
+          128,
+          0.6597938144329897
+        ],
+        [
+          100.0,
+          44,
+          0.2268041237113402
+        ],
+        [
+          1.0,
+          13,
+          0.06701030927835051
+        ],
+        [
+          50.0,
+          4,
+          0.020618556701030927
+        ]
+      ],
+      "entropy_nats": 0.9792039621041857,
+      "entropy_normalised": 0.5465041368114308,
+      "share_zero": 0.6597938144329897,
+      "share_half": 0.020618556701030927,
+      "share_full": 0.2268041237113402,
+      "degeneracy": {
+        "n": 200,
+        "mean_chars": 801.88,
+        "mean_words": 148.83,
+        "mean_distinct_trigram_ratio": 0.9609571346405752,
+        "share_trigram_repeated_5x": 0.015,
+        "share_with_non_latin_script": 0.01
+      }
+    },
+    "-3": {
+      "n_rows": 200,
+      "n_parsed": 198,
+      "parse_coverage": 0.99,
+      "tags": {
+        "a2_anchor": 148,
+        "a2_near": 41,
+        "complement": 2,
+        "unparsed": 2,
+        "verb_obj": 7
+      },
+      "mean": 10.901515151515152,
+      "sd": 29.283172828275188,
+      "se": 2.0810644747178055,
+      "ci": [
+        6.797491532982812,
+        15.005538770047494
+      ],
+      "median": 0.0,
+      "n_distinct_amounts": 5,
+      "modal_amount": 0.0,
+      "modal_share": 0.8232323232323232,
+      "top4": [
+        [
+          0.0,
+          163,
+          0.8232323232323232
+        ],
+        [
+          100.0,
+          17,
+          0.08585858585858586
+        ],
+        [
+          1.0,
+          9,
+          0.045454545454545456
+        ],
+        [
+          50.0,
+          8,
+          0.04040404040404041
+        ]
+      ],
+      "entropy_nats": 0.6677798432706837,
+      "entropy_normalised": 0.4149149452188181,
+      "share_zero": 0.8232323232323232,
+      "share_half": 0.04040404040404041,
+      "share_full": 0.08585858585858586,
+      "degeneracy": {
+        "n": 200,
+        "mean_chars": 875.18,
+        "mean_words": 159.835,
+        "mean_distinct_trigram_ratio": 0.9523728870320509,
+        "share_trigram_repeated_5x": 0.09,
+        "share_with_non_latin_script": 0.005
+      }
+    },
+    "-1": {
+      "n_rows": 200,
+      "n_parsed": 198,
+      "parse_coverage": 0.99,
+      "tags": {
+        "a2_anchor": 163,
+        "a2_near": 22,
+        "bare": 5,
+        "bare_int": 2,
+        "keep": 1,
+        "refusal": 2,
+        "verb_obj": 5
+      },
+      "mean": 9.378787878787879,
+      "sd": 21.12358978071226,
+      "se": 1.5011881577499686,
+      "ci": [
+        6.41832618713253,
+        12.339249570443227
+      ],
+      "median": 0.0,
+      "n_distinct_amounts": 9,
+      "modal_amount": 0.0,
+      "modal_share": 0.7171717171717171,
+      "top4": [
+        [
+          0.0,
+          142,
+          0.7171717171717171
+        ],
+        [
+          50.0,
+          24,
+          0.12121212121212122
+        ],
+        [
+          1.0,
+          15,
+          0.07575757575757576
+        ],
+        [
+          25.0,
+          4,
+          0.020202020202020204
+        ]
+      ],
+      "entropy_nats": 1.0430505846152127,
+      "entropy_normalised": 0.4747127787364109,
+      "share_zero": 0.7171717171717171,
+      "share_half": 0.12121212121212122,
+      "share_full": 0.020202020202020204,
+      "degeneracy": {
+        "n": 200,
+        "mean_chars": 1113.04,
+        "mean_words": 196.38,
+        "mean_distinct_trigram_ratio": 0.9534396598920551,
+        "share_trigram_repeated_5x": 0.17,
+        "share_with_non_latin_script": 0.01
+      }
+    },
+    "0": {
+      "n_rows": 200,
+      "n_parsed": 200,
+      "parse_coverage": 1.0,
+      "tags": {
+        "a2_anchor": 166,
+        "a2_near": 8,
+        "answer_is": 1,
+        "bare": 11,
+        "bare_int": 1,
+        "complement": 1,
+        "keep": 3,
+        "verb_obj": 9
+      },
+      "mean": 12.965,
+      "sd": 20.59013216843366,
+      "se": 1.4559422081826712,
+      "ci": [
+        10.093945234521847,
+        15.836054765478153
+      ],
+      "median": 0.0,
+      "n_distinct_amounts": 14,
+      "modal_amount": 0.0,
+      "modal_share": 0.61,
+      "top4": [
+        [
+          0.0,
+          122,
+          0.61
+        ],
+        [
+          50.0,
+          35,
+          0.175
+        ],
+        [
+          20.0,
+          15,
+          0.075
+        ],
+        [
+          10.0,
+          7,
+          0.035
+        ]
+      ],
+      "entropy_nats": 1.3738939018524177,
+      "entropy_normalised": 0.5206002485943396,
+      "share_zero": 0.61,
+      "share_half": 0.175,
+      "share_full": 0.005,
+      "degeneracy": {
+        "n": 200,
+        "mean_chars": 1272.095,
+        "mean_words": 220.57,
+        "mean_distinct_trigram_ratio": 0.9567584223105512,
+        "share_trigram_repeated_5x": 0.15,
+        "share_with_non_latin_script": 0.02
+      }
+    },
+    "1": {
+      "n_rows": 200,
+      "n_parsed": 198,
+      "parse_coverage": 0.99,
+      "tags": {
+        "a2_anchor": 173,
+        "a2_near": 9,
+        "answer_is": 3,
+        "bare": 6,
+        "complement": 1,
+        "keep": 1,
+        "refusal": 1,
+        "unparsed": 1,
+        "verb_obj": 5
+      },
+      "mean": 26.32070707070707,
+      "sd": 22.566977030373184,
+      "se": 1.6037652229520565,
+      "ci": [
+        23.15795529942015,
+        29.48345884199399
+      ],
+      "median": 26.25,
+      "n_distinct_amounts": 14,
+      "modal_amount": 50.0,
+      "modal_share": 0.3888888888888889,
+      "top4": [
+        [
+          50.0,
+          77,
+          0.3888888888888889
+        ],
+        [
+          0.0,
+          69,
+          0.3484848484848485
+        ],
+        [
+          30.0,
+          12,
+          0.06060606060606061
+        ],
+        [
+          20.0,
+          12,
+          0.06060606060606061
+        ]
+      ],
+      "entropy_nats": 1.6261080909320593,
+      "entropy_normalised": 0.6161700515877484,
+      "share_zero": 0.3484848484848485,
+      "share_half": 0.3888888888888889,
+      "share_full": 0.0,
+      "degeneracy": {
+        "n": 200,
+        "mean_chars": 1384.08,
+        "mean_words": 234.705,
+        "mean_distinct_trigram_ratio": 0.9629267598287147,
+        "share_trigram_repeated_5x": 0.165,
+        "share_with_non_latin_script": 0.015
+      }
+    },
+    "3": {
+      "n_rows": 200,
+      "n_parsed": 196,
+      "parse_coverage": 0.98,
+      "tags": {
+        "a2_anchor": 172,
+        "a2_near": 12,
+        "bare": 3,
+        "keep": 5,
+        "unparsed": 4,
+        "verb_obj": 4
+      },
+      "mean": 41.339285714285715,
+      "sd": 16.999123280560436,
+      "se": 1.2142230914686025,
+      "ci": [
+        38.94459001414761,
+        43.73398141442382
+      ],
+      "median": 50.0,
+      "n_distinct_amounts": 19,
+      "modal_amount": 50.0,
+      "modal_share": 0.45408163265306123,
+      "top4": [
+        [
+          50.0,
+          89,
+          0.45408163265306123
+        ],
+        [
+          40.0,
+          31,
+          0.15816326530612246
+        ],
+        [
+          30.0,
+          28,
+          0.14285714285714285
+        ],
+        [
+          0.0,
+          16,
+          0.08163265306122448
+        ]
+      ],
+      "entropy_nats": 1.8150121684531144,
+      "entropy_normalised": 0.6164203711794828,
+      "share_zero": 0.08163265306122448,
+      "share_half": 0.45408163265306123,
+      "share_full": 0.01020408163265306,
+      "degeneracy": {
+        "n": 200,
+        "mean_chars": 1516.835,
+        "mean_words": 251.255,
+        "mean_distinct_trigram_ratio": 0.96180738064536,
+        "share_trigram_repeated_5x": 0.19,
+        "share_with_non_latin_script": 0.02
+      }
+    },
+    "5": {
+      "n_rows": 200,
+      "n_parsed": 193,
+      "parse_coverage": 0.965,
+      "tags": {
+        "a2_anchor": 149,
+        "a2_near": 6,
+        "answer_is": 1,
+        "bare": 6,
+        "complement": 5,
+        "keep": 6,
+        "unparsed": 7,
+        "verb_obj": 20
+      },
+      "mean": 51.58031088082902,
+      "sd": 12.94881855561282,
+      "se": 0.9320763549917069,
+      "ci": [
+        49.74188674860512,
+        53.41873501305292
+      ],
+      "median": 50.0,
+      "n_distinct_amounts": 15,
+      "modal_amount": 50.0,
+      "modal_share": 0.5077720207253886,
+      "top4": [
+        [
+          50.0,
+          98,
+          0.5077720207253886
+        ],
+        [
+          60.0,
+          36,
+          0.18652849740932642
+        ],
+        [
+          70.0,
+          18,
+          0.09326424870466321
+        ],
+        [
+          30.0,
+          13,
+          0.06735751295336788
+        ]
+      ],
+      "entropy_nats": 1.6296760393038074,
+      "entropy_normalised": 0.6017894493390518,
+      "share_zero": 0.010362694300518135,
+      "share_half": 0.5077720207253886,
+      "share_full": 0.0051813471502590676,
+      "degeneracy": {
+        "n": 200,
+        "mean_chars": 1521.155,
+        "mean_words": 254.365,
+        "mean_distinct_trigram_ratio": 0.9525847042654906,
+        "share_trigram_repeated_5x": 0.14,
+        "share_with_non_latin_script": 0.04
+      }
+    }
+  },
+  "orth": {
+    "-5": {
+      "n_rows": 200,
+      "n_parsed": 197,
+      "parse_coverage": 0.985,
+      "tags": {
+        "a2_anchor": 114,
+        "a2_near": 18,
+        "bare": 5,
+        "complement": 2,
+        "unparsed": 3,
+        "verb_obj": 58
+      },
+      "mean": 28.761421319796955,
+      "sd": 38.68869652477155,
+      "se": 2.7564554952674647,
+      "ci": [
+        23.325301811903195,
+        34.197540827690716
+      ],
+      "median": 1.0,
+      "n_distinct_amounts": 6,
+      "modal_amount": 0.0,
+      "modal_share": 0.38071065989847713,
+      "top4": [
+        [
+          0.0,
+          75,
+          0.38071065989847713
+        ],
+        [
+          50.0,
+          38,
+          0.19289340101522842
+        ],
+        [
+          100.0,
+          36,
+          0.18274111675126903
+        ],
+        [
+          1.0,
+          34,
+          0.17258883248730963
+        ]
+      ],
+      "entropy_nats": 1.5050962980111082,
+      "entropy_normalised": 0.8400102379029424,
+      "share_zero": 0.38071065989847713,
+      "share_half": 0.19289340101522842,
+      "share_full": 0.18274111675126903,
+      "degeneracy": {
+        "n": 200,
+        "mean_chars": 977.515,
+        "mean_words": 177.345,
+        "mean_distinct_trigram_ratio": 0.9646765989327823,
+        "share_trigram_repeated_5x": 0.01,
+        "share_with_non_latin_script": 0.02
+      }
+    },
+    "-1": {
+      "n_rows": 200,
+      "n_parsed": 199,
+      "parse_coverage": 0.995,
+      "tags": {
+        "a2_anchor": 170,
+        "a2_near": 15,
+        "bare": 8,
+        "complement": 1,
+        "unparsed": 1,
+        "verb_obj": 5
+      },
+      "mean": 13.057788944723619,
+      "sd": 23.079363013453065,
+      "se": 1.6360526663801427,
+      "ci": [
+        9.831464491961292,
+        16.284113397485946
+      ],
+      "median": 0.0,
+      "n_distinct_amounts": 14,
+      "modal_amount": 0.0,
+      "modal_share": 0.628140703517588,
+      "top4": [
+        [
+          0.0,
+          125,
+          0.628140703517588
+        ],
+        [
+          50.0,
+          36,
+          0.18090452261306533
+        ],
+        [
+          1.0,
+          15,
+          0.07537688442211055
+        ],
+        [
+          10.0,
+          5,
+          0.02512562814070352
+        ]
+      ],
+      "entropy_nats": 1.295314707735172,
+      "entropy_normalised": 0.49082477034480065,
+      "share_zero": 0.628140703517588,
+      "share_half": 0.18090452261306533,
+      "share_full": 0.020100502512562814,
+      "degeneracy": {
+        "n": 200,
+        "mean_chars": 1177.88,
+        "mean_words": 206.935,
+        "mean_distinct_trigram_ratio": 0.9581468624360228,
+        "share_trigram_repeated_5x": 0.1,
+        "share_with_non_latin_script": 0.025
+      }
+    },
+    "1": {
+      "n_rows": 200,
+      "n_parsed": 199,
+      "parse_coverage": 0.995,
+      "tags": {
+        "a2_anchor": 171,
+        "a2_near": 13,
+        "answer_is": 1,
+        "bare": 5,
+        "complement": 3,
+        "keep": 3,
+        "unparsed": 1,
+        "verb_obj": 3
+      },
+      "mean": 18.6356783919598,
+      "sd": 23.643804224343338,
+      "se": 1.6760648429533687,
+      "ci": [
+        15.330449227668801,
+        21.9409075562508
+      ],
+      "median": 0.0,
+      "n_distinct_amounts": 14,
+      "modal_amount": 0.0,
+      "modal_share": 0.5477386934673367,
+      "top4": [
+        [
+          0.0,
+          109,
+          0.5477386934673367
+        ],
+        [
+          50.0,
+          53,
+          0.2663316582914573
+        ],
+        [
+          20.0,
+          10,
+          0.05025125628140704
+        ],
+        [
+          30.0,
+          9,
+          0.04522613065326633
+        ]
+      ],
+      "entropy_nats": 1.3901886745551768,
+      "entropy_normalised": 0.5267747157117837,
+      "share_zero": 0.5477386934673367,
+      "share_half": 0.2663316582914573,
+      "share_full": 0.005025125628140704,
+      "degeneracy": {
+        "n": 200,
+        "mean_chars": 1313.13,
+        "mean_words": 223.57,
+        "mean_distinct_trigram_ratio": 0.9572106144846108,
+        "share_trigram_repeated_5x": 0.22,
+        "share_with_non_latin_script": 0.01
+      }
+    },
+    "5": {
+      "n_rows": 200,
+      "n_parsed": 189,
+      "parse_coverage": 0.945,
+      "tags": {
+        "a2_anchor": 140,
+        "a2_near": 18,
+        "answer_is": 2,
+        "bare": 8,
+        "complement": 4,
+        "keep": 10,
+        "unparsed": 11,
+        "verb_obj": 7
+      },
+      "mean": 40.68783068783069,
+      "sd": 25.60549538035357,
+      "se": 1.862525726782735,
+      "ci": [
+        37.01369567300606,
+        44.36196570265532
+      ],
+      "median": 50.0,
+      "n_distinct_amounts": 20,
+      "modal_amount": 50.0,
+      "modal_share": 0.25925925925925924,
+      "top4": [
+        [
+          50.0,
+          49,
+          0.25925925925925924
+        ],
+        [
+          0.0,
+          38,
+          0.20105820105820105
+        ],
+        [
+          60.0,
+          21,
+          0.1111111111111111
+        ],
+        [
+          30.0,
+          20,
+          0.10582010582010581
+        ]
+      ],
+      "entropy_nats": 2.2556577431690115,
+      "entropy_normalised": 0.7529570526317457,
+      "share_zero": 0.20105820105820105,
+      "share_half": 0.25925925925925924,
+      "share_full": 0.010582010582010581,
+      "degeneracy": {
+        "n": 200,
+        "mean_chars": 1698.395,
+        "mean_words": 283.73,
+        "mean_distinct_trigram_ratio": 0.9391435466105108,
+        "share_trigram_repeated_5x": 0.4,
+        "share_with_non_latin_script": 0.06
+      }
+    }
+  },
+  "theirs": {
+    "-5": {
+      "n_rows": 200,
+      "n_parsed": 196,
+      "parse_coverage": 0.98,
+      "tags": {
+        "a2_anchor": 143,
+        "a2_near": 3,
+        "answer_is": 4,
+        "bare": 17,
+        "bare_int": 1,
+        "keep": 4,
+        "unparsed": 4,
+        "verb_obj": 24
+      },
+      "mean": 30.107142857142858,
+      "sd": 26.202050223168357,
+      "se": 1.8715750159405968,
+      "ci": [
+        26.41601502845196,
+        33.79827068583376
+      ],
+      "median": 32.5,
+      "n_distinct_amounts": 21,
+      "modal_amount": 50.0,
+      "modal_share": 0.3469387755102041,
+      "top4": [
+        [
+          50.0,
+          68,
+          0.3469387755102041
+        ],
+        [
+          0.0,
+          61,
+          0.3112244897959184
+        ],
+        [
+          25.0,
+          14,
+          0.07142857142857142
+        ],
+        [
+          20.0,
+          7,
+          0.03571428571428571
+        ]
+      ],
+      "entropy_nats": 1.992888502031938,
+      "entropy_normalised": 0.6545816438528677,
+      "share_zero": 0.3112244897959184,
+      "share_half": 0.3469387755102041,
+      "share_full": 0.025510204081632654,
+      "degeneracy": {
+        "n": 200,
+        "mean_chars": 1335.655,
+        "mean_words": 242.865,
+        "mean_distinct_trigram_ratio": 0.9464767695359508,
+        "share_trigram_repeated_5x": 0.135,
+        "share_with_non_latin_script": 0.03
+      }
+    },
+    "-4": {
+      "n_rows": 200,
+      "n_parsed": 198,
+      "parse_coverage": 0.99,
+      "tags": {
+        "a2_anchor": 152,
+        "a2_near": 2,
+        "answer_is": 3,
+        "bare": 13,
+        "bare_int": 2,
+        "complement": 1,
+        "keep": 1,
+        "unparsed": 2,
+        "verb_obj": 24
+      },
+      "mean": 26.060606060606062,
+      "sd": 25.824207815061726,
+      "se": 1.8352465351624379,
+      "ci": [
+        22.441354846797502,
+        29.679857274414623
+      ],
+      "median": 22.5,
+      "n_distinct_amounts": 17,
+      "modal_amount": 0.0,
+      "modal_share": 0.42424242424242425,
+      "top4": [
+        [
+          0.0,
+          84,
+          0.42424242424242425
+        ],
+        [
+          50.0,
+          65,
+          0.3282828282828283
+        ],
+        [
+          20.0,
+          12,
+          0.06060606060606061
+        ],
+        [
+          35.0,
+          7,
+          0.03535353535353535
+        ]
+      ],
+      "entropy_nats": 1.659873696428426,
+      "entropy_normalised": 0.5858625859964505,
+      "share_zero": 0.42424242424242425,
+      "share_half": 0.3282828282828283,
+      "share_full": 0.015151515151515152,
+      "degeneracy": {
+        "n": 200,
+        "mean_chars": 1300.825,
+        "mean_words": 234.075,
+        "mean_distinct_trigram_ratio": 0.950352407600665,
+        "share_trigram_repeated_5x": 0.125,
+        "share_with_non_latin_script": 0.025
+      }
+    },
+    "-3": {
+      "n_rows": 200,
+      "n_parsed": 197,
+      "parse_coverage": 0.985,
+      "tags": {
+        "a2_anchor": 162,
+        "a2_near": 4,
+        "answer_is": 3,
+        "bare": 10,
+        "complement": 3,
+        "keep": 3,
+        "refusal": 1,
+        "unparsed": 2,
+        "verb_obj": 12
+      },
+      "mean": 23.870558375634516,
+      "sd": 26.19388552644184,
+      "se": 1.8662370714799847,
+      "ci": [
+        20.190075317575033,
+        27.551041433694
+      ],
+      "median": 20.0,
+      "n_distinct_amounts": 19,
+      "modal_amount": 0.0,
+      "modal_share": 0.4263959390862944,
+      "top4": [
+        [
+          0.0,
+          84,
+          0.4263959390862944
+        ],
+        [
+          50.0,
+          54,
+          0.27411167512690354
+        ],
+        [
+          20.0,
+          10,
+          0.050761421319796954
+        ],
+        [
+          30.0,
+          9,
+          0.04568527918781726
+        ]
+      ],
+      "entropy_nats": 1.8262544093017754,
+      "entropy_normalised": 0.6202384977999379,
+      "share_zero": 0.4263959390862944,
+      "share_half": 0.27411167512690354,
+      "share_full": 0.030456852791878174,
+      "degeneracy": {
+        "n": 200,
+        "mean_chars": 1278.6,
+        "mean_words": 227.55,
+        "mean_distinct_trigram_ratio": 0.9515493736256212,
+        "share_trigram_repeated_5x": 0.165,
+        "share_with_non_latin_script": 0.015
+      }
+    },
+    "-2": {
+      "n_rows": 200,
+      "n_parsed": 199,
+      "parse_coverage": 0.995,
+      "tags": {
+        "a2_anchor": 152,
+        "a2_near": 18,
+        "bare": 15,
+        "complement": 2,
+        "keep": 4,
+        "unparsed": 1,
+        "verb_obj": 8
+      },
+      "mean": 13.520100502512562,
+      "sd": 21.736649170503835,
+      "se": 1.5408702056830204,
+      "ci": [
+        10.481477525828428,
+        16.558723479196697
+      ],
+      "median": 0.0,
+      "n_distinct_amounts": 16,
+      "modal_amount": 0.0,
+      "modal_share": 0.6381909547738693,
+      "top4": [
+        [
+          0.0,
+          127,
+          0.6381909547738693
+        ],
+        [
+          50.0,
+          34,
+          0.1708542713567839
+        ],
+        [
+          30.0,
+          7,
+          0.035175879396984924
+        ],
+        [
+          20.0,
+          6,
+          0.03015075376884422
+        ]
+      ],
+      "entropy_nats": 1.3574736695226932,
+      "entropy_normalised": 0.4896051327894333,
+      "share_zero": 0.6381909547738693,
+      "share_half": 0.1708542713567839,
+      "share_full": 0.010050251256281407,
+      "degeneracy": {
+        "n": 200,
+        "mean_chars": 1225.03,
+        "mean_words": 215.44,
+        "mean_distinct_trigram_ratio": 0.9507214522868334,
+        "share_trigram_repeated_5x": 0.215,
+        "share_with_non_latin_script": 0.04
+      }
+    },
+    "-1": {
+      "n_rows": 200,
+      "n_parsed": 196,
+      "parse_coverage": 0.98,
+      "tags": {
+        "a2_anchor": 167,
+        "a2_near": 18,
+        "bare": 6,
+        "bare_int": 1,
+        "unparsed": 4,
+        "verb_obj": 4
+      },
+      "mean": 11.364795918367347,
+      "sd": 19.362025626684662,
+      "se": 1.3830018304774758,
+      "ci": [
+        8.637234105387957,
+        14.092357731346738
+      ],
+      "median": 0.0,
+      "n_distinct_amounts": 12,
+      "modal_amount": 0.0,
+      "modal_share": 0.6479591836734694,
+      "top4": [
+        [
+          0.0,
+          127,
+          0.6479591836734694
+        ],
+        [
+          50.0,
+          31,
+          0.15816326530612246
+        ],
+        [
+          20.0,
+          9,
+          0.04591836734693878
+        ],
+        [
+          10.0,
+          8,
+          0.04081632653061224
+        ]
+      ],
+      "entropy_nats": 1.2703022741968726,
+      "entropy_normalised": 0.511207241650405,
+      "share_zero": 0.6479591836734694,
+      "share_half": 0.15816326530612246,
+      "share_full": 0.0,
+      "degeneracy": {
+        "n": 200,
+        "mean_chars": 1202.245,
+        "mean_words": 210.09,
+        "mean_distinct_trigram_ratio": 0.9552020848628066,
+        "share_trigram_repeated_5x": 0.165,
+        "share_with_non_latin_script": 0.02
+      }
+    },
+    "0": {
+      "n_rows": 200,
+      "n_parsed": 200,
+      "parse_coverage": 1.0,
+      "tags": {
+        "a2_anchor": 166,
+        "a2_near": 8,
+        "answer_is": 1,
+        "bare": 11,
+        "bare_int": 1,
+        "complement": 1,
+        "keep": 3,
+        "verb_obj": 9
+      },
+      "mean": 12.965,
+      "sd": 20.59013216843366,
+      "se": 1.4559422081826712,
+      "ci": [
+        10.093945234521847,
+        15.836054765478153
+      ],
+      "median": 0.0,
+      "n_distinct_amounts": 14,
+      "modal_amount": 0.0,
+      "modal_share": 0.61,
+      "top4": [
+        [
+          0.0,
+          122,
+          0.61
+        ],
+        [
+          50.0,
+          35,
+          0.175
+        ],
+        [
+          20.0,
+          15,
+          0.075
+        ],
+        [
+          10.0,
+          7,
+          0.035
+        ]
+      ],
+      "entropy_nats": 1.3738939018524177,
+      "entropy_normalised": 0.5206002485943396,
+      "share_zero": 0.61,
+      "share_half": 0.175,
+      "share_full": 0.005,
+      "degeneracy": {
+        "n": 200,
+        "mean_chars": 1272.095,
+        "mean_words": 220.57,
+        "mean_distinct_trigram_ratio": 0.9567584223105512,
+        "share_trigram_repeated_5x": 0.15,
+        "share_with_non_latin_script": 0.02
+      }
+    },
+    "1": {
+      "n_rows": 200,
+      "n_parsed": 196,
+      "parse_coverage": 0.98,
+      "tags": {
+        "a2_anchor": 169,
+        "a2_near": 17,
+        "bare": 4,
+        "complement": 2,
+        "refusal": 2,
+        "unparsed": 2,
+        "verb_obj": 4
+      },
+      "mean": 26.619897959183675,
+      "sd": 24.625079190080573,
+      "se": 1.758934227862898,
+      "ci": [
+        23.150920749077684,
+        30.088875169289665
+      ],
+      "median": 22.5,
+      "n_distinct_amounts": 12,
+      "modal_amount": 50.0,
+      "modal_share": 0.4030612244897959,
+      "top4": [
+        [
+          50.0,
+          79,
+          0.4030612244897959
+        ],
+        [
+          0.0,
+          66,
+          0.336734693877551
+        ],
+        [
+          20.0,
+          15,
+          0.07653061224489796
+        ],
+        [
+          10.0,
+          9,
+          0.04591836734693878
+        ]
+      ],
+      "entropy_nats": 1.610605403776842,
+      "entropy_normalised": 0.6481552954571758,
+      "share_zero": 0.336734693877551,
+      "share_half": 0.4030612244897959,
+      "share_full": 0.015306122448979591,
+      "degeneracy": {
+        "n": 200,
+        "mean_chars": 1339.725,
+        "mean_words": 228.76,
+        "mean_distinct_trigram_ratio": 0.9651490680857812,
+        "share_trigram_repeated_5x": 0.115,
+        "share_with_non_latin_script": 0.02
+      }
+    },
+    "2": {
+      "n_rows": 200,
+      "n_parsed": 198,
+      "parse_coverage": 0.99,
+      "tags": {
+        "a2_anchor": 176,
+        "a2_near": 11,
+        "answer_is": 1,
+        "bare": 2,
+        "unparsed": 2,
+        "verb_obj": 8
+      },
+      "mean": 38.13636363636363,
+      "sd": 25.926763134032242,
+      "se": 1.8425348243193018,
+      "ci": [
+        34.50273934031671,
+        41.76998793241056
+      ],
+      "median": 50.0,
+      "n_distinct_amounts": 14,
+      "modal_amount": 50.0,
+      "modal_share": 0.5606060606060606,
+      "top4": [
+        [
+          50.0,
+          111,
+          0.5606060606060606
+        ],
+        [
+          0.0,
+          25,
+          0.12626262626262627
+        ],
+        [
+          10.0,
+          17,
+          0.08585858585858586
+        ],
+        [
+          20.0,
+          13,
+          0.06565656565656566
+        ]
+      ],
+      "entropy_nats": 1.5703027105061436,
+      "entropy_normalised": 0.5950240992813423,
+      "share_zero": 0.12626262626262627,
+      "share_half": 0.5606060606060606,
+      "share_full": 0.06060606060606061,
+      "degeneracy": {
+        "n": 200,
+        "mean_chars": 1363.615,
+        "mean_words": 232.575,
+        "mean_distinct_trigram_ratio": 0.9708243981215844,
+        "share_trigram_repeated_5x": 0.125,
+        "share_with_non_latin_script": 0.01
+      }
+    },
+    "3": {
+      "n_rows": 200,
+      "n_parsed": 194,
+      "parse_coverage": 0.97,
+      "tags": {
+        "a2_anchor": 183,
+        "a2_near": 9,
+        "unparsed": 6,
+        "verb_obj": 2
+      },
+      "mean": 53.88659793814433,
+      "sd": 25.466986162891928,
+      "se": 1.8284230491053304,
+      "ci": [
+        50.28034124163886,
+        57.492854634649795
+      ],
+      "median": 50.0,
+      "n_distinct_amounts": 7,
+      "modal_amount": 50.0,
+      "modal_share": 0.7010309278350515,
+      "top4": [
+        [
+          50.0,
+          136,
+          0.7010309278350515
+        ],
+        [
+          100.0,
+          34,
+          0.17525773195876287
+        ],
+        [
+          10.0,
+          13,
+          0.06701030927835051
+        ],
+        [
+          0.0,
+          4,
+          0.020618556701030927
+        ]
+      ],
+      "entropy_nats": 0.9697225240420314,
+      "entropy_normalised": 0.4983387976638107,
+      "share_zero": 0.020618556701030927,
+      "share_half": 0.7010309278350515,
+      "share_full": 0.17525773195876287,
+      "degeneracy": {
+        "n": 200,
+        "mean_chars": 1240.105,
+        "mean_words": 212.7,
+        "mean_distinct_trigram_ratio": 0.9779647699379028,
+        "share_trigram_repeated_5x": 0.04,
+        "share_with_non_latin_script": 0.025
+      }
+    },
+    "4": {
+      "n_rows": 200,
+      "n_parsed": 194,
+      "parse_coverage": 0.97,
+      "tags": {
+        "a2_anchor": 185,
+        "a2_near": 5,
+        "unparsed": 6,
+        "verb_obj": 4
+      },
+      "mean": 65.71134020618557,
+      "sd": 31.681693693566704,
+      "se": 2.2746130466124357,
+      "ci": [
+        61.225048844173614,
+        70.19763156819752
+      ],
+      "median": 50.0,
+      "n_distinct_amounts": 4,
+      "modal_amount": 50.0,
+      "modal_share": 0.4742268041237113,
+      "top4": [
+        [
+          50.0,
+          92,
+          0.4742268041237113
+        ],
+        [
+          100.0,
+          80,
+          0.41237113402061853
+        ],
+        [
+          10.0,
+          14,
+          0.07216494845360824
+        ],
+        [
+          1.0,
+          8,
+          0.041237113402061855
+        ]
+      ],
+      "entropy_nats": 1.0402859177722221,
+      "entropy_normalised": 0.7504076673383044,
+      "share_zero": 0.0,
+      "share_half": 0.4742268041237113,
+      "share_full": 0.41237113402061853,
+      "degeneracy": {
+        "n": 200,
+        "mean_chars": 992.74,
+        "mean_words": 173.695,
+        "mean_distinct_trigram_ratio": 0.9827739345015671,
+        "share_trigram_repeated_5x": 0.005,
+        "share_with_non_latin_script": 0.03
+      }
+    },
+    "5": {
+      "n_rows": 200,
+      "n_parsed": 190,
+      "parse_coverage": 0.95,
+      "tags": {
+        "a2_anchor": 178,
+        "a2_near": 9,
+        "complement": 1,
+        "unparsed": 10,
+        "verb_obj": 2
+      },
+      "mean": 76.67894736842105,
+      "sd": 33.05226066994575,
+      "se": 2.3978630128490868,
+      "ci": [
+        71.94893458891974,
+        81.40896014792236
+      ],
+      "median": 100.0,
+      "n_distinct_amounts": 5,
+      "modal_amount": 100.0,
+      "modal_share": 0.631578947368421,
+      "top4": [
+        [
+          100.0,
+          120,
+          0.631578947368421
+        ],
+        [
+          50.0,
+          49,
+          0.2578947368421053
+        ],
+        [
+          10.0,
+          11,
+          0.05789473684210526
+        ],
+        [
+          1.0,
+          9,
+          0.04736842105263158
+        ]
+      ],
+      "entropy_nats": 0.976760530381148,
+      "entropy_normalised": 0.6068954402247824,
+      "share_zero": 0.005263157894736842,
+      "share_half": 0.2578947368421053,
+      "share_full": 0.631578947368421,
+      "degeneracy": {
+        "n": 200,
+        "mean_chars": 879.555,
+        "mean_words": 158.105,
+        "mean_distinct_trigram_ratio": 0.9798106730433972,
+        "share_trigram_repeated_5x": 0.005,
+        "share_with_non_latin_script": 0.02
+      }
+    }
+  }
+}

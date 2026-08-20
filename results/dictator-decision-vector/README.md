@@ -352,7 +352,8 @@ vectors/                   the decision vector and its two nulls, (29, 3584) flo
 rows/                      STEERING OUTPUT - 4400 generations, 22 self-describing CSVs
 extraction/                THE GRID THE VECTOR WAS BUILT FROM - 1800 scored generations
 scripts/                   the code, all five stages, committed as it ran
-provenance/                the environment capture and the execution trace
+provenance/                environment capture, execution logs, gate and null records
+analysis/                  the derived tables, regenerable from rows/ by scripts/
 ```
 
 **`rows/` and `extraction/` are different things and it matters which one you are
@@ -396,25 +397,48 @@ the float32 value, so that is the value quoted wherever a coefficient is named.
 counts (939 self-interested, 452 altruistic, 362 middle discarded) and the
 exactly-half finding above checkable rather than merely stated.
 
-`provenance/` holds two files, and they do different jobs.
+`provenance/` holds the run's own records.
 
 `sweep_provenance.json` is the environment capture: transformers 4.52.3,
 torch 2.6.0+cu124, the model id and revision, dtype, `attn_implementation`, stop
 token ids, the preset and sampling parameters, seed, batch size, the device
 (`NVIDIA A40`), the repo commit, and one entry per coefficient giving the vector, its
-sha256, its layer-20 norm, the unit beta and the output CSV. It is the
-reproducibility record for the run.
+sha256, its layer-20 norm, the unit beta and the output CSV.
 
-`sweep.log` is the execution trace — every arm and coefficient as it completed, with
-`n`, the parsed count, the mean and the output filename, and elapsed wall clock.
-**What it is:** evidence that the committed rows are the rows that run produced. All
-14 of its lines were cross-checked against `summary.csv` and against the files in
-`rows/`; every `n`, parsed count and mean agrees, and every filename it names is
-present. **What it is not:** a command line — the invocations were never recorded —
-and not the whole run. It covers the first launch only: the 11 decision coefficients
-and 3 shuffled-null coefficients, 2800 of the 4400 generations, 59.7 minutes of the
-106.2. The remaining three launches (4 more shuffled-null points, and the orthogonal
-null at ±52.54 then ±10.51) wrote their own logs, which are **not committed here**.
+**The four `.log` files are the execution trace, and together they cover the whole
+run.** Each line names an arm, a unit beta, `n`, the parsed count, the mean, the
+output filename and elapsed wall clock. The four launches were: `sweep.log` (the 11
+decision coefficients and 3 shuffled-null, 59.7 min), `null_extra.log` (4 more
+shuffled-null points, 21.4 min), `orthogonal_null.log` (the orthogonal null at
+±52.54, 13.7 min) and `orthogonal_null_pm1.log` (the orthogonal null at ±10.51,
+11.4 min) — 106.2 minutes and 4400 generations in total.
+
+**All 22 of the 22 coefficient files in `rows/` are confirmed against a log line**:
+22 log lines parsed, every `n`, parsed count and mean agreeing with `summary.csv`,
+every named output file present, **0 mismatches**. That is what makes the committed
+rows demonstrably the rows those runs produced. What the logs are *not* is a set of
+command lines — the invocations were never recorded.
+
+`gates.json` is the result of the three pre-sweep gates, and it is why the gate
+claims in this file are checkable rather than asserted: `beta0_equals_unhooked` with
+`unhooked_reproducible`, 48 hook invocations at both zero and nonzero coefficient,
+`nonzero_changes_ids`, the hook site resolving to `model.layers[19]` with
+`equals_hidden_states_20` true and 19 and 21 false, the vector's sha256 and its
+layer-20 norm, and `all_gates_passed`.
+
+`null_vector.json` and `orthogonal_null_vector.json` are the two null constructions:
+pole and cell counts, the rebuild deviation against the shipped artifact
+(2.7e-08), per-layer norms, and the cosines the control argument turns on —
++0.24231978 for Null A and -8.93e-10 for Null B after the float32 round-trip.
+
+`analysis/` holds the derived tables: `comparison_table.csv`,
+`differences_vs_decision.csv` and `comparison.json` from `final_tables.py`;
+`pole_curves.csv` and `pole_curves.json` from `pole_curves.py`; `pole_tests.json`
+from `pole_tests.py`; `distributions.json` from `distributions.py`; and
+`negative_arm_audit.json` from `negative_arm_audit.py`. Every one of them is
+reproducible from `rows/` using the script named beside it, so they are not an extra
+source of truth — they are there so the check can be *regenerate and diff* rather
+than *regenerate and hope you computed it the same way*.
 
 `rows/` holds one CSV per arm per coefficient: 11 for the decision arm, 7 for the
 shuffled-label null, 4 for the orthogonal null, 200 rows each. Every row carries its
@@ -456,11 +480,14 @@ The four layer-20 norms are `torch.load(path)[20].double().norm()` on the files 
 `vectors/` and on the trait vector already in the repo, for the float64 column;
 `.float().norm()` for the float32 column the coefficients were actually built on.
 
-That the committed rows are the rows the run produced is checkable from
-`provenance/sweep.log`: each of its 14 lines names an arm, a unit beta, `n`, a parsed
-count, a mean and an output filename. All 14 agree with `summary.csv` and with the
-files present in `rows/`. It covers the first launch only — see above for what it
-does not cover.
+That the committed rows are the rows the run produced is checkable from the four
+logs in `provenance/`: each line names an arm, a unit beta, `n`, a parsed count, a
+mean and an output filename. **22 of the 22 coefficient files are confirmed, with 0
+mismatches.**
+
+Everything in `analysis/` can be regenerated from `rows/` by the script named for it
+in the section above and diffed against the committed copy. That is a stronger check
+than recomputing by hand, and it is the reason those files are here.
 
 ## How to rebuild it
 
@@ -473,10 +500,10 @@ where it now sits, and that is stated rather than patched away.
 | 1. the grid | 1800 generations: 6 endowments ($10 to $500) x 5 neutral wordings x 60 samples, `neutral` preset, seed 0, batch size 20. 46.1 min on one A40. Parse coverage 99.17%. Output is `extraction/grid_seed0.csv`. | `gen_grid.py`, with the prompt grid itself in `decision_grid.py` |
 | 2. the activations | For each labelled row, re-render the prompt, verify it byte-for-byte against the `prompt_sha256` recorded at generation time, then run **one teacher-forced forward pass** over `prompt + the model's own response` with `output_hidden_states=True`, batch size 1, no padding. Pool all 29 hidden states three ways per layer. 1785 rows in 6.3 min on one A40. Writes `acts_seed0/`, **2.1 GB, not committed** — the one input that cannot be regenerated from what is here without a GPU and the model weights. | `extract_acts.py` |
 | 3. the vector | Per-layer mean difference, altruistic minus self-interested, averaged over the 30 (wording, endowment) cells so prompt composition cancels within a fixed prompt. Saved as `(29, 3584)` float32. Also the held-out separation, the per-layer cosines and the 1000-draw shuffled-label nulls. CPU only. | `analyze.py`, with the extra per-target and per-layer nulls in `extra_controls.py` |
-| 4. the two nulls | Permute the pole labels within each cell, preserving each cell's pole counts, and rebuild — that is Null A. Then project the real direction out per layer to get Null B, exactly orthogonal at the steered layer. Both write a JSON record of the construction, including the cosine to the real vector. CPU only. | `build_null_vector.py`, then `build_orthogonal_null.py` |
+| 4. the two nulls | Permute the pole labels within each cell, preserving each cell's pole counts, and rebuild — that is Null A. Then project the real direction out per layer to get Null B, exactly orthogonal at the steered layer. Both write a JSON record of the construction, including the cosine to the real vector — committed as `provenance/null_vector.json` and `provenance/orthogonal_null_vector.json`. CPU only. | `build_null_vector.py`, then `build_orthogonal_null.py` |
 | 5. the sweep | Add the vector at every position of every forward pass — prompt tokens and each decode step alike — at the output of `model.model.layers[19]`, whose output is byte-equal to `hidden_states[20]`. Cast to the model's parameter dtype *before* scaling. 4400 generations, 106.2 min on A40s. Output is `rows/`. | `run_sweep.py` for the first launch, `run_arm.py` for one arm at a time, `extend_null.py` for the four extra shuffled-null points |
-| gates | The three pre-sweep gates: `beta = 0` is a byte-exact no-op with positive controls, the hook site is `model.model.layers[19]` and its output is byte-equal to `hidden_states[20]`, and the vector loaded is the file intended. Run before any sweep. | `verify_gates.py` |
-| the analysis | Everything downstream of `rows/`: the per-arm tables and Welch differences, the pole curves and their Newcombe tests, the answer distributions and degeneracy statistics, the hand audit of the negative arm, and the figure. | `analyze_sweep.py` (the statistics library the rest import), `final_tables.py`, `pole_curves.py`, `pole_tests.py`, `distributions.py`, `negative_arm_audit.py`, `make_plot.py` |
+| gates | The three pre-sweep gates: `beta = 0` is a byte-exact no-op with positive controls, the hook site is `model.model.layers[19]` and its output is byte-equal to `hidden_states[20]`, and the vector loaded is the file intended. Run before any sweep; result committed as `provenance/gates.json`. | `verify_gates.py` |
+| the analysis | Everything downstream of `rows/`: the per-arm tables and Welch differences, the pole curves and their Newcombe tests, the answer distributions and degeneracy statistics, the hand audit of the negative arm, and the figure. Outputs committed under `analysis/`. | `analyze_sweep.py` (the statistics library the rest import), `final_tables.py`, `pole_curves.py`, `pole_tests.py`, `distributions.py`, `negative_arm_audit.py`, `make_plot.py` |
 
 `audit_sample.py` is the sampler used for the hand audit of the *labelling* — it
 dumps a stratified sample of pole rows for a human to read. It measures the parser's
@@ -533,6 +560,12 @@ executed** during this packaging: running them would have written over the sourc
 artifacts outside this repository. Their behaviour above is read from the source, not
 measured — the one claim in this section that was not run.
 
+**So do not just run them.** Each one's input and output paths have to be repointed
+first — at `rows/`, `extraction/` and `analysis/` in this directory — or it will
+either fail to find its inputs or write outside the repository. That is also the
+regenerate-and-diff route for `analysis/`: repoint the paths, run, diff against the
+committed copy.
+
 **Two things are pinned to the machine this ran on.** `gen_grid.py`,
 `extract_acts.py`, `extend_null.py`, `run_sweep.py`, `run_arm.py` and
 `verify_gates.py` all load the model with `device_map={"": 0}` — GPU device 0, not
@@ -557,7 +590,9 @@ min_p 0.0, repetition_penalty 1.0, max_new_tokens 1000, seed 0, batch size 20, 2
 samples per coefficient, layer 20, `positions="all"`, `norm="unit"`. Repo commit
 `4d10f19dfe7436845456f0f8b67d2adef25776a4`. 4400 generations, 106.2 minutes total.
 
-Three gates were run and passed before any sweep:
+Three gates were run and passed before any sweep. Their recorded result is
+`provenance/gates.json`, so each of the following is checkable there rather than
+taken on trust:
 
 1. `beta = 0` is a byte-exact no-op against no hook at all, with the three positive
    controls that make that statement mean anything: the unhooked run is reproducible
@@ -569,10 +604,11 @@ Three gates were run and passed before any sweep:
 3. The vector loaded is the file intended: sha256 and layer-20 norm are recorded on
    every result row.
 
-Additional identity checks: the decision vector was rebuilt from raw activations and
-matched the shipped artifact to 2.7e-08 relative before either null was built; the
-orthogonalised null is orthogonal to the decision direction at -8.9e-10 after the
-float32 round-trip; the decision arm's `beta = 0` rows are byte-identical to the
-reference sweep's across all 200 answers.
+Additional identity checks, recorded in `provenance/null_vector.json` and
+`provenance/orthogonal_null_vector.json`: the decision vector was rebuilt from raw
+activations and matched the shipped artifact to 2.7e-08 relative before either null
+was built; the orthogonalised null is orthogonal to the decision direction at
+-8.9e-10 after the float32 round-trip. The decision arm's `beta = 0` rows are
+byte-identical to the reference sweep's across all 200 answers.
 
 Nothing under `audit/` was modified by this work.

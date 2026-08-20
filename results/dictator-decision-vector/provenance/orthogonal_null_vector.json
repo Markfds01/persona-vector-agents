@@ -1,0 +1,16 @@
+{
+  "layer": 20,
+  "cos_null_vs_real": 0.24231978322736766,
+  "cos_residual_vs_real": -5.742777478616278e-17,
+  "cos_residual_vs_null": 0.9701964350875764,
+  "norm_null": 0.5799206060523804,
+  "norm_real": 6.872108722940985,
+  "norm_residual": 0.5626369046258461,
+  "real_component_of_null_at_unit_beta_52_5415": 12.731844890440739,
+  "source_null": "/home/marco/dockmaster/data/steer-decision/decision_response_avg_diff_cellbalanced_shuffled_seed20260819.pt",
+  "source_null_sha256_16": "d1491af711ba9b0e",
+  "source_real_sha256_16": "50643c04fe40ab9e",
+  "out": "/home/marco/dockmaster/data/steer-decision/decision_shuffled_orthogonalised_seed20260819.pt",
+  "out_sha256_16": "90de41193a56e397",
+  "cos_residual_vs_real_after_save": -8.927245917069108e-10
+}
