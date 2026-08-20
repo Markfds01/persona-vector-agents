@@ -1,0 +1,6 @@
+Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s]Loading checkpoint shards:  25%|██▌       | 1/4 [00:01<00:03,  1.05s/it]Loading checkpoint shards:  50%|█████     | 2/4 [00:01<00:01,  1.13it/s]Loading checkpoint shards:  75%|███████▌  | 3/4 [00:02<00:00,  1.21it/s]Loading checkpoint shards: 100%|██████████| 4/4 [00:03<00:00,  1.29it/s]Loading checkpoint shards: 100%|██████████| 4/4 [00:03<00:00,  1.22it/s]
+[null-extra] unit_beta= +10.5083 n=200 parsed=198 mean=26.32  altruism_v3-dictator_free_layer20_all_unit_coef10.5083.csv  5.5 min
+[null-extra] unit_beta= -10.5083 n=200 parsed=198 mean=9.38  altruism_v3-dictator_free_layer20_all_unit_coef-10.5083.csv  10.4 min
+[null-extra] unit_beta= +31.5249 n=200 parsed=196 mean=41.34  altruism_v3-dictator_free_layer20_all_unit_coef31.5249.csv  17.2 min
+[null-extra] unit_beta= -31.5249 n=200 parsed=198 mean=10.90  altruism_v3-dictator_free_layer20_all_unit_coef-31.5249.csv  21.4 min
+done in 21.4 min

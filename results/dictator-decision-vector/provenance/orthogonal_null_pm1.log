@@ -1,0 +1,8 @@
+LAUNCHING: device 0 free=23854MiB at 09:15:49Z
+Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s]Loading checkpoint shards:  25%|██▌       | 1/4 [00:01<00:03,  1.20s/it]Loading checkpoint shards:  50%|█████     | 2/4 [00:01<00:01,  1.05it/s]Loading checkpoint shards:  75%|███████▌  | 3/4 [00:02<00:00,  1.14it/s]Loading checkpoint shards: 100%|██████████| 4/4 [00:03<00:00,  1.25it/s]Loading checkpoint shards: 100%|██████████| 4/4 [00:03<00:00,  1.16it/s]
+[orthogonal-null] unit_beta= +10.5083 n=200 parsed=199 mean=18.64  altruism_v3-dictator_free_layer20_all_unit_coef10.5083.csv  6.4 min
+   manifest updated for k=+1
+[orthogonal-null] unit_beta= -10.5083 n=200 parsed=199 mean=13.06  altruism_v3-dictator_free_layer20_all_unit_coef-10.5083.csv  11.4 min
+   manifest updated for k=-1
+done in 11.4 min
+RUN_EXIT=0

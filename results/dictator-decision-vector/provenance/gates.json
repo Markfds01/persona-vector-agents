@@ -1,0 +1,59 @@
+{
+  "engine": {
+    "engine": "huggingface",
+    "engine_version": "4.52.3",
+    "torch_version": "2.6.0+cu124",
+    "model_id": "Qwen/Qwen2.5-7B-Instruct",
+    "model_revision": "a09a35458c702b33eeacc393d103063234e8bc28",
+    "dtype": "torch.bfloat16",
+    "attn_implementation": "sdpa",
+    "stop_token_ids": [
+      151645,
+      151643
+    ]
+  },
+  "cuda_visible_devices": "1",
+  "device_name": "NVIDIA A40",
+  "vector": {
+    "path": "/home/marco/dockmaster/data/decision-vector/decision_response_avg_diff_cellbalanced.pt",
+    "sha256_16": "50643c04fe40ab9e",
+    "shape": [
+      29,
+      3584
+    ],
+    "dtype": "torch.float32",
+    "layer": 20,
+    "layer_norm_fp32": 6.872108459472656
+  },
+  "hook_site": {
+    "resolved_path": "model.layers[19]",
+    "is_model_model_layers_19": true,
+    "n_hidden_states": 29,
+    "equals_hidden_states_20": true,
+    "equals_hidden_states_19": false,
+    "equals_hidden_states_21": false
+  },
+  "noop_gate": {
+    "unhooked_reproducible": true,
+    "beta0_equals_unhooked": true,
+    "beta0_hook_invocations": 48,
+    "nonzero_hook_invocations": 48,
+    "nonzero_changes_ids": true,
+    "nonzero_beta_unit": 20.0,
+    "shapes": {
+      "unhooked": [
+        4,
+        205
+      ],
+      "beta0": [
+        4,
+        205
+      ],
+      "nonzero": [
+        4,
+        205
+      ]
+    }
+  },
+  "all_gates_passed": true
+}
