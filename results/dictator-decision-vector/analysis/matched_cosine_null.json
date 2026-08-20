@@ -1,0 +1,24 @@
+{
+  "what": "empirical cosine null for the cell-balanced decision vector, matched construction",
+  "construction": "within-cell label permutation, cell-balanced rebuild, cosine to the cell-balanced real vector at layer 20",
+  "layer": 20,
+  "draws": 1000,
+  "seed": 20260819,
+  "rebuild_relative_deviation_vs_shipped_at_layer": 2.6152560679708326e-08,
+  "observed_cos_shuffled_null_vs_real": 0.24231978212677696,
+  "null": {
+    "n": 1000,
+    "mean": -0.0180074264517054,
+    "sd": 0.34443217570822027,
+    "min": -0.8117266927633787,
+    "max": 0.7894466343731297,
+    "abs_max": 0.8117266927633787,
+    "p2.5": -0.6415287256575868,
+    "p97.5": 0.6097835319069883
+  },
+  "observed_z_vs_null_sd": 0.7035341040032623,
+  "draws_reaching_observed_abs": 545,
+  "empirical_p_two_sided": 0.545,
+  "one_over_sd_squared": 8.429320559000272,
+  "note": "analyze.py's shuffle_null_vs_ours (sd 0.34635) is a DIFFERENT construction - global permutation, naive pooled rebuild, scored against the naive vector - and is not the matched null for the cell-balanced vector that was steered."
+}

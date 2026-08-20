@@ -86,14 +86,24 @@ on the positive arm:
 | +42.03 | +28.74 | +52.75 | — | — |
 | +52.54 | +25.73 | +63.71 | +38.61 | +27.72 |
 
-**The decision arm rises to a peak at +21.02 and declines beyond it.** Most of the
-move arrives at the first step — +25.78 of an eventual +31.18, or 83%, by +10.51 —
-but it is still rising after that: +21.02 is a further **+5.39 [+2.78, +8.01],
-p = 6.2e-05** above +10.51, and on the pole metric `P($0)` goes 0.076 to 0.000 across
-the same interval. Past the peak it declines significantly: +31.52 versus +21.02 is
+**The decision arm's responsive range is asymmetric, and the two sides have to be
+described separately.**
+
+*Positive side: it keeps rising past +10.51 and peaks at +21.02.* Most of the move
+arrives at the first step — +25.78 of an eventual +31.18, or 83%, by +10.51 — but it
+is not finished: +21.02 is a further **+5.39 [+2.78, +8.01], p = 6.2e-05** above
++10.51, and on the pole metric `P($0)` goes 0.076 to 0.000 across the same interval.
+Past the peak it declines significantly: +31.52 versus +21.02 is
 -1.92 [-3.65, -0.18], p = 0.030, and +52.54 versus +21.02 is
--5.44 [-7.19, -3.70], p = 2.2e-09. The trait vector, at the same +10.51, has
-delivered 21% of its eventual move and is still climbing at the end of the range.
+-5.44 [-7.19, -3.70], p = 2.2e-09.
+
+*Negative side: it is saturated from the first step.* -10.51 already carries
+-11.60 of the -11.93 maximum, **97%** of the movement, and nothing further out is
+distinguishable from it: versus -10.51, -21.02 is +1.66 (p = 0.25), -31.52 is +1.14
+(p = 0.40), -42.03 is +2.15 (p = 0.16) and -52.54 is -0.34 (p = 0.75).
+
+The trait vector, at the same +10.51, has delivered 21% of its eventual move and is
+still climbing at the end of the range.
 
 They also move mass to different places. The decision vector empties the $0 mode
 completely and parks the model just below half — at +52.54, 69.4% of parsed answers
@@ -115,8 +125,11 @@ baseline at two of its three negative points — +0.107 [+0.014, +0.197] at -10.
 +0.213 [+0.125, +0.297] at -31.52 — which is giving moving down. Its dollar mean at
 those two points is not significantly different from baseline (-3.59, p = 0.087;
 -2.06, p = 0.42). So the honest version is: the decision vector is the only direction
-whose negative arm suppresses giving *on the dollar mean*, and it is far from the only
-one that can push mass onto $0.
+whose negative arm suppresses giving *on the dollar mean*, and it is not the only one
+that can push mass onto $0 — the shuffled null does too, and it is the only other arm
+that does. The trait vector never moves `P($0)` significantly above baseline (its
+closest is +0.038 [-0.057, +0.132] at -10.51) and the orthogonal null does so at no
+coefficient.
 
 ## The result
 
@@ -153,14 +166,22 @@ stated rather than rounded away:
 | **+10.51** | **+5.67** | **[+1.31, +10.04]** | **0.011** |
 
 On the negative side **no movement is detected** — $13.06 against a baseline of
-$12.96, while the decision vector drops to $1.37. That is a non-detection at this
-resolution, not a demonstration of zero: the interval runs to ±$4.4, so a move as
-large as the +5.67 treated as real on the other side would not have been ruled out.
-On the positive side it is not flat: it produces a small but real move of +5.67,
-**about a fifth** of the decision vector's +25.78. So the precise claim is: the
-orthogonal null shows no detectable movement on the negative side and none on either
-side of the pole metric, and delivers roughly a fifth of our effect on the
-positive-side dollar mean.
+$12.96, while the decision vector drops to $1.37. On the positive side it is not
+flat: it produces a small but real move of +5.67, **about a fifth** of the decision
+vector's +25.78.
+
+The two sides are genuinely different, and that is testable rather than merely
+apparent. The negative-side interval is [-4.21, +4.40], and **a move the size of the
+positive side's is excluded from it**: testing the hypothesis that the true
+negative-side effect equals +5.67 gives p = 0.011. Comparing the two arms directly,
++10.51 against -10.51 on the orthogonal null is **+5.58 [+0.97, +10.18], p = 0.018**.
+So the orthogonal null's small residual effect is real, one-sided, and confined to
+the positive dollar arm — it is not a symmetric effect that the negative side merely
+failed to resolve.
+
+The precise claim, then: the orthogonal null produces no detectable movement on the
+negative dollar arm and none on either side of the pole metric, and delivers roughly
+a fifth of our effect on the positive-side dollar mean.
 
 **Past the peak, no — and the question is ill-posed there.** At +52.54 the
 orthogonal null's mean is statistically indistinguishable from the decision arm's
@@ -190,23 +211,36 @@ rows.
 
 Measured here, the shuffled-label null's cosine to the decision vector at layer 20
 is **+0.2423**. That is not an unlucky draw. The deviations of these activations are
-anisotropic, occupying roughly 8 effective dimensions, so *any* difference of means
-over this row set lands partly in the same subspace. Rebuilding the vector from 1000
-independent label permutations and taking each one's cosine to the decision vector
-gives a null with sd **0.3464** and a 95% range of [-0.620, +0.623]
-(`analysis/analysis.json`, `shuffle_null_vs_ours` at layer 20). Against that null
-+0.2423 is a 0.7-sigma draw — thoroughly ordinary — and 1/0.3464² = 8.3 is where the
-"roughly 8 effective dimensions" comes from. The theoretical null for d = 3584 is
-`1/sqrt(3584) = 0.0167`, twenty times narrower. Never quote the theoretical cosine
-null for activation difference vectors.
+anisotropic — the participation ratio of the cell-mean-centred pole deviations at
+layer 20 is **14.1**, against a nominal 3584 — so *any* difference of means over this
+row set lands partly in the same subspace.
 
-**And use the null for the target you are actually testing.** The same 1000
-permutations scored against the *trait* vector give sd **0.0808** — a different
-distribution, because a null's width is the overlap between the target and the
-subspace these deviations occupy. Judged against 0.0808 the +0.2423 would look like a
-3-sigma event; judged against its own target's null it is typical. The two numbers
-are not interchangeable, and the one that answers "is this null contaminated?" is the
-one computed against the null's own target.
+Quantified the matched way: 1000 **within-cell** label permutations, each rebuilt
+**cell-balanced** and scored against the **cell-balanced** vector — the same
+construction as the vector under test — give a null with sd **0.34443**, 95% range
+[-0.642, +0.610]. Against it +0.2423 is a **0.70-sigma** draw, empirical two-sided
+p = **0.545**. Thoroughly ordinary. The recomputation is
+`analysis/matched_cosine_null.json`, produced by `scripts/matched_cosine_null.py`,
+which reproduces the shipped vector from the raw activations to 2.6e-08 first. The
+theoretical null for d = 3584 is `1/sqrt(3584) = 0.0167`, twenty times narrower.
+Never quote the theoretical cosine null for activation difference vectors.
+
+**And match the null to the construction *and* the target, not just to the data.**
+Two ways of getting this wrong are live here, and this project made one of them:
+
+* *Wrong target.* The same permutation scored against the **trait** vector gives sd
+  **0.0808**, a different distribution, because a null's width is the overlap between
+  the target and the subspace these deviations occupy. Judged against 0.0808 the
+  +0.2423 would read as a 3-sigma event.
+* *Wrong construction.* `analysis/analysis.json` carries `shuffle_null_vs_ours`,
+  sd 0.34635, which looks like the right number and is not: it is built from a
+  **global** permutation and a **naive pooled** rebuild, scored against the **naive**
+  vector. `build_null_vector.py`'s own docstring says why that is not the matched null
+  for a cell-balanced vector — a global permutation reshuffles prompt composition
+  across cells, which is exactly what cell-balancing exists to cancel. An earlier
+  revision of this file cited it. The two happen to agree to two decimals (0.34635
+  against 0.34443), so the conclusion never moved, but agreeing by luck is not the
+  same as being the right null.
 
 Now put that next to the dose-response curve. At the top of the sweep the shuffled
 null is delivering
@@ -215,18 +249,37 @@ null is delivering
 component along the decision direction  =  cos x beta  =  0.2423 x 52.54  =  12.73 unit-beta
 ```
 
-and 12.73 unit-beta is a **large dose of the real direction**: it sits above +10.51,
-where the decision arm has already delivered 83% of its peak movement, and below the
-peak at +21.02, so it lands in the region where that arm is still rising towards its
-maximum. The shuffled null at ±52.54 is therefore steering the real direction at
-close to its most effective magnitude, on top of its orthogonal remainder. It is not
-a null there in any useful sense — whatever else it is doing, a large part of what it
-does to the game is what the real direction does to the game.
+and 12.73 unit-beta is a **large dose of the real direction** — on either side,
+though for different reasons, because the decision arm's responsive range is
+asymmetric. On the positive side +12.73 sits just past the 83%-of-peak point and
+below the peak at +21.02, so it lands near the arm's most effective magnitude. On the
+negative side -12.73 is already past -10.51, where the arm has delivered 97% of its
+movement and stopped responding, so it is a fully saturating dose.
 
-That is the reason the extreme comparison cannot be read as a mechanism test, and it
-does not depend on the decision arm having stopped responding. It only needs the
-null's contaminating dose to be big enough to matter, which at 12.73 unit-beta
-against a peak at 21.02 it plainly is.
+**And the contamination does not have to be argued from the cosine — it is directly
+measurable.** The two nulls are the same vector with and without its real-direction
+component, steered at the same length, so the difference between their arms is what
+that component bought:
+
+| unit beta | shuffled null | orthogonal null | difference = the contamination |
+|---|---|---|---|
+| +52.54 | $51.58 | $40.69 | **+10.89 [+6.79, +14.99], p = 3.4e-07** |
+| -52.54 | $24.10 | $28.76 | -4.66 [-12.68, +3.36], p = 0.25 |
+
+On the positive side the real-direction component is worth **+10.89**, and it is
+unambiguous. On the negative side the point estimate has the right sign but the
+interval spans zero, so the contamination is established on one side only.
+
+**Superposition does not hold at these magnitudes**, which is worth knowing on its
+own. A 12.73 dose of the real direction delivers about +26.9 when steered alone
+(interpolating between the measured +25.78 at +10.51 and +31.18 at +21.02). Riding
+inside the shuffled null it is worth +10.89 — roughly **40%** of that. The
+orthogonal remainder is not a passive carrier; the two components interfere.
+
+That is the reason the extreme comparison cannot be read as a mechanism test. It does
+not rest on the decision arm having stopped responding, and it is not an inference
+from the cosine — it is a measured $10.89 of the shuffled null's effect that the
+orthogonal null does not have.
 
 Hence the orthogonalised arm: the shuffled null with the decision direction
 projected out per layer, cosine to the decision vector **-8.9e-10** after the
@@ -309,11 +362,18 @@ would be a different vector.
   ±31.52, so where between 10.51 and 52.54 it starts to move is unmeasured. Given
   that a three-point null reversed under a seven-point one in this very run, this is
   the gap most likely to matter. It is roughly 20 GPU-minutes.
-* **Seed robustness.** Single seed. Run-to-run spread at n = 200 on this game was
-  previously measured at about $1.63 typical, with 95% of gaps under $4.00.
-  Differences under about $4 are inside that. The only headline number close to that
-  floor is the +21.02 decision-vs-trait gap (-6.01); everything the verdict rests on
-  is far above it.
+* **Seed robustness, and several load-bearing numbers are near the floor.** Single
+  seed. Run-to-run spread at n = 200 on this game was previously measured at about
+  $1.63 typical, with 95% of gaps under $4.00, so a difference under about $4 is
+  inside the noise this design cannot see past. The big effects are far clear of it —
+  the decision arm's ±$11 to $26 moves, the +20.11 decision-versus-orthogonal gap at
+  +10.51 — but **four numbers the argument uses are not**: the -1.92 [-3.65, -0.18]
+  decline from +21.02 to +31.52; the +5.39 [+2.78, +8.01] rise from +10.51 to +21.02
+  that establishes where the arm peaks; the +5.67 [+1.31, +10.04] positive-side
+  orthogonal-null move this file calls load-bearing; and the -6.01 decision-versus-
+  trait gap at +21.02. Each is a single-seed measurement of a difference near the
+  run-to-run floor, and each would need a second seed before it could carry weight on
+  its own.
 * **That the direction is "the decision" rather than its verbalisation.** At layer 0
   — the token-embedding average of the response, involving no computation — the two
   poles already separate at AUC 0.903. An answer that gives half the pot literally
@@ -323,6 +383,13 @@ would be a different vector.
   provide.
 * **Anything about the middle of the distribution.** 362 rows between the poles were
   discarded when the vector was built.
+* **Two checks that left no artifact.** The 56-row stratified hand audit of the pole
+  labelling (`METHOD.md` §3, 0 pole errors) and the parser-versus-judge agreement
+  (`METHOD.md` §8, 95.6% over 1951 held-out generations) were both performed, and both
+  are reported here, but neither wrote a file. They are the only claims in this
+  directory that cannot be re-checked against committed data. The hand audit of the
+  negative *steering* arm is separate and is committed as
+  `analysis/negative_arm_audit.json`.
 * **Coherence.** No LLM judge was run anywhere in this work. The degeneracy figures
   quoted above are four counted surface statistics (mean word count,
   distinct-trigram ratio, share with a word trigram repeated five or more times,
@@ -354,8 +421,11 @@ coherently reasoned. The **15 logical inversions** are answers that state a
 payoff-*maximising* goal and then conclude the model should hand over everything —
 *"the only way to increase your payoff is to give Agent 2 all of the money"*. That
 is broken payoff arithmetic, not generosity, and it is the dominant content of the
-non-zero tail. The **8 scorer errors** are answers that committed to $0 and were
-scored as $100 because the parser anchored on a number in the payoff sentence.
+non-zero tail. The **8 scorer errors** are answers the parser resolved off a number that was not the
+transfer — in seven cases anchoring on the payoff sentence and scoring $100, and in
+one (at -52.54) scoring $2. Seven of the eight committed to $0; the eighth, at
+-42.03, committed to **no amount at all** and was scored $100 from its payoff line.
+That row is flagged in the audit record as `note_no_commitment_rows: ["k=-4[5]"]`.
 
 After hand correction, 97.5-99.0% of answers on the negative arm commit to giving
 nothing. The model decides to give nothing; it does not stop producing usable
@@ -441,7 +511,7 @@ summary.csv                per-arm, per-coefficient: n, parsed, mean, SD, SE, 95
 vectors/                   the decision vector and its two nulls, (29, 3584) float32
 rows/                      STEERING OUTPUT - 4400 generations, 22 self-describing CSVs
 extraction/                THE GRID THE VECTOR WAS BUILT FROM - 1800 scored generations
-scripts/                   the code, all five stages, committed as it ran
+scripts/                   the code for all five stages, plus the two launch wrappers
 provenance/                environment capture, execution logs, gate and null records
 analysis/                  the derived tables, regenerable from rows/ by scripts/
 ```
@@ -506,8 +576,19 @@ shuffled-null points, 21.4 min), `orthogonal_null.log` (the orthogonal null at
 **All 22 of the 22 coefficient files in `rows/` are confirmed against a log line**:
 22 log lines parsed, every `n`, parsed count and mean agreeing with `summary.csv`,
 every named output file present, **0 mismatches**. That is what makes the committed
-rows demonstrably the rows those runs produced. What the logs are *not* is a set of
-command lines — the invocations were never recorded.
+rows demonstrably the rows those runs produced.
+
+**Two of the four launches also have their exact invocation committed.**
+`scripts/armed_launch.sh` ran the orthogonal null at ±10.51 — the coefficients the
+whole mechanism result is read at — and `scripts/chain_orthogonal.sh` ran it at
+±52.54. Both carry the full command line: the vector paths, `--arm orthogonal-null`,
+`--ks 1,-1` and `5,-5`, the output directory, the manifest, and the
+`CUDA_VISIBLE_DEVICES` setting. `armed_launch.sh` is also demonstrably the thing that
+ran: line 1 of `provenance/orthogonal_null_pm1.log` is
+`LAUNCHING: device 0 free=23854MiB at 09:15:49Z`, and that string is emitted by
+nothing else in the repository — it is line 11 of that script. What is *not* recorded
+is the invocation of the first two launches, the decision arm and the shuffled-null
+extension.
 
 `gates.json` is the result of the three pre-sweep gates, and it is why the gate
 claims in this file are checkable rather than asserted: `beta0_equals_unhooked` with
@@ -540,6 +621,12 @@ the decision vector, sd 0.3464 at layer 20 — which is the evidence for the cla
 the shuffled null's +0.2423 is a typical draw. `controls.json` carries the per-target
 nulls, including the sd 0.0808 for the trait vector, and its own docstring is the
 source of the rule that a null's width cannot be reused across targets.
+
+`matched_cosine_null.json` is the third, and it is the one the argument in "Why the
+controls are shaped the way they are" actually cites: the **matched** null for the
+cell-balanced vector, recomputed during packaging by `scripts/matched_cosine_null.py`
+because the run never saved one. `analysis.json`'s `shuffle_null_vs_ours` is a
+different construction and is kept for the comparison, not as the citation.
 
 `rows/` holds one CSV per arm per coefficient: 11 for the decision arm, 7 for the
 shuffled-label null, 4 for the orthogonal null, 200 rows each. Every row carries its
@@ -603,7 +690,7 @@ not fail the same way:
 | `pole_curves.csv`, `pole_curves.json` | runs, but `pole_curves.py` `continue`s past the missing trait path — output is missing the whole trait arm |
 | `distributions.json` | **no** — `distributions.py` does `raise SystemExit("missing %s")` on it |
 | `steering_comparison.png` | regenerates from `analysis/comparison.json` and `analysis/pole_curves.json`, so it is complete *as long as it reads the committed copies* rather than ones regenerated without the trait arm |
-| `analysis.json`, `controls.json` | **no** — these are extraction-stage outputs and need `acts_seed0/`, the 2.1 GB of activations |
+| `analysis.json`, `controls.json`, `matched_cosine_null.json` | **no** — these are extraction-stage outputs and need `acts_seed0/`, the 2.1 GB of activations. `matched_cosine_null.py` will regenerate the last of them given `--acts` |
 
 So the two silent cases are the ones to watch: they exit 0 and produce a file that
 differs from the committed one in a way a casual diff will show but a casual run will
@@ -631,23 +718,39 @@ error rate; it does not relabel anything.
 
 The recorded parameters are seed 0, 60 samples per prompt and batch size 20 for
 stage 1; analysis seed 20260819 with 1000 shuffles for stage 3; seed 0, 200 samples
-per coefficient and batch size 20 for stage 5. **The exact command lines were never
-recorded**, so they are not reproduced here. Each script that takes arguments lists
-them under `--help`; `provenance/sweep.log` and `provenance/sweep_provenance.json`
-are the closest thing to an execution record that exists.
+per coefficient and batch size 20 for stage 5. **The command lines survive for two of
+the four sweep launches and not the other two.** `scripts/armed_launch.sh`
+(orthogonal null at ±10.51) and `scripts/chain_orthogonal.sh` (orthogonal null at
+±52.54) are committed with their full invocations, and the first is provably the one
+that ran — see "What is in this directory". The decision arm and the shuffled-null
+extension were launched by hand and their exact command lines were not recorded; for
+those, each script's `--help` lists the arguments and
+`provenance/sweep_provenance.json` records the parameter values that were used.
 
 ### What does not work about the committed code, and why it was left that way
 
-This is the code that produced the result, copied byte-identical, not a cleaned-up
-version — with **two exceptions, both from a post-run correction**. Review found that
-the decision arm does not saturate at unit beta 10.51 as the original write-up said;
-it peaks at 21.02. `make_plot.py` therefore had its `SAT = UNIT` constant replaced by
-`PEAK = 2 * UNIT`, its shaded band and its annotation text changed to match, and the
-figure was regenerated from the committed `analysis/comparison.json` and
-`analysis/pole_curves.json`. `build_orthogonal_null.py` had the same wrong claim in
-its docstring, corrected in place with a note recording what changed; nothing it
-computes depended on it. No other script differs from what ran, and no computation in
-either of those two changed. Three separate things break when it is read out of the directory it ran in.
+`scripts/` holds 23 files. **20 of them are the code that produced the result, copied
+byte-identical** — the 18 `.py` files not named below, plus `armed_launch.sh` and
+`chain_orthogonal.sh`, the two launch wrappers. Three files are not in that category
+and each is declared here:
+
+* `make_plot.py` — **edited after the run.** Review found the decision arm does not
+  saturate at unit beta 10.51 as the original write-up said: it peaks at +21.02 on the
+  positive side and saturates only on the negative one. Its `SAT = UNIT` constant
+  became `PEAK`/`SAT`/`TEST`, the shaded band became asymmetric (-10.51 to +21.02),
+  and the annotation, title and footer changed to match. The figure was regenerated
+  from the committed `analysis/comparison.json` and `analysis/pole_curves.json`.
+* `build_orthogonal_null.py` — **docstring edited after the run**, which carried the
+  same wrong claim, corrected in place with a note recording the change. Nothing it
+  computes depended on it.
+* `matched_cosine_null.py` — **written during packaging, not part of the run.** It
+  recomputes the matched empirical cosine null (within-cell permutation, cell-balanced
+  rebuild, cell-balanced target) that the run never saved, and writes
+  `analysis/matched_cosine_null.json`. It reproduces the shipped vector from the raw
+  activations to 2.6e-08 before trusting its own null.
+
+No computation in `make_plot.py` or `build_orthogonal_null.py` changed, and no other
+file differs from what ran. Three separate things break when it is read out of the directory it ran in.
 
 **It was a package named `scratch/` directly under the repo root.** Every entry point
 does `sys.path.insert(0, Path(__file__).resolve().parents[1])` to reach the repo root
@@ -671,14 +774,23 @@ from the repo root, as committed and again copied back to `scratch/`:
 | `analyze.py` | runs | runs |
 | `audit_sample.py` | runs | runs |
 | `analyze_sweep.py` | runs | runs |
+| `matched_cosine_null.py` | runs | runs |
 | `build_null_vector.py` | runs | runs |
 | `build_orthogonal_null.py` | runs | runs |
 
 So: copy the directory to `scratch/` at the repo root and invoke it from there. Seven
-of the twelve need it; the other five import neither `audit` nor `scratch` and run as
-they sit.
+of the thirteen need it; the other six import neither `audit` nor `scratch` and run as
+they sit. (`matched_cosine_null.py` was written during packaging and resolves its own
+location, so it works either way — but it needs `--acts` pointing at the 2.1 GB of
+activations, which are not committed.)
 
-**Six scripts have no argument parser at all.** `pole_curves.py`, `pole_tests.py`,
+The two shell wrappers, `armed_launch.sh` and `chain_orthogonal.sh`, are recorded for
+their invocations rather than for re-running: both `cd` to a worktree path that no
+longer exists and call `scratch/run_arm.py` through a `.venv` interpreter, and
+`armed_launch.sh` additionally polls `nvidia-smi` for free memory on device 0 before
+launching.
+
+**Six of the Python scripts have no argument parser at all.** `pole_curves.py`, `pole_tests.py`,
 `distributions.py`, `negative_arm_audit.py`, `final_tables.py` and `make_plot.py` do
 their work at import time, reading and writing **hardcoded absolute paths** under
 `/home/marco/dockmaster/data/steer-decision/` and

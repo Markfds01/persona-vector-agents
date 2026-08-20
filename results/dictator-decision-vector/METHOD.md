@@ -143,8 +143,17 @@ With causal attention, activations at prompt positions are a function of the
 prompt alone. Every row in one grid cell shares a prompt, so **within a cell the
 prompt-side vectors are the same vector**. Measured over 57–60 differently-sampled
 answers to one prompt at layer 20, the maximum deviation from the cell mean as a
-fraction of its norm is 0.7% for `prompt_avg` and 1.3% for `prompt_last` — kernel
-jitter, not information — against 32% for `response_avg`.
+fraction of its norm is 0.7% for `prompt_avg` and 1.4% for `prompt_last` — kernel
+jitter, not information — against **26%** for `response_avg`.
+
+*(Corrected during packaging. The original text gave 32% for `response_avg`, which
+does not reproduce: recomputing all three under one definition — the mean over the 30
+cells of the largest within-cell deviation from that cell's mean, as a fraction of the
+cell mean's norm — gives 0.68%, 1.36% and 26.2%. Taking the maximum over cells instead
+of the mean gives 1.0%, 2.0% and 39.3%. No single statistic yields 0.7 / 1.3 / 32, so
+the three numbers as originally published were not all the same measurement. The
+ratio the argument turns on — two orders of magnitude between the prompt-side and
+response-side variants — holds under either definition.)*
 
 A prompt-side pole difference can therefore only encode *which cells fell into
 each pole*. Given the 4.6× wording spread, it does exactly that. The
@@ -232,17 +241,23 @@ and the decision it recorded. It does *not* produce a direction unrelated to the
 real one, because the two directions are built from the same rows.
 
 Measured here, Null A's cosine to the real vector at layer 20 is **+0.2423**. That
-is not an unlucky draw. The deviations of these activations are anisotropic,
-occupying roughly 8 effective dimensions, so *any* difference of means over this
-row set lands partly in the same subspace. Scoring 1000 independent label
-permutations against the real vector gives an empirical cosine null with sd
-**0.3464**, 95% range [-0.620, +0.623] — twenty times the theoretical
-`1/sqrt(3584) = 0.0167`. Against that, +0.2423 is a 0.7-sigma draw, i.e. ordinary.
-**Never quote the theoretical cosine null for activation difference vectors** — and
-**never reuse a null across targets**: the same 1000 permutations scored against the
-*trait* vector give sd 0.0808, because a null's width is the overlap between the
-target and the subspace these deviations occupy. Judged against the wrong one of
-those two numbers, +0.2423 flips from typical to a 3-sigma event.
+is not an unlucky draw. The deviations of these activations are anisotropic, so
+*any* difference of means over this row set lands partly in the same subspace: the
+participation ratio of the cell-mean-centred pole deviations at layer 20 is **14.1**,
+against a nominal 3584.
+Scoring 1000 **within-cell** permutations, each rebuilt **cell-balanced** and scored
+against the **cell-balanced** vector, gives an empirical cosine null with sd
+**0.34443**, 95% range [-0.642, +0.610] — twenty times the theoretical
+`1/sqrt(3584) = 0.0167`. Against that, +0.2423 is a 0.70-sigma draw, empirical
+p = 0.545, i.e. ordinary.
+
+**Never quote the theoretical cosine null for activation difference vectors.** And
+match the null to both the target and the construction: the same permutations scored
+against the *trait* vector give sd 0.0808, because a null's width is the overlap
+between the target and the subspace these deviations occupy; and a **global**
+permutation with a **naive pooled** rebuild is a null for a different vector than
+this one, for the reason given in section 5. Judged against the wrong target's null,
++0.2423 flips from typical to a 3-sigma event.
 
 Now combine that with the second measured fact, which only appears once the sweep
 is run: **the real vector's dose-response curve turns over.** It delivers 83% of its
@@ -408,7 +423,8 @@ number, the affected rows are read by hand and the correction is stated.
 
 ## 9. Artifacts
 
-Everything named in this document is committed alongside it.
+Almost everything named in this document is committed alongside it. The exceptions
+are named at the end of this section.
 
 | path | what |
 |---|---|
@@ -422,13 +438,21 @@ Everything named in this document is committed alongside it.
 | `provenance/null_vector.json`, `provenance/orthogonal_null_vector.json` | the two null constructions of section 6: counts, per-layer norms, rebuild deviation, and the cosines to the real vector |
 | `provenance/sweep_provenance.json` | the environment capture: versions, model revision, dtype, kernel, stop tokens, device, repo commit, and one entry per coefficient |
 | `provenance/*.log` | the execution trace of all four launches; all 22 coefficient files confirm against a log line |
-| `analysis/` | the derived tables, each regenerable from `rows/` by the script named for it in `README.md` |
+| `analysis/` | the derived tables. How completely each one regenerates from what is committed is **not uniform** — two regenerate exactly, five silently lose the trait arm and one hard-fails, because the trait-vector rows are not here. `README.md`, "How to check these numbers", has the per-file breakdown |
+| `analysis/matched_cosine_null.json` | the matched empirical cosine null of section 6, recomputed during packaging by `scripts/matched_cosine_null.py` |
 | `summary.csv` | per-arm, per-coefficient n, parsed, mean, SD, SE and 95% CI |
 | `steering_comparison.png` | the figure |
 | `README.md` | the result, its bounds, and what it does not establish |
 
-The one thing not committed is `acts_seed0/`, the 2.1 GB of captured activations of
-section 4. Regenerating it needs a GPU and the model weights; `README.md` says how.
+**Not committed.** `acts_seed0/`, the 2.1 GB of captured activations of section 4 —
+regenerating it needs a GPU and the model weights, and `README.md` says how. And two
+records that were never written to a file at all: the 56-row stratified hand audit of
+the labelling in section 3, and the parser-versus-judge agreement of section 8
+(95.6% over 1951 held-out generations). Both were performed and their results are
+reported here and in `README.md`, but neither left an artifact, so unlike everything
+else in this directory they cannot be re-checked against committed data. The audit of
+the *negative steering arm* is a different thing and is committed, as
+`analysis/negative_arm_audit.json`.
 
 A note on section 7's coefficient table: the unit betas there are built on the
 reference vector's layer-20 norm computed in **float32**, 10.508308410644531, which

@@ -1,14 +1,21 @@
-"""The steering arms on one matched intervention axis, with the decision arm's peak marked.
+"""The steering arms on one matched intervention axis, with the decision arm's
+responsive range marked. That range is ASYMMETRIC and the band is drawn that way.
 
 Left: mean dollars given. Right: P(gives exactly $0) - one of the two poles the
 decision vector was constructed from, so the contrast the test is really about.
 
-The decision arm rises to a measured peak at |unit beta| = 21.02 and declines
-significantly beyond it (+52.54 vs +21.02: -5.44 [-7.19, -3.70], p = 2.2e-09). That
-line is drawn on both panels, because it is what makes the extreme comparison
-uninformative: past the peak the decision arm is going backwards, so any arm still
-climbing will catch up regardless of what it encodes. The measurement that separates
-mechanism from magnitude is the one at +-10.51, not the one at the edge.
+POSITIVE side: the decision arm keeps rising past 10.51 to a peak at +21.02
+(+21.02 vs +10.51 is +5.39 [+2.78, +8.01], p = 6.2e-05) and declines significantly
+beyond it (+52.54 vs +21.02: -5.44 [-7.19, -3.70], p = 2.2e-09).
+
+NEGATIVE side: the arm IS saturated from the first step. It delivers 97% of its
+movement by -10.51 and nothing after that is distinguishable from it (-21.02 p=0.25,
+-31.52 p=0.40, -42.03 p=0.16, -52.54 p=0.75).
+
+So the band runs -10.51 to +21.02. Either way the extreme comparison is
+uninformative - on the right because the arm is going backwards, on the left because
+it stopped moving at the first step - and the measurement that separates mechanism
+from magnitude is the one at +-10.51, not the one at the edge.
 """
 import json
 from pathlib import Path
@@ -19,7 +26,8 @@ import matplotlib.pyplot as plt
 OUT = Path("/home/marco/dockmaster/data/steer-decision")
 UNIT = 10.508308410644531
 OUR_NORM = 6.872108459472656
-PEAK = 2 * UNIT  # the decision arm's measured peak, +-21.02 (README, "The comparison")
+PEAK = 2 * UNIT  # positive side: the decision arm's measured peak, +21.02
+SAT = UNIT       # negative side: saturated from -10.51 out (97% of movement)
 TEST = UNIT      # +-10.51: the coefficient the mechanism test is read at
 
 table = json.loads((OUT / "comparison.json").read_text())["table"]
@@ -74,17 +82,19 @@ for ax, data, ykey, lokey, hikey, base, ylab, title, basetxt, ylim, texty in pan
                     capsize=3, markersize=6, linewidth=lw, label=label, zorder=4)
     ax.axhline(base, color="#999999", linewidth=0.9, linestyle=(0, (2, 3)), zorder=1)
     ax.text(-56, texty, basetxt, fontsize=8.5, color="#666666")
-    # inside this band the decision arm is still rising towards its peak
-    ax.axvspan(-PEAK, PEAK, color="#1b6ca8", alpha=0.055, zorder=0)
-    for s in (-PEAK, PEAK):
+    # the decision arm's responsive range - asymmetric: it saturates at -10.51 on
+    # the negative side but keeps rising to +21.02 on the positive one
+    ax.axvspan(-SAT, PEAK, color="#1b6ca8", alpha=0.055, zorder=0)
+    for s in (-SAT, PEAK):
         ax.axvline(s, color="#1b6ca8", linewidth=1.1, linestyle=(0, (4, 3)),
                    alpha=0.75, zorder=2)
     ax.set_ylabel(ylab)
     ax.set_title(title, fontsize=12, loc="left")
     ax.set_ylim(ylim)
 
-axes[0].annotate("decision arm peaks at $\\pm$21.02\nand declines beyond",
-                 xy=(PEAK, 45.5), xytext=(-7, 64), fontsize=8.5, color="#1b6ca8",
+axes[0].annotate("decision arm peaks at +21.02\nand declines beyond;\n"
+                 "flat from $-$10.51 out",
+                 xy=(PEAK, 45.5), xytext=(-9, 62), fontsize=8.5, color="#1b6ca8",
                  ha="left", arrowprops=dict(arrowstyle="->", color="#1b6ca8", lw=1))
 axes[1].annotate("at $\\pm$10.51 the orthogonal null\nis indistinguishable from baseline",
                  xy=(TEST, 0.548), xytext=(15, 0.80), fontsize=8.5, color="#7a3b9e",
@@ -105,8 +115,8 @@ for ax in axes:
 
 axes[0].legend(loc="upper left", fontsize=8.8, framealpha=0.95)
 
-fig.suptitle("Steering the Dictator game at matched intervention size: below the peak "
-             "the decision direction does what its orthogonal complement cannot",
+fig.suptitle("Steering the Dictator game at matched intervention size: inside the decision "
+             "arm's responsive range it does what its orthogonal complement cannot",
              fontsize=13, y=0.995)
 fig.text(0.5, 0.008,
          "Qwen2.5-7B-Instruct, altruism_v3 Dictator, mode free, layer 20, positions=all, "
@@ -115,8 +125,9 @@ fig.text(0.5, 0.008,
          "Every arm is steered at unit norm, so a given x is the same edit magnitude for "
          "each. Our raw beta = unit beta / %.4f; theirs = unit beta / %.4f. "
          "beta=0 is one shared no-op run (verified byte-identical across arms).\n"
-         "Shaded band: below the decision arm's measured peak at +-21.02, where it is still "
-         "rising. The orthogonal null was run at 4 coefficients; +-31.52 was not run." % (OUR_NORM, UNIT),
+         "Shaded band: the decision arm's responsive range, -10.51 to +21.02, asymmetric - it "
+         "saturates at the first negative step (97%% of its movement) but rises to a peak at\n"
+         "+21.02. The orthogonal null was run at 4 coefficients; +-31.52 was not run." % (OUR_NORM, UNIT),
          ha="center", fontsize=8.4, color="#444444")
 
 fig.tight_layout(rect=(0, 0.10, 1, 0.962))
