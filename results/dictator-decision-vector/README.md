@@ -224,9 +224,9 @@ The vector was built from the binary contrast "gave $0" against "gave at least h
 the endowment". That threshold turns out to be much narrower than it reads, because
 the model's giving in this game is bimodal at 0 and one half.
 
-Counted from the 1800-generation extraction grid — the file named `grid_seed0.csv`
-in the extraction artifacts, **not committed here**; the endowment is the `eNN`
-suffix of `game_id` and the fraction given is `value / endowment`:
+Counted from the 1800-generation extraction grid, committed here as
+`extraction/grid_seed0.csv`. The endowment is the `eNN` suffix of `game_id` and the
+fraction given is `value / endowment`:
 
 * Of the **452 rows in the altruistic pole**, **356 gave exactly half the
   endowment — 78.8%**. Counting all 457 rows at or above half, including the five
@@ -346,14 +346,35 @@ METHOD.md                  how the vector and both nulls are built, and why
 steering_comparison.png    the figure
 summary.csv                per-arm, per-coefficient: n, parsed, mean, SD, SE, 95% CI
 vectors/                   the decision vector and its two nulls, (29, 3584) float32
-rows/                      4400 steering generations, 22 self-describing CSVs
+rows/                      STEERING OUTPUT - 4400 generations, 22 self-describing CSVs
+extraction/                THE GRID THE VECTOR WAS BUILT FROM - 1800 scored generations
+scripts/                   the code that produced the grid, the vector and its analysis
 ```
+
+**`rows/` and `extraction/` are different things and it matters which one you are
+reading.** `rows/` is the *output* of the experiment: 4400 answers produced *while
+steering*, one CSV per arm per coefficient. `extraction/grid_seed0.csv` is the
+*input* to the vector: the 1800 unsteered answers whose amounts became the pole
+labels the vector was built from. No row appears in both — they are different
+generations, from different prompts, at different stages.
 
 | file | sha256 (first 16) | layer-20 norm |
 |---|---|---|
-| `vectors/decision_response_avg_diff_cellbalanced.pt` | `50643c04fe40ab9e` | 6.872108 |
-| `vectors/decision_response_avg_diff_cellbalanced_shuffled_seed20260819.pt` | `d1491af711ba9b0e` | 0.579921 |
-| `vectors/decision_shuffled_orthogonalised_seed20260819.pt` | `90de41193a56e397` | 0.562637 |
+| `vectors/decision_response_avg_diff_cellbalanced.pt` | `50643c04fe40ab9e` | 6.872108722941 |
+| `vectors/decision_response_avg_diff_cellbalanced_shuffled_seed20260819.pt` | `d1491af711ba9b0e` | 0.579920606052 |
+| `vectors/decision_shuffled_orthogonalised_seed20260819.pt` | `90de41193a56e397` | 0.562636905792 |
+| `persona_vectors/Qwen2.5-7B-Instruct/altruism_response_avg_diff.pt` (already in the repo) | `fe59088876ea2d78` | 10.508307958484 |
+
+Those four norms are what the whole unit-beta axis rests on, so they are quoted as
+measured in float64 from the files themselves rather than as reported. All four are
+`(29, 3584)` float32 tensors; the norm is of row 20. The trait vector's
+**10.508307958484** is the conversion constant that maps its existing sweep onto the
+shared axis.
+
+`extraction/grid_seed0.csv` is 1800 rows, 35 columns, one per generation, scored by
+`audit.parse` with the resolution path named in its `tag`. It is what makes the pole
+counts (939 self-interested, 452 altruistic, 362 middle discarded) and the
+exactly-half finding above checkable rather than merely stated.
 
 `rows/` holds one CSV per arm per coefficient: 11 for the decision arm, 7 for the
 shuffled-label null, 4 for the orthogonal null, 200 rows each. Every row carries its
@@ -383,34 +404,77 @@ comparisons on the same parsed values. `P(gives exactly $0)` is the share of par
 values equal to zero, with Wilson intervals for a single share and Newcombe
 intervals for a difference of two.
 
+The pole counts and the exactly-half finding are checkable the same way, from
+`extraction/grid_seed0.csv` alone: drop the rows tagged `unparsed` or `refusal`,
+drop the `complement` and `keep` rows the poles exclude, then take the endowment
+from the `eNN` suffix of `game_id` and the fraction given as `value / endowment`.
+Rows at fraction 0 are the self-interested pole (939), rows at 0.5 or above the
+altruistic pole (452), the rest the discarded middle (362). Of that altruistic pole,
+356 sit at exactly 0.5.
+
+The four layer-20 norms are `torch.load(path)[20].double().norm()` on the files in
+`vectors/` and on the trait vector already in the repo.
+
 ## How to rebuild it
 
-Not everything needed for a from-scratch rebuild is committed here: the
-1800-generation extraction grid, the 2.1 GB of captured activations, and the
-generation, extraction and analysis scripts all live outside this directory. What
-follows is the procedure, with the numbers each stage produced. `METHOD.md` has the
-detail.
+The code for stages 1 to 3 is in `scripts/`, committed exactly as it ran. **Read the
+next section before trying to run it** — it does not work from where it now sits, and
+that is stated rather than patched away.
 
-1. **The grid.** 1800 generations: 6 endowments ($10 to $500) x 5 neutral wordings
-   x 60 samples, `neutral` preset, seed 0, batch size 20. 46.1 min on one A40.
-   Parse coverage 99.17%.
-2. **The activations** (`acts_seed0/`, 2.1 GB, **not committed**). For each labelled
-   row, re-render the prompt, verify it byte-for-byte against the `prompt_sha256`
-   recorded at generation time, then run **one teacher-forced forward pass** over
-   `prompt + the model's own response` with `output_hidden_states=True`, batch size
-   1, no padding. Pool all 29 hidden states three ways per layer. 1785 rows in
-   6.3 min on one A40. Regenerating them needs a GPU and the model weights; nothing
-   else in this directory does.
-3. **The vector.** Per-layer mean difference, altruistic minus self-interested,
-   averaged over the 30 (wording, endowment) cells so that prompt composition
-   cancels within a fixed prompt. Saved as `(29, 3584)` float32.
-4. **The nulls.** Permute the pole labels within each cell, preserving each cell's
-   pole counts, and rebuild (shuffled-label null). Then subtract the decision
-   component per layer to get the orthogonal null.
-5. **The sweep.** Add the vector at every position of every forward pass — prompt
-   tokens and each decode step alike — at the output of `model.model.layers[19]`,
-   whose output is byte-equal to `hidden_states[20]`. Cast to the model's parameter
-   dtype *before* scaling. 4400 generations, 106.2 min on A40s.
+| stage | what it does | code |
+|---|---|---|
+| 1. the grid | 1800 generations: 6 endowments ($10 to $500) x 5 neutral wordings x 60 samples, `neutral` preset, seed 0, batch size 20. 46.1 min on one A40. Parse coverage 99.17%. Output is `extraction/grid_seed0.csv`. | `scripts/gen_grid.py`, with the prompt grid itself in `scripts/decision_grid.py` |
+| 2. the activations | For each labelled row, re-render the prompt, verify it byte-for-byte against the `prompt_sha256` recorded at generation time, then run **one teacher-forced forward pass** over `prompt + the model's own response` with `output_hidden_states=True`, batch size 1, no padding. Pool all 29 hidden states three ways per layer. 1785 rows in 6.3 min on one A40. Writes `acts_seed0/`, **2.1 GB, not committed** — this is the only stage that needs a GPU and the model weights. | `scripts/extract_acts.py` |
+| 3. the vector and its measurements | Per-layer mean difference, altruistic minus self-interested, averaged over the 30 (wording, endowment) cells so prompt composition cancels within a fixed prompt. Saved as `(29, 3584)` float32. Also the held-out separation, the per-layer cosines and the 1000-draw shuffled-label nulls. CPU only. | `scripts/analyze.py`, with the extra per-target and per-layer nulls in `scripts/extra_controls.py` |
+| 4. the two nulls | Permute the pole labels within each cell, preserving each cell's pole counts, and rebuild (shuffled-label null). Then subtract the decision component per layer to get the orthogonal null. | **not committed** |
+| 5. the sweep | Add the vector at every position of every forward pass — prompt tokens and each decode step alike — at the output of `model.model.layers[19]`, whose output is byte-equal to `hidden_states[20]`. Cast to the model's parameter dtype *before* scaling. 4400 generations, 106.2 min on A40s. Output is `rows/`. | **not committed** |
+
+`scripts/audit_sample.py` is the sampler used for the hand audit of the labelling —
+it dumps a stratified sample of pole rows for a human to read. It measures the
+parser's error rate; it does not relabel anything.
+
+The recorded parameters are seed 0, 60 samples per prompt and batch size 20 for
+stage 1; analysis seed 20260819 with 1000 shuffles for stage 3. **The exact command
+lines were not recorded**, so they are not reproduced here; each script's `--help`
+lists its required arguments.
+
+### What does not work about the committed code, and why it was left that way
+
+These scripts are what actually produced the result, not a cleaned-up version of it.
+They were written as a package named `scratch/` sitting **directly under the repo
+root**, and two things follow from that which do not survive the move into
+`results/dictator-decision-vector/scripts/`:
+
+* Every entry point does `sys.path.insert(0, Path(__file__).resolve().parents[1])`
+  to reach the repo root. From here, `parents[1]` is
+  `results/dictator-decision-vector/`, so `import audit` fails.
+* `gen_grid.py` and `extract_acts.py` do `from scratch import decision_grid`, and
+  `extra_controls.py` does `from scratch.analyze import ...`. The directory is now
+  called `scripts`, so those imports fail too.
+
+Checked, not assumed — running each entry point's `--help` from the repo root as
+committed:
+
+| script | as committed | copied to `scratch/` at the repo root |
+|---|---|---|
+| `gen_grid.py` | fails, `No module named 'audit'` | runs |
+| `extract_acts.py` | fails, `No module named 'audit'` | runs |
+| `extra_controls.py` | fails, `No module named 'scratch'` | runs |
+| `analyze.py` | runs | runs |
+| `audit_sample.py` | runs | runs |
+
+So the way to run them is to copy the directory to `scratch/` at the repo root and
+invoke it from there. `analyze.py` and `audit_sample.py` import neither `audit` nor
+`scratch` and run as they sit; their `sys.path` line is vestigial.
+
+Two further things are hardcoded to the machine this ran on, and are likewise left
+as they were:
+
+* `gen_grid.py` and `extract_acts.py` both load the model with
+  `device_map={"": 0}` — GPU device 0, not selectable by a flag.
+* `analyze.py` and `extra_controls.py` default `--vectors-dir` to the relative path
+  `persona_vectors/Qwen2.5-7B-Instruct`, so they must be run with the repo root as
+  the working directory.
 
 ## Provenance
 

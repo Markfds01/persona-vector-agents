@@ -400,18 +400,20 @@ Committed alongside this file:
 | `vectors/decision_response_avg_diff_cellbalanced.pt` | the vector under test, (29, 3584) fp32 |
 | `vectors/decision_response_avg_diff_cellbalanced_shuffled_seed20260819.pt` | Null A |
 | `vectors/decision_shuffled_orthogonalised_seed20260819.pt` | Null B |
-| `rows/decision/`, `rows/shuffled-null/`, `rows/orthogonal-null/` | one self-describing CSV per coefficient, 4400 rows in total |
+| `rows/decision/`, `rows/shuffled-null/`, `rows/orthogonal-null/` | the steering output: one self-describing CSV per coefficient, 4400 rows in total |
+| `extraction/grid_seed0.csv` | the 1800-generation grid of section 2, scored, one self-describing row each - the input the poles were read off |
+| `scripts/` | the code for the grid, the extraction and the analysis, committed as it ran |
 | `summary.csv` | per-arm, per-coefficient n, parsed, mean, SD, SE and 95% CI |
 | `steering_comparison.png` | the figure |
 | `README.md` | the result, its bounds, and what it does not establish |
 
-Not committed here, and named so it is clear what a rebuild would need: the
-1800-generation extraction grid, the 2.1 GB of captured activations
-(`acts_seed0/`), the generation, extraction and analysis scripts, and the
-gate/provenance records (`gates.json`, `null_vector.json`,
+Not committed, and named so it is clear what a rebuild would need: the 2.1 GB of
+captured activations (`acts_seed0/`), the null-construction and sweep scripts, and
+the gate/provenance records (`gates.json`, `null_vector.json`,
 `orthogonal_null_vector.json`, `sweep_provenance.json`, `negative_arm_audit.json`).
 The gate results and the hand audit of the negative arm are summarised in
-`README.md`.
+`README.md`, which also states what does and does not run about the committed
+scripts.
 
 Every result row carries its own provenance: model id and revision, dtype,
 attention implementation, sampling parameters, stop tokens, chat-template hash,
