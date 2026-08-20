@@ -402,18 +402,28 @@ Committed alongside this file:
 | `vectors/decision_shuffled_orthogonalised_seed20260819.pt` | Null B |
 | `rows/decision/`, `rows/shuffled-null/`, `rows/orthogonal-null/` | the steering output: one self-describing CSV per coefficient, 4400 rows in total |
 | `extraction/grid_seed0.csv` | the 1800-generation grid of section 2, scored, one self-describing row each - the input the poles were read off |
-| `scripts/` | the code for the grid, the extraction and the analysis, committed as it ran |
+| `scripts/` | the code for all five stages, committed as it ran |
+| `provenance/sweep_provenance.json` | the environment capture: versions, model revision, dtype, kernel, stop tokens, device, repo commit, and one entry per coefficient |
+| `provenance/sweep.log` | the execution trace of the first launch - 14 coefficients with n, parsed count, mean, output file and wall clock |
 | `summary.csv` | per-arm, per-coefficient n, parsed, mean, SD, SE and 95% CI |
 | `steering_comparison.png` | the figure |
 | `README.md` | the result, its bounds, and what it does not establish |
 
-Not committed, and named so it is clear what a rebuild would need: the 2.1 GB of
-captured activations (`acts_seed0/`), the null-construction and sweep scripts, and
-the gate/provenance records (`gates.json`, `null_vector.json`,
-`orthogonal_null_vector.json`, `sweep_provenance.json`, `negative_arm_audit.json`).
-The gate results and the hand audit of the negative arm are summarised in
-`README.md`, which also states what does and does not run about the committed
-scripts.
+Not committed, and named so it is clear what is missing: the 2.1 GB of captured
+activations (`acts_seed0/`), the JSON records the gate and null-construction runs
+wrote (`gates.json`, `null_vector.json`, `orthogonal_null_vector.json`), the derived
+analysis outputs the scripts in `scripts/` regenerate from `rows/`
+(`comparison_table.csv`, `pole_curves.*`, `pole_tests.json`, `distributions.json`,
+`negative_arm_audit.json`, `comparison.json`), and the logs of the three launches
+after the first. The gate results and the hand audit of the negative arm are
+summarised in `README.md`, which also states what does and does not run about the
+committed scripts.
+
+A note on section 7's coefficient table: the unit betas there are built on the
+reference vector's layer-20 norm computed in **float32**, 10.508308410644531, which
+is what every script in `scripts/` computes and what the rows record. Re-measuring
+the same file in float64 gives 10.508307958483506. `README.md` explains the
+difference and why it changes nothing.
 
 Every result row carries its own provenance: model id and revision, dtype,
 attention implementation, sampling parameters, stop tokens, chat-template hash,

@@ -40,7 +40,10 @@ shared unsteered run:
 
 Raw coefficients are not comparable across vectors of different length. The
 layer-20 norms are 6.8721 (decision), 10.5083 (trait), 0.5799 (shuffled null) and
-0.5626 (orthogonal null). Every arm is therefore steered at **unit norm**, and the
+0.5626 (orthogonal null) — quoted to four places here because the axis was built on
+float32 norms and a reader recomputing them in float64 gets slightly different
+figures; the full values, both ways, and which one defined the axis are under
+"What is in this directory". Every arm is therefore steered at **unit norm**, and the
 x-axis below is **unit beta** — the length of the activation edit added at layer
 20. A given unit beta is the same size of intervention for every arm. Unit beta
 `k x 10.5083` reproduces exactly the edit the trait vector's raw beta `k` produced,
@@ -348,7 +351,8 @@ summary.csv                per-arm, per-coefficient: n, parsed, mean, SD, SE, 95
 vectors/                   the decision vector and its two nulls, (29, 3584) float32
 rows/                      STEERING OUTPUT - 4400 generations, 22 self-describing CSVs
 extraction/                THE GRID THE VECTOR WAS BUILT FROM - 1800 scored generations
-scripts/                   the code that produced the grid, the vector and its analysis
+scripts/                   the code, all five stages, committed as it ran
+provenance/                the environment capture and the execution trace
 ```
 
 **`rows/` and `extraction/` are different things and it matters which one you are
@@ -358,23 +362,59 @@ steering*, one CSV per arm per coefficient. `extraction/grid_seed0.csv` is the
 labels the vector was built from. No row appears in both — they are different
 generations, from different prompts, at different stages.
 
-| file | sha256 (first 16) | layer-20 norm |
-|---|---|---|
-| `vectors/decision_response_avg_diff_cellbalanced.pt` | `50643c04fe40ab9e` | 6.872108722941 |
-| `vectors/decision_response_avg_diff_cellbalanced_shuffled_seed20260819.pt` | `d1491af711ba9b0e` | 0.579920606052 |
-| `vectors/decision_shuffled_orthogonalised_seed20260819.pt` | `90de41193a56e397` | 0.562636905792 |
-| `persona_vectors/Qwen2.5-7B-Instruct/altruism_response_avg_diff.pt` (already in the repo) | `fe59088876ea2d78` | 10.508307958484 |
+| file | sha256 (first 16) | layer-20 norm, float32 | layer-20 norm, float64 |
+|---|---|---|---|
+| `vectors/decision_response_avg_diff_cellbalanced.pt` | `50643c04fe40ab9e` | 6.872108459472656 | 6.872108722940985 |
+| `vectors/decision_response_avg_diff_cellbalanced_shuffled_seed20260819.pt` | `d1491af711ba9b0e` | 0.579920530319214 | 0.579920606052380 |
+| `vectors/decision_shuffled_orthogonalised_seed20260819.pt` | `90de41193a56e397` | 0.562636852264404 | 0.562636905792069 |
+| `persona_vectors/Qwen2.5-7B-Instruct/altruism_response_avg_diff.pt` (already in the repo) | `fe59088876ea2d78` | **10.508308410644531** | 10.508307958483506 |
 
-Those four norms are what the whole unit-beta axis rests on, so they are quoted as
-measured in float64 from the files themselves rather than as reported. All four are
-`(29, 3584)` float32 tensors; the norm is of row 20. The trait vector's
-**10.508307958484** is the conversion constant that maps its existing sweep onto the
-shared axis.
+All four are `(29, 3584)` float32 tensors and the norm is of row 20. Two columns,
+because they differ in the seventh decimal and **the difference is not cosmetic in
+one specific place**.
+
+**The float32 column is the one the experiment used.** Every script that converts a
+raw beta to a unit beta computes the norm as
+`float(vector[layer].detach().float().norm())` — a float32 accumulation. So the
+x-axis of every plot and table here is built on the trait vector's
+**10.508308410644531**, and `provenance/sweep_provenance.json` records exactly that
+under `their_layer_norm`. It is also what the rows record: `steer_coeff` at k = 5 is
+`52.541542053222656`, which is 5 x the float32 norm to the last bit, not 5 x the
+float64 norm (52.541539792417531).
+
+The float64 column is the same files re-measured at higher precision —
+`torch.load(path)[20].double().norm()`. It is the more accurate number, and a reader
+who recomputes the norms will get it. The two differ by 4.5e-07 absolute,
+4.3e-08 relative, which is far below anything this experiment resolves: at the
+largest coefficient the two conventions disagree about the applied edit by
+0.0000023 unit-beta, against a saturation point of 10.51 and per-point standard
+errors of $0.62 to $3.01. Nothing in the result changes. But the axis was defined by
+the float32 value, so that is the value quoted wherever a coefficient is named.
 
 `extraction/grid_seed0.csv` is 1800 rows, 35 columns, one per generation, scored by
 `audit.parse` with the resolution path named in its `tag`. It is what makes the pole
 counts (939 self-interested, 452 altruistic, 362 middle discarded) and the
 exactly-half finding above checkable rather than merely stated.
+
+`provenance/` holds two files, and they do different jobs.
+
+`sweep_provenance.json` is the environment capture: transformers 4.52.3,
+torch 2.6.0+cu124, the model id and revision, dtype, `attn_implementation`, stop
+token ids, the preset and sampling parameters, seed, batch size, the device
+(`NVIDIA A40`), the repo commit, and one entry per coefficient giving the vector, its
+sha256, its layer-20 norm, the unit beta and the output CSV. It is the
+reproducibility record for the run.
+
+`sweep.log` is the execution trace — every arm and coefficient as it completed, with
+`n`, the parsed count, the mean and the output filename, and elapsed wall clock.
+**What it is:** evidence that the committed rows are the rows that run produced. All
+14 of its lines were cross-checked against `summary.csv` and against the files in
+`rows/`; every `n`, parsed count and mean agrees, and every filename it names is
+present. **What it is not:** a command line — the invocations were never recorded —
+and not the whole run. It covers the first launch only: the 11 decision coefficients
+and 3 shuffled-null coefficients, 2800 of the 4400 generations, 59.7 minutes of the
+106.2. The remaining three launches (4 more shuffled-null points, and the orthogonal
+null at ±52.54 then ±10.51) wrote their own logs, which are **not committed here**.
 
 `rows/` holds one CSV per arm per coefficient: 11 for the decision arm, 7 for the
 shuffled-label null, 4 for the orthogonal null, 200 rows each. Every row carries its
@@ -413,68 +453,98 @@ altruistic pole (452), the rest the discarded middle (362). Of that altruistic p
 356 sit at exactly 0.5.
 
 The four layer-20 norms are `torch.load(path)[20].double().norm()` on the files in
-`vectors/` and on the trait vector already in the repo.
+`vectors/` and on the trait vector already in the repo, for the float64 column;
+`.float().norm()` for the float32 column the coefficients were actually built on.
+
+That the committed rows are the rows the run produced is checkable from
+`provenance/sweep.log`: each of its 14 lines names an arm, a unit beta, `n`, a parsed
+count, a mean and an output filename. All 14 agree with `summary.csv` and with the
+files present in `rows/`. It covers the first launch only — see above for what it
+does not cover.
 
 ## How to rebuild it
 
-The code for stages 1 to 3 is in `scripts/`, committed exactly as it ran. **Read the
-next section before trying to run it** — it does not work from where it now sits, and
-that is stated rather than patched away.
+All five stages have their code in `scripts/`, committed exactly as it ran. **Read
+the next section before trying to run any of it** — much of it does not work from
+where it now sits, and that is stated rather than patched away.
 
 | stage | what it does | code |
 |---|---|---|
-| 1. the grid | 1800 generations: 6 endowments ($10 to $500) x 5 neutral wordings x 60 samples, `neutral` preset, seed 0, batch size 20. 46.1 min on one A40. Parse coverage 99.17%. Output is `extraction/grid_seed0.csv`. | `scripts/gen_grid.py`, with the prompt grid itself in `scripts/decision_grid.py` |
-| 2. the activations | For each labelled row, re-render the prompt, verify it byte-for-byte against the `prompt_sha256` recorded at generation time, then run **one teacher-forced forward pass** over `prompt + the model's own response` with `output_hidden_states=True`, batch size 1, no padding. Pool all 29 hidden states three ways per layer. 1785 rows in 6.3 min on one A40. Writes `acts_seed0/`, **2.1 GB, not committed** — this is the only stage that needs a GPU and the model weights. | `scripts/extract_acts.py` |
-| 3. the vector and its measurements | Per-layer mean difference, altruistic minus self-interested, averaged over the 30 (wording, endowment) cells so prompt composition cancels within a fixed prompt. Saved as `(29, 3584)` float32. Also the held-out separation, the per-layer cosines and the 1000-draw shuffled-label nulls. CPU only. | `scripts/analyze.py`, with the extra per-target and per-layer nulls in `scripts/extra_controls.py` |
-| 4. the two nulls | Permute the pole labels within each cell, preserving each cell's pole counts, and rebuild (shuffled-label null). Then subtract the decision component per layer to get the orthogonal null. | **not committed** |
-| 5. the sweep | Add the vector at every position of every forward pass — prompt tokens and each decode step alike — at the output of `model.model.layers[19]`, whose output is byte-equal to `hidden_states[20]`. Cast to the model's parameter dtype *before* scaling. 4400 generations, 106.2 min on A40s. Output is `rows/`. | **not committed** |
+| 1. the grid | 1800 generations: 6 endowments ($10 to $500) x 5 neutral wordings x 60 samples, `neutral` preset, seed 0, batch size 20. 46.1 min on one A40. Parse coverage 99.17%. Output is `extraction/grid_seed0.csv`. | `gen_grid.py`, with the prompt grid itself in `decision_grid.py` |
+| 2. the activations | For each labelled row, re-render the prompt, verify it byte-for-byte against the `prompt_sha256` recorded at generation time, then run **one teacher-forced forward pass** over `prompt + the model's own response` with `output_hidden_states=True`, batch size 1, no padding. Pool all 29 hidden states three ways per layer. 1785 rows in 6.3 min on one A40. Writes `acts_seed0/`, **2.1 GB, not committed** — the one input that cannot be regenerated from what is here without a GPU and the model weights. | `extract_acts.py` |
+| 3. the vector | Per-layer mean difference, altruistic minus self-interested, averaged over the 30 (wording, endowment) cells so prompt composition cancels within a fixed prompt. Saved as `(29, 3584)` float32. Also the held-out separation, the per-layer cosines and the 1000-draw shuffled-label nulls. CPU only. | `analyze.py`, with the extra per-target and per-layer nulls in `extra_controls.py` |
+| 4. the two nulls | Permute the pole labels within each cell, preserving each cell's pole counts, and rebuild — that is Null A. Then project the real direction out per layer to get Null B, exactly orthogonal at the steered layer. Both write a JSON record of the construction, including the cosine to the real vector. CPU only. | `build_null_vector.py`, then `build_orthogonal_null.py` |
+| 5. the sweep | Add the vector at every position of every forward pass — prompt tokens and each decode step alike — at the output of `model.model.layers[19]`, whose output is byte-equal to `hidden_states[20]`. Cast to the model's parameter dtype *before* scaling. 4400 generations, 106.2 min on A40s. Output is `rows/`. | `run_sweep.py` for the first launch, `run_arm.py` for one arm at a time, `extend_null.py` for the four extra shuffled-null points |
+| gates | The three pre-sweep gates: `beta = 0` is a byte-exact no-op with positive controls, the hook site is `model.model.layers[19]` and its output is byte-equal to `hidden_states[20]`, and the vector loaded is the file intended. Run before any sweep. | `verify_gates.py` |
+| the analysis | Everything downstream of `rows/`: the per-arm tables and Welch differences, the pole curves and their Newcombe tests, the answer distributions and degeneracy statistics, the hand audit of the negative arm, and the figure. | `analyze_sweep.py` (the statistics library the rest import), `final_tables.py`, `pole_curves.py`, `pole_tests.py`, `distributions.py`, `negative_arm_audit.py`, `make_plot.py` |
 
-`scripts/audit_sample.py` is the sampler used for the hand audit of the labelling —
-it dumps a stratified sample of pole rows for a human to read. It measures the
-parser's error rate; it does not relabel anything.
+`audit_sample.py` is the sampler used for the hand audit of the *labelling* — it
+dumps a stratified sample of pole rows for a human to read. It measures the parser's
+error rate; it does not relabel anything.
 
 The recorded parameters are seed 0, 60 samples per prompt and batch size 20 for
-stage 1; analysis seed 20260819 with 1000 shuffles for stage 3. **The exact command
-lines were not recorded**, so they are not reproduced here; each script's `--help`
-lists its required arguments.
+stage 1; analysis seed 20260819 with 1000 shuffles for stage 3; seed 0, 200 samples
+per coefficient and batch size 20 for stage 5. **The exact command lines were never
+recorded**, so they are not reproduced here. Each script that takes arguments lists
+them under `--help`; `provenance/sweep.log` and `provenance/sweep_provenance.json`
+are the closest thing to an execution record that exists.
 
 ### What does not work about the committed code, and why it was left that way
 
-These scripts are what actually produced the result, not a cleaned-up version of it.
-They were written as a package named `scratch/` sitting **directly under the repo
-root**, and two things follow from that which do not survive the move into
-`results/dictator-decision-vector/scripts/`:
+This is the code that produced the result, copied byte-identical, not a cleaned-up
+version. Three separate things break when it is read out of the directory it ran in.
 
-* Every entry point does `sys.path.insert(0, Path(__file__).resolve().parents[1])`
-  to reach the repo root. From here, `parents[1]` is
-  `results/dictator-decision-vector/`, so `import audit` fails.
-* `gen_grid.py` and `extract_acts.py` do `from scratch import decision_grid`, and
-  `extra_controls.py` does `from scratch.analyze import ...`. The directory is now
-  called `scripts`, so those imports fail too.
+**It was a package named `scratch/` directly under the repo root.** Every entry point
+does `sys.path.insert(0, Path(__file__).resolve().parents[1])` to reach the repo root
+so it can `import audit`; from `results/dictator-decision-vector/scripts/` that
+resolves to the results directory instead. Two of the extraction scripts additionally
+import each other as `scratch.<module>`, and `final_tables.py` and `distributions.py`
+do `sys.path.insert(0, "scratch")` — a path relative to the working directory.
 
-Checked, not assumed — running each entry point's `--help` from the repo root as
-committed:
+Checked, not assumed. Each script that has an argument parser was run with `--help`
+from the repo root, as committed and again copied back to `scratch/`:
 
 | script | as committed | copied to `scratch/` at the repo root |
 |---|---|---|
 | `gen_grid.py` | fails, `No module named 'audit'` | runs |
 | `extract_acts.py` | fails, `No module named 'audit'` | runs |
 | `extra_controls.py` | fails, `No module named 'scratch'` | runs |
+| `extend_null.py` | fails, `No module named 'audit'` | runs |
+| `run_sweep.py` | fails, `No module named 'audit'` | runs |
+| `run_arm.py` | fails, `No module named 'audit'` | runs |
+| `verify_gates.py` | fails, `No module named 'audit'` | runs |
 | `analyze.py` | runs | runs |
 | `audit_sample.py` | runs | runs |
+| `analyze_sweep.py` | runs | runs |
+| `build_null_vector.py` | runs | runs |
+| `build_orthogonal_null.py` | runs | runs |
 
-So the way to run them is to copy the directory to `scratch/` at the repo root and
-invoke it from there. `analyze.py` and `audit_sample.py` import neither `audit` nor
-`scratch` and run as they sit; their `sys.path` line is vestigial.
+So: copy the directory to `scratch/` at the repo root and invoke it from there. Seven
+of the twelve need it; the other five import neither `audit` nor `scratch` and run as
+they sit.
 
-Two further things are hardcoded to the machine this ran on, and are likewise left
-as they were:
+**Six scripts have no argument parser at all.** `pole_curves.py`, `pole_tests.py`,
+`distributions.py`, `negative_arm_audit.py`, `final_tables.py` and `make_plot.py` do
+their work at import time, reading and writing **hardcoded absolute paths** under
+`/home/marco/dockmaster/data/steer-decision/` and
+`/home/marco/dockmaster/data/audit-steer/rows/`. They are not command-line tools and
+they will not find their inputs on any other machine. They were deliberately **not
+executed** during this packaging: running them would have written over the source
+artifacts outside this repository. Their behaviour above is read from the source, not
+measured — the one claim in this section that was not run.
 
-* `gen_grid.py` and `extract_acts.py` both load the model with
-  `device_map={"": 0}` — GPU device 0, not selectable by a flag.
-* `analyze.py` and `extra_controls.py` default `--vectors-dir` to the relative path
-  `persona_vectors/Qwen2.5-7B-Instruct`, so they must be run with the repo root as
-  the working directory.
+**Two things are pinned to the machine this ran on.** `gen_grid.py`,
+`extract_acts.py`, `extend_null.py`, `run_sweep.py`, `run_arm.py` and
+`verify_gates.py` all load the model with `device_map={"": 0}` — GPU device 0, not
+selectable by a flag, even though the sweep itself ran mostly on device 1 via
+`CUDA_VISIBLE_DEVICES` (recorded as `"1"` in `sweep_provenance.json`). And
+`analyze.py` and `extra_controls.py` default `--vectors-dir` to the relative path
+`persona_vectors/Qwen2.5-7B-Instruct`, so they need the repo root as the working
+directory.
+
+`provenance/sweep_provenance.json` likewise records absolute paths from the machine
+it ran on, including a worktree that no longer exists. Left as generated, for the
+same reason the rows were.
 
 ## Provenance
 
