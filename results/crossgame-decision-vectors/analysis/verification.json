@@ -1,0 +1,2301 @@
+{
+  "policy": "strict",
+  "n_rows": 4503,
+  "hidden_size": 3584,
+  "n_hidden_states": 29,
+  "theoretical_random_cosine_sd": 0.016703827619526525,
+  "A_per_game_vs_committed": {
+    "dictator": {
+      "usable_cells": 30,
+      "cos_layer20": 1.0000000000000002,
+      "min_cos_over_layers": 0.999999999999999,
+      "norm_layer20": 7.50471337301571
+    },
+    "trust": {
+      "usable_cells": 20,
+      "cos_layer20": 0.9999999999999997,
+      "min_cos_over_layers": 0.9999999999999989,
+      "norm_layer20": 5.373255190772857
+    },
+    "ultimatum": {
+      "usable_cells": 10,
+      "cos_layer20": 0.9999999999999997,
+      "min_cos_over_layers": 0.9999999999999991,
+      "norm_layer20": 5.366469371540662
+    },
+    "apology": {
+      "usable_cells": 25,
+      "cos_layer20": 0.9999999999999996,
+      "min_cos_over_layers": 0.999999999999999,
+      "norm_layer20": 8.002891979821516
+    },
+    "overfishing": {
+      "usable_cells": 17,
+      "cos_layer20": 0.9999999999999998,
+      "min_cos_over_layers": 0.9999999999999993,
+      "norm_layer20": 2.2737787939402674
+    },
+    "prisoners_dilemma": {
+      "usable_cells": 9,
+      "cos_layer20": 0.9999999999999996,
+      "min_cos_over_layers": 0.999999999999999,
+      "norm_layer20": 8.466909389557397
+    }
+  },
+  "B_agreement": {
+    "layer20": {
+      "dictator|trust": 0.790564359570958,
+      "dictator|ultimatum": 0.5105775737426727,
+      "dictator|apology": 0.841691583993577,
+      "dictator|overfishing": 0.21693500700398924,
+      "dictator|prisoners_dilemma": 0.33934066122239176,
+      "trust|ultimatum": 0.48779308530366633,
+      "trust|apology": 0.6430760467571202,
+      "trust|overfishing": 0.20347660721625818,
+      "trust|prisoners_dilemma": 0.3964933344580774,
+      "ultimatum|apology": 0.4185201649706088,
+      "ultimatum|overfishing": 0.12766217198376026,
+      "ultimatum|prisoners_dilemma": 0.13546017457622914,
+      "apology|overfishing": 0.16441565336220293,
+      "apology|prisoners_dilemma": 0.22816537398210537,
+      "overfishing|prisoners_dilemma": 0.06618941949091131
+    },
+    "layer0": {
+      "dictator|trust": 0.5811498673749174,
+      "dictator|ultimatum": 0.3366749708528635,
+      "dictator|apology": 0.748077342803666,
+      "dictator|overfishing": 0.169926913413704,
+      "dictator|prisoners_dilemma": 0.044470553408131164,
+      "trust|ultimatum": 0.41488999170501795,
+      "trust|apology": 0.46705151526386995,
+      "trust|overfishing": 0.045388643666413056,
+      "trust|prisoners_dilemma": 0.15470062416601413,
+      "ultimatum|apology": 0.20683189348907915,
+      "ultimatum|overfishing": -0.05942357078365059,
+      "ultimatum|prisoners_dilemma": 0.0913676825990785,
+      "apology|overfishing": 0.11599572538592029,
+      "apology|prisoners_dilemma": -0.027818262040253984,
+      "overfishing|prisoners_dilemma": -0.08131442712704519
+    }
+  },
+  "C_logo_cell_balanced": {
+    "dictator": {
+      "layer0": 0.8696581520503297,
+      "layer20": 0.939695292958387,
+      "best": 0.939695292958387,
+      "best_layer": 20,
+      "n_altruistic": 167,
+      "n_self_interested": 395
+    },
+    "trust": {
+      "layer0": 0.9314345991561181,
+      "layer20": 0.9683966244725738,
+      "best": 0.969493670886076,
+      "best_layer": 19,
+      "n_altruistic": 300,
+      "n_self_interested": 79
+    },
+    "ultimatum": {
+      "layer0": 0.6180897646414888,
+      "layer20": 0.7130541871921182,
+      "best": 0.7803776683087028,
+      "best_layer": 2,
+      "n_altruistic": 252,
+      "n_self_interested": 29
+    },
+    "apology": {
+      "layer0": 0.8241749841658113,
+      "layer20": 0.9369580885404154,
+      "best": 0.9369580885404154,
+      "best_layer": 20,
+      "n_altruistic": 422,
+      "n_self_interested": 217
+    },
+    "overfishing": {
+      "layer0": 0.5991518889745566,
+      "layer20": 0.6659984579799537,
+      "best": 0.6892675404780262,
+      "best_layer": 25,
+      "n_altruistic": 1297,
+      "n_self_interested": 50
+    },
+    "prisoners_dilemma": {
+      "layer0": 0.5952008346374543,
+      "layer20": 0.968961919666145,
+      "best": 0.9770474700052165,
+      "best_layer": 23,
+      "n_altruistic": 18,
+      "n_self_interested": 213
+    }
+  },
+  "D_logo_game_equal_unit": {
+    "dictator": {
+      "layer0": 0.8335480936860457,
+      "layer20": 0.9219282953081179,
+      "best": 0.922974304555446,
+      "best_layer": 17
+    },
+    "trust": {
+      "layer0": 0.9286497890295359,
+      "layer20": 0.9667932489451477,
+      "best": 0.9667932489451477,
+      "best_layer": 19
+    },
+    "ultimatum": {
+      "layer0": 0.6264367816091954,
+      "layer20": 0.6964969896004378,
+      "best": 0.8006294471811713,
+      "best_layer": 28
+    },
+    "apology": {
+      "layer0": 0.7625636097582283,
+      "layer20": 0.9285495883110927,
+      "best": 0.9322296721776924,
+      "best_layer": 15
+    },
+    "overfishing": {
+      "layer0": 0.5561912104857363,
+      "layer20": 0.6512413261372397,
+      "best": 0.6753122590593678,
+      "best_layer": 25
+    },
+    "prisoners_dilemma": {
+      "layer0": 0.6593635889410537,
+      "layer20": 0.9574856546687532,
+      "best": 0.9710485133020345,
+      "best_layer": 21
+    }
+  },
+  "E_pool_cosines": {
+    "n_usable_cells_total": 111,
+    "cell_balanced": {
+      "vs_dictator_layer0": 0.890086233555113,
+      "vs_dictator_layer20": 0.9594251105058459,
+      "vs_dictator_min_layer10_27": 0.9431930066972232,
+      "vs_altruism_layer20": 0.1099440036955426,
+      "vs_cell_balanced_pool_layer20": 1.0,
+      "norm_layer20": 5.066440388785507
+    },
+    "game_equal_unit": {
+      "vs_dictator_layer0": 0.8187411132300295,
+      "vs_dictator_layer20": 0.9007761970876631,
+      "vs_dictator_min_layer10_27": 0.8955881210591051,
+      "vs_altruism_layer20": 0.06696739017678743,
+      "vs_cell_balanced_pool_layer20": 0.965621889208208,
+      "norm_layer20": 0.6900225929326328
+    },
+    "game_equal_raw": {
+      "vs_dictator_layer0": 0.7688205995884292,
+      "vs_dictator_layer20": 0.9163576065763482,
+      "vs_dictator_min_layer10_27": 0.8962431990732007,
+      "vs_altruism_layer20": 0.11178531151969036,
+      "vs_cell_balanced_pool_layer20": 0.9798562778826571,
+      "norm_layer20": 4.492976002700415
+    },
+    "game_precision_raw": {
+      "vs_dictator_layer0": 0.9050056525487807,
+      "vs_dictator_layer20": 0.9608960464052931,
+      "vs_dictator_min_layer10_27": 0.9451862145188206,
+      "vs_altruism_layer20": 0.11746002585802687,
+      "vs_cell_balanced_pool_layer20": 0.9947295141641955,
+      "norm_layer20": 5.628407656628803
+    },
+    "game_precision_unit": {
+      "vs_dictator_layer0": 0.9041522066702107,
+      "vs_dictator_layer20": 0.956554844264444,
+      "vs_dictator_min_layer10_27": 0.9444848755640908,
+      "vs_altruism_layer20": 0.08994136203537656,
+      "vs_cell_balanced_pool_layer20": 0.993686421197386,
+      "norm_layer20": 0.8016451305480075
+    },
+    "dictator_vs_altruism_layer20": 0.08750851730799492
+  },
+  "E_per_game_vs_dictator_layer20": {
+    "dictator": 0.9831228081735669,
+    "trust": 0.8024621440083508,
+    "ultimatum": 0.5007047380153985,
+    "apology": 0.8415925071533363,
+    "overfishing": 0.24244508353163938,
+    "prisoners_dilemma": 0.35900828211626173
+  },
+  "E_per_game_vs_altruism_layer20": {
+    "dictator": 0.10852302387985413,
+    "trust": -0.012550092392986037,
+    "ultimatum": 0.025690914343426078,
+    "apology": 0.1625461811951675,
+    "overfishing": -0.14317143403696986,
+    "prisoners_dilemma": 0.13621548028181735
+  },
+  "E_per_game_vs_pool_layer20": {
+    "cell_balanced": {
+      "dictator": 0.9604671466041911,
+      "trust": 0.8506278417988361,
+      "ultimatum": 0.5690668722954535,
+      "apology": 0.89776764533738,
+      "overfishing": 0.2741083889645942,
+      "prisoners_dilemma": 0.445767623703276
+    },
+    "game_equal_unit": {
+      "dictator": 0.8934753787824486,
+      "trust": 0.8505526894754578,
+      "ultimatum": 0.6473249808596213,
+      "apology": 0.7960775141815756,
+      "overfishing": 0.4296185074891636,
+      "prisoners_dilemma": 0.5230864868075288
+    },
+    "game_equal_raw": {
+      "dictator": 0.9123504478472075,
+      "trust": 0.8491084312649916,
+      "ultimatum": 0.6159918900795408,
+      "apology": 0.8282050983241388,
+      "overfishing": 0.28030646206968224,
+      "prisoners_dilemma": 0.5878601571157174
+    },
+    "game_precision_raw": {
+      "dictator": 0.9641713624382998,
+      "trust": 0.8243921467063192,
+      "ultimatum": 0.5422909548162632,
+      "apology": 0.9315133075720314,
+      "overfishing": 0.2521029758180938,
+      "prisoners_dilemma": 0.374344634210254
+    },
+    "game_precision_unit": {
+      "dictator": 0.9566651689011784,
+      "trust": 0.8406403310393151,
+      "ultimatum": 0.5585597539167406,
+      "apology": 0.9069744321997523,
+      "overfishing": 0.34838788228216083,
+      "prisoners_dilemma": 0.3700390108800942
+    }
+  },
+  "F_dictator_projected_out": {
+    "dictator": {
+      "auc_layer20_before": 0.9219282953081179,
+      "auc_layer20_after": 0.5001440157659365,
+      "best_after": 0.5433032668839536,
+      "best_after_layer": 27,
+      "residual_norm_fraction_layer20": 0.5458556795930023
+    },
+    "trust": {
+      "auc_layer20_before": 0.9667932489451477,
+      "auc_layer20_after": 0.810632911392405,
+      "best_after": 0.8548523206751055,
+      "best_after_layer": 5,
+      "residual_norm_fraction_layer20": 0.47758806523042946
+    },
+    "ultimatum": {
+      "auc_layer20_before": 0.6964969896004378,
+      "auc_layer20_after": 0.32936507936507936,
+      "best_after": 0.5970169677066228,
+      "best_after_layer": 1,
+      "residual_norm_fraction_layer20": 0.4294071628386859
+    },
+    "apology": {
+      "auc_layer20_before": 0.9285495883110927,
+      "auc_layer20_after": 0.313407735820211,
+      "best_after": 0.4815668202764977,
+      "best_after_layer": 10,
+      "residual_norm_fraction_layer20": 0.5272001517666104
+    },
+    "overfishing": {
+      "auc_layer20_before": 0.6512413261372397,
+      "auc_layer20_after": 0.4841017733230532,
+      "best_after": 0.5139090208172706,
+      "best_after_layer": 25,
+      "residual_norm_fraction_layer20": 0.40777761021209485
+    },
+    "prisoners_dilemma": {
+      "auc_layer20_before": 0.9574856546687532,
+      "auc_layer20_after": 0.3137715179968701,
+      "best_after": 0.819509650495566,
+      "best_after_layer": 28,
+      "residual_norm_fraction_layer20": 0.42123406179480855
+    }
+  },
+  "H_census": {
+    "dictator": {
+      "rows_generated": 720,
+      "rows_scored": 712,
+      "n_altruistic": 167,
+      "n_self_interested": 395,
+      "n_middle": 140,
+      "n_tag_excluded": 10,
+      "unresolved_fraction": 0.011111111111111112,
+      "tag_counts": {
+        "a2_anchor": 549,
+        "a2_near": 64,
+        "verb_obj": 42,
+        "bare": 37,
+        "bare_int": 8,
+        "unparsed": 8,
+        "keep": 5,
+        "complement": 5,
+        "answer_is": 2
+      },
+      "focal_altruistic": {
+        "value_over_scale": 0.5,
+        "n": 134,
+        "total": 167,
+        "share": 0.8023952095808383
+      },
+      "focal_self_interested": {
+        "value_over_scale": 0.0,
+        "n": 395,
+        "total": 395,
+        "share": 1.0
+      },
+      "by_wording": {
+        "upstream": {
+          "n": 141,
+          "alt": 25
+        },
+        "rules_first": {
+          "n": 141,
+          "alt": 38
+        },
+        "second_person": {
+          "n": 142,
+          "alt": 13
+        },
+        "payoff_lines": {
+          "n": 139,
+          "alt": 21
+        },
+        "narrative": {
+          "n": 139,
+          "alt": 70
+        }
+      },
+      "usable_cells": 30,
+      "effective_n": 75.16815788328502,
+      "rows_in_usable_cells": {
+        "altruistic": 167,
+        "self_interested": 395
+      }
+    },
+    "trust": {
+      "rows_generated": 720,
+      "rows_scored": 699,
+      "n_altruistic": 300,
+      "n_self_interested": 79,
+      "n_middle": 309,
+      "n_tag_excluded": 11,
+      "unresolved_fraction": 0.029166666666666667,
+      "tag_counts": {
+        "a2_anchor": 439,
+        "a2_near": 93,
+        "verb_obj": 73,
+        "bare_int": 47,
+        "bare": 35,
+        "unparsed": 21,
+        "complement": 8,
+        "keep": 3,
+        "answer_is": 1
+      },
+      "focal_altruistic": {
+        "value_over_scale": 0.5,
+        "n": 200,
+        "total": 300,
+        "share": 0.6666666666666666
+      },
+      "focal_self_interested": {
+        "value_over_scale": 0.0,
+        "n": 79,
+        "total": 79,
+        "share": 1.0
+      },
+      "by_wording": {
+        "upstream": {
+          "n": 142,
+          "alt": 48
+        },
+        "rules_first": {
+          "n": 141,
+          "alt": 85
+        },
+        "second_person": {
+          "n": 142,
+          "alt": 60
+        },
+        "payoff_lines": {
+          "n": 122,
+          "alt": 34
+        },
+        "narrative": {
+          "n": 141,
+          "alt": 73
+        }
+      },
+      "usable_cells": 20,
+      "effective_n": 39.225546894644204,
+      "rows_in_usable_cells": {
+        "altruistic": 180,
+        "self_interested": 79
+      }
+    },
+    "ultimatum": {
+      "rows_generated": 720,
+      "rows_scored": 713,
+      "n_altruistic": 252,
+      "n_self_interested": 29,
+      "n_middle": 396,
+      "n_tag_excluded": 36,
+      "unresolved_fraction": 0.009722222222222222,
+      "tag_counts": {
+        "a2_anchor": 520,
+        "a2_near": 82,
+        "verb_obj": 40,
+        "complement": 27,
+        "bare": 27,
+        "keep": 9,
+        "unparsed": 7,
+        "bare_int": 6,
+        "answer_is": 2
+      },
+      "focal_altruistic": {
+        "value_over_scale": 0.5,
+        "n": 185,
+        "total": 252,
+        "share": 0.7341269841269841
+      },
+      "focal_self_interested": {
+        "value_over_scale": 0.0,
+        "n": 29,
+        "total": 29,
+        "share": 1.0
+      },
+      "by_wording": {
+        "upstream": {
+          "n": 137,
+          "alt": 31
+        },
+        "rules_first": {
+          "n": 132,
+          "alt": 43
+        },
+        "second_person": {
+          "n": 138,
+          "alt": 55
+        },
+        "payoff_lines": {
+          "n": 132,
+          "alt": 43
+        },
+        "narrative": {
+          "n": 138,
+          "alt": 80
+        }
+      },
+      "usable_cells": 10,
+      "effective_n": 15.119484158775759,
+      "rows_in_usable_cells": {
+        "altruistic": 90,
+        "self_interested": 27
+      }
+    },
+    "apology": {
+      "rows_generated": 720,
+      "rows_scored": 714,
+      "n_altruistic": 422,
+      "n_self_interested": 217,
+      "n_middle": 73,
+      "n_tag_excluded": 2,
+      "unresolved_fraction": 0.008333333333333333,
+      "tag_counts": {
+        "a2_anchor": 587,
+        "bare": 43,
+        "verb_obj": 43,
+        "a2_near": 37,
+        "unparsed": 6,
+        "complement": 2,
+        "answer_is": 1,
+        "bare_int": 1
+      },
+      "focal_altruistic": {
+        "value_over_scale": 0.5,
+        "n": 255,
+        "total": 422,
+        "share": 0.6042654028436019
+      },
+      "focal_self_interested": {
+        "value_over_scale": 0.0,
+        "n": 217,
+        "total": 217,
+        "share": 1.0
+      },
+      "by_wording": {
+        "upstream": {
+          "n": 143,
+          "alt": 47
+        },
+        "rules_first": {
+          "n": 143,
+          "alt": 94
+        },
+        "second_person": {
+          "n": 143,
+          "alt": 48
+        },
+        "payoff_lines": {
+          "n": 141,
+          "alt": 96
+        },
+        "narrative": {
+          "n": 142,
+          "alt": 137
+        }
+      },
+      "usable_cells": 25,
+      "effective_n": 75.75405107974282,
+      "rows_in_usable_cells": {
+        "altruistic": 306,
+        "self_interested": 217
+      }
+    },
+    "overfishing": {
+      "rows_generated": 1440,
+      "rows_scored": 1425,
+      "n_altruistic": 1297,
+      "n_self_interested": 50,
+      "n_middle": 78,
+      "n_tag_excluded": 0,
+      "unresolved_fraction": 0.010416666666666666,
+      "tag_counts": {
+        "fish": 1404,
+        "fish_bare": 21,
+        "unparsed": 15
+      },
+      "focal_altruistic": {
+        "value_over_scale": 0.5,
+        "n": 1119,
+        "total": 1297,
+        "share": 0.8627602158828065
+      },
+      "focal_self_interested": {
+        "value_over_scale": 1.0,
+        "n": 47,
+        "total": 50,
+        "share": 0.94
+      },
+      "by_wording": {
+        "upstream": {
+          "n": 284,
+          "alt": 271
+        },
+        "rules_first": {
+          "n": 286,
+          "alt": 260
+        },
+        "second_person": {
+          "n": 284,
+          "alt": 266
+        },
+        "payoff_lines": {
+          "n": 286,
+          "alt": 262
+        },
+        "narrative": {
+          "n": 285,
+          "alt": 238
+        }
+      },
+      "usable_cells": 17,
+      "effective_n": 28.89099627237595,
+      "rows_in_usable_cells": {
+        "altruistic": 735,
+        "self_interested": 50
+      }
+    },
+    "prisoners_dilemma": {
+      "rows_generated": 240,
+      "rows_scored": 240,
+      "n_altruistic": 18,
+      "n_self_interested": 213,
+      "n_middle": 0,
+      "n_tag_excluded": 9,
+      "unresolved_fraction": 0.0,
+      "tag_counts": {
+        "defect_decl": 184,
+        "defect": 29,
+        "coop_decl": 16,
+        "mixed": 9,
+        "coop": 2
+      },
+      "focal_altruistic": {
+        "value_over_scale": 1.0,
+        "n": 18,
+        "total": 18,
+        "share": 1.0
+      },
+      "focal_self_interested": {
+        "value_over_scale": 0.0,
+        "n": 213,
+        "total": 213,
+        "share": 1.0
+      },
+      "by_wording": {
+        "upstream": {
+          "n": 46,
+          "alt": 0
+        },
+        "rules_first": {
+          "n": 47,
+          "alt": 14
+        },
+        "second_person": {
+          "n": 45,
+          "alt": 1
+        },
+        "payoff_lines": {
+          "n": 46,
+          "alt": 1
+        },
+        "narrative": {
+          "n": 47,
+          "alt": 2
+        }
+      },
+      "usable_cells": 9,
+      "effective_n": 10.173444976076556,
+      "rows_in_usable_cells": {
+        "altruistic": 18,
+        "self_interested": 52
+      }
+    }
+  },
+  "I_pd_probe": {
+    "n_draws": 96,
+    "n_matrices": 6,
+    "cooperations": 0,
+    "by_matrix": {
+      "pd_probe_v1/upstream_equiv": {
+        "n": 16,
+        "cooperate": 0
+      },
+      "pd_probe_v1/mild_temptation": {
+        "n": 16,
+        "cooperate": 0
+      },
+      "pd_probe_v1/mild_all": {
+        "n": 16,
+        "cooperate": 0
+      },
+      "pd_probe_v1/mild_all_x10": {
+        "n": 16,
+        "cooperate": 0
+      },
+      "pd_probe_v1/no_loss": {
+        "n": 16,
+        "cooperate": 0
+      },
+      "pd_probe_v1/no_loss_mild": {
+        "n": 16,
+        "cooperate": 0
+      }
+    }
+  },
+  "G_layer0": {
+    "n_distinct_response_tokens": 5657,
+    "digit_token_ids": [
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24
+    ],
+    "theoretical_spherical_baseline": 0.052822140920532286,
+    "per_vector": {
+      "pool_cell_balanced": {
+        "digit_span_share": 0.4186391098431848,
+        "cos_vs_big_digit_minus_zero": 0.27480300580598427,
+        "response_control_32": {
+          "n_draws": 32,
+          "mean": 0.10201801359653473,
+          "p97.5": 0.14516231417655945,
+          "max": 0.14893649518489838
+        },
+        "response_control_many": {
+          "n_draws": 1000,
+          "mean": 0.10614126920700073,
+          "p97.5": 0.19079861044883728,
+          "max": 0.39086705446243286
+        },
+        "vocab_control_32": {
+          "n_draws": 32,
+          "mean": 0.09109776467084885,
+          "p97.5": 0.12990061938762665,
+          "max": 0.13806988298892975
+        },
+        "toward_altruistic": [
+          [
+            "5",
+            0.372
+          ],
+          [
+            "6",
+            0.257
+          ],
+          [
+            "4",
+            0.242
+          ],
+          [
+            "7",
+            0.234
+          ],
+          [
+            "\u0120fair",
+            0.217
+          ],
+          [
+            "\u0120a",
+            0.196
+          ],
+          [
+            "2",
+            0.188
+          ],
+          [
+            "A",
+            0.183
+          ],
+          [
+            "8",
+            0.178
+          ],
+          [
+            "\u00ef\u00bc\u0137",
+            0.158
+          ],
+          [
+            "a",
+            0.146
+          ],
+          [
+            "\u0120significant",
+            0.142
+          ]
+        ],
+        "toward_self_interested": [
+          [
+            "\u0120Agent",
+            -0.289
+          ],
+          [
+            "\u0120no",
+            -0.223
+          ],
+          [
+            "\u0120any",
+            -0.223
+          ],
+          [
+            ",",
+            -0.183
+          ],
+          [
+            "\u0120",
+            -0.161
+          ],
+          [
+            "\u00e3\u0122\u0123",
+            -0.154
+          ],
+          [
+            "\u0120payoff",
+            -0.151
+          ],
+          [
+            "\u00ef\u00bc\u012e",
+            -0.151
+          ],
+          [
+            "\u0120rational",
+            -0.148
+          ],
+          [
+            ",\u010a",
+            -0.148
+          ],
+          [
+            ")",
+            -0.146
+          ],
+          [
+            ";\u010a",
+            -0.136
+          ]
+        ]
+      },
+      "pool_game_equal_unit": {
+        "digit_span_share": 0.42620464586367246,
+        "cos_vs_big_digit_minus_zero": 0.3216209092871741,
+        "response_control_32": {
+          "n_draws": 32,
+          "mean": 0.09766533970832825,
+          "p97.5": 0.13959749042987823,
+          "max": 0.1437845230102539
+        },
+        "response_control_many": {
+          "n_draws": 1000,
+          "mean": 0.10092753171920776,
+          "p97.5": 0.17706060409545898,
+          "max": 0.3774840533733368
+        },
+        "vocab_control_32": {
+          "n_draws": 32,
+          "mean": 0.08849474042654037,
+          "p97.5": 0.1298450529575348,
+          "max": 0.1380482017993927
+        },
+        "toward_altruistic": [
+          [
+            "5",
+            0.36
+          ],
+          [
+            "6",
+            0.241
+          ],
+          [
+            "4",
+            0.201
+          ],
+          [
+            "\u0120fair",
+            0.201
+          ],
+          [
+            "7",
+            0.2
+          ],
+          [
+            "A",
+            0.171
+          ],
+          [
+            "\u0120a",
+            0.17
+          ],
+          [
+            "\u00ef\u00bc\u0137",
+            0.167
+          ],
+          [
+            "8",
+            0.156
+          ],
+          [
+            "\u0120significant",
+            0.139
+          ],
+          [
+            "\u0120reasonable",
+            0.136
+          ],
+          [
+            "\u0120balanced",
+            0.134
+          ]
+        ],
+        "toward_self_interested": [
+          [
+            "\u0120Agent",
+            -0.325
+          ],
+          [
+            "\u0120any",
+            -0.201
+          ],
+          [
+            "\u0120no",
+            -0.199
+          ],
+          [
+            ",",
+            -0.169
+          ],
+          [
+            "\u0120",
+            -0.166
+          ],
+          [
+            "\u0120is",
+            -0.159
+          ],
+          [
+            "Agent",
+            -0.156
+          ],
+          [
+            "\u0120\u0120",
+            -0.15
+          ],
+          [
+            ")",
+            -0.144
+          ],
+          [
+            "\u0120$",
+            -0.133
+          ],
+          [
+            "\u0120No",
+            -0.128
+          ],
+          [
+            "),",
+            -0.128
+          ]
+        ]
+      },
+      "pool_game_equal_raw": {
+        "digit_span_share": 0.38041354129870425,
+        "cos_vs_big_digit_minus_zero": 0.27827103073163273,
+        "response_control_32": {
+          "n_draws": 32,
+          "mean": 0.10530123859643936,
+          "p97.5": 0.1440364122390747,
+          "max": 0.14833806455135345
+        },
+        "response_control_many": {
+          "n_draws": 1000,
+          "mean": 0.10469188541173935,
+          "p97.5": 0.18746095895767212,
+          "max": 0.38998445868492126
+        },
+        "vocab_control_32": {
+          "n_draws": 32,
+          "mean": 0.0885176956653595,
+          "p97.5": 0.13023026287555695,
+          "max": 0.13531279563903809
+        },
+        "toward_altruistic": [
+          [
+            "5",
+            0.308
+          ],
+          [
+            "6",
+            0.212
+          ],
+          [
+            "\u0120fair",
+            0.204
+          ],
+          [
+            "4",
+            0.159
+          ],
+          [
+            "A",
+            0.155
+          ],
+          [
+            "7",
+            0.155
+          ],
+          [
+            "\u00ef\u00bc\u0137",
+            0.151
+          ],
+          [
+            "\u0120a",
+            0.149
+          ],
+          [
+            "\u0120reasonable",
+            0.143
+          ],
+          [
+            "\u0120significant",
+            0.142
+          ],
+          [
+            "\u0120balanced",
+            0.139
+          ],
+          [
+            "\u0120Fair",
+            0.127
+          ]
+        ],
+        "toward_self_interested": [
+          [
+            "\u0120Agent",
+            -0.367
+          ],
+          [
+            "\u0120any",
+            -0.193
+          ],
+          [
+            "\u0120",
+            -0.182
+          ],
+          [
+            "\u0120no",
+            -0.176
+          ],
+          [
+            "\u0120\u0120",
+            -0.176
+          ],
+          [
+            "\u0120$",
+            -0.171
+          ],
+          [
+            "Agent",
+            -0.17
+          ],
+          [
+            "\u0120agent",
+            -0.165
+          ],
+          [
+            "\u0120\u0120\u0120",
+            -0.149
+          ],
+          [
+            "\u0120is",
+            -0.143
+          ],
+          [
+            "\u0120Agents",
+            -0.142
+          ],
+          [
+            "\u010a\u010a",
+            -0.142
+          ]
+        ]
+      },
+      "pool_game_precision_raw": {
+        "digit_span_share": 0.42665486643209255,
+        "cos_vs_big_digit_minus_zero": 0.24899206470736698,
+        "response_control_32": {
+          "n_draws": 32,
+          "mean": 0.10494017601013184,
+          "p97.5": 0.1524697095155716,
+          "max": 0.15884412825107574
+        },
+        "response_control_many": {
+          "n_draws": 1000,
+          "mean": 0.10987576097249985,
+          "p97.5": 0.20163112878799438,
+          "max": 0.3978005349636078
+        },
+        "vocab_control_32": {
+          "n_draws": 32,
+          "mean": 0.09286957234144211,
+          "p97.5": 0.12937188148498535,
+          "max": 0.1380709707736969
+        },
+        "toward_altruistic": [
+          [
+            "5",
+            0.381
+          ],
+          [
+            "4",
+            0.271
+          ],
+          [
+            "6",
+            0.264
+          ],
+          [
+            "7",
+            0.26
+          ],
+          [
+            "2",
+            0.241
+          ],
+          [
+            "\u0120fair",
+            0.223
+          ],
+          [
+            "\u0120a",
+            0.207
+          ],
+          [
+            "8",
+            0.198
+          ],
+          [
+            "A",
+            0.188
+          ],
+          [
+            "1",
+            0.173
+          ],
+          [
+            "a",
+            0.161
+          ],
+          [
+            "3",
+            0.161
+          ]
+        ],
+        "toward_self_interested": [
+          [
+            "\u0120no",
+            -0.246
+          ],
+          [
+            "\u0120Agent",
+            -0.236
+          ],
+          [
+            "\u0120any",
+            -0.235
+          ],
+          [
+            ",",
+            -0.198
+          ],
+          [
+            "\u00ef\u00bc\u012e",
+            -0.18
+          ],
+          [
+            "\u00e3\u0122\u0123",
+            -0.179
+          ],
+          [
+            "\u0120payoff",
+            -0.179
+          ],
+          [
+            "\u0120rational",
+            -0.157
+          ],
+          [
+            ",\u010a",
+            -0.154
+          ],
+          [
+            "\u0120to",
+            -0.153
+          ],
+          [
+            "\u0120",
+            -0.143
+          ],
+          [
+            ")",
+            -0.141
+          ]
+        ]
+      },
+      "pool_game_precision_unit": {
+        "digit_span_share": 0.43709467014874986,
+        "cos_vs_big_digit_minus_zero": 0.2702518445319262,
+        "response_control_32": {
+          "n_draws": 32,
+          "mean": 0.10533350706100464,
+          "p97.5": 0.1477397382259369,
+          "max": 0.15425755083560944
+        },
+        "response_control_many": {
+          "n_draws": 1000,
+          "mean": 0.11074598133563995,
+          "p97.5": 0.20470157265663147,
+          "max": 0.4092598855495453
+        },
+        "vocab_control_32": {
+          "n_draws": 32,
+          "mean": 0.09476765245199203,
+          "p97.5": 0.12986882030963898,
+          "max": 0.13878491520881653
+        },
+        "toward_altruistic": [
+          [
+            "5",
+            0.392
+          ],
+          [
+            "4",
+            0.274
+          ],
+          [
+            "6",
+            0.268
+          ],
+          [
+            "7",
+            0.266
+          ],
+          [
+            "2",
+            0.236
+          ],
+          [
+            "\u0120fair",
+            0.212
+          ],
+          [
+            "8",
+            0.202
+          ],
+          [
+            "\u0120a",
+            0.202
+          ],
+          [
+            "A",
+            0.188
+          ],
+          [
+            "1",
+            0.179
+          ],
+          [
+            "9",
+            0.171
+          ],
+          [
+            "3",
+            0.165
+          ]
+        ],
+        "toward_self_interested": [
+          [
+            "\u0120no",
+            -0.245
+          ],
+          [
+            "\u0120any",
+            -0.231
+          ],
+          [
+            "\u0120Agent",
+            -0.228
+          ],
+          [
+            ",",
+            -0.209
+          ],
+          [
+            "\u00ef\u00bc\u012e",
+            -0.189
+          ],
+          [
+            "\u00e3\u0122\u0123",
+            -0.186
+          ],
+          [
+            "\u0120payoff",
+            -0.179
+          ],
+          [
+            "\u0120to",
+            -0.154
+          ],
+          [
+            ",\u010a",
+            -0.151
+          ],
+          [
+            "\u0120rational",
+            -0.15
+          ],
+          [
+            ")",
+            -0.143
+          ],
+          [
+            "\u0120",
+            -0.14
+          ]
+        ]
+      },
+      "archived_dictator": {
+        "digit_span_share": 0.386993160783821,
+        "cos_vs_big_digit_minus_zero": 0.25338483444293186,
+        "response_control_32": {
+          "n_draws": 32,
+          "mean": 0.1226235032081604,
+          "p97.5": 0.16623522341251373,
+          "max": 0.17991213500499725
+        },
+        "response_control_many": {
+          "n_draws": 1000,
+          "mean": 0.12783388793468475,
+          "p97.5": 0.19956965744495392,
+          "max": 0.3615337014198303
+        },
+        "vocab_control_32": {
+          "n_draws": 32,
+          "mean": 0.10730676352977753,
+          "p97.5": 0.14464962482452393,
+          "max": 0.14750348031520844
+        },
+        "toward_altruistic": [
+          [
+            "5",
+            0.335
+          ],
+          [
+            "6",
+            0.225
+          ],
+          [
+            "\u0120fair",
+            0.21
+          ],
+          [
+            "A",
+            0.206
+          ],
+          [
+            "7",
+            0.193
+          ],
+          [
+            "4",
+            0.189
+          ],
+          [
+            "\u0120a",
+            0.178
+          ],
+          [
+            "2",
+            0.166
+          ],
+          [
+            "\u0120common",
+            0.158
+          ],
+          [
+            "1",
+            0.156
+          ],
+          [
+            "\u0120might",
+            0.155
+          ],
+          [
+            "\u0120which",
+            0.154
+          ]
+        ],
+        "toward_self_interested": [
+          [
+            "\u0120payoff",
+            -0.259
+          ],
+          [
+            "\u0120Agent",
+            -0.22
+          ],
+          [
+            ",",
+            -0.219
+          ],
+          [
+            "\u0120",
+            -0.197
+          ],
+          [
+            "\u0120rational",
+            -0.192
+          ],
+          [
+            "\u0120to",
+            -0.184
+          ],
+          [
+            "\u0120no",
+            -0.171
+          ],
+          [
+            ")",
+            -0.159
+          ],
+          [
+            "\u00e3\u0122\u0123",
+            -0.158
+          ],
+          [
+            "\u00ef\u00bc\u012e",
+            -0.15
+          ],
+          [
+            "-shot",
+            -0.147
+          ],
+          [
+            "\u0120any",
+            -0.144
+          ]
+        ]
+      },
+      "shipped_altruism": {
+        "digit_span_share": 0.10631926547853202,
+        "cos_vs_big_digit_minus_zero": -0.07097512566548292,
+        "response_control_32": {
+          "n_draws": 32,
+          "mean": 0.11934399604797363,
+          "p97.5": 0.16530011594295502,
+          "max": 0.1734287589788437
+        },
+        "response_control_many": {
+          "n_draws": 1000,
+          "mean": 0.12686319649219513,
+          "p97.5": 0.201823428273201,
+          "max": 0.29014426469802856
+        },
+        "vocab_control_32": {
+          "n_draws": 32,
+          "mean": 0.09902521222829819,
+          "p97.5": 0.1456078439950943,
+          "max": 0.1643609255552292
+        },
+        "toward_altruistic": [
+          [
+            "\u0120others",
+            0.252
+          ],
+          [
+            "\u0120community",
+            0.246
+          ],
+          [
+            "\u0120communities",
+            0.226
+          ],
+          [
+            "\u0120to",
+            0.224
+          ],
+          [
+            "\u0120helping",
+            0.197
+          ],
+          [
+            "\u0120altru",
+            0.192
+          ],
+          [
+            "\u0120support",
+            0.181
+          ],
+          [
+            "\u0120can",
+            0.177
+          ],
+          [
+            "\u0120of",
+            0.165
+          ],
+          [
+            "\u0120comunit\u00c3\u0142",
+            0.163
+          ],
+          [
+            "\u00e7\u00a4\u00be\u00e4\u00bc\u013c\u00e7\u00bb\u0126\u00e7\u00bb\u0129",
+            0.161
+          ],
+          [
+            "\u00e4\u00ba\u00ba\u00e3\u0122\u0127",
+            0.155
+          ]
+        ],
+        "toward_self_interested": [
+          [
+            "\u0120**",
+            -0.225
+          ],
+          [
+            "\u0120If",
+            -0.194
+          ],
+          [
+            "**",
+            -0.183
+          ],
+          [
+            "\u0120\u0120",
+            -0.181
+          ],
+          [
+            ":\u010a",
+            -0.168
+          ],
+          [
+            "**\u010a",
+            -0.158
+          ],
+          [
+            "If",
+            -0.156
+          ],
+          [
+            "\u0120-",
+            -0.154
+          ],
+          [
+            "\u0120fair",
+            -0.153
+          ],
+          [
+            "\u00e3\u0122\u0122",
+            -0.152
+          ],
+          [
+            "\u0109\u0120\u0120",
+            -0.147
+          ],
+          [
+            ":\u010a\u010a",
+            -0.147
+          ]
+        ]
+      },
+      "game_dictator": {
+        "digit_span_share": 0.34179876012613697,
+        "cos_vs_big_digit_minus_zero": 0.20819394068814306,
+        "response_control_32": {
+          "n_draws": 32,
+          "mean": 0.11861111968755722,
+          "p97.5": 0.15680362284183502,
+          "max": 0.1718299388885498
+        },
+        "response_control_many": {
+          "n_draws": 1000,
+          "mean": 0.1224830374121666,
+          "p97.5": 0.2113834023475647,
+          "max": 0.3229096531867981
+        },
+        "vocab_control_32": {
+          "n_draws": 32,
+          "mean": 0.10469163954257965,
+          "p97.5": 0.14187142252922058,
+          "max": 0.14521554112434387
+        },
+        "toward_altruistic": [
+          [
+            "5",
+            0.292
+          ],
+          [
+            "\u0120fair",
+            0.212
+          ],
+          [
+            "\u0120a",
+            0.212
+          ],
+          [
+            "4",
+            0.206
+          ],
+          [
+            "6",
+            0.206
+          ],
+          [
+            "A",
+            0.193
+          ],
+          [
+            "7",
+            0.19
+          ],
+          [
+            "2",
+            0.177
+          ],
+          [
+            "1",
+            0.16
+          ],
+          [
+            "a",
+            0.159
+          ],
+          [
+            "\u0120of",
+            0.148
+          ],
+          [
+            "\u0120common",
+            0.143
+          ]
+        ],
+        "toward_self_interested": [
+          [
+            "\u0120payoff",
+            -0.26
+          ],
+          [
+            "\u0120no",
+            -0.228
+          ],
+          [
+            "\u0120any",
+            -0.201
+          ],
+          [
+            ",",
+            -0.195
+          ],
+          [
+            "\u0120Agent",
+            -0.195
+          ],
+          [
+            "\u0120to",
+            -0.194
+          ],
+          [
+            "\u0120rational",
+            -0.194
+          ],
+          [
+            "\u00e3\u0122\u0123",
+            -0.171
+          ],
+          [
+            "\u00ef\u00bc\u012e",
+            -0.16
+          ],
+          [
+            "\u0120",
+            -0.148
+          ],
+          [
+            "\u00e4\u00bd\u0142\u00e7\u013c\u0126",
+            -0.147
+          ],
+          [
+            ")",
+            -0.142
+          ]
+        ]
+      },
+      "game_trust": {
+        "digit_span_share": 0.4887786492440792,
+        "cos_vs_big_digit_minus_zero": 0.3240509412187604,
+        "response_control_32": {
+          "n_draws": 32,
+          "mean": 0.09962587058544159,
+          "p97.5": 0.17210307717323303,
+          "max": 0.19375169277191162
+        },
+        "response_control_many": {
+          "n_draws": 1000,
+          "mean": 0.11090083420276642,
+          "p97.5": 0.2131410837173462,
+          "max": 0.44849151372909546
+        },
+        "vocab_control_32": {
+          "n_draws": 32,
+          "mean": 0.0907086730003357,
+          "p97.5": 0.12494580447673798,
+          "max": 0.13522601127624512
+        },
+        "toward_altruistic": [
+          [
+            "5",
+            0.436
+          ],
+          [
+            "7",
+            0.314
+          ],
+          [
+            "6",
+            0.311
+          ],
+          [
+            "4",
+            0.298
+          ],
+          [
+            "\u0120a",
+            0.285
+          ],
+          [
+            "\u00ef\u00bc\u0137",
+            0.238
+          ],
+          [
+            "8",
+            0.235
+          ],
+          [
+            "2",
+            0.218
+          ],
+          [
+            "\u0120return",
+            0.212
+          ],
+          [
+            "9",
+            0.192
+          ],
+          [
+            "3",
+            0.191
+          ],
+          [
+            "\u0120an",
+            0.185
+          ]
+        ],
+        "toward_self_interested": [
+          [
+            "\u0120Agent",
+            -0.275
+          ],
+          [
+            "$",
+            -0.207
+          ],
+          [
+            "\u0120\\(",
+            -0.206
+          ],
+          [
+            "\u0120\u0120",
+            -0.205
+          ],
+          [
+            "\u0120-",
+            -0.174
+          ],
+          [
+            ",\u010a",
+            -0.172
+          ],
+          [
+            "Agent",
+            -0.169
+          ],
+          [
+            "\u0120$",
+            -0.164
+          ],
+          [
+            "\\)",
+            -0.155
+          ],
+          [
+            "\u010d\u010a",
+            -0.151
+          ],
+          [
+            "\u010a\u010a",
+            -0.15
+          ],
+          [
+            "}.\u010a",
+            -0.15
+          ]
+        ]
+      },
+      "game_ultimatum": {
+        "digit_span_share": 0.2865255846421603,
+        "cos_vs_big_digit_minus_zero": 0.1624248207783966,
+        "response_control_32": {
+          "n_draws": 32,
+          "mean": 0.10919073224067688,
+          "p97.5": 0.16255542635917664,
+          "max": 0.16558116674423218
+        },
+        "response_control_many": {
+          "n_draws": 1000,
+          "mean": 0.10902184993028641,
+          "p97.5": 0.18925189971923828,
+          "max": 0.30872979760169983
+        },
+        "vocab_control_32": {
+          "n_draws": 32,
+          "mean": 0.0862819030880928,
+          "p97.5": 0.11955413222312927,
+          "max": 0.12187082320451736
+        },
+        "toward_altruistic": [
+          [
+            "\u0120a",
+            0.268
+          ],
+          [
+            "\u0120and",
+            0.261
+          ],
+          [
+            "\u0120the",
+            0.216
+          ],
+          [
+            "\u0120fair",
+            0.215
+          ],
+          [
+            "\u0120of",
+            0.191
+          ],
+          [
+            "\u0120an",
+            0.188
+          ],
+          [
+            "\u0120Fair",
+            0.161
+          ],
+          [
+            "\u0120with",
+            0.155
+          ],
+          [
+            "\u0120as",
+            0.155
+          ],
+          [
+            "\u0120reasonable",
+            0.152
+          ],
+          [
+            "5",
+            0.139
+          ],
+          [
+            "The",
+            0.134
+          ]
+        ],
+        "toward_self_interested": [
+          [
+            "\u0120$",
+            -0.28
+          ],
+          [
+            "\u0120\\(",
+            -0.199
+          ],
+          [
+            "\u0120Agent",
+            -0.187
+          ],
+          [
+            "\u0120($",
+            -0.168
+          ],
+          [
+            "\u0120avoid",
+            -0.165
+          ],
+          [
+            "\u0120receiving",
+            -0.156
+          ],
+          [
+            "\u0120$\\",
+            -0.144
+          ],
+          [
+            "$$",
+            -0.143
+          ],
+          [
+            "\u0120\u010a\u010a",
+            -0.136
+          ],
+          [
+            "\u0120offer",
+            -0.136
+          ],
+          [
+            "\u0120//$",
+            -0.134
+          ],
+          [
+            "\u0120\\$",
+            -0.134
+          ]
+        ]
+      },
+      "game_apology": {
+        "digit_span_share": 0.4218211666011962,
+        "cos_vs_big_digit_minus_zero": 0.13038860754046325,
+        "response_control_32": {
+          "n_draws": 32,
+          "mean": 0.10732000321149826,
+          "p97.5": 0.1639571636915207,
+          "max": 0.18267345428466797
+        },
+        "response_control_many": {
+          "n_draws": 1000,
+          "mean": 0.1083579733967781,
+          "p97.5": 0.2049228698015213,
+          "max": 0.3712295889854431
+        },
+        "vocab_control_32": {
+          "n_draws": 32,
+          "mean": 0.08564796298742294,
+          "p97.5": 0.12365884333848953,
+          "max": 0.12799671292304993
+        },
+        "toward_altruistic": [
+          [
+            "5",
+            0.347
+          ],
+          [
+            "2",
+            0.343
+          ],
+          [
+            "4",
+            0.297
+          ],
+          [
+            "7",
+            0.28
+          ],
+          [
+            "6",
+            0.241
+          ],
+          [
+            "3",
+            0.234
+          ],
+          [
+            "8",
+            0.226
+          ],
+          [
+            "\u0120fair",
+            0.221
+          ],
+          [
+            "1",
+            0.219
+          ],
+          [
+            "9",
+            0.187
+          ],
+          [
+            "0",
+            0.186
+          ],
+          [
+            "A",
+            0.149
+          ]
+        ],
+        "toward_self_interested": [
+          [
+            "\u0120no",
+            -0.292
+          ],
+          [
+            "\u0120any",
+            -0.262
+          ],
+          [
+            "\u00ef\u00bc\u012e",
+            -0.221
+          ],
+          [
+            ",",
+            -0.201
+          ],
+          [
+            "\u00e3\u0122\u0123",
+            -0.194
+          ],
+          [
+            "\u0120No",
+            -0.161
+          ],
+          [
+            "\u0120money",
+            -0.153
+          ],
+          [
+            "\u0120payoff",
+            -0.144
+          ],
+          [
+            "\u0120nothing",
+            -0.143
+          ],
+          [
+            ",\u010a",
+            -0.142
+          ],
+          [
+            "No",
+            -0.141
+          ],
+          [
+            "\u0120rational",
+            -0.139
+          ]
+        ]
+      },
+      "game_overfishing": {
+        "digit_span_share": 0.30696560370818243,
+        "cos_vs_big_digit_minus_zero": 0.24012851943883917,
+        "response_control_32": {
+          "n_draws": 32,
+          "mean": 0.10910271853208542,
+          "p97.5": 0.18505145609378815,
+          "max": 0.21075046062469482
+        },
+        "response_control_many": {
+          "n_draws": 1000,
+          "mean": 0.11375409364700317,
+          "p97.5": 0.18906401097774506,
+          "max": 0.324064165353775
+        },
+        "vocab_control_32": {
+          "n_draws": 32,
+          "mean": 0.08985991030931473,
+          "p97.5": 0.12652996182441711,
+          "max": 0.12912991642951965
+        },
+        "toward_altruistic": [
+          [
+            "\u0120fish",
+            0.291
+          ],
+          [
+            "\u0120catch",
+            0.215
+          ],
+          [
+            "**:",
+            0.168
+          ],
+          [
+            "\u0120risk",
+            0.162
+          ],
+          [
+            "\u0120caught",
+            0.158
+          ],
+          [
+            "###",
+            0.156
+          ],
+          [
+            "\u0120**",
+            0.152
+          ],
+          [
+            "Fish",
+            0.15
+          ],
+          [
+            "\u0120stock",
+            0.134
+          ],
+          [
+            ")**",
+            0.132
+          ],
+          [
+            "\u0120Fish",
+            0.132
+          ],
+          [
+            "\u0109catch",
+            0.132
+          ]
+        ],
+        "toward_self_interested": [
+          [
+            ",",
+            -0.208
+          ],
+          [
+            "\u0120and",
+            -0.195
+          ],
+          [
+            "0",
+            -0.187
+          ],
+          [
+            "\u0120for",
+            -0.17
+          ],
+          [
+            "\u0120a",
+            -0.167
+          ],
+          [
+            "\u0120their",
+            -0.155
+          ],
+          [
+            "\u0120the",
+            -0.153
+          ],
+          [
+            "\u0120will",
+            -0.149
+          ],
+          [
+            "\u0120names",
+            -0.144
+          ],
+          [
+            "\u0120is",
+            -0.14
+          ],
+          [
+            "\u0120or",
+            -0.138
+          ],
+          [
+            "\u00e5\u00b0\u0128\u00e4\u00bc\u013c",
+            -0.135
+          ]
+        ]
+      },
+      "game_prisoners_dilemma": {
+        "digit_span_share": 0.2455281414631331,
+        "cos_vs_big_digit_minus_zero": 0.06808491096160696,
+        "response_control_32": {
+          "n_draws": 32,
+          "mean": 0.13412126898765564,
+          "p97.5": 0.2225736528635025,
+          "max": 0.28953900933265686
+        },
+        "response_control_many": {
+          "n_draws": 1000,
+          "mean": 0.13349956274032593,
+          "p97.5": 0.21984602510929108,
+          "max": 0.36561769247055054
+        },
+        "vocab_control_32": {
+          "n_draws": 32,
+          "mean": 0.09851472824811935,
+          "p97.5": 0.13592149317264557,
+          "max": 0.1474808007478714
+        },
+        "toward_altruistic": [
+          [
+            "\u00e9\u0122\u012b\u00e6\u012d\u00a9",
+            0.183
+          ],
+          [
+            "\u00eb\u00b8\u013e",
+            0.171
+          ],
+          [
+            "\u0120Cooper",
+            0.145
+          ],
+          [
+            "\u00e4\u00bc\u013c\u00e9\u0122\u012b\u00e6\u012d\u00a9",
+            0.145
+          ],
+          [
+            "\u00e9\u00a2\u013f\u00e5\u00a4\u0138",
+            0.144
+          ],
+          [
+            "\u00e5\u0131\u00af\u00e8\u0125\u00bd\u00e5\u0143\u013a\u00e5\u013e\u00a8",
+            0.144
+          ],
+          [
+            "\u00e5\u00a4\u00aa\u00e8\u00bf\u0129",
+            0.143
+          ],
+          [
+            "\u00e9\u00ab\u013a\u00e7\u00b4\u0142\u00e8\u00b4\u00a8",
+            0.143
+          ],
+          [
+            "\u00e4\u00bb\u013a\u00e5\u0129\u00ba",
+            0.142
+          ],
+          [
+            "\u00e6\u013d\u00b4\u00e9\u0122\u0124\u00e5\u0132\u012a",
+            0.142
+          ],
+          [
+            "\u00e8\u00b6\u012c\u00e6\u013f\u00a5\u00e8\u00b6\u012c\u00e5\u00a5\u00bd",
+            0.141
+          ],
+          [
+            "\u00ef\u00b4\u00b0",
+            0.14
+          ]
+        ],
+        "toward_self_interested": [
+          [
+            "\u0120Agent",
+            -0.34
+          ],
+          [
+            "\u0120Def",
+            -0.285
+          ],
+          [
+            "ect",
+            -0.253
+          ],
+          [
+            "D",
+            -0.232
+          ],
+          [
+            "\u0120$",
+            -0.231
+          ],
+          [
+            "\u0120defect",
+            -0.217
+          ],
+          [
+            "\u0120agent",
+            -0.213
+          ],
+          [
+            "\u0120the",
+            -0.209
+          ],
+          [
+            "\u0120\u0120",
+            -0.202
+          ],
+          [
+            "2",
+            -0.198
+          ],
+          [
+            "\u0120If",
+            -0.196
+          ],
+          [
+            "\u0120The",
+            -0.189
+          ]
+        ]
+      }
+    }
+  }
+}

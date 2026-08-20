@@ -1,0 +1,26 @@
+=== prisoners_dilemma: generate at batch 32 (2026-08-20T15:04:32+00:00) ===
+device 0 has 28405 MiB free; starting
+cells=30 samples=8 total=240
+Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s]Loading checkpoint shards:  25%|██▌       | 1/4 [00:01<00:03,  1.25s/it]Loading checkpoint shards:  50%|█████     | 2/4 [00:02<00:01,  1.00it/s]Loading checkpoint shards:  75%|███████▌  | 3/4 [00:02<00:00,  1.09it/s]Loading checkpoint shards: 100%|██████████| 4/4 [00:03<00:00,  1.20it/s]Loading checkpoint shards: 100%|██████████| 4/4 [00:03<00:00,  1.11it/s]
+loaded; 11.6 GiB free of 44.4 on cuda:0
+engine: EngineDescription(engine='huggingface', engine_version='4.52.3', torch_version='2.6.0+cu124', model_id='Qwen/Qwen2.5-7B-Instruct', model_revision='a09a35458c702b33eeacc393d103063234e8bc28', dtype='torch.bfloat16', attn_implementation='sdpa', stop_token_ids=(151645, 151643))
+device: cuda:0
+    32 rows     61.5s   31.2 rows/min
+    64 rows    149.6s   25.7 rows/min
+    96 rows    235.6s   24.5 rows/min
+   128 rows    337.4s   22.8 rows/min
+   160 rows    418.4s   22.9 rows/min
+   192 rows    479.8s   24.0 rows/min
+   224 rows    521.3s   25.8 rows/min
+   240 rows    546.4s   26.4 rows/min
+wrote 240 rows to /home/marco/dockmaster/state/worktrees/crossgame-vector/scratch/rows/prisoners_dilemma.csv in 9.1 min
+prisoners_dilemma generated at batch 32
+=== prisoners_dilemma: extract (2026-08-20T15:13:47+00:00) ===
+device 0 has 35096 MiB free; starting
+rows=240 scored=240 unscored=0
+Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s]Loading checkpoint shards:  25%|██▌       | 1/4 [00:01<00:04,  1.48s/it]Loading checkpoint shards:  50%|█████     | 2/4 [00:02<00:02,  1.23s/it]Loading checkpoint shards:  75%|███████▌  | 3/4 [00:03<00:01,  1.16s/it]Loading checkpoint shards: 100%|██████████| 4/4 [00:04<00:00,  1.08s/it]Loading checkpoint shards: 100%|██████████| 4/4 [00:04<00:00,  1.14s/it]
+captured 240 of 240 scored rows, dropped 0, 0.5 min
+=== prisoners_dilemma: land (2026-08-20T15:14:26+00:00) ===
+landed prisoners_dilemma (240 rows): {"strict": {"alt": 18, "self": 213, "middle": 0, "usable_cells": 9, "layer_0_auc": 0.9314641744548287, "layer_20_auc": 0.9335410176531672, "best_layer": 2, "best_layer_auc": 0.9501557632398754, "norm_layer_20_unbalanced": 12.851426105793712, "norm_layer_20_balanced": 8.466909389557397}, "relaxed": {"alt": 18, "self": 213, "middle": 0, "usable_cells": 9, "layer_0_auc": 0.9314641744548287, "layer_20_auc": 0.9335410176531672, "best_layer": 2, "best_layer_auc": 0.9501557632398754, "norm_layer_20_unbalanced": 12.851426105793712, "norm_layer_20_balanced": 8.466909389557397}}
+=== prisoners_dilemma: landed (2026-08-20T15:14:29+00:00) ===
+RESUME RUN COMPLETE 2026-08-20T15:14:29+00:00

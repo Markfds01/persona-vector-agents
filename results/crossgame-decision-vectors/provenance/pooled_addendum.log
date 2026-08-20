@@ -1,0 +1,8 @@
+=== strict
+  logo null layer 0 done
+  logo null layer 20 done
+  checkpointed addendum.json after strict
+=== relaxed
+  logo null layer 0 done
+  logo null layer 20 done
+  checkpointed addendum.json after relaxed

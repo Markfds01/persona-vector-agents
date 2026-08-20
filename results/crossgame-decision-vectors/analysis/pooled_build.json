@@ -1,0 +1,206 @@
+{
+  "policies": {
+    "strict": {
+      "census": {
+        "dictator": {
+          "usable_cells": 30,
+          "cells_seen_with_a_pole_row": 30,
+          "alt_rows_total": 167,
+          "self_rows_total": 395,
+          "alt_rows_in_usable_cells": 167,
+          "self_rows_in_usable_cells": 395,
+          "effective_n": 75.16815788328502,
+          "vector_norm_layer20": 7.50471337301571,
+          "vector_norm_layer0": 0.020915668610943537,
+          "precision_weight": 0.3076480196679405,
+          "cell_weight": 0.2702702702702703,
+          "equal_weight": 0.16666666666666666
+        },
+        "trust": {
+          "usable_cells": 20,
+          "cells_seen_with_a_pole_row": 30,
+          "alt_rows_total": 300,
+          "self_rows_total": 79,
+          "alt_rows_in_usable_cells": 180,
+          "self_rows_in_usable_cells": 79,
+          "effective_n": 39.225546894644204,
+          "vector_norm_layer20": 5.373255190772857,
+          "vector_norm_layer0": 0.018083121329563658,
+          "precision_weight": 0.16054220513514383,
+          "cell_weight": 0.18018018018018017,
+          "equal_weight": 0.16666666666666666
+        },
+        "ultimatum": {
+          "usable_cells": 10,
+          "cells_seen_with_a_pole_row": 30,
+          "alt_rows_total": 252,
+          "self_rows_total": 29,
+          "alt_rows_in_usable_cells": 90,
+          "self_rows_in_usable_cells": 27,
+          "effective_n": 15.119484158775759,
+          "vector_norm_layer20": 5.366469371540662,
+          "vector_norm_layer0": 0.022045737279320247,
+          "precision_weight": 0.06188098113393436,
+          "cell_weight": 0.09009009009009009,
+          "equal_weight": 0.16666666666666666
+        },
+        "apology": {
+          "usable_cells": 25,
+          "cells_seen_with_a_pole_row": 30,
+          "alt_rows_total": 422,
+          "self_rows_total": 217,
+          "alt_rows_in_usable_cells": 306,
+          "self_rows_in_usable_cells": 217,
+          "effective_n": 75.75405107974282,
+          "vector_norm_layer20": 8.002891979821516,
+          "vector_norm_layer0": 0.023144544406045457,
+          "precision_weight": 0.3100459616516597,
+          "cell_weight": 0.22522522522522523,
+          "equal_weight": 0.16666666666666666
+        },
+        "overfishing": {
+          "usable_cells": 17,
+          "cells_seen_with_a_pole_row": 30,
+          "alt_rows_total": 1297,
+          "self_rows_total": 50,
+          "alt_rows_in_usable_cells": 735,
+          "self_rows_in_usable_cells": 50,
+          "effective_n": 28.89099627237595,
+          "vector_norm_layer20": 2.2737787939402674,
+          "vector_norm_layer0": 0.010212036139089647,
+          "precision_weight": 0.11824498617128909,
+          "cell_weight": 0.15315315315315314,
+          "equal_weight": 0.16666666666666666
+        },
+        "prisoners_dilemma": {
+          "usable_cells": 9,
+          "cells_seen_with_a_pole_row": 30,
+          "alt_rows_total": 18,
+          "self_rows_total": 213,
+          "alt_rows_in_usable_cells": 18,
+          "self_rows_in_usable_cells": 52,
+          "effective_n": 10.173444976076556,
+          "vector_norm_layer20": 8.466909389557397,
+          "vector_norm_layer0": 0.03763823675098819,
+          "precision_weight": 0.041637846240032535,
+          "cell_weight": 0.08108108108108109,
+          "equal_weight": 0.16666666666666666
+        }
+      },
+      "rebuild_check_cos_vs_archived_pool": {
+        "layer0": 1.0000000000000007,
+        "layer20": 0.9999999999999989,
+        "min_over_layers": 0.9999999999999989
+      },
+      "rebuild_check_cos_vs_archived_per_game": {
+        "dictator": 0.999999999999999,
+        "trust": 0.9999999999999989,
+        "ultimatum": 0.9999999999999991,
+        "apology": 0.999999999999999,
+        "overfishing": 0.9999999999999993,
+        "prisoners_dilemma": 0.999999999999999
+      }
+    },
+    "relaxed": {
+      "census": {
+        "dictator": {
+          "usable_cells": 30,
+          "cells_seen_with_a_pole_row": 30,
+          "alt_rows_total": 167,
+          "self_rows_total": 445,
+          "alt_rows_in_usable_cells": 167,
+          "self_rows_in_usable_cells": 445,
+          "effective_n": 76.94560811022818,
+          "vector_norm_layer20": 6.921648867655511,
+          "vector_norm_layer0": 0.019575714446335487,
+          "precision_weight": 0.2052283951756537,
+          "cell_weight": 0.2097902097902098,
+          "equal_weight": 0.16666666666666666
+        },
+        "trust": {
+          "usable_cells": 25,
+          "cells_seen_with_a_pole_row": 30,
+          "alt_rows_total": 300,
+          "self_rows_total": 106,
+          "alt_rows_in_usable_cells": 259,
+          "self_rows_in_usable_cells": 106,
+          "effective_n": 44.79392720890395,
+          "vector_norm_layer20": 4.725528397596609,
+          "vector_norm_layer0": 0.016340983601779924,
+          "precision_weight": 0.11947382079986976,
+          "cell_weight": 0.17482517482517482,
+          "equal_weight": 0.16666666666666666
+        },
+        "ultimatum": {
+          "usable_cells": 24,
+          "cells_seen_with_a_pole_row": 30,
+          "alt_rows_total": 252,
+          "self_rows_total": 235,
+          "alt_rows_in_usable_cells": 218,
+          "self_rows_in_usable_cells": 219,
+          "effective_n": 92.29360405080202,
+          "vector_norm_layer20": 7.166027366591859,
+          "vector_norm_layer0": 0.028007376741462833,
+          "precision_weight": 0.24616438429064147,
+          "cell_weight": 0.16783216783216784,
+          "equal_weight": 0.16666666666666666
+        },
+        "apology": {
+          "usable_cells": 25,
+          "cells_seen_with_a_pole_row": 30,
+          "alt_rows_total": 422,
+          "self_rows_total": 229,
+          "alt_rows_in_usable_cells": 306,
+          "self_rows_in_usable_cells": 229,
+          "effective_n": 77.1625432760805,
+          "vector_norm_layer20": 7.798984017630987,
+          "vector_norm_layer0": 0.022920528626076558,
+          "precision_weight": 0.20580700202584917,
+          "cell_weight": 0.17482517482517482,
+          "equal_weight": 0.16666666666666666
+        },
+        "overfishing": {
+          "usable_cells": 30,
+          "cells_seen_with_a_pole_row": 30,
+          "alt_rows_total": 1297,
+          "self_rows_total": 128,
+          "alt_rows_in_usable_cells": 1297,
+          "self_rows_in_usable_cells": 128,
+          "effective_n": 73.5575877789181,
+          "vector_norm_layer20": 2.1485688570373416,
+          "vector_norm_layer0": 0.0076916828744229716,
+          "precision_weight": 0.19619190833132102,
+          "cell_weight": 0.2097902097902098,
+          "equal_weight": 0.16666666666666666
+        },
+        "prisoners_dilemma": {
+          "usable_cells": 9,
+          "cells_seen_with_a_pole_row": 30,
+          "alt_rows_total": 18,
+          "self_rows_total": 213,
+          "alt_rows_in_usable_cells": 18,
+          "self_rows_in_usable_cells": 52,
+          "effective_n": 10.173444976076556,
+          "vector_norm_layer20": 8.466909389557397,
+          "vector_norm_layer0": 0.03763823675098819,
+          "precision_weight": 0.027134489376664916,
+          "cell_weight": 0.06293706293706294,
+          "equal_weight": 0.16666666666666666
+        }
+      },
+      "rebuild_check_cos_vs_archived_pool": {
+        "layer0": 0.9999999999999999,
+        "layer20": 1.0,
+        "min_over_layers": 0.9999999999999986
+      },
+      "rebuild_check_cos_vs_archived_per_game": {
+        "dictator": 0.9999999999999991,
+        "trust": 0.9999999999999989,
+        "ultimatum": 0.9999999999999989,
+        "apology": 0.9999999999999991,
+        "overfishing": 0.9999999999999989,
+        "prisoners_dilemma": 0.999999999999999
+      }
+    }
+  }
+}

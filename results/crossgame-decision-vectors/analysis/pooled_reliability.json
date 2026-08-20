@@ -1,0 +1,557 @@
+{
+  "seed": 20260820,
+  "policies": {
+    "strict": {
+      "game_reliability": {
+        "apology": {
+          "layer0": 0.8579102569594663,
+          "layer20": 0.9688130584291855
+        },
+        "dictator": {
+          "layer0": 0.88381799607424,
+          "layer20": 0.9654243074240373
+        },
+        "overfishing": {
+          "layer0": 0.15795097100980177,
+          "layer20": 0.43576671362720387
+        },
+        "prisoners_dilemma": {
+          "layer0": 0.5987866214511581,
+          "layer20": 0.7900632671652014
+        },
+        "trust": {
+          "layer0": 0.7685508491101188,
+          "layer20": 0.9095700542201534
+        },
+        "ultimatum": {
+          "layer0": 0.2304728745672619,
+          "layer20": 0.5432293863541733
+        }
+      },
+      "logo_corrected": {
+        "game_equal_unit": {
+          "apology": {
+            "layer0": {
+              "observed": 0.5211817644613249,
+              "reliability_pool": 0.6717453157509033,
+              "reliability_game": 0.8579102569594663,
+              "attenuation_corrected": 0.6865401782284803
+            },
+            "layer20": {
+              "observed": 0.6755774826491318,
+              "reliability_pool": 0.8597211112411411,
+              "reliability_game": 0.9688130584291855,
+              "attenuation_corrected": 0.7402465265374435
+            }
+          },
+          "dictator": {
+            "layer0": {
+              "observed": 0.679586641033978,
+              "reliability_pool": 0.6143604815537672,
+              "reliability_game": 0.88381799607424,
+              "attenuation_corrected": 0.9222566107089463
+            },
+            "layer20": {
+              "observed": 0.8235077484743419,
+              "reliability_pool": 0.8464941197048411,
+              "reliability_game": 0.9654243074240373,
+              "attenuation_corrected": 0.910954325664985
+            }
+          },
+          "overfishing": {
+            "layer0": {
+              "observed": 0.057369350937847015,
+              "reliability_pool": 0.7948191307851485,
+              "reliability_game": 0.15795097100980177,
+              "attenuation_corrected": 0.16191408521117506
+            },
+            "layer20": {
+              "observed": 0.20390576994787468,
+              "reliability_pool": 0.9387712383663591,
+              "reliability_game": 0.43576671362720387,
+              "attenuation_corrected": 0.31880314781043867
+            }
+          },
+          "prisoners_dilemma": {
+            "layer0": {
+              "observed": 0.0545644126571701,
+              "reliability_pool": 0.7806762309355206,
+              "reliability_game": 0.5987866214511581,
+              "attenuation_corrected": 0.07980644439034544
+            },
+            "layer20": {
+              "observed": 0.31367506149978375,
+              "reliability_pool": 0.8913015471054784,
+              "reliability_game": 0.7900632671652014,
+              "attenuation_corrected": 0.37379778747367237
+            }
+          },
+          "trust": {
+            "layer0": {
+              "observed": 0.5847584384941744,
+              "reliability_pool": 0.6726605865924324,
+              "reliability_game": 0.7685508491101188,
+              "attenuation_corrected": 0.8132839534616614
+            },
+            "layer20": {
+              "observed": 0.7568705928183415,
+              "reliability_pool": 0.8764721952738895,
+              "reliability_game": 0.9095700542201534,
+              "attenuation_corrected": 0.8476849704978654
+            }
+          },
+          "ultimatum": {
+            "layer0": {
+              "observed": 0.3224095357161929,
+              "reliability_pool": 0.8064203251023838,
+              "reliability_game": 0.2304728745672619,
+              "attenuation_corrected": 0.7478547153196397
+            },
+            "layer20": {
+              "observed": 0.46993244697501296,
+              "reliability_pool": 0.9289801464132736,
+              "reliability_game": 0.5432293863541733,
+              "attenuation_corrected": 0.6615163587290719
+            }
+          }
+        },
+        "cell_balanced": {
+          "apology": {
+            "layer0": {
+              "observed": 0.6237551296057291,
+              "reliability_pool": 0.8312631821124656,
+              "reliability_game": 0.8579102569594663,
+              "attenuation_corrected": 0.7386248714446078
+            },
+            "layer20": {
+              "observed": 0.7760503947030434,
+              "reliability_pool": 0.9576515720128457,
+              "reliability_game": 0.9688130584291855,
+              "attenuation_corrected": 0.8056866530463856
+            }
+          },
+          "dictator": {
+            "layer0": {
+              "observed": 0.750996411287892,
+              "reliability_pool": 0.7528765250521167,
+              "reliability_game": 0.88381799607424,
+              "attenuation_corrected": 0.9206500129080921
+            },
+            "layer20": {
+              "observed": 0.8954925964417665,
+              "reliability_pool": 0.944436924999466,
+              "reliability_game": 0.9654243074240373,
+              "attenuation_corrected": 0.9378133392220322
+            }
+          },
+          "overfishing": {
+            "layer0": {
+              "observed": 0.09865503764066544,
+              "reliability_pool": 0.8817639524674341,
+              "reliability_game": 0.15795097100980177,
+              "attenuation_corrected": 0.26435160184878104
+            },
+            "layer20": {
+              "observed": 0.20884470472383193,
+              "reliability_pool": 0.9784295737572537,
+              "reliability_game": 0.43576671362720387,
+              "attenuation_corrected": 0.3198391745861895
+            }
+          },
+          "prisoners_dilemma": {
+            "layer0": {
+              "observed": 0.049586889389081866,
+              "reliability_pool": 0.8950366647958317,
+              "reliability_game": 0.5987866214511581,
+              "attenuation_corrected": 0.06773457469650666
+            },
+            "layer20": {
+              "observed": 0.32749488729631104,
+              "reliability_pool": 0.972620014968712,
+              "reliability_game": 0.7900632671652014,
+              "attenuation_corrected": 0.37359580238168044
+            }
+          },
+          "trust": {
+            "layer0": {
+              "observed": 0.6070968552585095,
+              "reliability_pool": 0.8592990264579989,
+              "reliability_game": 0.7685508491101188,
+              "attenuation_corrected": 0.7470497418473058
+            },
+            "layer20": {
+              "observed": 0.7819437906556019,
+              "reliability_pool": 0.9715437610659227,
+              "reliability_game": 0.9095700542201534,
+              "attenuation_corrected": 0.8318140944449478
+            }
+          },
+          "ultimatum": {
+            "layer0": {
+              "observed": 0.34540695807777044,
+              "reliability_pool": 0.9036023053452585,
+              "reliability_game": 0.2304728745672619,
+              "attenuation_corrected": 0.7568895471951225
+            },
+            "layer20": {
+              "observed": 0.49912377871217867,
+              "reliability_pool": 0.9782376991296227,
+              "reliability_game": 0.5432293863541733,
+              "attenuation_corrected": 0.6846907096205864
+            }
+          }
+        }
+      },
+      "focal_points": {
+        "dictator": {
+          "self_interested": {
+            "n": 395,
+            "modal_value_as_fraction_of_scale": 0.0,
+            "modal_share": 1.0
+          },
+          "altruistic": {
+            "n": 167,
+            "modal_value_as_fraction_of_scale": 0.5,
+            "modal_share": 0.8023952095808383
+          }
+        },
+        "trust": {
+          "self_interested": {
+            "n": 79,
+            "modal_value_as_fraction_of_scale": 0.0,
+            "modal_share": 1.0
+          },
+          "altruistic": {
+            "n": 300,
+            "modal_value_as_fraction_of_scale": 0.5,
+            "modal_share": 0.6666666666666666
+          }
+        },
+        "ultimatum": {
+          "altruistic": {
+            "n": 252,
+            "modal_value_as_fraction_of_scale": 0.5,
+            "modal_share": 0.7341269841269841
+          },
+          "self_interested": {
+            "n": 29,
+            "modal_value_as_fraction_of_scale": 0.0,
+            "modal_share": 1.0
+          }
+        },
+        "apology": {
+          "self_interested": {
+            "n": 217,
+            "modal_value_as_fraction_of_scale": 0.0,
+            "modal_share": 1.0
+          },
+          "altruistic": {
+            "n": 422,
+            "modal_value_as_fraction_of_scale": 0.5,
+            "modal_share": 0.6042654028436019
+          }
+        },
+        "overfishing": {
+          "altruistic": {
+            "n": 1297,
+            "modal_value_as_fraction_of_scale": 0.5,
+            "modal_share": 0.8627602158828065
+          },
+          "self_interested": {
+            "n": 50,
+            "modal_value_as_fraction_of_scale": 1.0,
+            "modal_share": 0.94
+          }
+        },
+        "prisoners_dilemma": {
+          "self_interested": {
+            "n": 213,
+            "modal_value_as_fraction_of_scale": 0.0,
+            "modal_share": 1.0
+          },
+          "altruistic": {
+            "n": 18,
+            "modal_value_as_fraction_of_scale": 1.0,
+            "modal_share": 1.0
+          }
+        }
+      }
+    },
+    "relaxed": {
+      "game_reliability": {
+        "apology": {
+          "layer0": 0.8799768949456138,
+          "layer20": 0.9544788042986927
+        },
+        "dictator": {
+          "layer0": 0.817916477605768,
+          "layer20": 0.9553659922299991
+        },
+        "overfishing": {
+          "layer0": 0.15421595649489503,
+          "layer20": 0.20285442453146818
+        },
+        "prisoners_dilemma": {
+          "layer0": 0.3394708403628501,
+          "layer20": 0.5607413497708358
+        },
+        "trust": {
+          "layer0": 0.6944247987928177,
+          "layer20": 0.8397033599422403
+        },
+        "ultimatum": {
+          "layer0": 0.9288585635694828,
+          "layer20": 0.9633398007896248
+        }
+      },
+      "logo_corrected": {
+        "game_equal_unit": {
+          "apology": {
+            "layer0": {
+              "observed": 0.52744431107251,
+              "reliability_pool": 0.7443815549628054,
+              "reliability_game": 0.8799768949456138,
+              "attenuation_corrected": 0.6516931801707475
+            },
+            "layer20": {
+              "observed": 0.623303135648762,
+              "reliability_pool": 0.8960466393145142,
+              "reliability_game": 0.9544788042986927,
+              "attenuation_corrected": 0.6739859755266562
+            }
+          },
+          "dictator": {
+            "layer0": {
+              "observed": 0.6595106557763011,
+              "reliability_pool": 0.7394316860529104,
+              "reliability_game": 0.817916477605768,
+              "attenuation_corrected": 0.8480438512358061
+            },
+            "layer20": {
+              "observed": 0.8069136164560593,
+              "reliability_pool": 0.87639151276913,
+              "reliability_game": 0.9553659922299991,
+              "attenuation_corrected": 0.8818466586431583
+            }
+          },
+          "overfishing": {
+            "layer0": {
+              "observed": 0.16303262804773233,
+              "reliability_pool": 0.8700957116087138,
+              "reliability_game": 0.15421595649489503,
+              "attenuation_corrected": 0.44506798904359174
+            },
+            "layer20": {
+              "observed": 0.23560398138400354,
+              "reliability_pool": 0.9410904882970575,
+              "reliability_game": 0.20285442453146818,
+              "attenuation_corrected": 0.5392308004697316
+            }
+          },
+          "prisoners_dilemma": {
+            "layer0": {
+              "observed": 0.12408046204557321,
+              "reliability_pool": 0.8640613621423185,
+              "reliability_game": 0.3394708403628501,
+              "attenuation_corrected": 0.22910252282509994
+            },
+            "layer20": {
+              "observed": 0.3662512210038098,
+              "reliability_pool": 0.9215003811147998,
+              "reliability_game": 0.5607413497708358,
+              "attenuation_corrected": 0.5095068536091544
+            }
+          },
+          "trust": {
+            "layer0": {
+              "observed": 0.5803631140735507,
+              "reliability_pool": 0.788038198906958,
+              "reliability_game": 0.6944247987928177,
+              "attenuation_corrected": 0.7845372280359919
+            },
+            "layer20": {
+              "observed": 0.7598761871071515,
+              "reliability_pool": 0.8990999108143446,
+              "reliability_game": 0.8397033599422403,
+              "attenuation_corrected": 0.8745324162713062
+            }
+          },
+          "ultimatum": {
+            "layer0": {
+              "observed": 0.5139245794836954,
+              "reliability_pool": 0.7483094969865769,
+              "reliability_game": 0.9288585635694828,
+              "attenuation_corrected": 0.6164302831351198
+            },
+            "layer20": {
+              "observed": 0.5639616469462039,
+              "reliability_pool": 0.9080731054337815,
+              "reliability_game": 0.9633398007896248,
+              "attenuation_corrected": 0.6029751464060786
+            }
+          }
+        },
+        "cell_balanced": {
+          "apology": {
+            "layer0": {
+              "observed": 0.5775875368095206,
+              "reliability_pool": 0.8715709418442577,
+              "reliability_game": 0.8799768949456138,
+              "attenuation_corrected": 0.6595243090300524
+            },
+            "layer20": {
+              "observed": 0.6949603804104083,
+              "reliability_pool": 0.9575928837841102,
+              "reliability_game": 0.9544788042986927,
+              "attenuation_corrected": 0.7269197137593142
+            }
+          },
+          "dictator": {
+            "layer0": {
+              "observed": 0.709808806632391,
+              "reliability_pool": 0.8679416904379241,
+              "reliability_game": 0.817916477605768,
+              "attenuation_corrected": 0.8424451411032927
+            },
+            "layer20": {
+              "observed": 0.869086488088497,
+              "reliability_pool": 0.936780475604043,
+              "reliability_game": 0.9553659922299991,
+              "attenuation_corrected": 0.9186692794334824
+            }
+          },
+          "overfishing": {
+            "layer0": {
+              "observed": 0.15336629304819022,
+              "reliability_pool": 0.9225971446928873,
+              "reliability_game": 0.15421595649489503,
+              "attenuation_corrected": 0.4065923578358264
+            },
+            "layer20": {
+              "observed": 0.2226165041548962,
+              "reliability_pool": 0.9761125894267728,
+              "reliability_game": 0.20285442453146818,
+              "attenuation_corrected": 0.5002823245728313
+            }
+          },
+          "prisoners_dilemma": {
+            "layer0": {
+              "observed": 0.10948598189961908,
+              "reliability_pool": 0.9294049184165382,
+              "reliability_game": 0.3394708403628501,
+              "attenuation_corrected": 0.1949192791618082
+            },
+            "layer20": {
+              "observed": 0.359355481029796,
+              "reliability_pool": 0.9716517775057618,
+              "reliability_game": 0.5607413497708358,
+              "attenuation_corrected": 0.4868415732287473
+            }
+          },
+          "trust": {
+            "layer0": {
+              "observed": 0.6341698953765122,
+              "reliability_pool": 0.9056187067460193,
+              "reliability_game": 0.6944247987928177,
+              "attenuation_corrected": 0.7996875202559081
+            },
+            "layer20": {
+              "observed": 0.7858825613965763,
+              "reliability_pool": 0.9661319451517969,
+              "reliability_game": 0.8397033599422403,
+              "attenuation_corrected": 0.8725221991992278
+            }
+          },
+          "ultimatum": {
+            "layer0": {
+              "observed": 0.5287846877153919,
+              "reliability_pool": 0.863864737224437,
+              "reliability_game": 0.9288585635694828,
+              "attenuation_corrected": 0.5903114438533802
+            },
+            "layer20": {
+              "observed": 0.5602488380023372,
+              "reliability_pool": 0.9676190755069749,
+              "reliability_game": 0.9633398007896248,
+              "attenuation_corrected": 0.5802818699589043
+            }
+          }
+        }
+      },
+      "focal_points": {
+        "dictator": {
+          "self_interested": {
+            "n": 445,
+            "modal_value_as_fraction_of_scale": 0.0,
+            "modal_share": 0.8876404494382022
+          },
+          "altruistic": {
+            "n": 167,
+            "modal_value_as_fraction_of_scale": 0.5,
+            "modal_share": 0.8023952095808383
+          }
+        },
+        "trust": {
+          "self_interested": {
+            "n": 106,
+            "modal_value_as_fraction_of_scale": 0.0,
+            "modal_share": 0.7452830188679245
+          },
+          "altruistic": {
+            "n": 300,
+            "modal_value_as_fraction_of_scale": 0.5,
+            "modal_share": 0.6666666666666666
+          }
+        },
+        "ultimatum": {
+          "altruistic": {
+            "n": 252,
+            "modal_value_as_fraction_of_scale": 0.5,
+            "modal_share": 0.7341269841269841
+          },
+          "self_interested": {
+            "n": 235,
+            "modal_value_as_fraction_of_scale": 0.05,
+            "modal_share": 0.2
+          }
+        },
+        "apology": {
+          "self_interested": {
+            "n": 229,
+            "modal_value_as_fraction_of_scale": 0.0,
+            "modal_share": 0.9475982532751092
+          },
+          "altruistic": {
+            "n": 422,
+            "modal_value_as_fraction_of_scale": 0.5,
+            "modal_share": 0.6042654028436019
+          }
+        },
+        "overfishing": {
+          "altruistic": {
+            "n": 1297,
+            "modal_value_as_fraction_of_scale": 0.5,
+            "modal_share": 0.8627602158828065
+          },
+          "self_interested": {
+            "n": 128,
+            "modal_value_as_fraction_of_scale": 1.0,
+            "modal_share": 0.8125
+          }
+        },
+        "prisoners_dilemma": {
+          "self_interested": {
+            "n": 213,
+            "modal_value_as_fraction_of_scale": 0.0,
+            "modal_share": 1.0
+          },
+          "altruistic": {
+            "n": 18,
+            "modal_value_as_fraction_of_scale": 1.0,
+            "modal_share": 1.0
+          }
+        }
+      }
+    }
+  }
+}
