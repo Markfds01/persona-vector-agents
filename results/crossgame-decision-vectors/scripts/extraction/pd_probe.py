@@ -8,17 +8,22 @@ the model, it has to be separated from a property of the grid: the grid's ladder
 only ever moves the temptation T-R, and always with a NEGATIVE sucker payoff,
 because its wordings state that payoff as a loss.
 
-This probe widens the parameterisation along the second axis that governs
-cooperation, the sucker risk R-S, including matrices where cooperating cannot
-lose money at all. Every matrix here is a genuine one-shot Prisoner's Dilemma:
-T > R > P > S, and 2R > T + S so mutual cooperation is the efficient outcome.
+This probe widens the parameterisation along the second axis a one-shot PD has,
+the sucker risk R-S, including matrices where cooperating cannot lose money at
+all. Whether that axis moves this model is the question, not the premise. Every
+matrix here is a genuine one-shot Prisoner's Dilemma: T > R > P > S, and
+2R > T + S so mutual cooperation is the efficient outcome.
 
 One wording is used for all six matrices, including an upstream-equivalent
-control, so the comparison isolates the payoff matrix. That wording states each
-payoff as a signed amount received rather than as a loss, which is what lets a
-non-negative sucker payoff be expressed at all; it is therefore NOT byte-identical
-to the altruism_v3 question, and matrix 1 is the control that says what this
-wording alone does.
+control, so the matrix is the only thing that varies WITHIN this probe. That
+wording states each payoff as a signed amount received rather than as a loss,
+which is what lets a non-negative sucker payoff be expressed at all; it is
+therefore NOT byte-identical to the altruism_v3 question and is a SIXTH wording,
+never run in the grid, whose own cooperation rate against the grid's payoff ladder
+was never measured. So a null result here bounds the matrix's effect within this
+one wording and says nothing beyond it: a wording that never cooperates, whatever
+the matrix, produces exactly this output. Matrix 1 is the control that says
+what this wording alone does. `README.md` §8b and §9 state the limit.
 """
 
 import argparse

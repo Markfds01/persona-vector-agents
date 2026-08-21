@@ -74,9 +74,11 @@ def walk(old, new, path, numeric, provenance, structural):
             walk(old[key], new[key], here, numeric, provenance, structural)
         return
     if isinstance(old, list) and isinstance(new, list):
+        # a truncated top-N list (16 entries against 20) is still aligned over the
+        # entries both sides have; returning here left the whole subtree with zero
+        # numeric leaves and the file "compared" without comparing anything
         if len(old) != len(new):
             structural.append({"path": path, "old_len": len(old), "new_len": len(new)})
-            return
         for index, (a, b) in enumerate(zip(old, new)):
             walk(a, b, "%s[%d]" % (path, index), numeric, provenance, structural)
         return
@@ -101,18 +103,22 @@ def diff_json(old_path, new_path, top):
          "", numeric, provenance, structural)
     moved = sorted((n for n in numeric if n["abs_delta"] > 0),
                    key=lambda n: -n["abs_delta"])
-    # integer-valued leaves are counts, not measurements: a row count that moves by 1
-    # would otherwise dominate every cosine delta the comparison exists to report
-    measured = [n for n in moved if not (float(n["old"]).is_integer()
-                                         and float(n["new"]).is_integer())]
+    # An integer-valued leaf can be a count OR a measurement — an AUC that collapses
+    # 1.0 -> 0.0 and a norm that moves 8.0 -> 9.0 are both integer-valued. Filtering
+    # them out of the headline printed a catastrophe as "max |delta| none", so the
+    # headline is now every moved leaf and the split is only a reading aid.
+    integral = [n for n in moved if float(n["old"]).is_integer()
+                and float(n["new"]).is_integer()]
     return {
         "old": str(old_path), "new": str(new_path),
         "n_numeric_leaves": len(numeric),
         "n_numeric_leaves_identical": len(numeric) - len(moved),
-        "max_abs_delta": measured[0]["abs_delta"] if measured else None,
-        "max_abs_delta_path": measured[0]["path"] if measured else None,
-        "largest_moves": measured[:top],
-        "counts_that_moved": [n for n in moved if n not in measured][:top],
+        "n_numeric_leaves_that_moved": len(moved),
+        "max_abs_delta": moved[0]["abs_delta"] if moved else None,
+        "max_abs_delta_path": moved[0]["path"] if moved else None,
+        "largest_moves": moved[:top],
+        "n_integer_valued_moves": len(integral),
+        "integer_valued_moves": integral[:top],
         "provenance_differences": provenance,
         "structural_differences": structural[:top],
         "n_structural_differences": len(structural),
@@ -155,27 +161,37 @@ def main():
 
     report = {"old": str(old_root.resolve()), "new": str(new_root.resolve()),
               "vectors": {}, "json": {}, "missing": []}
-    committed = sorted((old_root / "vectors").glob("*.pt"))
+    committed = {path.name: path for path in (old_root / "vectors").glob("*.pt")}
     if not committed:
         raise SystemExit("no vectors under %s/vectors; --old must point at the "
                          "published directory" % old_root)
-    for path in committed:
-        rebuilt = new_vectors / path.name
-        if not rebuilt.is_file():
-            report["missing"].append("vectors/%s" % path.name)
+    # both directions: walking only the OLD tree left a vector the rebuild added
+    # undiffed while the report still said nothing was missing
+    rebuilt = {path.name: path for path in new_vectors.glob("*.pt")}
+    for name in sorted(set(committed) | set(rebuilt)):
+        if name not in rebuilt:
+            report["missing"].append({"path": "vectors/%s" % name, "only_in": "old"})
             continue
-        report["vectors"][path.name] = diff_vector(path, rebuilt)
-    for committed, produced in JSON_FILES:
-        old_path, new_path = old_root / committed, new_root / produced
+        if name not in committed:
+            report["missing"].append({"path": "vectors/%s" % name, "only_in": "new"})
+            continue
+        report["vectors"][name] = diff_vector(committed[name], rebuilt[name])
+    for published, produced in JSON_FILES:
+        old_path, new_path = old_root / published, new_root / produced
         if not old_path.is_file() or not new_path.is_file():
-            report["missing"].append(committed if not old_path.is_file() else produced)
+            # naming a side it is only in would be a lie when it is in neither
+            side = ("neither" if not old_path.is_file() and not new_path.is_file()
+                    else "new" if not old_path.is_file() else "old")
+            report["missing"].append(
+                {"path": published if not old_path.is_file() else produced,
+                 "only_in": side})
             continue
-        report["json"][committed] = diff_json(old_path, new_path, args.top)
+        report["json"][published] = diff_json(old_path, new_path, args.top)
 
     vectors = list(report["vectors"].values())
     comparable = [v for v in vectors if "min_cos_over_layers" in v]
     deltas = [(name, f["max_abs_delta"]) for name, f in report["json"].items()
-              if f["max_abs_delta"] is not None]
+              if f["max_abs_delta"] is not None]  # None only when nothing moved
     worst_name, worst_delta = max(deltas, key=lambda kv: kv[1], default=(None, None))
     report["summary"] = {
         "n_vectors_compared": len(vectors),
@@ -184,8 +200,12 @@ def main():
         "worst_vector_cosine": min((v["min_cos_over_layers"] for v in comparable),
                                    default=None),
         "n_json_files_compared": len(report["json"]),
+        "json_files_with_no_numeric_leaves": sorted(
+            name for name, f in report["json"].items() if not f["n_numeric_leaves"]),
         "n_structural_differences": sum(f["n_structural_differences"]
                                         for f in report["json"].values()),
+        "n_numeric_leaves_that_moved": sum(f["n_numeric_leaves_that_moved"]
+                                           for f in report["json"].values()),
         "n_missing": len(report["missing"]),
         "largest_numeric_delta": worst_delta,
         "largest_numeric_delta_path": ("%s :: %s"
@@ -206,10 +226,13 @@ def main():
         print("%-42s %6d leaves, %6d identical, %3d structural, max |delta| %s at %s"
               % (name, entry["n_numeric_leaves"], entry["n_numeric_leaves_identical"],
                  entry["n_structural_differences"],
-                 "none" if entry["max_abs_delta"] is None
+                 "nothing moved" if entry["max_abs_delta"] is None
                  else "%.3e" % entry["max_abs_delta"], entry["max_abs_delta_path"]))
+        if not entry["n_numeric_leaves"]:
+            print("  NOTHING NUMERIC COMPARED in %s" % name)
     if report["missing"]:
-        print("MISSING: %s" % ", ".join(report["missing"]))
+        print("MISSING: %s" % ", ".join("%s (only in %s)" % (m["path"], m["only_in"])
+                                        for m in report["missing"]))
     print("wrote %s" % args.out)
 
 

@@ -1,8 +1,8 @@
 {
-  "note": "each corpus re-extracted with audit/extract.py from its committed rows CSV, compared row by row against the activations the superseded per-game extractors produced",
+  "note": "each corpus re-extracted with lab/extract.py from its committed rows CSV, compared row by row against the activations the superseded per-game extractors produced",
   "corpora": {
     "apology": {
-      "dir_a": "/home/marco/dockmaster/data/pr-crossgame/acts_v2/apology",
+      "dir_a": "/home/marco/dockmaster/data/pr-crossgame/acts_v3/apology",
       "dir_b": "/home/marco/dockmaster/data/crossgame-vector/acts/apology",
       "rows_a": 714,
       "rows_b": 714,
@@ -38,7 +38,7 @@
       }
     },
     "dictator": {
-      "dir_a": "/home/marco/dockmaster/data/pr-crossgame/acts_v2/dictator",
+      "dir_a": "/home/marco/dockmaster/data/pr-crossgame/acts_v3/dictator",
       "dir_b": "/home/marco/dockmaster/data/crossgame-vector/acts/dictator",
       "rows_a": 712,
       "rows_b": 712,
@@ -74,7 +74,7 @@
       }
     },
     "dictator_only": {
-      "dir_a": "/home/marco/dockmaster/data/pr-crossgame/acts_v2/dictator_only",
+      "dir_a": "/home/marco/dockmaster/data/pr-crossgame/acts_v3/dictator_only",
       "dir_b": "/home/marco/dockmaster/data/decision-vector/acts_seed0",
       "rows_a": 1785,
       "rows_b": 1785,
@@ -110,7 +110,7 @@
       }
     },
     "overfishing": {
-      "dir_a": "/home/marco/dockmaster/data/pr-crossgame/acts_v2/overfishing",
+      "dir_a": "/home/marco/dockmaster/data/pr-crossgame/acts_v3/overfishing",
       "dir_b": "/home/marco/dockmaster/data/crossgame-vector/acts/overfishing",
       "rows_a": 1425,
       "rows_b": 1425,
@@ -146,7 +146,7 @@
       }
     },
     "prisoners_dilemma": {
-      "dir_a": "/home/marco/dockmaster/data/pr-crossgame/acts_v2/prisoners_dilemma",
+      "dir_a": "/home/marco/dockmaster/data/pr-crossgame/acts_v3/prisoners_dilemma",
       "dir_b": "/home/marco/dockmaster/data/crossgame-vector/acts/prisoners_dilemma",
       "rows_a": 240,
       "rows_b": 240,
@@ -182,7 +182,7 @@
       }
     },
     "trust": {
-      "dir_a": "/home/marco/dockmaster/data/pr-crossgame/acts_v2/trust",
+      "dir_a": "/home/marco/dockmaster/data/pr-crossgame/acts_v3/trust",
       "dir_b": "/home/marco/dockmaster/data/crossgame-vector/acts/trust",
       "rows_a": 699,
       "rows_b": 699,
@@ -218,7 +218,7 @@
       }
     },
     "ultimatum": {
-      "dir_a": "/home/marco/dockmaster/data/pr-crossgame/acts_v2/ultimatum",
+      "dir_a": "/home/marco/dockmaster/data/pr-crossgame/acts_v3/ultimatum",
       "dir_b": "/home/marco/dockmaster/data/crossgame-vector/acts/ultimatum",
       "rows_a": 713,
       "rows_b": 713,

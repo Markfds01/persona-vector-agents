@@ -7,7 +7,7 @@ weighting - nine of them, including the two that balance the ANSWER-FORMAT axis
 rather than the game axis, which is the axis the confound actually lives on.
 
 Nothing here loads a model or touches a GPU: it reads the activation shards
-`audit.extract` wrote and does linear algebra on the CPU.
+`lab.extract` wrote and does linear algebra on the CPU.
 
 Two paths have to come from the caller, because one of them is 5.3 GB and is not
 committed:
@@ -49,7 +49,7 @@ def _required(name, what):
     return Path(value)
 
 
-ACTS = _required("DM_ACTS", "the activation root written by audit.extract "
+ACTS = _required("DM_ACTS", "the activation root written by lab.extract "
                             "(<family>/shard_*.pt and rows.csv)")
 OUT = _required("DM_POOLED_OUT", "the directory this stage writes into")
 

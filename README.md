@@ -136,6 +136,17 @@ space, and a regression suite measured against the judge labels already in this
 repo. It imports with no API keys, no network and no GPU, and does not import
 `eval/`. See [audit/README.md](audit/README.md).
 
+## Experiments (`lab/`)
+
+`lab/` is this repository's own experimental pipeline. It borrows `audit/`'s
+prompt rendering and game declarations; nothing in `audit/` depends on it.
+`lab/extract.py` is the one teacher-forced activation capture every prompt grid
+uses, and it too needs no keys and no network — only a GPU when it is actually
+capturing.
+
+Both suites run offline, and both are needed: `lab/tests` is where the extractor
+is covered, so `audit/tests` alone leaves it untested.
+
 ```bash
-python -m pytest audit/tests -q
+python -m pytest audit/tests lab/tests -q
 ```

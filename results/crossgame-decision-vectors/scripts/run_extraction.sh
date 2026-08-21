@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Re-extract every activation in this directory's corpus with `audit.extract`.
+# Re-extract every activation in this directory's corpus with `lab.extract`.
 #
 # One extractor for the whole corpus: the six cross-game grids and the earlier
 # Dictator-only grid, all from their COMMITTED rows CSVs, so the comparison
@@ -36,7 +36,7 @@ cd "$REPO"
 mkdir -p "$ACTS"
 for fam in dictator trust ultimatum apology overfishing prisoners_dilemma; do
   echo "=== $fam $(date -u +%FT%TZ) ==="
-  "$PY" -u -m audit.extract --rows "$DIR/extraction/$fam.csv" \
+  "$PY" -u -m lab.extract --rows "$DIR/extraction/$fam.csv" \
       --out-dir "$ACTS/$fam" --grid "$XGRID" --device "$DEVICE" $RESUME_FLAG
   cp "$DIR/extraction/$fam.csv" "$ACTS/$fam/rows.csv"
 done
@@ -44,7 +44,7 @@ done
 # The Dictator-only grid: its vector is what section 6 projects out, so it has to
 # come off the same extractor as everything it is compared with.
 echo "=== dictator_only $(date -u +%FT%TZ) ==="
-"$PY" -u -m audit.extract \
+"$PY" -u -m lab.extract \
     --rows "$REPO/results/dictator-decision-vector/extraction/grid_seed0.csv" \
     --out-dir "$ACTS/dictator_only" --grid "$DGRID" --device "$DEVICE" $RESUME_FLAG
 cp "$REPO/results/dictator-decision-vector/extraction/grid_seed0.csv" \

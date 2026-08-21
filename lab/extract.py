@@ -1,5 +1,9 @@
 """Teacher-forced activation capture — one implementation for every prompt grid.
 
+This is `lab/`, the experimental pipeline. It borrows `audit`'s prompt rendering
+and game declarations, which are the clean-room reimplementation of the upstream
+paper, and nothing in `audit` depends on this file.
+
 Upstream's `generate_vec.py:28-38` in a form that can be audited. For each
 generated row: re-render the prompt it was generated from, verify the rendered
 bytes against the fingerprint the row carries, run ONE forward pass over
@@ -41,16 +45,18 @@ the GPU is shared and an eviction should cost a shard rather than a corpus.
 
 import argparse
 import csv
+import hashlib
 import importlib.util
 import json
 import os
 import time
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Dict, List, Optional, Sequence, Tuple
+from typing import Dict, List, Sequence, Tuple
 
 from audit import elicit, games
-from audit.generate import resolve_attn_implementation, resolve_revision
+from audit.generate import (ProvenanceError, resolve_attn_implementation,
+                            resolve_revision)
 
 #: Rows per shard. 250 is what the archived runs used; at hidden size 3584 it is
 #: ~300 MB per file and bounds what an eviction costs to about a minute.
@@ -126,11 +132,30 @@ def seam_of(prompt_ids: Sequence[int], ids: Sequence[int]):
     return Seam(tuple(ids), prompt_len), ""
 
 
+def persona_of(row: dict):
+    """The persona prefix a row was generated under, or None.
+
+    A grid may prepend upstream's persona system turn, and the row records only
+    its label (`pos_0`), not the assistant name a caller could have overridden.
+    So this rebuilds the default form and lets the per-row prompt fingerprint
+    catch anything else.
+    """
+    label = row.get("persona", "")
+    if not label:
+        return None
+    polarity, _, index = label.rpartition("_")
+    if not index.isdigit():
+        raise ValueError("row records persona %r, which is not <polarity>_<index>"
+                         % (label,))
+    return elicit.Persona(polarity, int(index))
+
+
 class Prompts:
     """Re-renders each row's prompt and proves it is the one the row came from.
 
-    Cached per (game_id, mode) because a grid has a few hundred cells and
-    thousands of rows; the fingerprint check runs per ROW, not per cache miss.
+    Cached per (game_id, mode, persona) — everything `render` reads — because a
+    grid has a few hundred cells and thousands of rows; the fingerprint check
+    runs per ROW, not per cache miss.
     """
 
     def __init__(self, tokenizer):
@@ -138,11 +163,11 @@ class Prompts:
         self._cache = {}
 
     def for_row(self, row: dict) -> str:
-        key = (row["game_id"], row["mode"])
+        key = (row["game_id"], row["mode"], row.get("persona", ""))
         rendered = self._cache.get(key)
         if rendered is None:
             rendered = elicit.render(games.by_id(row["game_id"]), row["mode"],
-                                     self._tokenizer)
+                                     self._tokenizer, persona_of(row))
             self._cache[key] = rendered
         if rendered.sha256 != row["prompt_sha256"]:
             raise PromptMismatch(
@@ -181,6 +206,30 @@ def pool(hidden_states, prompt_len: int) -> Dict[str, object]:
         if not torch.isfinite(tensor).all():
             raise ValueError("non-finite %s" % name)
     return pooled
+
+
+def claim_shard(staging, path):
+    """Move a finished shard to its final name, refusing another run's.
+
+    `os.link` is the claim: it is atomic and fails on EEXIST, so two runs cannot
+    both pass an `exists()` check and interleave into one inode. Not every
+    filesystem has hard links (FUSE mounts, exFAT, some network mounts), and
+    there the rename is the only way to land the shard at all — losing an hour of
+    GPU work to a portability failure is the worse outcome, so it falls back, with
+    the check-then-rename race that implies.
+    """
+    try:
+        os.link(staging, path)
+        return
+    except FileExistsError:
+        raise ShardsUnusable("%s already exists; another run is writing into this "
+                             "directory" % path) from None
+    except OSError:
+        pass
+    if path.exists():
+        raise ShardsUnusable("%s already exists; another run is writing into this "
+                             "directory" % path)
+    os.replace(staging, path)
 
 
 class ShardWriter:
@@ -224,14 +273,16 @@ class ShardWriter:
         for name in POOLINGS:
             payload[name] = torch.stack([p[name] for _r, _s, p in self._pending])
         path = self.out_dir / ("shard_%04d.pt" % self.shard_index)
-        if path.exists():
-            raise ShardsUnusable("%s already exists; another run is writing into this "
-                                 "directory" % path)
-        # written under a temporary name and renamed, so a kill during the write
-        # cannot leave a truncated shard that the resume path would trust
-        staging = path.parent / (path.name + ".tmp")
+        # written under a name no other run can be using, then claimed: a kill
+        # during the write leaves a temp file the resume path ignores, never a
+        # truncated shard it would trust
+        staging = path.parent / ("%s.%d.tmp" % (path.name, os.getpid()))
         torch.save(payload, staging)
-        os.replace(staging, path)
+        try:
+            claim_shard(staging, path)
+        finally:
+            if staging.exists():
+                os.unlink(staging)
         count = len(self._pending)
         self.shard_index += 1
         self.written += count
@@ -266,6 +317,30 @@ def captured_row_indices(out_dir):
                                      "pole mean" % (path, index))
             seen.add(index)
     return seen, len(shards)
+
+
+def requested_model_id(model) -> str:
+    """The checkpoint the run was pointed at, as transformers recorded it.
+
+    NOT a resolver: `from_pretrained` copies its own argument onto the config, so
+    this reads the request back and cannot disagree with it. It is a label. The
+    thing that actually identifies these weights is the revision sha, which IS
+    resolved. Refused when empty, because a nameless label is no provenance.
+    """
+    label = getattr(getattr(model, "config", None), "_name_or_path", None)
+    if not isinstance(label, str) or not label:
+        raise ProvenanceError("the loaded model records no checkpoint name, so "
+                              "`model_id` would be empty")
+    return label
+
+
+def file_sha256(path) -> str:
+    """Content fingerprint of a file, read a block at a time."""
+    digest = hashlib.sha256()
+    with open(path, "rb") as handle:
+        for block in iter(lambda: handle.read(1 << 20), b""):
+            digest.update(block)
+    return digest.hexdigest()
 
 
 def load_model(model_id: str, revision: str, device: int, dtype: str, attn: str,
@@ -312,20 +387,27 @@ def load_model(model_id: str, revision: str, device: int, dtype: str, attn: str,
     return model, tokenizer
 
 
-def meta_record(model, tokenizer, rows_csv, device: int,
-                model_id: str) -> Dict[str, object]:
-    """The run-level provenance, resolved from the loaded model, never from the request.
+def meta_record(model, tokenizer, rows_csv, device: int) -> Dict[str, object]:
+    """The run-level provenance, read off the loaded model rather than the request.
 
-    Both resolvers are called without a fallback on purpose: one that accepted the
-    caller's value would let this file assert a provenance the weights do not
-    support. `load_model` has already checked the two against what was asked for.
+    `model_revision`, `dtype` and `attn_implementation` are RESOLVED: each is read
+    from the weights and each resolver is called without a fallback, because one
+    that accepted the caller's value would let this file assert a provenance the
+    weights do not support. `load_model` has already checked the revision against
+    what was asked for. `model_id` is not in that class and is not presented as if
+    it were — see `requested_model_id`.
+
+    The rows CSV is recorded by CONTENT as well as by path: the path alone says
+    nothing about a file that was regenerated in place, and a resume that read a
+    different set of answers at the same row indices would mislabel every pole.
     """
     import torch
     import transformers
 
     return {
         "rows_csv": str(Path(rows_csv).resolve()),
-        "model_id": model_id,
+        "rows_csv_sha256": file_sha256(rows_csv),
+        "model_id": requested_model_id(model),
         "model_revision": resolve_revision(model),
         "dtype": str(model.dtype),
         "attn_implementation": resolve_attn_implementation(model),
@@ -339,7 +421,7 @@ def meta_record(model, tokenizer, rows_csv, device: int,
         "batch_size": 1,
         "padding": "none",
         "poolings": list(POOLINGS),
-        "extractor": "audit.extract",
+        "extractor": "lab.extract",
     }
 
 
@@ -401,10 +483,11 @@ def capture(rows: Sequence[dict], model, tokenizer, out_dir, *, skip=(),
 
 #: the meta fields that must not change between the invocations of one run. A resume
 #: that changed any of them would put incomparable activations in one directory, which
-#: is the failure this module exists to prevent.
-PINNED = ("rows_csv", "model_id", "model_revision", "dtype", "attn_implementation",
-          "chat_template_sha256", "batch_size", "padding", "poolings", "shard_rows",
-          "limit_rows")
+#: is the failure this module exists to prevent. The rows CSV is pinned by content as
+#: well as by path — regenerating it in place keeps the path and moves every answer.
+PINNED = ("rows_csv", "rows_csv_sha256", "model_id", "model_revision", "dtype",
+          "attn_implementation", "chat_template_sha256", "batch_size", "padding",
+          "poolings", "shard_rows", "limit_rows")
 
 
 def resume_conflicts(previous: Dict[str, object], current: Dict[str, object]):
@@ -426,13 +509,13 @@ def plan_resume(out_dir, meta: Dict[str, object], resuming: bool):
         return set(), 0
     meta_path = out_dir / "meta.json"
     if not meta_path.is_file():
-        raise SystemExit("%s holds shards but no meta.json, so there is nothing to "
-                         "check this run against; move it aside" % out_dir)
+        raise ShardsUnusable("%s holds shards but no meta.json, so there is nothing "
+                             "to check this run against; move it aside" % out_dir)
     conflicts = resume_conflicts(json.loads(meta_path.read_text(encoding="utf-8")), meta)
     if conflicts:
-        raise SystemExit("refusing to resume %s: %s"
-                         % (out_dir, "; ".join("%s was %r, now %r" % c
-                                               for c in conflicts)))
+        raise ShardsUnusable("refusing to resume %s: %s"
+                             % (out_dir, "; ".join("%s was %r, now %r" % c
+                                                   for c in conflicts)))
     return captured_row_indices(out_dir)
 
 
@@ -484,6 +567,7 @@ def main():
                          "together they would leave a directory that is neither")
     out_dir = Path(args.out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
+    meta_path = out_dir / "meta.json"
     resuming = bool(list(out_dir.glob("shard_*.pt")))
     if resuming and not args.resume:
         raise SystemExit("%s already holds shards; pass --resume to continue into it, "
@@ -508,18 +592,21 @@ def main():
     model, tokenizer = load_model(args.model, args.revision, args.device, args.dtype,
                                   args.attn, args.load_attempts,
                                   args.load_retry_seconds, on_retry)
-    meta = meta_record(model, tokenizer, args.rows, args.device, args.model)
+    meta = meta_record(model, tokenizer, args.rows, args.device)
     meta.update({"shard_rows": args.shard_rows, "limit_rows": args.limit_rows,
                  "n_scored_rows": len(todo), "complete": False})
     print("loaded %s @ %s %s/%s on %s" % (meta["model_id"], meta["model_revision"][:12],
                                           meta["dtype"], meta["attn_implementation"],
                                           meta["device"]), flush=True)
 
-    skip, first_shard = plan_resume(out_dir, meta, resuming)
+    try:
+        skip, first_shard = plan_resume(out_dir, meta, resuming)
+    except ShardsUnusable as exc:
+        raise SystemExit(str(exc))
     if resuming:
         print("resuming: %d shards, %d rows already captured"
               % (first_shard, len(skip)), flush=True)
-    (out_dir / "meta.json").write_text(json.dumps(meta, indent=2), encoding="utf-8")
+    meta_path.write_text(json.dumps(meta, indent=2), encoding="utf-8")
 
     started = time.time()
 
@@ -527,8 +614,13 @@ def main():
         print("%5d/%5d  %6.1fs  shard %d" % (done, total, time.time() - started,
                                              writer.shard_index - 1), flush=True)
 
-    done = capture(rows, model, tokenizer, out_dir, skip=skip, first_shard=first_shard,
-                   on_shard=on_shard, shard_rows=args.shard_rows)
+    try:
+        done = capture(rows, model, tokenizer, out_dir, skip=skip,
+                       first_shard=first_shard, on_shard=on_shard,
+                       shard_rows=args.shard_rows)
+    except ShardsUnusable as exc:
+        # a collision with a concurrent run is an operator mistake, not a crash
+        raise SystemExit(str(exc))
     meta.update({
         "n_shards": done.n_shards,
         "dropped": [d.as_record() for d in done.dropped],

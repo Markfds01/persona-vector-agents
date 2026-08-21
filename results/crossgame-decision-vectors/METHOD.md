@@ -21,9 +21,11 @@ extraction is not merely the same *method*, it is the same *code*: §5.
 
 ## 1. The question
 
-The Dictator-only decision vector separates its poles at layer 20 with
-out-of-sample AUC 0.932, but at **layer 0** — the mean of the raw input
-embeddings of the response tokens — it already reaches 0.903. Layer 0 carries no
+The Dictator-only decision vector — built in `results/dictator-decision-vector/`,
+whose METHOD.md is the source of the first figure below and whose README is the
+source of the second — separates its poles at layer 20 with out-of-sample AUC
+0.932, but at **layer 0**, the mean of the raw input
+embeddings of the response tokens, it already reaches 0.903. Layer 0 carries no
 computation. A direction that separates the poles there is separating the *tokens
 of the answer*, not a decision, and both Dictator poles are dollar amounts.
 
@@ -172,7 +174,7 @@ Both are directional and both are named in `README.md`.
 
 ## 5. Teacher-forced activation extraction
 
-`audit/extract.py` — **one implementation, shared by every grid in this
+`lab/extract.py` — **one implementation, shared by every grid in this
 repository**, matching upstream `generate_vec.py:28-38`:
 
 1. re-render the prompt the row was generated from and verify the rendered bytes
@@ -190,7 +192,7 @@ Dictator-only run — and every row names its own `game_id` and `mode`, so which
 prompt is re-rendered, which stakes it carried and which answer space scored it
 are read off the data. The grid module is named on the command line
 (`--grid <path>`). Adding a grid is a new declaration, never a second copy of the
-capture loop. Tests are in `audit/tests/test_extract.py` and need no weights.
+capture loop. Tests are in `lab/tests/test_extract.py` and need no weights.
 
 Batch size 1 and no padding is what makes the position slices mean what they say.
 Two failures are reported rather than absorbed: prefix instability (BPE merging
@@ -239,10 +241,12 @@ archived activations — same rows, same revision, same dtype, same kernel, batc
 so agreement should be exact.
 
 It was: **109,132,800 of 109,132,800 elements exactly equal**, all three poolings,
-all 29 layers, maximum absolute difference 0.0. The full re-extraction then
-reproduced the same result over all 6288 rows
-(`analysis/activation_equivalence.json`). No tolerance was needed and none is
-claimed. `scripts/compare_activations.py` is the code.
+all 29 layers, maximum absolute difference 0.0. That pre-check was a scratch run
+and **its report is not committed** — it bought the decision to spend the GPU, not
+the result. What is committed is the thing it predicted: the full re-extraction
+over all 6288 rows, in `analysis/activation_equivalence.json`, which supersedes it
+and is the record to read. No tolerance was needed and none is claimed.
+`scripts/compare_activations.py` is the code.
 
 ## 6. The vectors
 
@@ -297,9 +301,10 @@ mean is norm weight, not equal weight; `_unit` is the primary of each pair.
 Four of the six games answer in dollars, so one sixth each still puts 66.7% of the
 weight on dollar-format answers. The confound is the answer surface, not the game,
 so the axis to equalise is the surface. An earlier pass measured only the five
-game-axis schemes and concluded the whole family spanned about 15 degrees; with
-the format axis included it spans 66. That earlier claim is retracted in
-`README.md` §5.
+game-axis schemes, saw them land between 16° and 26° of the Dictator direction,
+and said it made no claim about weightings balancing a different axis. Adding the
+format axis reaches 66°, so the nine now cover 16° to 66°. That extends the
+earlier pass rather than retracting it — `README.md` §5.
 
 **Family balancing is post-hoc.** It was chosen after the agreement matrix showed
 the dollar / non-dollar split — that split is the reason to equalise the format

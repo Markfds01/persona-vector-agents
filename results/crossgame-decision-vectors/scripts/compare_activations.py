@@ -1,6 +1,6 @@
 """Compare two activation directories row by row. CPU only.
 
-Two runs of `audit.extract` over the SAME rows, at the same revision, dtype,
+Two runs of `lab.extract` over the SAME rows, at the same revision, dtype,
 attention kernel and batch size, should agree bit for bit: the forward pass is
 deterministic and nothing here samples. So this reports what was actually
 achieved rather than asserting it — the fraction of elements that are exactly
@@ -29,7 +29,7 @@ import torch
 # the repo root is four levels up from this directory
 sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
 
-from audit.extract import POOLINGS  # noqa: E402
+from lab.extract import POOLINGS  # noqa: E402
 
 # Shared box: grabbing all 256 cores makes every run slower, not faster.
 torch.set_num_threads(int(os.environ.get("DM_THREADS", "16")))

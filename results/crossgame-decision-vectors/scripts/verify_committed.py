@@ -6,6 +6,17 @@ that the check does not go through either run's analysis code: it imports only
 `crossgame_grid` and `poles`, which are the grid and pole DEFINITIONS, and does
 its own linear algebra.
 
+Sections A and A2 are the only ones with a committed artifact to disagree with,
+and they are a GATE: every committed vector must come back at cosine >= the
+`--min-cosine` floor AND at the same layer-20 norm, or this exits non-zero. A
+cosine is scale-invariant, so the norm is checked separately — without it a
+vector twice as long still reads 1.000000. The two tolerances sit on different
+floors: a cosine is blind to how the committed vector is STORED, a norm is not,
+and the committed `.pt` files are float32, whose rounding alone moves the norm by
+~1e-8. `--max-norm-drift` is set above that floor and still a thousandfold below
+any real scale error. The report is written either way, so a failure leaves its
+evidence on disk.
+
 What it recomputes, all from the activation shards:
 
   A  the six per-game cell-balanced vectors, against the committed .pt files
@@ -492,6 +503,65 @@ def pd_probe_section(probe_csv, grid, poles):
 
 # --- the run ------------------------------------------------------------------
 
+def committed_comparison(recomputed, committed):
+    """How a recomputed vector compares with the .pt this directory ships.
+
+    Both norms are taken in float64, but that does NOT make the ratio independent
+    of storage: the committed file is float32, and promoting it cannot recover the
+    bits rounding threw away. The ratio's floor is that rounding, ~1e-8, which is
+    what `--max-norm-drift` has to clear. The cosine is not affected — rounding
+    barely turns the vector.
+    """
+    committed = committed.double()
+    c = cosines(recomputed, committed)
+    mine, theirs = recomputed[20].norm().item(), committed[20].norm().item()
+    return {
+        "cos_layer20": c[20].item(),
+        "min_cos_over_layers": c.min().item(),
+        "norm_layer20": mine,
+        "norm_layer20_committed": theirs,
+        "norm_ratio_layer20": mine / theirs if theirs else float("inf"),
+    }
+
+
+def reproduction_gate(out, min_cosine, max_norm_drift):
+    """Pass/fail over every committed vector this run recomputed.
+
+    Everything outside A and A2 is a recomputation with nothing to check it
+    against. These two have the committed artifacts, and until this existed a
+    cos_layer20 of 0.3 was written into the report and the process exited 0.
+    """
+    failures = []
+    seen_cosines, seen_drifts = [], []
+    for section in ("A_per_game_vs_committed", "A2_pooled_vs_committed"):
+        for name, entry in sorted(out[section].items()):
+            if "error" in entry:
+                failures.append("%s.%s: %s" % (section, name, entry["error"]))
+                continue
+            worst = entry["min_cos_over_layers"]
+            seen_cosines.append(worst)
+            if not worst >= min_cosine:
+                failures.append("%s.%s: worst layer cosine %.12f < %.12f"
+                                % (section, name, worst, min_cosine))
+            drift = abs(entry["norm_ratio_layer20"] - 1.0)
+            seen_drifts.append(drift)
+            if not drift <= max_norm_drift:
+                failures.append("%s.%s: layer-20 norm %.6f against the committed "
+                                "%.6f (%.3e drift)"
+                                % (section, name, entry["norm_layer20"],
+                                   entry["norm_layer20_committed"], drift))
+    # a gate over nothing would report `passed` while proving nothing
+    if not seen_cosines:
+        failures.append("no committed vector was compared, so this gate proves nothing")
+    # the observed margins are reported, not just the thresholds: a tolerance nobody
+    # can see the distance to is a tolerance nobody notices is set wrong
+    return {"min_cosine": min_cosine, "max_norm_drift": max_norm_drift,
+            "n_vectors_checked": len(seen_cosines),
+            "worst_min_cos_over_layers": min(seen_cosines, default=None),
+            "worst_norm_drift_layer20": max(seen_drifts, default=None),
+            "failures": failures, "passed": not failures}
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--acts", required=True,
@@ -516,6 +586,13 @@ def main():
     ap.add_argument("--split-seed", type=int, default=20260821,
                     help="deliberately not the run's seed; see section J")
     ap.add_argument("--policy", default="strict", choices=("strict", "relaxed"))
+    ap.add_argument("--min-cosine", type=float, default=1 - 1e-9,
+                    help="floor for every committed vector's worst layer cosine; "
+                         "float64 reassociation noise is ~2e-15")
+    ap.add_argument("--max-norm-drift", type=float, default=1e-6,
+                    help="allowed |1 - recomputed/committed| on the layer-20 norm, "
+                         "which a cosine cannot see; the floor is the float32 the "
+                         "committed vectors are STORED in, ~1e-8, not float64 epsilon")
     ap.add_argument("--out", required=True)
     args = ap.parse_args()
 
@@ -544,13 +621,10 @@ def main():
     for f in FAMILY_ORDER:
         path = vec_dir / ("decision_%s_response_avg_diff_cellbalanced_%s.pt"
                           % (f, args.policy))
-        c = cosines(game_vecs[f], torch.load(path, map_location="cpu"))
-        out["A_per_game_vs_committed"][f] = {
-            "usable_cells": len(cells[f]),
-            "cos_layer20": c[20].item(),
-            "min_cos_over_layers": c.min().item(),
-            "norm_layer20": game_vecs[f][20].norm().item(),
-        }
+        entry = {"usable_cells": len(cells[f])}
+        entry.update(committed_comparison(game_vecs[f],
+                                          torch.load(path, map_location="cpu")))
+        out["A_per_game_vs_committed"][f] = entry
 
     # B -- the agreement matrix
     out["B_agreement"] = {"layer20": {}, "layer0": {}}
@@ -580,12 +654,8 @@ def main():
             out["A2_pooled_vs_committed"][scheme] = {
                 "error": "not committed: %s" % path.name}
             continue
-        c = cosines(pools[scheme], torch.load(path, map_location="cpu"))
-        out["A2_pooled_vs_committed"][scheme] = {
-            "cos_layer20": c[20].item(),
-            "min_cos_over_layers": c.min().item(),
-            "norm_layer20": pools[scheme][20].norm().item(),
-        }
+        out["A2_pooled_vs_committed"][scheme] = committed_comparison(
+            pools[scheme], torch.load(path, map_location="cpu"))
 
     # C, D -- leave-one-game-out AUC
     out["C_logo_cell_balanced"] = {}
@@ -684,8 +754,19 @@ def main():
     else:
         out["G_layer0"] = {"skipped": "no --snapshot given"}
 
+    out["gate"] = reproduction_gate(out, args.min_cosine, args.max_norm_drift)
     Path(args.out).write_text(json.dumps(out, indent=2))
     print("wrote %s" % args.out)
+    for failure in out["gate"]["failures"]:
+        print("FAIL %s" % failure)
+    if out["gate"]["failures"]:
+        raise SystemExit("%d of the committed vectors do not reproduce from these "
+                         "activations" % len(out["gate"]["failures"]))
+    gate = out["gate"]
+    print("gate: %d committed vectors reproduce; worst layer cosine %.15f (floor "
+          "%.15f), worst layer-20 norm drift %.3e (allowed %.1e)"
+          % (gate["n_vectors_checked"], gate["worst_min_cos_over_layers"],
+             args.min_cosine, gate["worst_norm_drift_layer20"], args.max_norm_drift))
 
 
 if __name__ == "__main__":

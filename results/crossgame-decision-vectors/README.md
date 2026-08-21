@@ -8,19 +8,22 @@ the two answered in anything else — fish counts, and the words Cooperate/Defec
 sit inside their own null against everything, including each other.
 
 Pooling the six does not remove the confound, and **no weighting of them removes
-it either**. Nine weightings are measured here, spanning 66 degrees against the
-Dictator-only direction — from +0.961 down to +0.403 — and the whole curve moves
-as one: every step away from the dollar games costs surface separation and deep
-separation together, and the layer-0 digit signature never falls into its control
-band at any point on it. Projecting out a direction fit on the Dictator game
-alone destroys essentially all of the pooled vector's separating power.
+it either**. Nine weightings are measured here, reaching **66 degrees** away from
+the Dictator-only direction — +0.961 (16°) at the near end down to +0.403 (66°) at
+the far end, a 50-degree spread — and the whole curve moves as one: every step
+away from the dollar games costs surface separation and deep separation together,
+and the layer-0 digit signature never falls into its control band at any point on
+it. Projecting out a direction fit on the Dictator game alone destroys essentially
+all of the pooled vector's separating power **under the strict pole policy**;
+under relaxed the same collapse is real but much smaller (§6).
 
 One thing does survive, and it is the only positive here: a direction fit on five
 games separates the sixth game's poles **at depth but not at layer 0** — the
 Prisoner's Dilemma goes 0.595 at layer 0 to 0.969 at layer 20 under a direction
 that never saw it. That is cross-surface and it is real, but §5 shows it is the
-four dollar games doing the transferring: drop them and it is gone (PD 0.509,
-chance).
+four dollar games doing the transferring: drop them and it falls to chance under
+strict (PD 0.509) — though that particular cell reads 0.817 under relaxed and
+should not be quoted on its own (§5).
 
 **Nothing here is steering.** No vector was added to the residual stream, no
 generation was run under an intervention, and no number in this file is a causal
@@ -31,20 +34,23 @@ Everything below is `Qwen/Qwen2.5-7B-Instruct` at revision
 `a09a35458c702b33eeacc393d103063234e8bc28`, bfloat16, `sdpa`, `response_avg`
 activations, seed 0 for generation and 20260820 for analysis. 4560 generations,
 4503 scored and captured, 0 dropped. **Strict pole policy unless stated**; the
-relaxed policy is carried end to end and agrees on every conclusion.
+relaxed policy is carried end to end and agrees on every conclusion, though two
+individual cells move a long way with the policy and are flagged where they
+appear (§5, §6).
 
 ---
 
 ## 0. Where these numbers come from
 
 Every number in this file was produced by the code in this directory and in
-`audit/`, from the rows committed under `extraction/`. That was not true of the
-first version of this directory, and closing the gap is what this revision is.
+`lab/` and `audit/`, from the rows committed under `extraction/`. That was not
+true of the first version of this directory, and closing the gap is what this
+revision is.
 
 **One extractor, for every grid.** The teacher-forced capture used to exist twice
 — once for the Dictator-only study and once here — and the two copies were only
-asserted to agree. There is now a single implementation, `audit/extract.py`, with
-tests under `audit/tests/`. Nothing in it is per game: a grid declares its own
+asserted to agree. There is now a single implementation, `lab/extract.py`, with
+tests under `lab/tests/`. Nothing in it is per game: a grid declares its own
 games and every row names its own `game_id`, so which prompt is re-rendered and
 which stakes it carried are read off the data (`METHOD.md` §5).
 
@@ -73,12 +79,16 @@ published (`scripts/compare_published.py`, output in
 enough to touch a conclusion.
 
 **And the reweighting is now complete.** The first version of this file measured
-five weightings, all of which balance the *game* axis or do not balance at all,
-and said the span they cover was about 15 degrees. That was true of those five and
-wrong as a statement about what this data permits: balancing the **answer-format**
-axis instead — a third each to dollar, fish and word answers — moves the pooled
-direction much further, and dropping the dollar games entirely further still.
-§5 carries all nine. The headline is unchanged and is still a negative.
+five weightings, all of which balance the *game* axis or do not balance at all.
+They ran +0.901 to +0.961 against the Dictator vector — 25.7° to 16.1°, under ten
+degrees of spread — and that version explicitly declined to generalise from them:
+it said this directory made "no claim about weightings that balance a different
+axis" and that "no weighting changes the answer" should be treated as unproven and
+out of scope. This revision closes that scope rather than correcting a claim.
+Balancing the **answer-format** axis — a third each to dollar, fish and word
+answers — moves the pooled direction to 44°, and dropping the dollar games
+entirely to 66°. §5 carries all nine. The headline is unchanged and is still a
+negative.
 
 ---
 
@@ -137,25 +147,37 @@ Two things follow, and both are measured rather than assumed:
   0.36**, not the ≈0.03 a random-direction argument would give. Under the wrong
   bar, +0.128 and +0.164 look like agreement. They are not.
 * Where two vectors **share rows** — a pooled vector against a game inside it —
-  the same construction is centred at **+0.40**, not zero, and its p97.5 is 0.60
-  to 0.65. §5 uses that version, and the difference is the whole reason those
-  thresholds look so much higher.
+  the same construction is **not centred at zero**, and how far off zero depends
+  on how much of the pool that game is. Across all nine weightings and all six
+  games at layer 20, strict, its mean runs −0.004 to +0.877 and its p97.5 runs
+  0.255 to 0.954: a game carrying half the pool (PD under `non_dollar_raw`) drags
+  its own null to +0.877, and a game carrying none of it (a dollar game under the
+  `non_dollar` schemes) sits back at zero. The often-quoted "+0.40, p97.5 0.60 to
+  0.65" is `game_equal_unit`'s band specifically. §5 therefore reads every cell
+  against **its own** null and never against one number.
 
 This is the same lesson the Dictator directory records. It is restated because
 both headline claims here are readings against a null.
 
 ### It is not attenuation
 
-Each game's vector was rebuilt from a disjoint random half of its own rows; the
-split-half reliability at layer 20 is dictator 0.969, apology 0.978, trust 0.948,
-PD 0.899, ultimatum 0.895, overfishing 0.866. Correcting each cosine by
-`cos / sqrt(rel_a * rel_b)` barely moves it — dictator–overfishing 0.217 → 0.237,
-overfishing–PD 0.066 → 0.075. The vectors are measured well enough to say they
-genuinely do not align.
+Each game's vector was rebuilt from a disjoint random half of its own rows. The
+matrix above is **cell-balanced**, so the reliability that matches it is the
+**within-cell** split-half, and that is the one used here: at layer 20 dictator
+0.965, apology 0.969, trust 0.910, PD 0.790, ultimatum 0.543, overfishing 0.436.
+Correcting by `cos / sqrt(rel_a * rel_b)` lifts the two failing cells to
+dictator–overfishing 0.217 → **0.334** and overfishing–PD 0.066 → **0.113** —
+a bigger move than the whole-game reliabilities (0.237 and 0.075) would suggest,
+because overfishing's within-cell vector is the noisiest of the six. It is still
+nowhere near the dollar games, which are barely moved: dictator–apology 0.842 →
+0.870. The correction changes the size of the gap, not its direction.
 
-(Reliability depends on the random half, and on whether the rebuild is whole-game
-or within-cell. Both are reported; the correction is a magnitude comparison and is
-never mixed with the nulls, which are computed on uncorrected cosines.)
+(§5 reports the same overfishing↔PD correction, 0.113, from the leave-one-out
+construction. The whole-game reliabilities are the higher figures because a
+whole-game rebuild is free to lean on between-cell composition, which cell
+balancing removes; they are the wrong denominator for this matrix. The correction
+is a magnitude comparison and is never mixed with the nulls, which are computed on
+uncorrected cosines.)
 
 ### The same matrix at layer 0
 
@@ -163,6 +185,14 @@ A weaker version of the same shape: dictator–apology +0.748, dictator–trust
 +0.581, trust–apology +0.467, ultimatum–overfishing −0.059, apology–PD −0.028,
 **overfishing–PD −0.081**. That is what you expect if layer 20 is partly carrying
 the same surface information layer 0 carries outright.
+
+**Read the layer-0 row of the three thin games with the reliabilities in hand.**
+Within-cell split-half at layer 0 is overfishing **0.158**, ultimatum **0.230**
+and PD 0.599, against dictator 0.884 and apology 0.858. Any layer-0 cell involving
+overfishing or ultimatum is measured too poorly for its size to mean much — the
+attenuation correction on such a cell is a division by a number near zero and is
+not quoted here for that reason. The shape of the matrix is the claim; the
+individual layer-0 magnitudes of those rows are not.
 
 ## 2. Separation per game, and the pooled layer-0 test that failed
 
@@ -232,12 +262,15 @@ The lists below are the **top ten and top eight in order**, not a selection:
   formatting tokens (`' **'`, `' If'`, `'**'`). Trait vocabulary, no digits.
 
 **Each game's layer-0 direction is its own answer vocabulary.** That is the
-"surface form of its own answers" hypothesis confirmed directly rather than
-inferred, and it explains §1: the dollar games align because they share a digit
-signature, and the fishery's inverted polarity is why overfishing aligns with
-nobody. Every list also carries punctuation and formatting tokens — layer 0 is the
-average of a whole response, not just its answer — which is why the scalar below
-exists.
+"surface form of its own answers" hypothesis read directly off the decode rather
+than inferred from the cosines. It lines up with §1: the four games that align are
+the four that share a digit signature, and the game that aligns with nobody is the
+one whose numeric polarity is inverted. **That is a correspondence, not a
+mechanism.** The same four games are also the four with the thickest poles, and
+this data cannot say which of the two is doing the work — §9 states that
+limitation and nothing here overrides it. Every list also carries punctuation and
+formatting tokens — layer 0 is the average of a whole response, not just its
+answer — which is why the scalar below exists.
 
 ### The scalar version
 
@@ -365,7 +398,7 @@ share. §6 then shows it does not survive removing the Dictator direction either
 **The PD row is 18 cooperating responses**, 14 of them from a single wording. It
 is the most cited number in this file and the thinnest. §8b.
 
-## 5. Nine weightings, 66 degrees, and the answer is still no
+## 5. Nine weightings, out to 66 degrees, and the answer is still no
 
 The objection to §2 is that the pool was weighted by usable cells, and 85 of 111
 cells are dollar cells. So the pool was rebuilt under nine explicit weightings
@@ -393,16 +426,23 @@ Full table, layer 20, both policies:
 | **`non_dollar_unit`** | **+0.412** | +0.385 | +0.493 | −0.005 | 0.73 |
 | **`non_dollar_raw`** | **+0.403** | +0.390 | +0.493 | +0.093 | 4.46 |
 
-At layer 0 the same ordering, strict: precision_raw +0.905, cell_balanced +0.890,
-game_equal_unit +0.819, family_balanced_unit +0.566, family_balanced_raw +0.446,
-non_dollar_unit +0.205, non_dollar_raw +0.143.
+At layer 0, strict: precision_raw +0.905, precision_unit +0.904, cell_balanced
++0.890, game_equal_unit +0.819, game_equal_raw +0.769, family_balanced_unit
++0.566, family_balanced_raw +0.446, non_dollar_unit +0.205, non_dollar_raw +0.143.
+The four *families* keep their order, but two of them — `game_equal` and
+`family_balanced` — reverse internally between the layers: `raw` is the closer of
+the pair to the Dictator direction at layer 20 and the further at layer 0. The
+other two do not reverse; `precision`'s pair sits within 0.001 of itself at layer
+0, and `non_dollar`'s `unit` is the closer member at both layers.
 
 **Balancing the game axis is not balancing the format axis.** Four of the six
 games answer in dollars, so one sixth each still puts 66.7% of the weight on
-dollar-format answers. That is why the first pass, which measured only game-axis
-weightings, saw a 16-to-26-degree span and concluded the family was exhausted at
-about 15 degrees. With the format axis included the span is **66 degrees**, and
-that earlier figure is retracted.
+dollar-format answers. The first pass measured only game-axis weightings and saw
+them land between 16° and 26° of the Dictator direction — under ten degrees —
+and said in as many words that it made no claim about weightings balancing a
+different axis. It did not claim the family was exhausted, and nothing here is a
+retraction of it. What the format axis adds is a far end: `family_balanced_unit`
+at 44° and `non_dollar_raw` at **66°**, so the nine now cover 16° to 66°.
 
 **The conclusion survives, and more strongly: every column moves in the same
 direction at once.** Getting further from the Dictator vector costs surface
@@ -440,10 +480,10 @@ format-balanced schemes — no shared rows, and the null drops back to zero-cent
 
 | held out | cell_balanced | game_equal_unit | family_balanced_unit | non_dollar_unit |
 |---|---|---|---|---|
-| dictator | +0.895 / 0.329 | +0.824 / 0.308 | +0.665 / 0.350 | +0.381 / 0.361 |
-| trust | +0.782 / 0.403 | +0.757 / 0.382 | +0.648 / 0.415 | +0.411 / 0.411 **within** |
-| apology | +0.776 / 0.332 | +0.676 / 0.320 | +0.526 / 0.284 | +0.269 / 0.267 |
-| ultimatum | +0.499 / 0.301 | +0.470 / 0.266 | +0.368 / 0.251 | +0.180 / 0.261 **within** |
+| dictator | +0.895 / 0.329 | +0.824 / 0.308 | +0.665 / 0.340 | +0.381 / 0.361 |
+| trust | +0.782 / 0.403 | +0.757 / 0.382 | +0.648 / 0.416 | +0.411 / 0.411 **within** |
+| apology | +0.776 / 0.332 | +0.676 / 0.320 | +0.526 / 0.287 | +0.269 / 0.267 |
+| ultimatum | +0.499 / 0.301 | +0.470 / 0.266 | +0.368 / 0.260 | +0.180 / 0.261 **within** |
 | **prisoners_dilemma** | +0.327 / 0.341 **within** | +0.314 / 0.315 **within** | +0.237 / 0.336 **within** | +0.066 / 0.343 **within** |
 | **overfishing** | +0.209 / 0.382 **within** | +0.204 / 0.348 **within** | +0.162 / 0.381 **within** | +0.066 / 0.343 **within** |
 
@@ -792,6 +832,21 @@ sits: all 7 checks pass**, with the numbers above.
   probe holds a wording fixed that the grid never tested, so it cannot separate
   "the matrix does not move this" from "this wording does not cooperate". The
   wording spread is measured; the matrix's contribution is not.
+* **Nothing is corrected for multiplicity.** §1 reads 15 pairwise cosines against
+  15 separate p97.5 bars and §5 reads 48 more the same way. Each bar is a nominal
+  2.5% one-sided test, so if every one of those 63 cells were truly null about 1.6
+  of them would still read "above". No correction is applied and none of the
+  verdicts is adjusted for the number of tests, so the marginal ones — trust–PD
+  +0.396 against 0.332, dictator–PD +0.339 against 0.263 — are the first to
+  distrust. Five of the six dollar–dollar pairs are not in that class — they clear
+  their bars by 0.16 to 0.49. The sixth, ultimatum–apology, clears by 0.081, which
+  is no better than dictator–PD's 0.076 and should be read the same way.
+* **No AUC here carries an interval.** Every AUC is a point estimate from one
+  split at one seed. The nulls price the *cosines*; nothing prices an AUC, and
+  several rest on a pole of 18 (PD), 29 (ultimatum) or 50 (overfishing) rows,
+  where the sampling error is large. The independent-seed split-half in §5 is the
+  only evidence offered about how much an AUC moves with the draw, and it moves a
+  lot (layer-20 pooled 0.908 against 0.926 at the other seed).
 * **Not that the focal-point reading is wrong.** §8d is unresolved and is the
   cheapest thing to test next: build a contrast whose altruistic answer is not the
   halfway focal point and see whether the layer-0 signature follows the focal point
@@ -875,7 +930,7 @@ committed is the two logs, which record the failure and the regeneration.
 | `pooled_digit_share.json` | the §3 scalar table: digit-span share, both control bands, the per-digit cosines and the `'0'`-only share |
 | `dictator_vector.json` | the Dictator-only vector rebuilt from the re-extracted activations, against the committed one |
 | `activation_equivalence.json` | §0: the re-extraction against the archived activations, row by row, all seven corpora |
-| `rebuild_deltas.json` | §12: every committed vector and analysis file against its rebuild, leaf by leaf |
+| `rebuild_deltas.json` | §12: this revision against the previous one — every vector on either side, and the seven analysis JSONs, leaf by leaf |
 | `verification.json`, `verification_relaxed.json` | the independent recomputation, one file per pole policy — see §11 |
 
 ### `provenance/`
@@ -899,7 +954,7 @@ stages it fed.
 
 | path | what it is |
 |---|---|
-| `run_extraction.sh` | drives `audit/extract.py` over the whole corpus, one game at a time, resumable |
+| `run_extraction.sh` | drives `lab/extract.py` over the whole corpus, one game at a time, resumable |
 | `run_analysis.sh` | everything downstream of the activations, in order, CPU only |
 | `extraction/crossgame_grid.py`, `poles.py` | the grid and pole **definitions** — declarations, not computation |
 | `extraction/gen_crossgame.py` + `run_all.sh`, `main_run.sh`, `resume_run.sh`, `finish.sh`, `finish_pd.sh` | the generation stage as it was launched; not re-run by this revision |
@@ -912,12 +967,18 @@ stages it fed.
 | `compare_activations.py`, `compare_published.py` | §0 and §12, the two diffs |
 
 The directory is named `extraction/` for historical reasons and no longer contains
-an extractor: the teacher-forced capture is `audit/extract.py`, which is where the
-repository keeps library code with tests.
+an extractor: the teacher-forced capture is `lab/extract.py`, a top-level package
+that holds this project's own experimental pipeline (`audit/` is the clean-room
+reimplementation of the upstream paper, and `lab/` borrows its prompt rendering
+and game declarations rather than the other way round).
 
 ## 11. How to check these numbers
 
-Two independent things are true, and they are not the same claim.
+Two independent things are true, and they are not the same claim. **Both of them
+start at the activations, which are not committed** — 5.3 GB for the six games,
+2.1 GB for the Dictator grid. So "checkable from what is here" means checkable
+given a GPU, the model weights and a re-extraction (stage 3 of §12); it is the one
+step that cannot be replayed from the repository alone.
 
 **One: every published number is produced by the code in this directory.**
 `scripts/run_extraction.sh` then `scripts/run_analysis.sh` regenerate every vector
@@ -929,13 +990,25 @@ with the analysis.** `scripts/verify_committed.py` reads the activation shards
 directly, imports only `crossgame_grid` and `poles` (the grid and pole
 *definitions*, not the computation), does its own linear algebra, and rebuilds:
 
+The two vector sections are a **gate**, not a report: if any committed vector came
+back at a worst-layer cosine below `--min-cosine` (default 1 − 1e-9) or at a
+layer-20 norm further than `--max-norm-drift` (default 1e-6) from the committed
+one, the script writes its report and exits non-zero. The cosine alone would not
+be enough — it is scale-invariant, so a vector twice as long still reads 1.000000.
+The two tolerances are different sizes because the committed vectors are stored
+**float32**: that rounding leaves the cosine at 1 − 1e-15 but moves the norm by up
+to ~1e-8, so the norm tolerance has to clear the storage floor. At 1e-6 it still
+fails on a scale error of one part in 100,000. Every other row below is a
+recomputation with no committed artifact to disagree with, and is reported rather
+than gated.
+
 | check | result |
 |---|---|
-| the six per-game cell-balanced vectors, against the committed `.pt` files | cosine **1.000000** at every layer, all six |
-| the nine pooled vectors, against the committed `.pt` files | cosine **1.000000** at every layer, all nine, both policies |
+| the six per-game cell-balanced vectors, against the committed `.pt` files | **gated, passes**: worst-layer cosine 1 − 1.1e-15, layer-20 norms within 3.1e-9, all six, both policies |
+| the nine pooled vectors, against the committed `.pt` files | **gated, passes**: worst-layer cosine 1 − 1.8e-15, layer-20 norms within 4.1e-9, all nine, both policies |
 | the 6x6 agreement matrix at layers 20 and 0 | matches to 4 decimal places, all 15 pairs |
 | leave-one-game-out AUC, all nine weightings | matches L0, L20, best and best-layer for all six games |
-| `cos(pool, Dictator-only)` and `cos(pool, pool)` at layers 0 and 20 | matches all nine schemes |
+| `cos(pool, Dictator-only)` at layers 0 and 20, and `cos(pool, cell-balanced pool)` at layer 20 | matches all nine schemes |
 | the leave-one-game-out cosine against the held-out game's own vector | matches all nine schemes, including `cos(overfishing, PD) = +0.066` |
 | the layer-0 digit-span share, the signed alignment, the per-digit decomposition, the `'0'`-only share and both control bands | matches for all 17 vectors, to 4 decimal places |
 | the layer-0 token decode | same tokens, same order, same values |
@@ -981,7 +1054,7 @@ To check things by hand from what is committed:
 |---|---|---|---|
 | 1. the grid | the 180 prompt cells, each fingerprint checked against its own text | `scripts/extraction/crossgame_grid.py` | nothing |
 | 2. generation | 4560 generations, `neutral` preset, seed 0, batch 32. Output is `extraction/*.csv`. **Not re-run by this revision.** | `scripts/extraction/gen_crossgame.py`, driven by the four wrappers | GPU + model weights |
-| 3. activations | teacher-forced forward pass over prompt+response, batch 1, no padding, three poolings x 29 layers. **5.3 GB for the six games, 2.1 GB for the Dictator grid, not committed.** | `audit/extract.py`, driven by `scripts/run_extraction.sh` | GPU + model weights |
+| 3. activations | teacher-forced forward pass over prompt+response, batch 1, no padding, three poolings x 29 layers. **5.3 GB for the six games, 2.1 GB for the Dictator grid, not committed.** | `lab/extract.py`, driven by `scripts/run_extraction.sh` | GPU + model weights |
 | 4. everything CPU-side | per-game landing, the six-game battery, the nine weightings, both token decodes, the digit share | `scripts/run_analysis.sh` | the activations |
 | 5. the two diffs | the re-extraction against the archived activations; the rebuild against what was published | `scripts/compare_activations.py`, `scripts/compare_published.py` | the activations |
 | 6. the verification | recomputes §1–§8 from the activations without either stage's analysis code | `scripts/verify_committed.py` | the activations, and the model weights for §3 |
@@ -1018,12 +1091,19 @@ freely.
 the previous one, produced by `scripts/compare_published.py`. **No published
 statistic moved.**
 
+The comparator itself was corrected in this revision, and the table below is its
+output, not the older one's: it used to abandon a subtree whose two lists differed
+in length, which meant it compared **nothing** in the token files while still
+reporting them as unmoved, and it walked only the old tree, which hid every vector
+the rebuild added.
+
 | | |
 |---|---|
 | committed vectors rebuilt | **22 of 22 to bit-identical tensors**; worst per-layer cosine 0.9999999999999986. (The `.pt` files differ as bytes — `torch.save` writes a zip with timestamps — but every element of every tensor is equal.) |
+| the other 8 committed vectors | the four new schemes, ×2 policies. The previous revision has no counterpart to diff them against, so this table cannot cover them and does not claim to: they are gated in §11 instead, and `n_missing: 9` in the report names them (the ninth is the Dictator-only vector, which moved directory). |
 | `crossgame_analysis.json` (§1–§4, §7, §8) | 8940 numeric leaves, **all 8940 identical** |
 | `pooled_build.json` (§8a census, effective n, weights) | no numeric movement |
-| `crossgame_layer0_tokens.json`, `pooled_layer0_tokens.json` (§3) | no numeric movement; every shared token and cosine identical |
+| `crossgame_layer0_tokens.json`, `pooled_layer0_tokens.json` (§3) | 96 and 240 numeric leaves, **all identical**; every shared token and cosine equal |
 | `pooled_reliability.json` (§5) | largest delta 3.3e-16 — float64 noise |
 | `pooled_analysis.json`, `pooled_addendum.json` (§5, §6) | largest delta **7.6e-07**, and every moved leaf is a label-null distribution summary |
 
@@ -1037,12 +1117,26 @@ The 215 structural differences are all **additions**: the four weightings the
 previous revision could not commit (`family_balanced_raw`/`_unit`,
 `non_dollar_raw`/`_unit`) and everything measured on them, the per-digit
 decomposition and the `'0'`-only share, the cross-pipeline check in
-`pooled_build.json`, two more decoded vectors, and the extra provenance fields
-`audit/extract.py` writes into each `meta.json`. One key is renamed: the
+`pooled_build.json`, two more decoded vectors, and the extra provenance fields the
+shared extractor writes into each `meta.json`. One key is renamed: the
 Dictator-only vector is decoded under
 `decision_dictator_only_response_avg_diff_cellbalanced.pt` rather than
 `decision_response_avg_diff_cellbalanced.pt`; its tokens and cosines are
 unchanged.
+
+**Three committed artifacts still name the extractor `audit.extract`.** That is the
+module path it had when they were produced: the `activation_meta` embedded in
+`analysis/crossgame_analysis.json`, `provenance/manifest.json`, and the provenance
+entries `analysis/rebuild_deltas.json` records for them. All three are records of
+runs and are not restated. The module is now `lab/extract.py`, and the move is
+part of this revision; what it computes did not move with it, and that is measured
+rather than asserted — the whole corpus was re-extracted through `lab.extract`,
+which is the run `analysis/activation_equivalence.json` above reports:
+1,960,648,704 of 1,960,648,704 elements exactly equal to the archive. From that
+same corpus `scripts/verify_committed.py` reproduces all 15 committed vectors
+under both pole policies. A `meta.json` written by the current code differs from
+the committed ones in two fields and no number: `extractor` reads `lab.extract`,
+and `rows_csv_sha256` is present.
 
 ### What still does not run from where it sits
 
@@ -1053,7 +1147,7 @@ They are the record of what was actually launched — the sample counts, the bat
 size, the seed, the device, the family order and the retry policy — which is why
 they are here, and `main_run.sh` carries the reasoning for the per-game sample
 counts in its own header. They also invoke an `extract_crossgame.py` that no longer
-exists: that step is now `audit/extract.py`, driven by `run_extraction.sh`, and
+exists: that step is now `lab/extract.py`, driven by `run_extraction.sh`, and
 every activation behind every number in this file came off it.
 
 Everything else in `scripts/` runs from where it sits, with no `PYTHONPATH` and no
@@ -1108,4 +1202,5 @@ onward is CPU-only linear algebra over the activations, plus reading the embeddi
 matrix off the safetensors shard for the §3 decode.
 
 Nothing under `persona_vectors/` or `results/dictator-decision-vector/` was
-modified by this work. `audit/` gained `extract.py` and its tests.
+modified by this work. A new top-level package, `lab/`, holds `extract.py` and its
+tests.

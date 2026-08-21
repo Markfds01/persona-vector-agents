@@ -9,37 +9,49 @@
       "usable_cells": 30,
       "cos_layer20": 1.0000000000000002,
       "min_cos_over_layers": 0.999999999999999,
-      "norm_layer20": 7.50471337301571
+      "norm_layer20": 7.50471337301571,
+      "norm_layer20_committed": 7.504713363958373,
+      "norm_ratio_layer20": 1.0000000012068864
     },
     "trust": {
       "usable_cells": 20,
       "cos_layer20": 0.9999999999999997,
       "min_cos_over_layers": 0.9999999999999989,
-      "norm_layer20": 5.373255190772857
+      "norm_layer20": 5.373255190772857,
+      "norm_layer20_committed": 5.373255186663716,
+      "norm_ratio_layer20": 1.0000000007647396
     },
     "ultimatum": {
       "usable_cells": 10,
       "cos_layer20": 0.9999999999999997,
       "min_cos_over_layers": 0.9999999999999991,
-      "norm_layer20": 5.366469371540662
+      "norm_layer20": 5.366469371540662,
+      "norm_layer20_committed": 5.366469373975343,
+      "norm_ratio_layer20": 0.999999999546316
     },
     "apology": {
       "usable_cells": 25,
       "cos_layer20": 0.9999999999999996,
       "min_cos_over_layers": 0.999999999999999,
-      "norm_layer20": 8.002891979821516
+      "norm_layer20": 8.002891979821516,
+      "norm_layer20_committed": 8.002891977887112,
+      "norm_ratio_layer20": 1.000000000241713
     },
     "overfishing": {
       "usable_cells": 17,
       "cos_layer20": 0.9999999999999998,
       "min_cos_over_layers": 0.9999999999999993,
-      "norm_layer20": 2.2737787939402674
+      "norm_layer20": 2.2737787939402674,
+      "norm_layer20_committed": 2.273778797536846,
+      "norm_ratio_layer20": 0.9999999984182373
     },
     "prisoners_dilemma": {
       "usable_cells": 9,
       "cos_layer20": 0.9999999999999996,
       "min_cos_over_layers": 0.999999999999999,
-      "norm_layer20": 8.466909389557397
+      "norm_layer20": 8.466909389557397,
+      "norm_layer20_committed": 8.466909381721154,
+      "norm_ratio_layer20": 1.000000000925514
     }
   },
   "B_agreement": {
@@ -148,47 +160,65 @@
     "cell_balanced": {
       "cos_layer20": 0.9999999999999989,
       "min_cos_over_layers": 0.9999999999999989,
-      "norm_layer20": 5.066440388785507
+      "norm_layer20": 5.066440388785507,
+      "norm_layer20_committed": 5.066440398631033,
+      "norm_ratio_layer20": 0.9999999980567172
     },
     "game_equal_raw": {
       "cos_layer20": 1.0000000000000002,
       "min_cos_over_layers": 0.9999999999999988,
-      "norm_layer20": 4.492976002700415
+      "norm_layer20": 4.492976002700415,
+      "norm_layer20_committed": 4.492976003392566,
+      "norm_ratio_layer20": 0.9999999998459481
     },
     "game_equal_unit": {
       "cos_layer20": 0.9999999999999994,
       "min_cos_over_layers": 0.9999999999999989,
-      "norm_layer20": 0.6900225929326327
+      "norm_layer20": 0.6900225929326327,
+      "norm_layer20_committed": 0.6900225911101427,
+      "norm_ratio_layer20": 1.0000000026412033
     },
     "game_precision_raw": {
       "cos_layer20": 0.9999999999999991,
       "min_cos_over_layers": 0.999999999999999,
-      "norm_layer20": 5.628407656628802
+      "norm_layer20": 5.628407656628802,
+      "norm_layer20_committed": 5.628407650175633,
+      "norm_ratio_layer20": 1.0000000011465355
     },
     "game_precision_unit": {
       "cos_layer20": 0.9999999999999998,
       "min_cos_over_layers": 0.999999999999999,
-      "norm_layer20": 0.8016451305480073
+      "norm_layer20": 0.8016451305480073,
+      "norm_layer20_committed": 0.8016451315413261,
+      "norm_ratio_layer20": 0.9999999987608996
     },
     "family_balanced_raw": {
       "cos_layer20": 1.0000000000000002,
       "min_cos_over_layers": 0.9999999999999992,
-      "norm_layer20": 4.039350139860891
+      "norm_layer20": 4.039350139860891,
+      "norm_layer20_committed": 4.039350145736908,
+      "norm_ratio_layer20": 0.9999999985453063
     },
     "family_balanced_unit": {
       "cos_layer20": 0.9999999999999992,
       "min_cos_over_layers": 0.9999999999999989,
-      "norm_layer20": 0.6454869981199084
+      "norm_layer20": 0.6454869981199084,
+      "norm_layer20_committed": 0.6454869955170677,
+      "norm_ratio_layer20": 1.0000000040323673
     },
     "non_dollar_raw": {
       "cos_layer20": 0.9999999999999997,
       "min_cos_over_layers": 0.9999999999999988,
-      "norm_layer20": 4.455534928817718
+      "norm_layer20": 4.455534928817718,
+      "norm_layer20_committed": 4.455534930754006,
+      "norm_ratio_layer20": 0.9999999995654195
     },
     "non_dollar_unit": {
       "cos_layer20": 1.0,
       "min_cos_over_layers": 0.999999999999999,
-      "norm_layer20": 0.7301333506596281
+      "norm_layer20": 0.7301333506596281,
+      "norm_layer20_committed": 0.7301333495349387,
+      "norm_ratio_layer20": 1.0000000015403891
     }
   },
   "C_logo_cell_balanced": {
@@ -4140,5 +4170,14 @@
         ]
       }
     }
+  },
+  "gate": {
+    "min_cosine": 0.999999999,
+    "max_norm_drift": 1e-06,
+    "n_vectors_checked": 15,
+    "worst_min_cos_over_layers": 0.9999999999999988,
+    "worst_norm_drift_layer20": 4.032367328932196e-09,
+    "failures": [],
+    "passed": true
   }
 }

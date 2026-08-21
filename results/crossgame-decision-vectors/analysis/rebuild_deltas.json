@@ -207,10 +207,12 @@
       "new": "/home/marco/dockmaster/data/pr-crossgame/work2/crossgame/analysis.json",
       "n_numeric_leaves": 8940,
       "n_numeric_leaves_identical": 8940,
+      "n_numeric_leaves_that_moved": 0,
       "max_abs_delta": null,
       "max_abs_delta_path": null,
       "largest_moves": [],
-      "counts_that_moved": [],
+      "n_integer_valued_moves": 0,
+      "integer_valued_moves": [],
       "provenance_differences": [
         {
           "path": "activation_meta.apology.extractor",
@@ -477,12 +479,14 @@
     "analysis/crossgame_layer0_tokens.json": {
       "old": "/home/marco/dockmaster/data/pr-crossgame/round1/results/crossgame-decision-vectors/analysis/crossgame_layer0_tokens.json",
       "new": "/home/marco/dockmaster/data/pr-crossgame/work2/crossgame/crossgame_layer0_tokens.json",
-      "n_numeric_leaves": 0,
-      "n_numeric_leaves_identical": 0,
+      "n_numeric_leaves": 96,
+      "n_numeric_leaves_identical": 96,
+      "n_numeric_leaves_that_moved": 0,
       "max_abs_delta": null,
       "max_abs_delta_path": null,
       "largest_moves": [],
-      "counts_that_moved": [],
+      "n_integer_valued_moves": 0,
+      "integer_valued_moves": [],
       "provenance_differences": [],
       "structural_differences": [
         {
@@ -531,10 +535,12 @@
       "new": "/home/marco/dockmaster/data/pr-crossgame/work2/pooled/build.json",
       "n_numeric_leaves": 162,
       "n_numeric_leaves_identical": 162,
+      "n_numeric_leaves_that_moved": 0,
       "max_abs_delta": null,
       "max_abs_delta_path": null,
       "largest_moves": [],
-      "counts_that_moved": [],
+      "n_integer_valued_moves": 0,
+      "integer_valued_moves": [],
       "provenance_differences": [],
       "structural_differences": [
         {
@@ -553,6 +559,7 @@
       "new": "/home/marco/dockmaster/data/pr-crossgame/work2/pooled/analysis.json",
       "n_numeric_leaves": 5258,
       "n_numeric_leaves_identical": 3467,
+      "n_numeric_leaves_that_moved": 1791,
       "max_abs_delta": 7.640687752219488e-07,
       "max_abs_delta_path": "policies.strict.null_game_wide.0.game_equal_unit.game:overfishing.min",
       "largest_moves": [
@@ -732,7 +739,8 @@
           "rel_delta": 2.9564645556585705e-06
         }
       ],
-      "counts_that_moved": [],
+      "n_integer_valued_moves": 0,
+      "integer_valued_moves": [],
       "provenance_differences": [
         {
           "path": "dictator_vector",
@@ -1699,6 +1707,7 @@
       "new": "/home/marco/dockmaster/data/pr-crossgame/work2/pooled/addendum.json",
       "n_numeric_leaves": 1069,
       "n_numeric_leaves_identical": 331,
+      "n_numeric_leaves_that_moved": 738,
       "max_abs_delta": 1.6548612163935772e-07,
       "max_abs_delta_path": "policies.relaxed.logo_null_within_cell.20.cell_balanced.overfishing.max",
       "largest_moves": [
@@ -1878,7 +1887,8 @@
           "rel_delta": 2.0390284524663558e-07
         }
       ],
-      "counts_that_moved": [],
+      "n_integer_valued_moves": 0,
+      "integer_valued_moves": [],
       "provenance_differences": [],
       "structural_differences": [
         {
@@ -1989,6 +1999,7 @@
       "new": "/home/marco/dockmaster/data/pr-crossgame/work2/pooled/reliability.json",
       "n_numeric_leaves": 289,
       "n_numeric_leaves_identical": 246,
+      "n_numeric_leaves_that_moved": 43,
       "max_abs_delta": 3.3306690738754696e-16,
       "max_abs_delta_path": "policies.strict.logo_corrected.game_equal_unit.overfishing.layer20.reliability_pool",
       "largest_moves": [
@@ -2168,7 +2179,8 @@
           "rel_delta": 1.6433689001469615e-16
         }
       ],
-      "counts_that_moved": [],
+      "n_integer_valued_moves": 0,
+      "integer_valued_moves": [],
       "provenance_differences": [],
       "structural_differences": [
         {
@@ -2195,10 +2207,12 @@
       "new": "/home/marco/dockmaster/data/pr-crossgame/work2/pooled/layer0_tokens.json",
       "n_numeric_leaves": 240,
       "n_numeric_leaves_identical": 240,
+      "n_numeric_leaves_that_moved": 0,
       "max_abs_delta": null,
       "max_abs_delta_path": null,
       "largest_moves": [],
-      "counts_that_moved": [],
+      "n_integer_valued_moves": 0,
+      "integer_valued_moves": [],
       "provenance_differences": [],
       "structural_differences": [
         {
@@ -2305,15 +2319,54 @@
       "n_structural_differences": 27
     }
   },
-  "missing": [],
+  "missing": [
+    {
+      "path": "vectors/decision_dictator_only_response_avg_diff_cellbalanced.pt",
+      "only_in": "new"
+    },
+    {
+      "path": "vectors/decision_pooled_family_balanced_raw_response_avg_diff_relaxed.pt",
+      "only_in": "new"
+    },
+    {
+      "path": "vectors/decision_pooled_family_balanced_raw_response_avg_diff_strict.pt",
+      "only_in": "new"
+    },
+    {
+      "path": "vectors/decision_pooled_family_balanced_unit_response_avg_diff_relaxed.pt",
+      "only_in": "new"
+    },
+    {
+      "path": "vectors/decision_pooled_family_balanced_unit_response_avg_diff_strict.pt",
+      "only_in": "new"
+    },
+    {
+      "path": "vectors/decision_pooled_non_dollar_raw_response_avg_diff_relaxed.pt",
+      "only_in": "new"
+    },
+    {
+      "path": "vectors/decision_pooled_non_dollar_raw_response_avg_diff_strict.pt",
+      "only_in": "new"
+    },
+    {
+      "path": "vectors/decision_pooled_non_dollar_unit_response_avg_diff_relaxed.pt",
+      "only_in": "new"
+    },
+    {
+      "path": "vectors/decision_pooled_non_dollar_unit_response_avg_diff_strict.pt",
+      "only_in": "new"
+    }
+  ],
   "summary": {
     "n_vectors_compared": 22,
     "n_vectors_bit_identical": 22,
     "n_vectors_uncomparable": 0,
     "worst_vector_cosine": 0.9999999999999986,
     "n_json_files_compared": 7,
+    "json_files_with_no_numeric_leaves": [],
     "n_structural_differences": 215,
-    "n_missing": 0,
+    "n_numeric_leaves_that_moved": 2572,
+    "n_missing": 9,
     "largest_numeric_delta": 7.640687752219488e-07,
     "largest_numeric_delta_path": "analysis/pooled_analysis.json :: policies.strict.null_game_wide.0.game_equal_unit.game:overfishing.min"
   }
