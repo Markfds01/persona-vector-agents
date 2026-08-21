@@ -87,6 +87,12 @@
           "equal_weight": 0.16666666666666666
         }
       },
+      "pipeline_check_cos_vs_six_game_pool": {
+        "layer0": 1.0000000000000007,
+        "layer20": 0.9999999999999989,
+        "min_over_layers": 0.9999999999999989,
+        "against": "/home/marco/dockmaster/data/pr-crossgame/work2/crossgame/decision_pooled_response_avg_diff_cellbalanced_strict.pt"
+      },
       "rebuild_check_cos_vs_archived_pool": {
         "layer0": 1.0000000000000007,
         "layer20": 0.9999999999999989,
@@ -187,6 +193,12 @@
           "cell_weight": 0.06293706293706294,
           "equal_weight": 0.16666666666666666
         }
+      },
+      "pipeline_check_cos_vs_six_game_pool": {
+        "layer0": 0.9999999999999999,
+        "layer20": 1.0,
+        "min_over_layers": 0.9999999999999986,
+        "against": "/home/marco/dockmaster/data/pr-crossgame/work2/crossgame/decision_pooled_response_avg_diff_cellbalanced_relaxed.pt"
       },
       "rebuild_check_cos_vs_archived_pool": {
         "layer0": 0.9999999999999999,

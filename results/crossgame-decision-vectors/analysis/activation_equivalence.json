@@ -1,0 +1,263 @@
+{
+  "note": "each corpus re-extracted with audit/extract.py from its committed rows CSV, compared row by row against the activations the superseded per-game extractors produced",
+  "corpora": {
+    "apology": {
+      "dir_a": "/home/marco/dockmaster/data/pr-crossgame/acts_v2/apology",
+      "dir_b": "/home/marco/dockmaster/data/crossgame-vector/acts/apology",
+      "rows_a": 714,
+      "rows_b": 714,
+      "rows_compared": 714,
+      "rows_only_in_a": [],
+      "rows_only_in_b": [],
+      "token_span_disagreements": [],
+      "poolings": {
+        "prompt_avg": {
+          "elements": 74210304,
+          "exactly_equal": 74210304,
+          "exact_fraction": 1.0,
+          "max_abs_diff": 0.0,
+          "max_rel_diff": 0.0,
+          "min_cosine_per_row_per_layer": 0.9999999999999996
+        },
+        "prompt_last": {
+          "elements": 74210304,
+          "exactly_equal": 74210304,
+          "exact_fraction": 1.0,
+          "max_abs_diff": 0.0,
+          "max_rel_diff": 0.0,
+          "min_cosine_per_row_per_layer": 0.9999999999999998
+        },
+        "response_avg": {
+          "elements": 74210304,
+          "exactly_equal": 74210304,
+          "exact_fraction": 1.0,
+          "max_abs_diff": 0.0,
+          "max_rel_diff": 0.0,
+          "min_cosine_per_row_per_layer": 0.9999999999999996
+        }
+      }
+    },
+    "dictator": {
+      "dir_a": "/home/marco/dockmaster/data/pr-crossgame/acts_v2/dictator",
+      "dir_b": "/home/marco/dockmaster/data/crossgame-vector/acts/dictator",
+      "rows_a": 712,
+      "rows_b": 712,
+      "rows_compared": 712,
+      "rows_only_in_a": [],
+      "rows_only_in_b": [],
+      "token_span_disagreements": [],
+      "poolings": {
+        "prompt_avg": {
+          "elements": 74002432,
+          "exactly_equal": 74002432,
+          "exact_fraction": 1.0,
+          "max_abs_diff": 0.0,
+          "max_rel_diff": 0.0,
+          "min_cosine_per_row_per_layer": 0.9999999999999996
+        },
+        "prompt_last": {
+          "elements": 74002432,
+          "exactly_equal": 74002432,
+          "exact_fraction": 1.0,
+          "max_abs_diff": 0.0,
+          "max_rel_diff": 0.0,
+          "min_cosine_per_row_per_layer": 0.9999999999999998
+        },
+        "response_avg": {
+          "elements": 74002432,
+          "exactly_equal": 74002432,
+          "exact_fraction": 1.0,
+          "max_abs_diff": 0.0,
+          "max_rel_diff": 0.0,
+          "min_cosine_per_row_per_layer": 0.9999999999999996
+        }
+      }
+    },
+    "dictator_only": {
+      "dir_a": "/home/marco/dockmaster/data/pr-crossgame/acts_v2/dictator_only",
+      "dir_b": "/home/marco/dockmaster/data/decision-vector/acts_seed0",
+      "rows_a": 1785,
+      "rows_b": 1785,
+      "rows_compared": 1785,
+      "rows_only_in_a": [],
+      "rows_only_in_b": [],
+      "token_span_disagreements": [],
+      "poolings": {
+        "prompt_avg": {
+          "elements": 185525760,
+          "exactly_equal": 185525760,
+          "exact_fraction": 1.0,
+          "max_abs_diff": 0.0,
+          "max_rel_diff": 0.0,
+          "min_cosine_per_row_per_layer": 0.9999999999999996
+        },
+        "prompt_last": {
+          "elements": 185525760,
+          "exactly_equal": 185525760,
+          "exact_fraction": 1.0,
+          "max_abs_diff": 0.0,
+          "max_rel_diff": 0.0,
+          "min_cosine_per_row_per_layer": 0.9999999999999998
+        },
+        "response_avg": {
+          "elements": 185525760,
+          "exactly_equal": 185525760,
+          "exact_fraction": 1.0,
+          "max_abs_diff": 0.0,
+          "max_rel_diff": 0.0,
+          "min_cosine_per_row_per_layer": 0.9999999999999996
+        }
+      }
+    },
+    "overfishing": {
+      "dir_a": "/home/marco/dockmaster/data/pr-crossgame/acts_v2/overfishing",
+      "dir_b": "/home/marco/dockmaster/data/crossgame-vector/acts/overfishing",
+      "rows_a": 1425,
+      "rows_b": 1425,
+      "rows_compared": 1425,
+      "rows_only_in_a": [],
+      "rows_only_in_b": [],
+      "token_span_disagreements": [],
+      "poolings": {
+        "prompt_avg": {
+          "elements": 148108800,
+          "exactly_equal": 148108800,
+          "exact_fraction": 1.0,
+          "max_abs_diff": 0.0,
+          "max_rel_diff": 0.0,
+          "min_cosine_per_row_per_layer": 0.9999999999999996
+        },
+        "prompt_last": {
+          "elements": 148108800,
+          "exactly_equal": 148108800,
+          "exact_fraction": 1.0,
+          "max_abs_diff": 0.0,
+          "max_rel_diff": 0.0,
+          "min_cosine_per_row_per_layer": 0.9999999999999998
+        },
+        "response_avg": {
+          "elements": 148108800,
+          "exactly_equal": 148108800,
+          "exact_fraction": 1.0,
+          "max_abs_diff": 0.0,
+          "max_rel_diff": 0.0,
+          "min_cosine_per_row_per_layer": 0.9999999999999996
+        }
+      }
+    },
+    "prisoners_dilemma": {
+      "dir_a": "/home/marco/dockmaster/data/pr-crossgame/acts_v2/prisoners_dilemma",
+      "dir_b": "/home/marco/dockmaster/data/crossgame-vector/acts/prisoners_dilemma",
+      "rows_a": 240,
+      "rows_b": 240,
+      "rows_compared": 240,
+      "rows_only_in_a": [],
+      "rows_only_in_b": [],
+      "token_span_disagreements": [],
+      "poolings": {
+        "prompt_avg": {
+          "elements": 24944640,
+          "exactly_equal": 24944640,
+          "exact_fraction": 1.0,
+          "max_abs_diff": 0.0,
+          "max_rel_diff": 0.0,
+          "min_cosine_per_row_per_layer": 0.9999999999999997
+        },
+        "prompt_last": {
+          "elements": 24944640,
+          "exactly_equal": 24944640,
+          "exact_fraction": 1.0,
+          "max_abs_diff": 0.0,
+          "max_rel_diff": 0.0,
+          "min_cosine_per_row_per_layer": 0.9999999999999998
+        },
+        "response_avg": {
+          "elements": 24944640,
+          "exactly_equal": 24944640,
+          "exact_fraction": 1.0,
+          "max_abs_diff": 0.0,
+          "max_rel_diff": 0.0,
+          "min_cosine_per_row_per_layer": 0.9999999999999996
+        }
+      }
+    },
+    "trust": {
+      "dir_a": "/home/marco/dockmaster/data/pr-crossgame/acts_v2/trust",
+      "dir_b": "/home/marco/dockmaster/data/crossgame-vector/acts/trust",
+      "rows_a": 699,
+      "rows_b": 699,
+      "rows_compared": 699,
+      "rows_only_in_a": [],
+      "rows_only_in_b": [],
+      "token_span_disagreements": [],
+      "poolings": {
+        "prompt_avg": {
+          "elements": 72651264,
+          "exactly_equal": 72651264,
+          "exact_fraction": 1.0,
+          "max_abs_diff": 0.0,
+          "max_rel_diff": 0.0,
+          "min_cosine_per_row_per_layer": 0.9999999999999996
+        },
+        "prompt_last": {
+          "elements": 72651264,
+          "exactly_equal": 72651264,
+          "exact_fraction": 1.0,
+          "max_abs_diff": 0.0,
+          "max_rel_diff": 0.0,
+          "min_cosine_per_row_per_layer": 0.9999999999999998
+        },
+        "response_avg": {
+          "elements": 72651264,
+          "exactly_equal": 72651264,
+          "exact_fraction": 1.0,
+          "max_abs_diff": 0.0,
+          "max_rel_diff": 0.0,
+          "min_cosine_per_row_per_layer": 0.9999999999999996
+        }
+      }
+    },
+    "ultimatum": {
+      "dir_a": "/home/marco/dockmaster/data/pr-crossgame/acts_v2/ultimatum",
+      "dir_b": "/home/marco/dockmaster/data/crossgame-vector/acts/ultimatum",
+      "rows_a": 713,
+      "rows_b": 713,
+      "rows_compared": 713,
+      "rows_only_in_a": [],
+      "rows_only_in_b": [],
+      "token_span_disagreements": [],
+      "poolings": {
+        "prompt_avg": {
+          "elements": 74106368,
+          "exactly_equal": 74106368,
+          "exact_fraction": 1.0,
+          "max_abs_diff": 0.0,
+          "max_rel_diff": 0.0,
+          "min_cosine_per_row_per_layer": 0.9999999999999994
+        },
+        "prompt_last": {
+          "elements": 74106368,
+          "exactly_equal": 74106368,
+          "exact_fraction": 1.0,
+          "max_abs_diff": 0.0,
+          "max_rel_diff": 0.0,
+          "min_cosine_per_row_per_layer": 0.9999999999999998
+        },
+        "response_avg": {
+          "elements": 74106368,
+          "exactly_equal": 74106368,
+          "exact_fraction": 1.0,
+          "max_abs_diff": 0.0,
+          "max_rel_diff": 0.0,
+          "min_cosine_per_row_per_layer": 0.9999999999999996
+        }
+      }
+    }
+  },
+  "totals": {
+    "rows": 6288,
+    "elements": 1960648704,
+    "exactly_equal": 1960648704,
+    "max_abs_diff": 0.0
+  }
+}

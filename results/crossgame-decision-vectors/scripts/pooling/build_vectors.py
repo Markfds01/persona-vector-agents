@@ -1,11 +1,19 @@
 """Build the game-balanced pooled vectors under every weighting and both policies.
 
-Also rebuilds the predecessor's cell-balanced pool from the same code path and
-checks it against the archived `.pt`, so any difference reported later between
-the two schemes is the weighting and not a difference in the pipeline.
+Two different checks are reported on the `cell_balanced` rebuild, and they answer
+different questions:
+
+* against the SIX-GAME stage's own pooled vector, which `analyze_crossgame.py`
+  built from the same activations by a different code path. This is the pipeline
+  check: it is what licenses "any difference between the schemes is the weighting
+  and not the pipeline". A comparison against another run of THIS file could not
+  say that.
+* against what round 1 committed, which is the rebuild check: did any published
+  number move.
 """
 
 import json
+import os
 from pathlib import Path
 
 import torch
@@ -13,7 +21,12 @@ import torch
 import common
 
 VEC_DIR = common.OUT / "vectors"
-CROSSGAME = common.CROSSGAME
+#: what round 1 published; the comparison this rebuild has to explain
+COMMITTED = common.RESULTS / "vectors"
+#: the six-game stage's output directory, written before this stage runs.
+#: run_analysis.sh puts it beside this stage's; env-overridable so the coupling to
+#: that layout is stated rather than assumed.
+CROSSGAME = Path(os.environ.get("DM_CROSSGAME_OUT", common.OUT.parent / "crossgame"))
 
 
 def build(acts, labels, policy):
@@ -65,9 +78,24 @@ def main():
                        VEC_DIR / ("decision_%s_response_avg_diff_cellbalanced_%s.pt"
                                   % (f, policy)))
 
-        # the pipeline check: our cell_balanced rebuild against the archived one
+        # the PIPELINE check: this stage's cell_balanced pool against the one the
+        # six-game stage built from the same activations by another code path
+        other_path = CROSSGAME / ("decision_pooled_response_avg_diff_cellbalanced_%s.pt"
+                                  % policy)
+        if not other_path.is_file():
+            raise SystemExit("%s is missing; run the six-game stage before this one, "
+                             "or the pipeline check would be vacuous" % other_path)
+        other = torch.load(other_path, map_location="cpu")
+        pcos = common.cosines(pooled["cell_balanced"], other)
+        report["policies"][policy]["pipeline_check_cos_vs_six_game_pool"] = {
+            "layer0": pcos[0].item(), "layer20": pcos[20].item(),
+            "min_over_layers": pcos.min().item(),
+            "against": str(other_path),
+        }
+
+        # the REBUILD check: this rebuild against what round 1 committed
         archived = torch.load(
-            CROSSGAME / ("decision_pooled_response_avg_diff_cellbalanced_%s.pt" % policy),
+            COMMITTED / ("decision_pooled_cell_balanced_response_avg_diff_%s.pt" % policy),
             map_location="cpu")
         cos = common.cosines(pooled["cell_balanced"], archived)
         report["policies"][policy]["rebuild_check_cos_vs_archived_pool"] = {
@@ -76,13 +104,14 @@ def main():
         }
         for f in game_vecs:
             arch_g = torch.load(
-                CROSSGAME / ("decision_%s_response_avg_diff_cellbalanced_%s.pt"
+                COMMITTED / ("decision_%s_response_avg_diff_cellbalanced_%s.pt"
                              % (f, policy)), map_location="cpu")
             c = common.cosines(game_vecs[f], arch_g).min().item()
             report["policies"][policy].setdefault(
                 "rebuild_check_cos_vs_archived_per_game", {})[f] = c
-        print("policy %s: rebuild check min cos vs archived pool %.6f"
-              % (policy, cos.min().item()), flush=True)
+        print("policy %s: pipeline check vs six-game pool min cos %.12f; "
+              "rebuild check vs round 1 min cos %.6f"
+              % (policy, pcos.min().item(), cos.min().item()), flush=True)
 
     (common.OUT / "build.json").write_text(json.dumps(report, indent=2))
     print("wrote %s" % (common.OUT / "build.json"))

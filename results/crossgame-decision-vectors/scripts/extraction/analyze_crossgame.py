@@ -33,9 +33,13 @@ from pathlib import Path
 
 import torch
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+HERE = Path(__file__).resolve().parent
+# this directory holds the grid and pole definitions; the repo root is four up
+sys.path.insert(0, str(HERE))
+sys.path.insert(0, str(HERE.parents[3]))
 
-from scratch import crossgame_grid, poles
+import crossgame_grid  # noqa: E402
+import poles  # noqa: E402
 
 VARIANTS = ("prompt_avg", "prompt_last", "response_avg")
 
@@ -559,10 +563,11 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--manifest", required=True)
     ap.add_argument("--out", required=True, help="directory for vectors + analysis.json")
-    ap.add_argument("--dictator-vector",
-                    default="/home/marco/dockmaster/data/decision-vector/"
-                            "decision_response_avg_diff_cellbalanced.pt")
-    ap.add_argument("--their-vectors", default="persona_vectors/Qwen2.5-7B-Instruct")
+    ap.add_argument("--dictator-vector", default=str(
+        HERE.parents[3] / "results/dictator-decision-vector/vectors"
+        / "decision_response_avg_diff_cellbalanced.pt"))
+    ap.add_argument("--their-vectors", default=str(
+        HERE.parents[3] / "persona_vectors/Qwen2.5-7B-Instruct"))
     ap.add_argument("--layer", type=int, default=20)
     ap.add_argument("--shuffles", type=int, default=1000)
     ap.add_argument("--pair-shuffles", type=int, default=300)

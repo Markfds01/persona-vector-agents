@@ -1,0 +1,35 @@
+=== policy strict
+  game_equal_unit cos_vs_dictator L20=0.9008
+  game_equal_raw cos_vs_dictator L20=0.9164
+  game_precision_raw cos_vs_dictator L20=0.9609
+  game_precision_unit cos_vs_dictator L20=0.9566
+  cell_balanced cos_vs_dictator L20=0.9594
+  family_balanced_unit cos_vs_dictator L20=0.7144
+  family_balanced_raw cos_vs_dictator L20=0.7319
+  non_dollar_unit cos_vs_dictator L20=0.4119
+  non_dollar_raw cos_vs_dictator L20=0.4030
+  logo done
+  split-half done
+  null within_cell layer 0 done
+  null within_cell layer 20 done
+  null game_wide layer 0 done
+  null game_wide layer 20 done
+  checkpointed analysis.json after strict
+=== policy relaxed
+  game_equal_unit cos_vs_dictator L20=0.8762
+  game_equal_raw cos_vs_dictator L20=0.8879
+  game_precision_raw cos_vs_dictator L20=0.9087
+  game_precision_unit cos_vs_dictator L20=0.8851
+  cell_balanced cos_vs_dictator L20=0.9230
+  family_balanced_unit cos_vs_dictator L20=0.6802
+  family_balanced_raw cos_vs_dictator L20=0.7049
+  non_dollar_unit cos_vs_dictator L20=0.3853
+  non_dollar_raw cos_vs_dictator L20=0.3897
+  logo done
+  split-half done
+  null within_cell layer 0 done
+  null within_cell layer 20 done
+  null game_wide layer 0 done
+  null game_wide layer 20 done
+  checkpointed analysis.json after relaxed
+wrote /home/marco/dockmaster/data/pr-crossgame/work2/pooled/analysis.json

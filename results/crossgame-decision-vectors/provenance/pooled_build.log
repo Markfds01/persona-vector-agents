@@ -1,0 +1,9 @@
+loaded dictator: 712 rows
+loaded trust: 699 rows
+loaded ultimatum: 713 rows
+loaded apology: 714 rows
+loaded overfishing: 1425 rows
+loaded prisoners_dilemma: 240 rows
+policy strict: pipeline check vs six-game pool min cos 1.000000000000; rebuild check vs round 1 min cos 1.000000
+policy relaxed: pipeline check vs six-game pool min cos 1.000000000000; rebuild check vs round 1 min cos 1.000000
+wrote /home/marco/dockmaster/data/pr-crossgame/work2/pooled/build.json

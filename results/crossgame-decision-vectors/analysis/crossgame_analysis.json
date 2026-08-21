@@ -16,10 +16,10 @@
     "prisoners_dilemma"
   ],
   "n_captured_total": 4503,
-  "dictator_vector_path": "/home/marco/dockmaster/data/decision-vector/decision_response_avg_diff_cellbalanced.pt",
+  "dictator_vector_path": "/home/marco/dockmaster/state/worktrees/pr-crossgame/results/dictator-decision-vector/vectors/decision_response_avg_diff_cellbalanced.pt",
   "activation_meta": {
     "apology": {
-      "rows_csv": "/home/marco/dockmaster/state/worktrees/crossgame-vector/scratch/rows/apology.csv",
+      "rows_csv": "/home/marco/dockmaster/state/worktrees/pr-crossgame/results/crossgame-decision-vectors/extraction/apology.csv",
       "model_id": "Qwen/Qwen2.5-7B-Instruct",
       "model_revision": "a09a35458c702b33eeacc393d103063234e8bc28",
       "dtype": "torch.bfloat16",
@@ -33,14 +33,24 @@
       "device": "cuda:0",
       "batch_size": 1,
       "padding": "none",
+      "poolings": [
+        "prompt_avg",
+        "prompt_last",
+        "response_avg"
+      ],
+      "extractor": "audit.extract",
+      "shard_rows": 250,
+      "limit_rows": 0,
+      "n_scored_rows": 714,
+      "complete": true,
       "n_shards": 3,
       "dropped": [],
-      "n_scored_rows": 714,
       "n_captured": 714,
-      "seconds": 154.88058376312256
+      "seconds": 141.22611689567566,
+      "resumed_from_shards": 0
     },
     "dictator": {
-      "rows_csv": "/home/marco/dockmaster/state/worktrees/crossgame-vector/scratch/rows/dictator.csv",
+      "rows_csv": "/home/marco/dockmaster/state/worktrees/pr-crossgame/results/crossgame-decision-vectors/extraction/dictator.csv",
       "model_id": "Qwen/Qwen2.5-7B-Instruct",
       "model_revision": "a09a35458c702b33eeacc393d103063234e8bc28",
       "dtype": "torch.bfloat16",
@@ -54,14 +64,24 @@
       "device": "cuda:0",
       "batch_size": 1,
       "padding": "none",
+      "poolings": [
+        "prompt_avg",
+        "prompt_last",
+        "response_avg"
+      ],
+      "extractor": "audit.extract",
+      "shard_rows": 250,
+      "limit_rows": 0,
+      "n_scored_rows": 712,
+      "complete": true,
       "n_shards": 3,
       "dropped": [],
-      "n_scored_rows": 712,
       "n_captured": 712,
-      "seconds": 233.68784141540527
+      "seconds": 107.40324878692627,
+      "resumed_from_shards": 0
     },
     "overfishing": {
-      "rows_csv": "/home/marco/dockmaster/state/worktrees/crossgame-vector/scratch/rows/overfishing.csv",
+      "rows_csv": "/home/marco/dockmaster/state/worktrees/pr-crossgame/results/crossgame-decision-vectors/extraction/overfishing.csv",
       "model_id": "Qwen/Qwen2.5-7B-Instruct",
       "model_revision": "a09a35458c702b33eeacc393d103063234e8bc28",
       "dtype": "torch.bfloat16",
@@ -75,14 +95,24 @@
       "device": "cuda:0",
       "batch_size": 1,
       "padding": "none",
+      "poolings": [
+        "prompt_avg",
+        "prompt_last",
+        "response_avg"
+      ],
+      "extractor": "audit.extract",
+      "shard_rows": 250,
+      "limit_rows": 0,
+      "n_scored_rows": 1425,
+      "complete": true,
       "n_shards": 6,
       "dropped": [],
-      "n_scored_rows": 1425,
       "n_captured": 1425,
-      "seconds": 373.6330671310425
+      "seconds": 212.13966846466064,
+      "resumed_from_shards": 0
     },
     "prisoners_dilemma": {
-      "rows_csv": "/home/marco/dockmaster/state/worktrees/crossgame-vector/scratch/rows/prisoners_dilemma.csv",
+      "rows_csv": "/home/marco/dockmaster/state/worktrees/pr-crossgame/results/crossgame-decision-vectors/extraction/prisoners_dilemma.csv",
       "model_id": "Qwen/Qwen2.5-7B-Instruct",
       "model_revision": "a09a35458c702b33eeacc393d103063234e8bc28",
       "dtype": "torch.bfloat16",
@@ -96,14 +126,24 @@
       "device": "cuda:0",
       "batch_size": 1,
       "padding": "none",
+      "poolings": [
+        "prompt_avg",
+        "prompt_last",
+        "response_avg"
+      ],
+      "extractor": "audit.extract",
+      "shard_rows": 250,
+      "limit_rows": 0,
+      "n_scored_rows": 240,
+      "complete": true,
       "n_shards": 1,
       "dropped": [],
-      "n_scored_rows": 240,
       "n_captured": 240,
-      "seconds": 25.430579662322998
+      "seconds": 26.175825357437134,
+      "resumed_from_shards": 0
     },
     "trust": {
-      "rows_csv": "/home/marco/dockmaster/state/worktrees/crossgame-vector/scratch/rows/trust.csv",
+      "rows_csv": "/home/marco/dockmaster/state/worktrees/pr-crossgame/results/crossgame-decision-vectors/extraction/trust.csv",
       "model_id": "Qwen/Qwen2.5-7B-Instruct",
       "model_revision": "a09a35458c702b33eeacc393d103063234e8bc28",
       "dtype": "torch.bfloat16",
@@ -117,14 +157,24 @@
       "device": "cuda:0",
       "batch_size": 1,
       "padding": "none",
+      "poolings": [
+        "prompt_avg",
+        "prompt_last",
+        "response_avg"
+      ],
+      "extractor": "audit.extract",
+      "shard_rows": 250,
+      "limit_rows": 0,
+      "n_scored_rows": 699,
+      "complete": true,
       "n_shards": 3,
       "dropped": [],
-      "n_scored_rows": 699,
       "n_captured": 699,
-      "seconds": 179.5174081325531
+      "seconds": 140.0958230495453,
+      "resumed_from_shards": 0
     },
     "ultimatum": {
-      "rows_csv": "/home/marco/dockmaster/state/worktrees/crossgame-vector/scratch/rows/ultimatum.csv",
+      "rows_csv": "/home/marco/dockmaster/state/worktrees/pr-crossgame/results/crossgame-decision-vectors/extraction/ultimatum.csv",
       "model_id": "Qwen/Qwen2.5-7B-Instruct",
       "model_revision": "a09a35458c702b33eeacc393d103063234e8bc28",
       "dtype": "torch.bfloat16",
@@ -138,11 +188,21 @@
       "device": "cuda:0",
       "batch_size": 1,
       "padding": "none",
+      "poolings": [
+        "prompt_avg",
+        "prompt_last",
+        "response_avg"
+      ],
+      "extractor": "audit.extract",
+      "shard_rows": 250,
+      "limit_rows": 0,
+      "n_scored_rows": 713,
+      "complete": true,
       "n_shards": 3,
       "dropped": [],
-      "n_scored_rows": 713,
       "n_captured": 713,
-      "seconds": 247.66442012786865
+      "seconds": 70.22763633728027,
+      "resumed_from_shards": 0
     }
   },
   "tag_counts_all_generated_rows": {

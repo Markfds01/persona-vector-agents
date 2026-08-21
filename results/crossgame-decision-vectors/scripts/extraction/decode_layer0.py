@@ -16,12 +16,9 @@ absent, though a null result in token space is weaker than a positive one.
 
 import argparse
 import json
-import sys
 from pathlib import Path
 
 import torch
-
-sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 SNAPSHOT = ("/home/marco/.cache/huggingface/hub/models--Qwen--Qwen2.5-7B-Instruct/"
             "snapshots/a09a35458c702b33eeacc393d103063234e8bc28")

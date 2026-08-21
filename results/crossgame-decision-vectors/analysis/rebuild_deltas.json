@@ -1,0 +1,2320 @@
+{
+  "old": "/home/marco/dockmaster/data/pr-crossgame/round1/results/crossgame-decision-vectors",
+  "new": "/home/marco/dockmaster/data/pr-crossgame/work2",
+  "vectors": {
+    "decision_apology_response_avg_diff_cellbalanced_relaxed.pt": {
+      "bit_identical": true,
+      "cos_layer0": 1.0000000000000007,
+      "cos_layer20": 1.0000000000000007,
+      "min_cos_over_layers": 0.9999999999999992,
+      "max_abs_elementwise_diff": 0.0,
+      "norm_layer20_old": 7.798984014088192,
+      "norm_layer20_new": 7.798984014088192
+    },
+    "decision_apology_response_avg_diff_cellbalanced_strict.pt": {
+      "bit_identical": true,
+      "cos_layer0": 1.0000000000000004,
+      "cos_layer20": 1.0000000000000004,
+      "min_cos_over_layers": 0.9999999999999992,
+      "max_abs_elementwise_diff": 0.0,
+      "norm_layer20_old": 8.002891977887112,
+      "norm_layer20_new": 8.002891977887112
+    },
+    "decision_dictator_response_avg_diff_cellbalanced_relaxed.pt": {
+      "bit_identical": true,
+      "cos_layer0": 1.0000000000000007,
+      "cos_layer20": 1.0000000000000002,
+      "min_cos_over_layers": 0.9999999999999989,
+      "max_abs_elementwise_diff": 0.0,
+      "norm_layer20_old": 6.921648881042431,
+      "norm_layer20_new": 6.921648881042431
+    },
+    "decision_dictator_response_avg_diff_cellbalanced_strict.pt": {
+      "bit_identical": true,
+      "cos_layer0": 0.9999999999999998,
+      "cos_layer20": 1.0000000000000007,
+      "min_cos_over_layers": 0.9999999999999989,
+      "max_abs_elementwise_diff": 0.0,
+      "norm_layer20_old": 7.504713363958373,
+      "norm_layer20_new": 7.504713363958373
+    },
+    "decision_overfishing_response_avg_diff_cellbalanced_relaxed.pt": {
+      "bit_identical": true,
+      "cos_layer0": 1.0000000000000009,
+      "cos_layer20": 1.0000000000000007,
+      "min_cos_over_layers": 0.9999999999999988,
+      "max_abs_elementwise_diff": 0.0,
+      "norm_layer20_old": 2.1485688598546155,
+      "norm_layer20_new": 2.1485688598546155
+    },
+    "decision_overfishing_response_avg_diff_cellbalanced_strict.pt": {
+      "bit_identical": true,
+      "cos_layer0": 0.9999999999999992,
+      "cos_layer20": 1.0000000000000002,
+      "min_cos_over_layers": 0.9999999999999992,
+      "max_abs_elementwise_diff": 0.0,
+      "norm_layer20_old": 2.273778797536846,
+      "norm_layer20_new": 2.273778797536846
+    },
+    "decision_pooled_cell_balanced_response_avg_diff_relaxed.pt": {
+      "bit_identical": true,
+      "cos_layer0": 1.0000000000000009,
+      "cos_layer20": 1.0000000000000002,
+      "min_cos_over_layers": 0.9999999999999989,
+      "max_abs_elementwise_diff": 0.0,
+      "norm_layer20_old": 4.471305253858495,
+      "norm_layer20_new": 4.471305253858495
+    },
+    "decision_pooled_cell_balanced_response_avg_diff_strict.pt": {
+      "bit_identical": true,
+      "cos_layer0": 1.0000000000000009,
+      "cos_layer20": 0.9999999999999989,
+      "min_cos_over_layers": 0.9999999999999989,
+      "max_abs_elementwise_diff": 0.0,
+      "norm_layer20_old": 5.066440398631033,
+      "norm_layer20_new": 5.066440398631033
+    },
+    "decision_pooled_game_equal_raw_response_avg_diff_relaxed.pt": {
+      "bit_identical": true,
+      "cos_layer0": 1.0000000000000009,
+      "cos_layer20": 1.0,
+      "min_cos_over_layers": 0.9999999999999993,
+      "max_abs_elementwise_diff": 0.0,
+      "norm_layer20_old": 4.5518000258629785,
+      "norm_layer20_new": 4.5518000258629785
+    },
+    "decision_pooled_game_equal_raw_response_avg_diff_strict.pt": {
+      "bit_identical": true,
+      "cos_layer0": 1.0000000000000009,
+      "cos_layer20": 1.0000000000000009,
+      "min_cos_over_layers": 0.9999999999999991,
+      "max_abs_elementwise_diff": 0.0,
+      "norm_layer20_old": 4.492976003392566,
+      "norm_layer20_new": 4.492976003392566
+    },
+    "decision_pooled_game_equal_unit_response_avg_diff_relaxed.pt": {
+      "bit_identical": true,
+      "cos_layer0": 0.9999999999999999,
+      "cos_layer20": 0.9999999999999994,
+      "min_cos_over_layers": 0.9999999999999987,
+      "max_abs_elementwise_diff": 0.0,
+      "norm_layer20_old": 0.7033558614852158,
+      "norm_layer20_new": 0.7033558614852158
+    },
+    "decision_pooled_game_equal_unit_response_avg_diff_strict.pt": {
+      "bit_identical": true,
+      "cos_layer0": 1.0000000000000002,
+      "cos_layer20": 0.9999999999999994,
+      "min_cos_over_layers": 0.9999999999999989,
+      "max_abs_elementwise_diff": 0.0,
+      "norm_layer20_old": 0.6900225911101427,
+      "norm_layer20_new": 0.6900225911101427
+    },
+    "decision_pooled_game_precision_raw_response_avg_diff_relaxed.pt": {
+      "bit_identical": true,
+      "cos_layer0": 1.000000000000001,
+      "cos_layer20": 0.9999999999999992,
+      "min_cos_over_layers": 0.9999999999999986,
+      "max_abs_elementwise_diff": 0.0,
+      "norm_layer20_old": 4.708012237572951,
+      "norm_layer20_new": 4.708012237572951
+    },
+    "decision_pooled_game_precision_raw_response_avg_diff_strict.pt": {
+      "bit_identical": true,
+      "cos_layer0": 1.0000000000000009,
+      "cos_layer20": 0.9999999999999994,
+      "min_cos_over_layers": 0.9999999999999994,
+      "max_abs_elementwise_diff": 0.0,
+      "norm_layer20_old": 5.628407650175633,
+      "norm_layer20_new": 5.628407650175633
+    },
+    "decision_pooled_game_precision_unit_response_avg_diff_relaxed.pt": {
+      "bit_identical": true,
+      "cos_layer0": 0.9999999999999997,
+      "cos_layer20": 0.9999999999999996,
+      "min_cos_over_layers": 0.9999999999999991,
+      "max_abs_elementwise_diff": 0.0,
+      "norm_layer20_old": 0.7334462737231594,
+      "norm_layer20_new": 0.7334462737231594
+    },
+    "decision_pooled_game_precision_unit_response_avg_diff_strict.pt": {
+      "bit_identical": true,
+      "cos_layer0": 1.0,
+      "cos_layer20": 1.0000000000000002,
+      "min_cos_over_layers": 0.9999999999999992,
+      "max_abs_elementwise_diff": 0.0,
+      "norm_layer20_old": 0.8016451315413261,
+      "norm_layer20_new": 0.8016451315413261
+    },
+    "decision_prisoners_dilemma_response_avg_diff_cellbalanced_relaxed.pt": {
+      "bit_identical": true,
+      "cos_layer0": 1.0000000000000007,
+      "cos_layer20": 1.0000000000000007,
+      "min_cos_over_layers": 0.9999999999999987,
+      "max_abs_elementwise_diff": 0.0,
+      "norm_layer20_old": 8.466909381721154,
+      "norm_layer20_new": 8.466909381721154
+    },
+    "decision_prisoners_dilemma_response_avg_diff_cellbalanced_strict.pt": {
+      "bit_identical": true,
+      "cos_layer0": 1.0000000000000007,
+      "cos_layer20": 1.0000000000000007,
+      "min_cos_over_layers": 0.9999999999999987,
+      "max_abs_elementwise_diff": 0.0,
+      "norm_layer20_old": 8.466909381721154,
+      "norm_layer20_new": 8.466909381721154
+    },
+    "decision_trust_response_avg_diff_cellbalanced_relaxed.pt": {
+      "bit_identical": true,
+      "cos_layer0": 1.0000000000000007,
+      "cos_layer20": 0.9999999999999989,
+      "min_cos_over_layers": 0.9999999999999987,
+      "max_abs_elementwise_diff": 0.0,
+      "norm_layer20_old": 4.725528412293989,
+      "norm_layer20_new": 4.725528412293989
+    },
+    "decision_trust_response_avg_diff_cellbalanced_strict.pt": {
+      "bit_identical": true,
+      "cos_layer0": 1.0,
+      "cos_layer20": 1.0,
+      "min_cos_over_layers": 0.9999999999999992,
+      "max_abs_elementwise_diff": 0.0,
+      "norm_layer20_old": 5.373255186663716,
+      "norm_layer20_new": 5.373255186663716
+    },
+    "decision_ultimatum_response_avg_diff_cellbalanced_relaxed.pt": {
+      "bit_identical": true,
+      "cos_layer0": 1.0000000000000009,
+      "cos_layer20": 1.0000000000000004,
+      "min_cos_over_layers": 0.9999999999999988,
+      "max_abs_elementwise_diff": 0.0,
+      "norm_layer20_old": 7.166027361223843,
+      "norm_layer20_new": 7.166027361223843
+    },
+    "decision_ultimatum_response_avg_diff_cellbalanced_strict.pt": {
+      "bit_identical": true,
+      "cos_layer0": 1.0000000000000002,
+      "cos_layer20": 1.0000000000000004,
+      "min_cos_over_layers": 0.9999999999999991,
+      "max_abs_elementwise_diff": 0.0,
+      "norm_layer20_old": 5.366469373975343,
+      "norm_layer20_new": 5.366469373975343
+    }
+  },
+  "json": {
+    "analysis/crossgame_analysis.json": {
+      "old": "/home/marco/dockmaster/data/pr-crossgame/round1/results/crossgame-decision-vectors/analysis/crossgame_analysis.json",
+      "new": "/home/marco/dockmaster/data/pr-crossgame/work2/crossgame/analysis.json",
+      "n_numeric_leaves": 8940,
+      "n_numeric_leaves_identical": 8940,
+      "max_abs_delta": null,
+      "max_abs_delta_path": null,
+      "largest_moves": [],
+      "counts_that_moved": [],
+      "provenance_differences": [
+        {
+          "path": "activation_meta.apology.extractor",
+          "old": null,
+          "new": "audit.extract"
+        },
+        {
+          "path": "activation_meta.apology.poolings",
+          "old": null,
+          "new": [
+            "prompt_avg",
+            "prompt_last",
+            "response_avg"
+          ]
+        },
+        {
+          "path": "activation_meta.apology.resumed_from_shards",
+          "old": null,
+          "new": 0
+        },
+        {
+          "path": "activation_meta.apology.rows_csv",
+          "old": "/home/marco/dockmaster/state/worktrees/crossgame-vector/scratch/rows/apology.csv",
+          "new": "/home/marco/dockmaster/state/worktrees/pr-crossgame/results/crossgame-decision-vectors/extraction/apology.csv"
+        },
+        {
+          "path": "activation_meta.apology.seconds",
+          "old": 154.88058376312256,
+          "new": 141.22611689567566
+        },
+        {
+          "path": "activation_meta.apology.shard_rows",
+          "old": null,
+          "new": 250
+        },
+        {
+          "path": "activation_meta.dictator.extractor",
+          "old": null,
+          "new": "audit.extract"
+        },
+        {
+          "path": "activation_meta.dictator.poolings",
+          "old": null,
+          "new": [
+            "prompt_avg",
+            "prompt_last",
+            "response_avg"
+          ]
+        },
+        {
+          "path": "activation_meta.dictator.resumed_from_shards",
+          "old": null,
+          "new": 0
+        },
+        {
+          "path": "activation_meta.dictator.rows_csv",
+          "old": "/home/marco/dockmaster/state/worktrees/crossgame-vector/scratch/rows/dictator.csv",
+          "new": "/home/marco/dockmaster/state/worktrees/pr-crossgame/results/crossgame-decision-vectors/extraction/dictator.csv"
+        },
+        {
+          "path": "activation_meta.dictator.seconds",
+          "old": 233.68784141540527,
+          "new": 107.40324878692627
+        },
+        {
+          "path": "activation_meta.dictator.shard_rows",
+          "old": null,
+          "new": 250
+        },
+        {
+          "path": "activation_meta.overfishing.extractor",
+          "old": null,
+          "new": "audit.extract"
+        },
+        {
+          "path": "activation_meta.overfishing.poolings",
+          "old": null,
+          "new": [
+            "prompt_avg",
+            "prompt_last",
+            "response_avg"
+          ]
+        },
+        {
+          "path": "activation_meta.overfishing.resumed_from_shards",
+          "old": null,
+          "new": 0
+        },
+        {
+          "path": "activation_meta.overfishing.rows_csv",
+          "old": "/home/marco/dockmaster/state/worktrees/crossgame-vector/scratch/rows/overfishing.csv",
+          "new": "/home/marco/dockmaster/state/worktrees/pr-crossgame/results/crossgame-decision-vectors/extraction/overfishing.csv"
+        },
+        {
+          "path": "activation_meta.overfishing.seconds",
+          "old": 373.6330671310425,
+          "new": 212.13966846466064
+        },
+        {
+          "path": "activation_meta.overfishing.shard_rows",
+          "old": null,
+          "new": 250
+        },
+        {
+          "path": "activation_meta.prisoners_dilemma.extractor",
+          "old": null,
+          "new": "audit.extract"
+        },
+        {
+          "path": "activation_meta.prisoners_dilemma.poolings",
+          "old": null,
+          "new": [
+            "prompt_avg",
+            "prompt_last",
+            "response_avg"
+          ]
+        },
+        {
+          "path": "activation_meta.prisoners_dilemma.resumed_from_shards",
+          "old": null,
+          "new": 0
+        },
+        {
+          "path": "activation_meta.prisoners_dilemma.rows_csv",
+          "old": "/home/marco/dockmaster/state/worktrees/crossgame-vector/scratch/rows/prisoners_dilemma.csv",
+          "new": "/home/marco/dockmaster/state/worktrees/pr-crossgame/results/crossgame-decision-vectors/extraction/prisoners_dilemma.csv"
+        },
+        {
+          "path": "activation_meta.prisoners_dilemma.seconds",
+          "old": 25.430579662322998,
+          "new": 26.175825357437134
+        },
+        {
+          "path": "activation_meta.prisoners_dilemma.shard_rows",
+          "old": null,
+          "new": 250
+        },
+        {
+          "path": "activation_meta.trust.extractor",
+          "old": null,
+          "new": "audit.extract"
+        },
+        {
+          "path": "activation_meta.trust.poolings",
+          "old": null,
+          "new": [
+            "prompt_avg",
+            "prompt_last",
+            "response_avg"
+          ]
+        },
+        {
+          "path": "activation_meta.trust.resumed_from_shards",
+          "old": null,
+          "new": 0
+        },
+        {
+          "path": "activation_meta.trust.rows_csv",
+          "old": "/home/marco/dockmaster/state/worktrees/crossgame-vector/scratch/rows/trust.csv",
+          "new": "/home/marco/dockmaster/state/worktrees/pr-crossgame/results/crossgame-decision-vectors/extraction/trust.csv"
+        },
+        {
+          "path": "activation_meta.trust.seconds",
+          "old": 179.5174081325531,
+          "new": 140.0958230495453
+        },
+        {
+          "path": "activation_meta.trust.shard_rows",
+          "old": null,
+          "new": 250
+        },
+        {
+          "path": "activation_meta.ultimatum.extractor",
+          "old": null,
+          "new": "audit.extract"
+        },
+        {
+          "path": "activation_meta.ultimatum.poolings",
+          "old": null,
+          "new": [
+            "prompt_avg",
+            "prompt_last",
+            "response_avg"
+          ]
+        },
+        {
+          "path": "activation_meta.ultimatum.resumed_from_shards",
+          "old": null,
+          "new": 0
+        },
+        {
+          "path": "activation_meta.ultimatum.rows_csv",
+          "old": "/home/marco/dockmaster/state/worktrees/crossgame-vector/scratch/rows/ultimatum.csv",
+          "new": "/home/marco/dockmaster/state/worktrees/pr-crossgame/results/crossgame-decision-vectors/extraction/ultimatum.csv"
+        },
+        {
+          "path": "activation_meta.ultimatum.seconds",
+          "old": 247.66442012786865,
+          "new": 70.22763633728027
+        },
+        {
+          "path": "activation_meta.ultimatum.shard_rows",
+          "old": null,
+          "new": 250
+        },
+        {
+          "path": "dictator_vector_path",
+          "old": "/home/marco/dockmaster/data/decision-vector/decision_response_avg_diff_cellbalanced.pt",
+          "new": "/home/marco/dockmaster/state/worktrees/pr-crossgame/results/dictator-decision-vector/vectors/decision_response_avg_diff_cellbalanced.pt"
+        }
+      ],
+      "structural_differences": [
+        {
+          "path": "activation_meta.apology.complete",
+          "only_in": "new"
+        },
+        {
+          "path": "activation_meta.apology.limit_rows",
+          "only_in": "new"
+        },
+        {
+          "path": "activation_meta.dictator.complete",
+          "only_in": "new"
+        },
+        {
+          "path": "activation_meta.dictator.limit_rows",
+          "only_in": "new"
+        },
+        {
+          "path": "activation_meta.overfishing.complete",
+          "only_in": "new"
+        },
+        {
+          "path": "activation_meta.overfishing.limit_rows",
+          "only_in": "new"
+        },
+        {
+          "path": "activation_meta.prisoners_dilemma.complete",
+          "only_in": "new"
+        },
+        {
+          "path": "activation_meta.prisoners_dilemma.limit_rows",
+          "only_in": "new"
+        },
+        {
+          "path": "activation_meta.trust.complete",
+          "only_in": "new"
+        },
+        {
+          "path": "activation_meta.trust.limit_rows",
+          "only_in": "new"
+        },
+        {
+          "path": "activation_meta.ultimatum.complete",
+          "only_in": "new"
+        },
+        {
+          "path": "activation_meta.ultimatum.limit_rows",
+          "only_in": "new"
+        }
+      ],
+      "n_structural_differences": 12
+    },
+    "analysis/crossgame_layer0_tokens.json": {
+      "old": "/home/marco/dockmaster/data/pr-crossgame/round1/results/crossgame-decision-vectors/analysis/crossgame_layer0_tokens.json",
+      "new": "/home/marco/dockmaster/data/pr-crossgame/work2/crossgame/crossgame_layer0_tokens.json",
+      "n_numeric_leaves": 0,
+      "n_numeric_leaves_identical": 0,
+      "max_abs_delta": null,
+      "max_abs_delta_path": null,
+      "largest_moves": [],
+      "counts_that_moved": [],
+      "provenance_differences": [],
+      "structural_differences": [
+        {
+          "path": "altruism_response_avg_diff.pt",
+          "only_in": "new"
+        },
+        {
+          "path": "decision_dictator_only_response_avg_diff_cellbalanced.pt",
+          "only_in": "new"
+        },
+        {
+          "path": "decision_overfishing_response_avg_diff_cellbalanced_strict.pt.altruistic_pole_tokens",
+          "old_len": 16,
+          "new_len": 20
+        },
+        {
+          "path": "decision_overfishing_response_avg_diff_cellbalanced_strict.pt.self_interested_pole_tokens",
+          "old_len": 16,
+          "new_len": 20
+        },
+        {
+          "path": "decision_pooled_response_avg_diff_cellbalanced_strict.pt.altruistic_pole_tokens",
+          "old_len": 16,
+          "new_len": 20
+        },
+        {
+          "path": "decision_pooled_response_avg_diff_cellbalanced_strict.pt.self_interested_pole_tokens",
+          "old_len": 16,
+          "new_len": 20
+        },
+        {
+          "path": "decision_prisoners_dilemma_response_avg_diff_cellbalanced_strict.pt.altruistic_pole_tokens",
+          "old_len": 16,
+          "new_len": 20
+        },
+        {
+          "path": "decision_prisoners_dilemma_response_avg_diff_cellbalanced_strict.pt.self_interested_pole_tokens",
+          "old_len": 16,
+          "new_len": 20
+        }
+      ],
+      "n_structural_differences": 8
+    },
+    "analysis/pooled_build.json": {
+      "old": "/home/marco/dockmaster/data/pr-crossgame/round1/results/crossgame-decision-vectors/analysis/pooled_build.json",
+      "new": "/home/marco/dockmaster/data/pr-crossgame/work2/pooled/build.json",
+      "n_numeric_leaves": 162,
+      "n_numeric_leaves_identical": 162,
+      "max_abs_delta": null,
+      "max_abs_delta_path": null,
+      "largest_moves": [],
+      "counts_that_moved": [],
+      "provenance_differences": [],
+      "structural_differences": [
+        {
+          "path": "policies.relaxed.pipeline_check_cos_vs_six_game_pool",
+          "only_in": "new"
+        },
+        {
+          "path": "policies.strict.pipeline_check_cos_vs_six_game_pool",
+          "only_in": "new"
+        }
+      ],
+      "n_structural_differences": 2
+    },
+    "analysis/pooled_analysis.json": {
+      "old": "/home/marco/dockmaster/data/pr-crossgame/round1/results/crossgame-decision-vectors/analysis/pooled_analysis.json",
+      "new": "/home/marco/dockmaster/data/pr-crossgame/work2/pooled/analysis.json",
+      "n_numeric_leaves": 5258,
+      "n_numeric_leaves_identical": 3467,
+      "max_abs_delta": 7.640687752219488e-07,
+      "max_abs_delta_path": "policies.strict.null_game_wide.0.game_equal_unit.game:overfishing.min",
+      "largest_moves": [
+        {
+          "path": "policies.strict.null_game_wide.0.game_equal_unit.game:overfishing.min",
+          "old": 0.12418084659996938,
+          "new": 0.12418008253119416,
+          "abs_delta": 7.640687752219488e-07,
+          "rel_delta": 6.1528713657693585e-06
+        },
+        {
+          "path": "policies.strict.null_game_wide.20.game_precision_raw.game:apology.min",
+          "old": 0.16011525595901266,
+          "new": 0.16011599320239578,
+          "abs_delta": 7.372433831198677e-07,
+          "rel_delta": 4.604433126102212e-06
+        },
+        {
+          "path": "policies.relaxed.null_game_wide.20.game_precision_unit.game:ultimatum.min",
+          "old": 0.14365876083777424,
+          "new": 0.1436580296194569,
+          "abs_delta": 7.312183173402431e-07,
+          "rel_delta": 5.08996675925645e-06
+        },
+        {
+          "path": "policies.relaxed.null_game_wide.20.game_precision_raw.game:trust.p2.5",
+          "old": -0.0029599551198016675,
+          "new": -0.0029592664049031487,
+          "abs_delta": 6.887148985188461e-07,
+          "rel_delta": 0.0002326774801115882
+        },
+        {
+          "path": "policies.strict.null_game_wide.0.game_equal_raw.game:overfishing.min",
+          "old": -0.00023707237019220082,
+          "new": -0.0002377340814670886,
+          "abs_delta": 6.617112748877828e-07,
+          "rel_delta": null
+        },
+        {
+          "path": "policies.strict.null_game_wide.20.game_equal_raw.game:trust.min",
+          "old": -0.262902069353497,
+          "new": -0.26290270126539705,
+          "abs_delta": 6.319119000286477e-07,
+          "rel_delta": 2.4035960718058214e-06
+        },
+        {
+          "path": "policies.strict.null_game_wide.20.game_precision_raw.game:overfishing.min",
+          "old": -0.08494332843035435,
+          "new": -0.08494272351048132,
+          "abs_delta": 6.04919873026244e-07,
+          "rel_delta": 7.1214524342806055e-06
+        },
+        {
+          "path": "policies.relaxed.null_game_wide.20.game_precision_unit.game:overfishing.min",
+          "old": 0.06431922995152563,
+          "new": 0.0643186367250626,
+          "abs_delta": 5.932264630220674e-07,
+          "rel_delta": 9.223158664510664e-06
+        },
+        {
+          "path": "policies.relaxed.null_game_wide.20.cell_balanced.game:ultimatum.p2.5",
+          "old": 0.06810650366426622,
+          "new": 0.06810592566651884,
+          "abs_delta": 5.779977473863163e-07,
+          "rel_delta": 8.486674785650128e-06
+        },
+        {
+          "path": "policies.strict.null_game_wide.20.game_precision_raw.game:overfishing.p2.5",
+          "old": 0.012002265865121813,
+          "new": 0.012001705553118174,
+          "abs_delta": 5.603120036383469e-07,
+          "rel_delta": 4.668385202719055e-05
+        },
+        {
+          "path": "policies.strict.null_game_wide.20.game_precision_unit.game:dictator.min",
+          "old": 0.30469394749356377,
+          "new": 0.3046933912267304,
+          "abs_delta": 5.562668333736198e-07,
+          "rel_delta": 1.8256576408869106e-06
+        },
+        {
+          "path": "policies.strict.null_game_wide.20.cell_balanced.game:dictator.min",
+          "old": 0.0675934753059874,
+          "new": 0.06759402834899329,
+          "abs_delta": 5.530430058908742e-07,
+          "rel_delta": 8.181832321569437e-06
+        },
+        {
+          "path": "policies.strict.null_game_wide.20.game_equal_unit.game:prisoners_dilemma.p2.5",
+          "old": 0.1405393512740767,
+          "new": 0.14053883519558147,
+          "abs_delta": 5.160784952440434e-07,
+          "rel_delta": 3.6721280592621963e-06
+        },
+        {
+          "path": "policies.relaxed.null_game_wide.20.game_equal_unit.game:overfishing.min",
+          "old": -0.023825995032912828,
+          "new": -0.023826503521182048,
+          "abs_delta": 5.084882692199533e-07,
+          "rel_delta": 2.134128781287196e-05
+        },
+        {
+          "path": "policies.relaxed.null_game_wide.20.game_precision_unit.game:ultimatum.p2.5",
+          "old": 0.3017789070690272,
+          "new": 0.30177840670595485,
+          "abs_delta": 5.003630723643404e-07,
+          "rel_delta": 1.6580452133783167e-06
+        },
+        {
+          "path": "policies.strict.null_game_wide.0.game_equal_unit.game:apology.min",
+          "old": -0.06265933538722987,
+          "new": -0.06265884640080661,
+          "abs_delta": 4.889864232554553e-07,
+          "rel_delta": 7.803887804324077e-06
+        },
+        {
+          "path": "policies.strict.null_game_wide.0.cell_balanced.game:overfishing.p2.5",
+          "old": 0.11437328547256118,
+          "new": 0.11437279725933215,
+          "abs_delta": 4.882132290245922e-07,
+          "rel_delta": 4.268594952111588e-06
+        },
+        {
+          "path": "policies.strict.null_game_wide.20.game_precision_raw.their_altruism.min",
+          "old": -0.24901263437846957,
+          "new": -0.24901217292145078,
+          "abs_delta": 4.6145701879107826e-07,
+          "rel_delta": 1.8531470097606312e-06
+        },
+        {
+          "path": "policies.relaxed.null_game_wide.20.game_precision_raw.game:ultimatum.min",
+          "old": 0.2102816461175634,
+          "new": 0.21028119238249185,
+          "abs_delta": 4.5373507154278236e-07,
+          "rel_delta": 2.1577492849238493e-06
+        },
+        {
+          "path": "policies.relaxed.null_game_wide.0.game_equal_unit.game:overfishing.min",
+          "old": 0.023217848200623937,
+          "new": 0.02321740192259347,
+          "abs_delta": 4.462780304678726e-07,
+          "rel_delta": 1.9221334665108188e-05
+        },
+        {
+          "path": "policies.strict.null_game_wide.20.cell_balanced.their_altruism.min",
+          "old": -0.2474499983254068,
+          "new": -0.24744955553704526,
+          "abs_delta": 4.427883615321093e-07,
+          "rel_delta": 1.7894053931244107e-06
+        },
+        {
+          "path": "policies.relaxed.null_game_wide.20.game_equal_raw.game:prisoners_dilemma.min",
+          "old": 0.21071883749434472,
+          "new": 0.2107184163902657,
+          "abs_delta": 4.2110407902362645e-07,
+          "rel_delta": 1.998416866906491e-06
+        },
+        {
+          "path": "policies.strict.null_game_wide.20.cell_balanced.game:ultimatum.min",
+          "old": -0.10937060240870104,
+          "new": -0.10937018164379224,
+          "abs_delta": 4.207649088039389e-07,
+          "rel_delta": 3.847148132471699e-06
+        },
+        {
+          "path": "policies.relaxed.null_game_wide.20.game_precision_unit.game:prisoners_dilemma.p97.5",
+          "old": 0.3998963415692317,
+          "new": 0.39989674859871305,
+          "abs_delta": 4.0702948134185846e-07,
+          "rel_delta": 1.0178364359503781e-06
+        },
+        {
+          "path": "policies.relaxed.null_game_wide.0.game_precision_unit.game:trust.min",
+          "old": -0.13714959667227053,
+          "new": -0.1371500021513907,
+          "abs_delta": 4.054791201690833e-07,
+          "rel_delta": 2.9564645556585705e-06
+        }
+      ],
+      "counts_that_moved": [],
+      "provenance_differences": [
+        {
+          "path": "dictator_vector",
+          "old": "/home/marco/dockmaster/data/decision-vector/decision_response_avg_diff_cellbalanced.pt",
+          "new": "/home/marco/dockmaster/state/worktrees/pr-crossgame/results/dictator-decision-vector/vectors/decision_response_avg_diff_cellbalanced.pt"
+        },
+        {
+          "path": "policies.relaxed.null_game_wide.0.cell_balanced.dictator_vector",
+          "old": {
+            "n": 300,
+            "mean": -0.0031403782470091272,
+            "sd": 0.14870160991206574,
+            "min": -0.3812400029571839,
+            "max": 0.37939190874379597,
+            "p2.5": -0.2999575177735959,
+            "p97.5": 0.2671804466973067
+          },
+          "new": {
+            "n": 300,
+            "mean": -0.003140412537053439,
+            "sd": 0.1487015994350104,
+            "min": -0.38124014042319054,
+            "max": 0.3793917963894251,
+            "p2.5": -0.29995748919321397,
+            "p97.5": 0.2671804125735578
+          }
+        },
+        {
+          "path": "policies.relaxed.null_game_wide.0.game_equal_raw.dictator_vector",
+          "old": {
+            "n": 300,
+            "mean": 0.000284845542291998,
+            "sd": 0.12704789014408457,
+            "min": -0.3410766946443964,
+            "max": 0.3115382798060015,
+            "p2.5": -0.2628473602612726,
+            "p97.5": 0.2370229917848708
+          },
+          "new": {
+            "n": 300,
+            "mean": 0.00028482050322352164,
+            "sd": 0.12704788429028724,
+            "min": -0.3410768076839137,
+            "max": 0.311538213251522,
+            "p2.5": -0.2628473945268967,
+            "p97.5": 0.2370229097434046
+          }
+        },
+        {
+          "path": "policies.relaxed.null_game_wide.0.game_equal_unit.dictator_vector",
+          "old": {
+            "n": 300,
+            "mean": -0.0017275952153603484,
+            "sd": 0.14471834417423662,
+            "min": -0.37870675432108625,
+            "max": 0.35650405944732444,
+            "p2.5": -0.28261996944136636,
+            "p97.5": 0.2583647849730511
+          },
+          "new": {
+            "n": 300,
+            "mean": -0.00172762893223674,
+            "sd": 0.1447183331495767,
+            "min": -0.37870671668105094,
+            "max": 0.35650393240066847,
+            "p2.5": -0.28261996557813346,
+            "p97.5": 0.25836476390872404
+          }
+        },
+        {
+          "path": "policies.relaxed.null_game_wide.0.game_precision_raw.dictator_vector",
+          "old": {
+            "n": 300,
+            "mean": -0.00551690965152462,
+            "sd": 0.1559317863498286,
+            "min": -0.4073954734219525,
+            "max": 0.36193208221531675,
+            "p2.5": -0.30968622253174566,
+            "p97.5": 0.29387807094231205
+          },
+          "new": {
+            "n": 300,
+            "mean": -0.00551693934866169,
+            "sd": 0.15593177494003546,
+            "min": -0.40739562537594076,
+            "max": 0.36193198166253937,
+            "p2.5": -0.3096860687794664,
+            "p97.5": 0.29387810901555667
+          }
+        },
+        {
+          "path": "policies.relaxed.null_game_wide.0.game_precision_unit.dictator_vector",
+          "old": {
+            "n": 300,
+            "mean": -0.0049988254054273715,
+            "sd": 0.15249602281644326,
+            "min": -0.37114126976514167,
+            "max": 0.3780745522307282,
+            "p2.5": -0.3056470383137692,
+            "p97.5": 0.27978999814109096
+          },
+          "new": {
+            "n": 300,
+            "mean": -0.004998855734252556,
+            "sd": 0.15249601038111588,
+            "min": -0.37114143403136246,
+            "max": 0.37807459436487,
+            "p2.5": -0.3056469641685881,
+            "p97.5": 0.2797900738633127
+          }
+        },
+        {
+          "path": "policies.relaxed.null_game_wide.20.cell_balanced.dictator_vector",
+          "old": {
+            "n": 300,
+            "mean": -0.0026758605999895302,
+            "sd": 0.24635975591698295,
+            "min": -0.6182966255440095,
+            "max": 0.6629332156973227,
+            "p2.5": -0.49410788063406247,
+            "p97.5": 0.4706282979594549
+          },
+          "new": {
+            "n": 300,
+            "mean": -0.0026758731181471666,
+            "sd": 0.24635975998946835,
+            "min": -0.6182966135544,
+            "max": 0.6629330142868438,
+            "p2.5": -0.49410791714121316,
+            "p97.5": 0.47062859586647066
+          }
+        },
+        {
+          "path": "policies.relaxed.null_game_wide.20.game_equal_raw.dictator_vector",
+          "old": {
+            "n": 300,
+            "mean": 0.003034651266973575,
+            "sd": 0.19793443357349122,
+            "min": -0.5403699089930032,
+            "max": 0.6220212434917999,
+            "p2.5": -0.35854129413953983,
+            "p97.5": 0.37929665538315605
+          },
+          "new": {
+            "n": 300,
+            "mean": 0.0030346367818694766,
+            "sd": 0.19793443451601145,
+            "min": -0.5403699679791945,
+            "max": 0.6220210910291094,
+            "p2.5": -0.3585412846098181,
+            "p97.5": 0.37929682745456406
+          }
+        },
+        {
+          "path": "policies.relaxed.null_game_wide.20.game_equal_unit.dictator_vector",
+          "old": {
+            "n": 300,
+            "mean": -0.005661122264254082,
+            "sd": 0.2298195380046875,
+            "min": -0.5929266492653981,
+            "max": 0.6444971330360294,
+            "p2.5": -0.44771485394267435,
+            "p97.5": 0.44624746602856963
+          },
+          "new": {
+            "n": 300,
+            "mean": -0.0056611390082664526,
+            "sd": 0.22981954001708849,
+            "min": -0.5929267651980479,
+            "max": 0.6444969721904591,
+            "p2.5": -0.4477148863999077,
+            "p97.5": 0.4462474848843409
+          }
+        },
+        {
+          "path": "policies.relaxed.null_game_wide.20.game_precision_raw.dictator_vector",
+          "old": {
+            "n": 300,
+            "mean": -0.0010347058754308443,
+            "sd": 0.25576134607141154,
+            "min": -0.6102436892576653,
+            "max": 0.664687582027623,
+            "p2.5": -0.49976192804654185,
+            "p97.5": 0.47854109333604106
+          },
+          "new": {
+            "n": 300,
+            "mean": -0.0010347094371298585,
+            "sd": 0.2557613432435403,
+            "min": -0.6102437013878135,
+            "max": 0.6646874196301092,
+            "p2.5": -0.49976187851536585,
+            "p97.5": 0.4785411672673178
+          }
+        },
+        {
+          "path": "policies.relaxed.null_game_wide.20.game_precision_unit.dictator_vector",
+          "old": {
+            "n": 300,
+            "mean": -0.006992105328507856,
+            "sd": 0.24582629227795388,
+            "min": -0.6099332454270682,
+            "max": 0.6671511594596236,
+            "p2.5": -0.4817469793573231,
+            "p97.5": 0.46563635547527493
+          },
+          "new": {
+            "n": 300,
+            "mean": -0.006992112612529298,
+            "sd": 0.2458262899404451,
+            "min": -0.6099333247190127,
+            "max": 0.6671511910645264,
+            "p2.5": -0.4817470278655947,
+            "p97.5": 0.4656361800041185
+          }
+        },
+        {
+          "path": "policies.relaxed.null_within_cell.0.cell_balanced.dictator_vector",
+          "old": {
+            "n": 300,
+            "mean": -0.00828578306455606,
+            "sd": 0.15256076439532393,
+            "min": -0.3957405872281021,
+            "max": 0.39738015730053666,
+            "p2.5": -0.3112248008483566,
+            "p97.5": 0.2778404448057217
+          },
+          "new": {
+            "n": 300,
+            "mean": -0.008285783306448606,
+            "sd": 0.15256076605084304,
+            "min": -0.3957405540881439,
+            "max": 0.3973801700597085,
+            "p2.5": -0.31122479660788904,
+            "p97.5": 0.27784045229734516
+          }
+        },
+        {
+          "path": "policies.relaxed.null_within_cell.0.game_equal_raw.dictator_vector",
+          "old": {
+            "n": 300,
+            "mean": -0.008670728853823466,
+            "sd": 0.1265115876662419,
+            "min": -0.35664254524006167,
+            "max": 0.30445972859732234,
+            "p2.5": -0.24872473110225066,
+            "p97.5": 0.25843446567217443
+          },
+          "new": {
+            "n": 300,
+            "mean": -0.008670727448836523,
+            "sd": 0.12651158849985245,
+            "min": -0.35664250675292336,
+            "max": 0.30445971730703103,
+            "p2.5": -0.24872473472790776,
+            "p97.5": 0.25843446574858514
+          }
+        },
+        {
+          "path": "policies.relaxed.null_within_cell.0.game_equal_unit.dictator_vector",
+          "old": {
+            "n": 300,
+            "mean": -0.007449077033027178,
+            "sd": 0.14997277147868207,
+            "min": -0.3748496754738015,
+            "max": 0.4140672499918104,
+            "p2.5": -0.27622644349924086,
+            "p97.5": 0.27426924164395466
+          },
+          "new": {
+            "n": 300,
+            "mean": -0.007449077081136035,
+            "sd": 0.1499727717223316,
+            "min": -0.3748496934860108,
+            "max": 0.4140672453247293,
+            "p2.5": -0.2762264567562392,
+            "p97.5": 0.27426925812005165
+          }
+        },
+        {
+          "path": "policies.relaxed.null_within_cell.0.game_precision_raw.dictator_vector",
+          "old": {
+            "n": 300,
+            "mean": -0.010895278168577034,
+            "sd": 0.16325483033708998,
+            "min": -0.4144842301113757,
+            "max": 0.43842846893096094,
+            "p2.5": -0.3201485677234829,
+            "p97.5": 0.3166365345026662
+          },
+          "new": {
+            "n": 300,
+            "mean": -0.010895279124503221,
+            "sd": 0.16325483188734732,
+            "min": -0.4144842108064614,
+            "max": 0.43842847693443227,
+            "p2.5": -0.32014856893112104,
+            "p97.5": 0.31663653987028506
+          }
+        },
+        {
+          "path": "policies.relaxed.null_within_cell.0.game_precision_unit.dictator_vector",
+          "old": {
+            "n": 300,
+            "mean": -0.007879217990273019,
+            "sd": 0.1604178847998913,
+            "min": -0.41555763539012364,
+            "max": 0.43642494459023806,
+            "p2.5": -0.29627224680717135,
+            "p97.5": 0.31072024005470555
+          },
+          "new": {
+            "n": 300,
+            "mean": -0.007879218969721352,
+            "sd": 0.16041788556151343,
+            "min": -0.41555762757741327,
+            "max": 0.4364249423965886,
+            "p2.5": -0.2962722573977483,
+            "p97.5": 0.3107202310784691
+          }
+        },
+        {
+          "path": "policies.relaxed.null_within_cell.20.cell_balanced.dictator_vector",
+          "old": {
+            "n": 300,
+            "mean": -0.004186240720926729,
+            "sd": 0.2598148498056557,
+            "min": -0.7399204306042433,
+            "max": 0.6391647529722552,
+            "p2.5": -0.46028425048782295,
+            "p97.5": 0.4902418467004011
+          },
+          "new": {
+            "n": 300,
+            "mean": -0.004186240228083566,
+            "sd": 0.2598148501360857,
+            "min": -0.7399204252923398,
+            "max": 0.6391647446133867,
+            "p2.5": -0.4602842441876744,
+            "p97.5": 0.49024184491860806
+          }
+        },
+        {
+          "path": "policies.relaxed.null_within_cell.20.game_equal_raw.dictator_vector",
+          "old": {
+            "n": 300,
+            "mean": -0.008534320454400241,
+            "sd": 0.21256725521803044,
+            "min": -0.657660327428946,
+            "max": 0.5677948804344993,
+            "p2.5": -0.3857937079161937,
+            "p97.5": 0.41008182739743493
+          },
+          "new": {
+            "n": 300,
+            "mean": -0.008534320059627006,
+            "sd": 0.21256725639190305,
+            "min": -0.6576603302412719,
+            "max": 0.5677948934701278,
+            "p2.5": -0.3857937035085405,
+            "p97.5": 0.41008183343389665
+          }
+        },
+        {
+          "path": "policies.relaxed.null_within_cell.20.game_equal_unit.dictator_vector",
+          "old": {
+            "n": 300,
+            "mean": -0.01022765357404405,
+            "sd": 0.24271923894794062,
+            "min": -0.6653358638480148,
+            "max": 0.5736941392554966,
+            "p2.5": -0.4317684972019713,
+            "p97.5": 0.4746234216434425
+          },
+          "new": {
+            "n": 300,
+            "mean": -0.010227654628758283,
+            "sd": 0.2427192388266256,
+            "min": -0.6653358453323531,
+            "max": 0.5736941637426293,
+            "p2.5": -0.4317685141034298,
+            "p97.5": 0.47462342187876144
+          }
+        },
+        {
+          "path": "policies.relaxed.null_within_cell.20.game_precision_raw.dictator_vector",
+          "old": {
+            "n": 300,
+            "mean": -0.0066626956302932765,
+            "sd": 0.27547837404873265,
+            "min": -0.7137872785744316,
+            "max": 0.6626764840350191,
+            "p2.5": -0.452757274425558,
+            "p97.5": 0.5334618236754907
+          },
+          "new": {
+            "n": 300,
+            "mean": -0.00666269510629197,
+            "sd": 0.27547837404917597,
+            "min": -0.7137872818072117,
+            "max": 0.6626764760589771,
+            "p2.5": -0.45275727814385397,
+            "p97.5": 0.5334618186072535
+          }
+        },
+        {
+          "path": "policies.relaxed.null_within_cell.20.game_precision_unit.dictator_vector",
+          "old": {
+            "n": 300,
+            "mean": -0.008190458709844979,
+            "sd": 0.2600610070980464,
+            "min": -0.6512870204747465,
+            "max": 0.6280085276684466,
+            "p2.5": -0.448664963405026,
+            "p97.5": 0.49859912956774227
+          },
+          "new": {
+            "n": 300,
+            "mean": -0.008190459908723384,
+            "sd": 0.2600610068106797,
+            "min": -0.6512870016210676,
+            "max": 0.628008530937987,
+            "p2.5": -0.44866495297928755,
+            "p97.5": 0.4985991323761813
+          }
+        },
+        {
+          "path": "policies.strict.null_game_wide.0.cell_balanced.dictator_vector",
+          "old": {
+            "n": 300,
+            "mean": 0.0038069184608148757,
+            "sd": 0.14979250512680145,
+            "min": -0.3808342972258079,
+            "max": 0.47632038894420486,
+            "p2.5": -0.27574785082404296,
+            "p97.5": 0.3283612827012456
+          },
+          "new": {
+            "n": 300,
+            "mean": 0.00380688707685886,
+            "sd": 0.14979250884530484,
+            "min": -0.3808343467974121,
+            "max": 0.47632047364438584,
+            "p2.5": -0.2757478565609521,
+            "p97.5": 0.3283612064768414
+          }
+        },
+        {
+          "path": "policies.strict.null_game_wide.0.game_equal_raw.dictator_vector",
+          "old": {
+            "n": 300,
+            "mean": 0.00038172746688497496,
+            "sd": 0.12397323499909824,
+            "min": -0.3939807909396309,
+            "max": 0.38692035664629854,
+            "p2.5": -0.23106985621259493,
+            "p97.5": 0.2550489188546703
+          },
+          "new": {
+            "n": 300,
+            "mean": 0.00038170093450896463,
+            "sd": 0.12397323696816231,
+            "min": -0.3939808355280505,
+            "max": 0.3869204254584317,
+            "p2.5": -0.23106993476670204,
+            "p97.5": 0.25504895488593815
+          }
+        },
+        {
+          "path": "policies.strict.null_game_wide.0.game_equal_unit.dictator_vector",
+          "old": {
+            "n": 300,
+            "mean": 0.0027337381139703808,
+            "sd": 0.14362306277862982,
+            "min": -0.37053057508403403,
+            "max": 0.4640584645201297,
+            "p2.5": -0.26935619490993057,
+            "p97.5": 0.3132051714561347
+          },
+          "new": {
+            "n": 300,
+            "mean": 0.0027337029184142767,
+            "sd": 0.14362306442338443,
+            "min": -0.37053062368781087,
+            "max": 0.46405856001897633,
+            "p2.5": -0.2693561293849625,
+            "p97.5": 0.3132051774131489
+          }
+        },
+        {
+          "path": "policies.strict.null_game_wide.0.game_precision_raw.dictator_vector",
+          "old": {
+            "n": 300,
+            "mean": 0.008643785930014426,
+            "sd": 0.1679681791334385,
+            "min": -0.48388994524783585,
+            "max": 0.5031864989918503,
+            "p2.5": -0.3131065613304254,
+            "p97.5": 0.33235655857390656
+          },
+          "new": {
+            "n": 300,
+            "mean": 0.008643760908531539,
+            "sd": 0.16796818116311704,
+            "min": -0.4838899736355031,
+            "max": 0.5031865993607785,
+            "p2.5": -0.31310652824079654,
+            "p97.5": 0.3323565230598877
+          }
+        },
+        {
+          "path": "policies.strict.null_game_wide.0.game_precision_unit.dictator_vector",
+          "old": {
+            "n": 300,
+            "mean": 0.01028787347536001,
+            "sd": 0.17942890709812337,
+            "min": -0.5427263761445558,
+            "max": 0.4754606978871254,
+            "p2.5": -0.3370762738851202,
+            "p97.5": 0.33985573250942314
+          },
+          "new": {
+            "n": 300,
+            "mean": 0.010287851318425962,
+            "sd": 0.17942890883739215,
+            "min": -0.5427263925691399,
+            "max": 0.4754608091052898,
+            "p2.5": -0.3370762735065098,
+            "p97.5": 0.339855753433382
+          }
+        },
+        {
+          "path": "policies.strict.null_game_wide.20.cell_balanced.dictator_vector",
+          "old": {
+            "n": 300,
+            "mean": 0.007865775285848017,
+            "sd": 0.24773770350747168,
+            "min": -0.6193756086645907,
+            "max": 0.663014239292438,
+            "p2.5": -0.46715639783378954,
+            "p97.5": 0.49029441772283894
+          },
+          "new": {
+            "n": 300,
+            "mean": 0.00786577834029708,
+            "sd": 0.2477377051932935,
+            "min": -0.6193756743060072,
+            "max": 0.6630141867624396,
+            "p2.5": -0.4671563430558554,
+            "p97.5": 0.49029425141914834
+          }
+        },
+        {
+          "path": "policies.strict.null_game_wide.20.game_equal_raw.dictator_vector",
+          "old": {
+            "n": 300,
+            "mean": 0.004532565881082821,
+            "sd": 0.1934427251868222,
+            "min": -0.4824738589652031,
+            "max": 0.552738370814455,
+            "p2.5": -0.37358014377184867,
+            "p97.5": 0.3738819634923753
+          },
+          "new": {
+            "n": 300,
+            "mean": 0.004532564474867971,
+            "sd": 0.19344272322718126,
+            "min": -0.48247385499044204,
+            "max": 0.5527383061342613,
+            "p2.5": -0.37358014726496375,
+            "p97.5": 0.373882019035235
+          }
+        },
+        {
+          "path": "policies.strict.null_game_wide.20.game_equal_unit.dictator_vector",
+          "old": {
+            "n": 300,
+            "mean": 0.00844323883587562,
+            "sd": 0.22265788107642265,
+            "min": -0.5581863333937477,
+            "max": 0.6215378098314018,
+            "p2.5": -0.42553116844693556,
+            "p97.5": 0.43921753149729775
+          },
+          "new": {
+            "n": 300,
+            "mean": 0.008443241556207813,
+            "sd": 0.22265788584395585,
+            "min": -0.5581864214924972,
+            "max": 0.6215377501845726,
+            "p2.5": -0.4255311405410923,
+            "p97.5": 0.4392175595962485
+          }
+        },
+        {
+          "path": "policies.strict.null_game_wide.20.game_precision_raw.dictator_vector",
+          "old": {
+            "n": 300,
+            "mean": 0.007688109169416064,
+            "sd": 0.2767720799290243,
+            "min": -0.7006286599799516,
+            "max": 0.6936460690019245,
+            "p2.5": -0.5107732707297654,
+            "p97.5": 0.5352512244113009
+          },
+          "new": {
+            "n": 300,
+            "mean": 0.007688122590402618,
+            "sd": 0.2767720791341334,
+            "min": -0.7006286707465493,
+            "max": 0.6936459799826807,
+            "p2.5": -0.5107733443762293,
+            "p97.5": 0.5352510930443085
+          }
+        },
+        {
+          "path": "policies.strict.null_game_wide.20.game_precision_unit.dictator_vector",
+          "old": {
+            "n": 300,
+            "mean": 0.009504280552610126,
+            "sd": 0.2808706641633692,
+            "min": -0.7150665753913603,
+            "max": 0.6997042660892663,
+            "p2.5": -0.5275109005029732,
+            "p97.5": 0.5218063940703096
+          },
+          "new": {
+            "n": 300,
+            "mean": 0.009504297628588173,
+            "sd": 0.28087066321274334,
+            "min": -0.7150665817914383,
+            "max": 0.6997041674641274,
+            "p2.5": -0.527510855106746,
+            "p97.5": 0.5218064615455023
+          }
+        },
+        {
+          "path": "policies.strict.null_within_cell.0.cell_balanced.dictator_vector",
+          "old": {
+            "n": 300,
+            "mean": 0.0015174762883724154,
+            "sd": 0.1600920455844533,
+            "min": -0.3474352905491541,
+            "max": 0.4205969734222723,
+            "p2.5": -0.27564886336984945,
+            "p97.5": 0.304165893012188
+          },
+          "new": {
+            "n": 300,
+            "mean": 0.0015174788200206116,
+            "sd": 0.16009204525974965,
+            "min": -0.34743528808129387,
+            "max": 0.42059697892141373,
+            "p2.5": -0.27564886764993285,
+            "p97.5": 0.30416589503244584
+          }
+        },
+        {
+          "path": "policies.strict.null_within_cell.0.game_equal_raw.dictator_vector",
+          "old": {
+            "n": 300,
+            "mean": 0.00028892686669996706,
+            "sd": 0.13232753308343928,
+            "min": -0.2988177952060384,
+            "max": 0.3545131461588017,
+            "p2.5": -0.22762930218682317,
+            "p97.5": 0.251133691835298
+          },
+          "new": {
+            "n": 300,
+            "mean": 0.00028892957604039464,
+            "sd": 0.13232753330720723,
+            "min": -0.2988178007841842,
+            "max": 0.3545131485879225,
+            "p2.5": -0.22762930862079017,
+            "p97.5": 0.2511336919287057
+          }
+        },
+        {
+          "path": "policies.strict.null_within_cell.0.game_equal_unit.dictator_vector",
+          "old": {
+            "n": 300,
+            "mean": 0.00045981476556807027,
+            "sd": 0.1536108518102326,
+            "min": -0.3309796417974882,
+            "max": 0.42470910129817246,
+            "p2.5": -0.27177464121020267,
+            "p97.5": 0.29545061251529825
+          },
+          "new": {
+            "n": 300,
+            "mean": 0.0004598173404629446,
+            "sd": 0.15361085120627763,
+            "min": -0.3309796416443923,
+            "max": 0.4247091052221838,
+            "p2.5": -0.27177462273496683,
+            "p97.5": 0.29545063118045106
+          }
+        },
+        {
+          "path": "policies.strict.null_within_cell.0.game_precision_raw.dictator_vector",
+          "old": {
+            "n": 300,
+            "mean": 0.00040603232772515725,
+            "sd": 0.17610845226703997,
+            "min": -0.42814491708314817,
+            "max": 0.4268231652220969,
+            "p2.5": -0.3018343436269698,
+            "p97.5": 0.3617826706076485
+          },
+          "new": {
+            "n": 300,
+            "mean": 0.00040603402775624353,
+            "sd": 0.17610845180202414,
+            "min": -0.4281449126404316,
+            "max": 0.4268231458656379,
+            "p2.5": -0.3018343465107466,
+            "p97.5": 0.3617826694951847
+          }
+        },
+        {
+          "path": "policies.strict.null_within_cell.0.game_precision_unit.dictator_vector",
+          "old": {
+            "n": 300,
+            "mean": -0.00117116054720838,
+            "sd": 0.18329233805036443,
+            "min": -0.4444231230093604,
+            "max": 0.4314123799286063,
+            "p2.5": -0.31583950310965353,
+            "p97.5": 0.37175405995889504
+          },
+          "new": {
+            "n": 300,
+            "mean": -0.0011711589591464448,
+            "sd": 0.1832923366097198,
+            "min": -0.4444231025158524,
+            "max": 0.4314123744856463,
+            "p2.5": -0.31583949747190754,
+            "p97.5": 0.37175404195102113
+          }
+        },
+        {
+          "path": "policies.strict.null_within_cell.20.cell_balanced.dictator_vector",
+          "old": {
+            "n": 300,
+            "mean": 0.008334782797773154,
+            "sd": 0.2652494625371146,
+            "min": -0.6194249970848462,
+            "max": 0.6864270660626103,
+            "p2.5": -0.4216737315614127,
+            "p97.5": 0.538541100498809
+          },
+          "new": {
+            "n": 300,
+            "mean": 0.008334780709203966,
+            "sd": 0.26524946275721895,
+            "min": -0.6194249661132456,
+            "max": 0.6864270706809481,
+            "p2.5": -0.42167373105320594,
+            "p97.5": 0.5385411125307826
+          }
+        },
+        {
+          "path": "policies.strict.null_within_cell.20.game_equal_raw.dictator_vector",
+          "old": {
+            "n": 300,
+            "mean": 0.00022722592970960835,
+            "sd": 0.21934633528833702,
+            "min": -0.4842363076610963,
+            "max": 0.5882254043497888,
+            "p2.5": -0.3711647042317116,
+            "p97.5": 0.44628069601681614
+          },
+          "new": {
+            "n": 300,
+            "mean": 0.0002272235378745835,
+            "sd": 0.21934633534194498,
+            "min": -0.4842363130595918,
+            "max": 0.5882254069175914,
+            "p2.5": -0.37116470307558813,
+            "p97.5": 0.4462806946479587
+          }
+        },
+        {
+          "path": "policies.strict.null_within_cell.20.game_equal_unit.dictator_vector",
+          "old": {
+            "n": 300,
+            "mean": 0.0016378677700866452,
+            "sd": 0.242761697493204,
+            "min": -0.5506308922086223,
+            "max": 0.6806991983629965,
+            "p2.5": -0.400661457644782,
+            "p97.5": 0.48822779448594106
+          },
+          "new": {
+            "n": 300,
+            "mean": 0.001637865332169602,
+            "sd": 0.24276169658276403,
+            "min": -0.5506308613842433,
+            "max": 0.6806992046083339,
+            "p2.5": -0.40066145260890756,
+            "p97.5": 0.48822779168555064
+          }
+        },
+        {
+          "path": "policies.strict.null_within_cell.20.game_precision_raw.dictator_vector",
+          "old": {
+            "n": 300,
+            "mean": 0.0150105353549953,
+            "sd": 0.29192019756826426,
+            "min": -0.6510975172439105,
+            "max": 0.6969465579654873,
+            "p2.5": -0.5066073198105392,
+            "p97.5": 0.5752390599265568
+          },
+          "new": {
+            "n": 300,
+            "mean": 0.015010533753426118,
+            "sd": 0.29192019668950336,
+            "min": -0.6510974952115927,
+            "max": 0.6969465590299605,
+            "p2.5": -0.5066073354432838,
+            "p97.5": 0.5752390711267933
+          }
+        },
+        {
+          "path": "policies.strict.null_within_cell.20.game_precision_unit.dictator_vector",
+          "old": {
+            "n": 300,
+            "mean": 0.012825300874051135,
+            "sd": 0.294283553989797,
+            "min": -0.6624006747925137,
+            "max": 0.6770858619456516,
+            "p2.5": -0.5411729752753153,
+            "p97.5": 0.5740868220320464
+          },
+          "new": {
+            "n": 300,
+            "mean": 0.012825298851687242,
+            "sd": 0.29428355212962815,
+            "min": -0.66240066751487,
+            "max": 0.6770858654421323,
+            "p2.5": -0.5411729763658082,
+            "p97.5": 0.5740868250449325
+          }
+        },
+        {
+          "path": "their_altruism_vector",
+          "old": "/home/marco/dockmaster/repos/persona-vector-agents/persona_vectors/Qwen2.5-7B-Instruct/altruism_response_avg_diff.pt",
+          "new": "/home/marco/dockmaster/state/worktrees/pr-crossgame/persona_vectors/Qwen2.5-7B-Instruct/altruism_response_avg_diff.pt"
+        }
+      ],
+      "structural_differences": [
+        {
+          "path": "policies.relaxed.cosines.family_balanced_raw",
+          "only_in": "new"
+        },
+        {
+          "path": "policies.relaxed.cosines.family_balanced_unit",
+          "only_in": "new"
+        },
+        {
+          "path": "policies.relaxed.cosines.non_dollar_raw",
+          "only_in": "new"
+        },
+        {
+          "path": "policies.relaxed.cosines.non_dollar_unit",
+          "only_in": "new"
+        },
+        {
+          "path": "policies.relaxed.in_sample_auc.cell_balanced.note",
+          "old": "in sample - every scored row is in the fit",
+          "new": "scored over every direct-tag pole row of every game, which is a superset of the fit: rows in cells that filled only one pole are scored here but entered no vector"
+        },
+        {
+          "path": "policies.relaxed.in_sample_auc.family_balanced_raw",
+          "only_in": "new"
+        },
+        {
+          "path": "policies.relaxed.in_sample_auc.family_balanced_unit",
+          "only_in": "new"
+        },
+        {
+          "path": "policies.relaxed.in_sample_auc.game_equal_raw.note",
+          "old": "in sample - every scored row is in the fit",
+          "new": "scored over every direct-tag pole row of every game, which is a superset of the fit: rows in cells that filled only one pole are scored here but entered no vector"
+        },
+        {
+          "path": "policies.relaxed.in_sample_auc.game_equal_unit.note",
+          "old": "in sample - every scored row is in the fit",
+          "new": "scored over every direct-tag pole row of every game, which is a superset of the fit: rows in cells that filled only one pole are scored here but entered no vector"
+        },
+        {
+          "path": "policies.relaxed.in_sample_auc.game_precision_raw.note",
+          "old": "in sample - every scored row is in the fit",
+          "new": "scored over every direct-tag pole row of every game, which is a superset of the fit: rows in cells that filled only one pole are scored here but entered no vector"
+        },
+        {
+          "path": "policies.relaxed.in_sample_auc.game_precision_unit.note",
+          "old": "in sample - every scored row is in the fit",
+          "new": "scored over every direct-tag pole row of every game, which is a superset of the fit: rows in cells that filled only one pole are scored here but entered no vector"
+        },
+        {
+          "path": "policies.relaxed.in_sample_auc.non_dollar_raw",
+          "only_in": "new"
+        },
+        {
+          "path": "policies.relaxed.in_sample_auc.non_dollar_unit",
+          "only_in": "new"
+        },
+        {
+          "path": "policies.relaxed.leave_one_game_out.apology.schemes.family_balanced_raw",
+          "only_in": "new"
+        },
+        {
+          "path": "policies.relaxed.leave_one_game_out.apology.schemes.family_balanced_unit",
+          "only_in": "new"
+        },
+        {
+          "path": "policies.relaxed.leave_one_game_out.apology.schemes.non_dollar_raw",
+          "only_in": "new"
+        },
+        {
+          "path": "policies.relaxed.leave_one_game_out.apology.schemes.non_dollar_unit",
+          "only_in": "new"
+        },
+        {
+          "path": "policies.relaxed.leave_one_game_out.dictator.schemes.family_balanced_raw",
+          "only_in": "new"
+        },
+        {
+          "path": "policies.relaxed.leave_one_game_out.dictator.schemes.family_balanced_unit",
+          "only_in": "new"
+        },
+        {
+          "path": "policies.relaxed.leave_one_game_out.dictator.schemes.non_dollar_raw",
+          "only_in": "new"
+        },
+        {
+          "path": "policies.relaxed.leave_one_game_out.dictator.schemes.non_dollar_unit",
+          "only_in": "new"
+        },
+        {
+          "path": "policies.relaxed.leave_one_game_out.overfishing.schemes.family_balanced_raw",
+          "only_in": "new"
+        },
+        {
+          "path": "policies.relaxed.leave_one_game_out.overfishing.schemes.family_balanced_unit",
+          "only_in": "new"
+        },
+        {
+          "path": "policies.relaxed.leave_one_game_out.overfishing.schemes.non_dollar_raw",
+          "only_in": "new"
+        },
+        {
+          "path": "policies.relaxed.leave_one_game_out.overfishing.schemes.non_dollar_unit",
+          "only_in": "new"
+        }
+      ],
+      "n_structural_differences": 118
+    },
+    "analysis/pooled_addendum.json": {
+      "old": "/home/marco/dockmaster/data/pr-crossgame/round1/results/crossgame-decision-vectors/analysis/pooled_addendum.json",
+      "new": "/home/marco/dockmaster/data/pr-crossgame/work2/pooled/addendum.json",
+      "n_numeric_leaves": 1069,
+      "n_numeric_leaves_identical": 331,
+      "max_abs_delta": 1.6548612163935772e-07,
+      "max_abs_delta_path": "policies.relaxed.logo_null_within_cell.20.cell_balanced.overfishing.max",
+      "largest_moves": [
+        {
+          "path": "policies.relaxed.logo_null_within_cell.20.cell_balanced.overfishing.max",
+          "old": 0.4374225078189385,
+          "new": 0.43742267330506013,
+          "abs_delta": 1.6548612163935772e-07,
+          "rel_delta": 3.783208592937914e-07
+        },
+        {
+          "path": "policies.relaxed.logo_null_within_cell.20.game_equal_unit.overfishing.max",
+          "old": 0.4261395927022528,
+          "new": 0.42613973293618385,
+          "abs_delta": 1.4023393102302606e-07,
+          "rel_delta": 3.290796895581353e-07
+        },
+        {
+          "path": "policies.relaxed.logo_null_within_cell.20.game_precision_unit.overfishing.min",
+          "old": -0.40533942575085413,
+          "new": -0.4053395537108056,
+          "abs_delta": 1.279599514680818e-07,
+          "rel_delta": 3.156858251227473e-07
+        },
+        {
+          "path": "policies.relaxed.logo_null_within_cell.20.game_precision_raw.overfishing.p97.5",
+          "old": 0.26520417144191344,
+          "new": 0.265204276462848,
+          "abs_delta": 1.0502093455988515e-07,
+          "rel_delta": 3.9600015490171536e-07
+        },
+        {
+          "path": "policies.strict.logo_null_within_cell.20.game_precision_unit.ultimatum.max",
+          "old": 0.4037741173875661,
+          "new": 0.4037740230288694,
+          "abs_delta": 9.435869668950048e-08,
+          "rel_delta": 2.3369179109350752e-07
+        },
+        {
+          "path": "policies.relaxed.logo_null_within_cell.20.game_equal_raw.overfishing.max",
+          "old": 0.5303982774201156,
+          "new": 0.5303981860016533,
+          "abs_delta": 9.141846224469674e-08,
+          "rel_delta": 1.7235814318508128e-07
+        },
+        {
+          "path": "policies.strict.logo_null_within_cell.0.game_precision_raw.apology.min",
+          "old": -0.3987862974037004,
+          "new": -0.3987862133390597,
+          "abs_delta": 8.406464069299346e-08,
+          "rel_delta": 2.1080122672292553e-07
+        },
+        {
+          "path": "policies.relaxed.logo_null_within_cell.20.game_precision_unit.overfishing.p97.5",
+          "old": 0.2646924106891263,
+          "new": 0.2646924945061255,
+          "abs_delta": 8.381699917459073e-08,
+          "rel_delta": 3.1665801227564106e-07
+        },
+        {
+          "path": "policies.relaxed.logo_null_within_cell.20.cell_balanced.overfishing.p2.5",
+          "old": -0.30176559997497465,
+          "new": -0.30176568223922806,
+          "abs_delta": 8.226425340929211e-08,
+          "rel_delta": 2.7260970432044097e-07
+        },
+        {
+          "path": "policies.relaxed.logo_null_within_cell.20.game_precision_unit.ultimatum.p2.5",
+          "old": -0.2994970657311203,
+          "new": -0.2994971435162713,
+          "abs_delta": 7.778515104250872e-08,
+          "rel_delta": 2.597191750454299e-07
+        },
+        {
+          "path": "policies.relaxed.logo_null_within_cell.20.game_precision_raw.apology.max",
+          "old": 0.3970844887181478,
+          "new": 0.39708441122896776,
+          "abs_delta": 7.748918001704297e-08,
+          "rel_delta": 1.9514532100508492e-07
+        },
+        {
+          "path": "policies.relaxed.logo_null_within_cell.20.cell_balanced.ultimatum.p97.5",
+          "old": 0.3086499995313164,
+          "new": 0.30865007622934715,
+          "abs_delta": 7.669803075982529e-08,
+          "rel_delta": 2.4849509741521543e-07
+        },
+        {
+          "path": "policies.relaxed.logo_null_within_cell.20.game_equal_unit.overfishing.p2.5",
+          "old": -0.2797270369357301,
+          "new": -0.27972711324536065,
+          "abs_delta": 7.630963055893503e-08,
+          "rel_delta": 2.728002647780538e-07
+        },
+        {
+          "path": "policies.relaxed.logo_null_within_cell.20.game_equal_raw.apology.p97.5",
+          "old": 0.2708099245747865,
+          "new": 0.2708098501252152,
+          "abs_delta": 7.444957128566188e-08,
+          "rel_delta": 2.7491448624919946e-07
+        },
+        {
+          "path": "policies.relaxed.logo_null_within_cell.20.game_equal_unit.apology.min",
+          "old": -0.38986461010955936,
+          "new": -0.38986453833766477,
+          "abs_delta": 7.177189459417477e-08,
+          "rel_delta": 1.840944079894954e-07
+        },
+        {
+          "path": "policies.strict.logo_null_within_cell.20.game_precision_unit.trust.max",
+          "old": 0.5094918679478745,
+          "new": 0.509491802198883,
+          "abs_delta": 6.5748991473491e-08,
+          "rel_delta": 1.290481666337758e-07
+        },
+        {
+          "path": "policies.strict.logo_null_within_cell.20.game_precision_raw.prisoners_dilemma.max",
+          "old": 0.49142339240099236,
+          "new": 0.4914234570650008,
+          "abs_delta": 6.466400842564113e-08,
+          "rel_delta": 1.31585107499433e-07
+        },
+        {
+          "path": "policies.relaxed.logo_null_within_cell.20.game_equal_unit.trust.p97.5",
+          "old": 0.30664809991357966,
+          "new": 0.3066480359167035,
+          "abs_delta": 6.399687618729999e-08,
+          "rel_delta": 2.0869810119591724e-07
+        },
+        {
+          "path": "policies.relaxed.logo_null_within_cell.20.game_precision_unit.apology.max",
+          "old": 0.3825669541440997,
+          "new": 0.3825668923404439,
+          "abs_delta": 6.180365580421565e-08,
+          "rel_delta": 1.6154990684568213e-07
+        },
+        {
+          "path": "policies.strict.logo_null_within_cell.20.cell_balanced.dictator.max",
+          "old": 0.44568343267133725,
+          "new": 0.44568337223280063,
+          "abs_delta": 6.043853661985565e-08,
+          "rel_delta": 1.3560866792287783e-07
+        },
+        {
+          "path": "policies.strict.logo_null_within_cell.0.game_precision_unit.apology.min",
+          "old": -0.4337198786914341,
+          "new": -0.43371981915767077,
+          "abs_delta": 5.95337633080284e-08,
+          "rel_delta": 1.3726316508167967e-07
+        },
+        {
+          "path": "policies.strict.logo_null_within_cell.20.cell_balanced.prisoners_dilemma.min",
+          "old": -0.521666922354498,
+          "new": -0.5216669807172049,
+          "abs_delta": 5.8362706889525384e-08,
+          "rel_delta": 1.1187732604675578e-07
+        },
+        {
+          "path": "policies.relaxed.logo_null_within_cell.20.game_precision_unit.prisoners_dilemma.p2.5",
+          "old": -0.3084683338265282,
+          "new": -0.3084683910841144,
+          "abs_delta": 5.725758617236565e-08,
+          "rel_delta": 1.8561897370143322e-07
+        },
+        {
+          "path": "policies.strict.logo_null_within_cell.20.game_precision_raw.prisoners_dilemma.min",
+          "old": -0.5527354408787565,
+          "new": -0.5527354957364745,
+          "abs_delta": 5.485771803481754e-08,
+          "rel_delta": 9.924768439509055e-08
+        },
+        {
+          "path": "policies.relaxed.logo_null_within_cell.20.cell_balanced.overfishing.p97.5",
+          "old": 0.2636812523053917,
+          "new": 0.26368130607076024,
+          "abs_delta": 5.376536854617697e-08,
+          "rel_delta": 2.0390284524663558e-07
+        }
+      ],
+      "counts_that_moved": [],
+      "provenance_differences": [],
+      "structural_differences": [
+        {
+          "path": "policies.relaxed.dollar_decomposition.family_balanced_raw",
+          "only_in": "new"
+        },
+        {
+          "path": "policies.relaxed.dollar_decomposition.family_balanced_unit",
+          "only_in": "new"
+        },
+        {
+          "path": "policies.relaxed.logo_null_within_cell.0.family_balanced_raw",
+          "only_in": "new"
+        },
+        {
+          "path": "policies.relaxed.logo_null_within_cell.0.family_balanced_unit",
+          "only_in": "new"
+        },
+        {
+          "path": "policies.relaxed.logo_null_within_cell.0.non_dollar_raw",
+          "only_in": "new"
+        },
+        {
+          "path": "policies.relaxed.logo_null_within_cell.0.non_dollar_unit",
+          "only_in": "new"
+        },
+        {
+          "path": "policies.relaxed.logo_null_within_cell.20.family_balanced_raw",
+          "only_in": "new"
+        },
+        {
+          "path": "policies.relaxed.logo_null_within_cell.20.family_balanced_unit",
+          "only_in": "new"
+        },
+        {
+          "path": "policies.relaxed.logo_null_within_cell.20.non_dollar_raw",
+          "only_in": "new"
+        },
+        {
+          "path": "policies.relaxed.logo_null_within_cell.20.non_dollar_unit",
+          "only_in": "new"
+        },
+        {
+          "path": "policies.relaxed.logo_orthogonal_to_dictator.apology.schemes.family_balanced_unit",
+          "only_in": "new"
+        },
+        {
+          "path": "policies.relaxed.logo_orthogonal_to_dictator.apology.schemes.non_dollar_unit",
+          "only_in": "new"
+        },
+        {
+          "path": "policies.relaxed.logo_orthogonal_to_dictator.dictator.schemes.family_balanced_unit",
+          "only_in": "new"
+        },
+        {
+          "path": "policies.relaxed.logo_orthogonal_to_dictator.dictator.schemes.non_dollar_unit",
+          "only_in": "new"
+        },
+        {
+          "path": "policies.relaxed.logo_orthogonal_to_dictator.overfishing.schemes.family_balanced_unit",
+          "only_in": "new"
+        },
+        {
+          "path": "policies.relaxed.logo_orthogonal_to_dictator.overfishing.schemes.non_dollar_unit",
+          "only_in": "new"
+        },
+        {
+          "path": "policies.relaxed.logo_orthogonal_to_dictator.prisoners_dilemma.schemes.family_balanced_unit",
+          "only_in": "new"
+        },
+        {
+          "path": "policies.relaxed.logo_orthogonal_to_dictator.prisoners_dilemma.schemes.non_dollar_unit",
+          "only_in": "new"
+        },
+        {
+          "path": "policies.relaxed.logo_orthogonal_to_dictator.trust.schemes.family_balanced_unit",
+          "only_in": "new"
+        },
+        {
+          "path": "policies.relaxed.logo_orthogonal_to_dictator.trust.schemes.non_dollar_unit",
+          "only_in": "new"
+        },
+        {
+          "path": "policies.relaxed.logo_orthogonal_to_dictator.ultimatum.schemes.family_balanced_unit",
+          "only_in": "new"
+        },
+        {
+          "path": "policies.relaxed.logo_orthogonal_to_dictator.ultimatum.schemes.non_dollar_unit",
+          "only_in": "new"
+        },
+        {
+          "path": "policies.strict.dollar_decomposition.family_balanced_raw",
+          "only_in": "new"
+        },
+        {
+          "path": "policies.strict.dollar_decomposition.family_balanced_unit",
+          "only_in": "new"
+        },
+        {
+          "path": "policies.strict.logo_null_within_cell.0.family_balanced_raw",
+          "only_in": "new"
+        }
+      ],
+      "n_structural_differences": 44
+    },
+    "analysis/pooled_reliability.json": {
+      "old": "/home/marco/dockmaster/data/pr-crossgame/round1/results/crossgame-decision-vectors/analysis/pooled_reliability.json",
+      "new": "/home/marco/dockmaster/data/pr-crossgame/work2/pooled/reliability.json",
+      "n_numeric_leaves": 289,
+      "n_numeric_leaves_identical": 246,
+      "max_abs_delta": 3.3306690738754696e-16,
+      "max_abs_delta_path": "policies.strict.logo_corrected.game_equal_unit.overfishing.layer20.reliability_pool",
+      "largest_moves": [
+        {
+          "path": "policies.strict.logo_corrected.game_equal_unit.overfishing.layer20.reliability_pool",
+          "old": 0.9387712383663591,
+          "new": 0.9387712383663595,
+          "abs_delta": 3.3306690738754696e-16,
+          "rel_delta": 3.5479027666755827e-16
+        },
+        {
+          "path": "policies.relaxed.logo_corrected.game_equal_unit.apology.layer20.reliability_pool",
+          "old": 0.8960466393145142,
+          "new": 0.896046639314514,
+          "abs_delta": 2.220446049250313e-16,
+          "rel_delta": 2.4780474049308184e-16
+        },
+        {
+          "path": "policies.relaxed.logo_corrected.game_equal_unit.dictator.layer0.reliability_pool",
+          "old": 0.7394316860529104,
+          "new": 0.7394316860529107,
+          "abs_delta": 2.220446049250313e-16,
+          "rel_delta": 3.0029089787902694e-16
+        },
+        {
+          "path": "policies.relaxed.logo_corrected.game_equal_unit.overfishing.layer20.reliability_pool",
+          "old": 0.9410904882970575,
+          "new": 0.9410904882970578,
+          "abs_delta": 2.220446049250313e-16,
+          "rel_delta": 2.359439476716317e-16
+        },
+        {
+          "path": "policies.strict.logo_corrected.game_equal_unit.apology.layer0.reliability_pool",
+          "old": 0.6717453157509033,
+          "new": 0.6717453157509036,
+          "abs_delta": 2.220446049250313e-16,
+          "rel_delta": 3.3054879538210257e-16
+        },
+        {
+          "path": "policies.strict.logo_corrected.game_equal_unit.dictator.layer0.reliability_pool",
+          "old": 0.6143604815537672,
+          "new": 0.614360481553767,
+          "abs_delta": 2.220446049250313e-16,
+          "rel_delta": 3.614239710917971e-16
+        },
+        {
+          "path": "policies.strict.logo_corrected.game_equal_unit.overfishing.layer0.reliability_pool",
+          "old": 0.7948191307851485,
+          "new": 0.7948191307851483,
+          "abs_delta": 2.220446049250313e-16,
+          "rel_delta": 2.7936494772803007e-16
+        },
+        {
+          "path": "policies.strict.logo_corrected.game_equal_unit.trust.layer20.reliability_pool",
+          "old": 0.8764721952738895,
+          "new": 0.8764721952738893,
+          "abs_delta": 2.220446049250313e-16,
+          "rel_delta": 2.5333901762353613e-16
+        },
+        {
+          "path": "policies.relaxed.logo_corrected.game_equal_unit.apology.layer0.attenuation_corrected",
+          "old": 0.6516931801707475,
+          "new": 0.6516931801707476,
+          "abs_delta": 1.1102230246251565e-16,
+          "rel_delta": 1.7035977334215333e-16
+        },
+        {
+          "path": "policies.relaxed.logo_corrected.game_equal_unit.apology.layer0.observed",
+          "old": 0.52744431107251,
+          "new": 0.5274443110725101,
+          "abs_delta": 1.1102230246251565e-16,
+          "rel_delta": 2.1049104167369232e-16
+        },
+        {
+          "path": "policies.relaxed.logo_corrected.game_equal_unit.apology.layer0.reliability_pool",
+          "old": 0.7443815549628054,
+          "new": 0.7443815549628056,
+          "abs_delta": 1.1102230246251565e-16,
+          "rel_delta": 1.491470358478497e-16
+        },
+        {
+          "path": "policies.relaxed.logo_corrected.game_equal_unit.apology.layer20.attenuation_corrected",
+          "old": 0.6739859755266562,
+          "new": 0.6739859755266561,
+          "abs_delta": 1.1102230246251565e-16,
+          "rel_delta": 1.6472494457434704e-16
+        },
+        {
+          "path": "policies.relaxed.logo_corrected.game_equal_unit.apology.layer20.observed",
+          "old": 0.623303135648762,
+          "new": 0.6233031356487619,
+          "abs_delta": 1.1102230246251565e-16,
+          "rel_delta": 1.7811927473613402e-16
+        },
+        {
+          "path": "policies.relaxed.logo_corrected.game_equal_unit.dictator.layer0.attenuation_corrected",
+          "old": 0.8480438512358061,
+          "new": 0.848043851235806,
+          "abs_delta": 1.1102230246251565e-16,
+          "rel_delta": 1.309157566566035e-16
+        },
+        {
+          "path": "policies.relaxed.logo_corrected.game_equal_unit.dictator.layer0.observed",
+          "old": 0.6595106557763011,
+          "new": 0.659510655776301,
+          "abs_delta": 1.1102230246251565e-16,
+          "rel_delta": 1.6834042253924284e-16
+        },
+        {
+          "path": "policies.relaxed.logo_corrected.game_equal_unit.dictator.layer20.reliability_pool",
+          "old": 0.87639151276913,
+          "new": 0.8763915127691301,
+          "abs_delta": 1.1102230246251565e-16,
+          "rel_delta": 1.26681170281669e-16
+        },
+        {
+          "path": "policies.relaxed.logo_corrected.game_equal_unit.overfishing.layer0.reliability_pool",
+          "old": 0.8700957116087138,
+          "new": 0.8700957116087137,
+          "abs_delta": 1.1102230246251565e-16,
+          "rel_delta": 1.27597804449866e-16
+        },
+        {
+          "path": "policies.relaxed.logo_corrected.game_equal_unit.prisoners_dilemma.layer0.reliability_pool",
+          "old": 0.8640613621423185,
+          "new": 0.8640613621423187,
+          "abs_delta": 1.1102230246251565e-16,
+          "rel_delta": 1.2848890984692506e-16
+        },
+        {
+          "path": "policies.relaxed.logo_corrected.game_equal_unit.trust.layer20.reliability_pool",
+          "old": 0.8990999108143446,
+          "new": 0.8990999108143445,
+          "abs_delta": 1.1102230246251565e-16,
+          "rel_delta": 1.2348160769136222e-16
+        },
+        {
+          "path": "policies.relaxed.logo_corrected.game_equal_unit.ultimatum.layer0.attenuation_corrected",
+          "old": 0.6164302831351198,
+          "new": 0.6164302831351199,
+          "abs_delta": 1.1102230246251565e-16,
+          "rel_delta": 1.8010520491930447e-16
+        },
+        {
+          "path": "policies.relaxed.logo_corrected.game_equal_unit.ultimatum.layer0.observed",
+          "old": 0.5139245794836954,
+          "new": 0.5139245794836955,
+          "abs_delta": 1.1102230246251565e-16,
+          "rel_delta": 2.1602839578922667e-16
+        },
+        {
+          "path": "policies.relaxed.logo_corrected.game_equal_unit.ultimatum.layer0.reliability_pool",
+          "old": 0.7483094969865769,
+          "new": 0.7483094969865768,
+          "abs_delta": 1.1102230246251565e-16,
+          "rel_delta": 1.4836415000691506e-16
+        },
+        {
+          "path": "policies.strict.logo_corrected.game_equal_unit.apology.layer0.observed",
+          "old": 0.5211817644613249,
+          "new": 0.521181764461325,
+          "abs_delta": 1.1102230246251565e-16,
+          "rel_delta": 2.130203127449487e-16
+        },
+        {
+          "path": "policies.strict.logo_corrected.game_equal_unit.apology.layer20.attenuation_corrected",
+          "old": 0.7402465265374435,
+          "new": 0.7402465265374434,
+          "abs_delta": 1.1102230246251565e-16,
+          "rel_delta": 1.4998017347251933e-16
+        },
+        {
+          "path": "policies.strict.logo_corrected.game_equal_unit.apology.layer20.observed",
+          "old": 0.6755774826491318,
+          "new": 0.6755774826491316,
+          "abs_delta": 1.1102230246251565e-16,
+          "rel_delta": 1.6433689001469615e-16
+        }
+      ],
+      "counts_that_moved": [],
+      "provenance_differences": [],
+      "structural_differences": [
+        {
+          "path": "policies.relaxed.logo_corrected.family_balanced_unit",
+          "only_in": "new"
+        },
+        {
+          "path": "policies.relaxed.logo_corrected.non_dollar_unit",
+          "only_in": "new"
+        },
+        {
+          "path": "policies.strict.logo_corrected.family_balanced_unit",
+          "only_in": "new"
+        },
+        {
+          "path": "policies.strict.logo_corrected.non_dollar_unit",
+          "only_in": "new"
+        }
+      ],
+      "n_structural_differences": 4
+    },
+    "analysis/pooled_layer0_tokens.json": {
+      "old": "/home/marco/dockmaster/data/pr-crossgame/round1/results/crossgame-decision-vectors/analysis/pooled_layer0_tokens.json",
+      "new": "/home/marco/dockmaster/data/pr-crossgame/work2/pooled/layer0_tokens.json",
+      "n_numeric_leaves": 240,
+      "n_numeric_leaves_identical": 240,
+      "max_abs_delta": null,
+      "max_abs_delta_path": null,
+      "largest_moves": [],
+      "counts_that_moved": [],
+      "provenance_differences": [],
+      "structural_differences": [
+        {
+          "path": "altruism_response_avg_diff.pt",
+          "only_in": "new"
+        },
+        {
+          "path": "decision_apology_response_avg_diff_cellbalanced_relaxed.pt",
+          "only_in": "new"
+        },
+        {
+          "path": "decision_apology_response_avg_diff_cellbalanced_strict.pt",
+          "only_in": "new"
+        },
+        {
+          "path": "decision_dictator_only_response_avg_diff_cellbalanced.pt",
+          "only_in": "new"
+        },
+        {
+          "path": "decision_dictator_response_avg_diff_cellbalanced_relaxed.pt",
+          "only_in": "new"
+        },
+        {
+          "path": "decision_dictator_response_avg_diff_cellbalanced_strict.pt",
+          "only_in": "new"
+        },
+        {
+          "path": "decision_overfishing_response_avg_diff_cellbalanced_relaxed.pt",
+          "only_in": "new"
+        },
+        {
+          "path": "decision_overfishing_response_avg_diff_cellbalanced_strict.pt",
+          "only_in": "new"
+        },
+        {
+          "path": "decision_pooled_family_balanced_raw_response_avg_diff_relaxed.pt",
+          "only_in": "new"
+        },
+        {
+          "path": "decision_pooled_family_balanced_raw_response_avg_diff_strict.pt",
+          "only_in": "new"
+        },
+        {
+          "path": "decision_pooled_family_balanced_unit_response_avg_diff_relaxed.pt",
+          "only_in": "new"
+        },
+        {
+          "path": "decision_pooled_family_balanced_unit_response_avg_diff_strict.pt",
+          "only_in": "new"
+        },
+        {
+          "path": "decision_pooled_game_equal_raw_response_avg_diff_relaxed.pt",
+          "only_in": "new"
+        },
+        {
+          "path": "decision_pooled_game_precision_raw_response_avg_diff_relaxed.pt",
+          "only_in": "new"
+        },
+        {
+          "path": "decision_pooled_game_precision_unit_response_avg_diff_relaxed.pt",
+          "only_in": "new"
+        },
+        {
+          "path": "decision_pooled_game_precision_unit_response_avg_diff_strict.pt",
+          "only_in": "new"
+        },
+        {
+          "path": "decision_pooled_non_dollar_raw_response_avg_diff_relaxed.pt",
+          "only_in": "new"
+        },
+        {
+          "path": "decision_pooled_non_dollar_raw_response_avg_diff_strict.pt",
+          "only_in": "new"
+        },
+        {
+          "path": "decision_pooled_non_dollar_unit_response_avg_diff_relaxed.pt",
+          "only_in": "new"
+        },
+        {
+          "path": "decision_pooled_non_dollar_unit_response_avg_diff_strict.pt",
+          "only_in": "new"
+        },
+        {
+          "path": "decision_prisoners_dilemma_response_avg_diff_cellbalanced_relaxed.pt",
+          "only_in": "new"
+        },
+        {
+          "path": "decision_prisoners_dilemma_response_avg_diff_cellbalanced_strict.pt",
+          "only_in": "new"
+        },
+        {
+          "path": "decision_response_avg_diff_cellbalanced.pt",
+          "only_in": "old"
+        },
+        {
+          "path": "decision_trust_response_avg_diff_cellbalanced_relaxed.pt",
+          "only_in": "new"
+        },
+        {
+          "path": "decision_trust_response_avg_diff_cellbalanced_strict.pt",
+          "only_in": "new"
+        }
+      ],
+      "n_structural_differences": 27
+    }
+  },
+  "missing": [],
+  "summary": {
+    "n_vectors_compared": 22,
+    "n_vectors_bit_identical": 22,
+    "n_vectors_uncomparable": 0,
+    "worst_vector_cosine": 0.9999999999999986,
+    "n_json_files_compared": 7,
+    "n_structural_differences": 215,
+    "n_missing": 0,
+    "largest_numeric_delta": 7.640687752219488e-07,
+    "largest_numeric_delta_path": "analysis/pooled_analysis.json :: policies.strict.null_game_wide.0.game_equal_unit.game:overfishing.min"
+  }
+}

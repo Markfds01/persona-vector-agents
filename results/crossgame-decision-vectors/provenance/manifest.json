@@ -2,8 +2,8 @@
   "families": [
     {
       "family": "apology",
-      "rows_csv": "/home/marco/dockmaster/data/crossgame-vector/acts/apology/rows.csv",
-      "acts_dir": "/home/marco/dockmaster/data/crossgame-vector/acts/apology",
+      "rows_csv": "/home/marco/dockmaster/data/pr-crossgame/acts_v2/apology/rows.csv",
+      "acts_dir": "/home/marco/dockmaster/data/pr-crossgame/acts_v2/apology",
       "n_generated_rows": 720,
       "tag_counts": {
         "a2_anchor": 587,
@@ -16,7 +16,7 @@
         "bare_int": 1
       },
       "activation_meta": {
-        "rows_csv": "/home/marco/dockmaster/state/worktrees/crossgame-vector/scratch/rows/apology.csv",
+        "rows_csv": "/home/marco/dockmaster/state/worktrees/pr-crossgame/results/crossgame-decision-vectors/extraction/apology.csv",
         "model_id": "Qwen/Qwen2.5-7B-Instruct",
         "model_revision": "a09a35458c702b33eeacc393d103063234e8bc28",
         "dtype": "torch.bfloat16",
@@ -30,11 +30,21 @@
         "device": "cuda:0",
         "batch_size": 1,
         "padding": "none",
+        "poolings": [
+          "prompt_avg",
+          "prompt_last",
+          "response_avg"
+        ],
+        "extractor": "audit.extract",
+        "shard_rows": 250,
+        "limit_rows": 0,
+        "n_scored_rows": 714,
+        "complete": true,
         "n_shards": 3,
         "dropped": [],
-        "n_scored_rows": 714,
         "n_captured": 714,
-        "seconds": 154.88058376312256
+        "seconds": 141.22611689567566,
+        "resumed_from_shards": 0
       },
       "by_policy": {
         "strict": {
@@ -921,8 +931,8 @@
     },
     {
       "family": "dictator",
-      "rows_csv": "/home/marco/dockmaster/data/crossgame-vector/acts/dictator/rows.csv",
-      "acts_dir": "/home/marco/dockmaster/data/crossgame-vector/acts/dictator",
+      "rows_csv": "/home/marco/dockmaster/data/pr-crossgame/acts_v2/dictator/rows.csv",
+      "acts_dir": "/home/marco/dockmaster/data/pr-crossgame/acts_v2/dictator",
       "n_generated_rows": 720,
       "tag_counts": {
         "a2_anchor": 549,
@@ -936,7 +946,7 @@
         "unparsed": 8
       },
       "activation_meta": {
-        "rows_csv": "/home/marco/dockmaster/state/worktrees/crossgame-vector/scratch/rows/dictator.csv",
+        "rows_csv": "/home/marco/dockmaster/state/worktrees/pr-crossgame/results/crossgame-decision-vectors/extraction/dictator.csv",
         "model_id": "Qwen/Qwen2.5-7B-Instruct",
         "model_revision": "a09a35458c702b33eeacc393d103063234e8bc28",
         "dtype": "torch.bfloat16",
@@ -950,11 +960,21 @@
         "device": "cuda:0",
         "batch_size": 1,
         "padding": "none",
+        "poolings": [
+          "prompt_avg",
+          "prompt_last",
+          "response_avg"
+        ],
+        "extractor": "audit.extract",
+        "shard_rows": 250,
+        "limit_rows": 0,
+        "n_scored_rows": 712,
+        "complete": true,
         "n_shards": 3,
         "dropped": [],
-        "n_scored_rows": 712,
         "n_captured": 712,
-        "seconds": 233.68784141540527
+        "seconds": 107.40324878692627,
+        "resumed_from_shards": 0
       },
       "by_policy": {
         "strict": {
@@ -1853,8 +1873,8 @@
     },
     {
       "family": "overfishing",
-      "rows_csv": "/home/marco/dockmaster/data/crossgame-vector/acts/overfishing/rows.csv",
-      "acts_dir": "/home/marco/dockmaster/data/crossgame-vector/acts/overfishing",
+      "rows_csv": "/home/marco/dockmaster/data/pr-crossgame/acts_v2/overfishing/rows.csv",
+      "acts_dir": "/home/marco/dockmaster/data/pr-crossgame/acts_v2/overfishing",
       "n_generated_rows": 1440,
       "tag_counts": {
         "fish": 1404,
@@ -1862,7 +1882,7 @@
         "fish_bare": 21
       },
       "activation_meta": {
-        "rows_csv": "/home/marco/dockmaster/state/worktrees/crossgame-vector/scratch/rows/overfishing.csv",
+        "rows_csv": "/home/marco/dockmaster/state/worktrees/pr-crossgame/results/crossgame-decision-vectors/extraction/overfishing.csv",
         "model_id": "Qwen/Qwen2.5-7B-Instruct",
         "model_revision": "a09a35458c702b33eeacc393d103063234e8bc28",
         "dtype": "torch.bfloat16",
@@ -1876,11 +1896,21 @@
         "device": "cuda:0",
         "batch_size": 1,
         "padding": "none",
+        "poolings": [
+          "prompt_avg",
+          "prompt_last",
+          "response_avg"
+        ],
+        "extractor": "audit.extract",
+        "shard_rows": 250,
+        "limit_rows": 0,
+        "n_scored_rows": 1425,
+        "complete": true,
         "n_shards": 6,
         "dropped": [],
-        "n_scored_rows": 1425,
         "n_captured": 1425,
-        "seconds": 373.6330671310425
+        "seconds": 212.13966846466064,
+        "resumed_from_shards": 0
       },
       "by_policy": {
         "strict": {
@@ -2676,8 +2706,8 @@
     },
     {
       "family": "prisoners_dilemma",
-      "rows_csv": "/home/marco/dockmaster/data/crossgame-vector/acts/prisoners_dilemma/rows.csv",
-      "acts_dir": "/home/marco/dockmaster/data/crossgame-vector/acts/prisoners_dilemma",
+      "rows_csv": "/home/marco/dockmaster/data/pr-crossgame/acts_v2/prisoners_dilemma/rows.csv",
+      "acts_dir": "/home/marco/dockmaster/data/pr-crossgame/acts_v2/prisoners_dilemma",
       "n_generated_rows": 240,
       "tag_counts": {
         "defect_decl": 184,
@@ -2687,7 +2717,7 @@
         "coop": 2
       },
       "activation_meta": {
-        "rows_csv": "/home/marco/dockmaster/state/worktrees/crossgame-vector/scratch/rows/prisoners_dilemma.csv",
+        "rows_csv": "/home/marco/dockmaster/state/worktrees/pr-crossgame/results/crossgame-decision-vectors/extraction/prisoners_dilemma.csv",
         "model_id": "Qwen/Qwen2.5-7B-Instruct",
         "model_revision": "a09a35458c702b33eeacc393d103063234e8bc28",
         "dtype": "torch.bfloat16",
@@ -2701,11 +2731,21 @@
         "device": "cuda:0",
         "batch_size": 1,
         "padding": "none",
+        "poolings": [
+          "prompt_avg",
+          "prompt_last",
+          "response_avg"
+        ],
+        "extractor": "audit.extract",
+        "shard_rows": 250,
+        "limit_rows": 0,
+        "n_scored_rows": 240,
+        "complete": true,
         "n_shards": 1,
         "dropped": [],
-        "n_scored_rows": 240,
         "n_captured": 240,
-        "seconds": 25.430579662322998
+        "seconds": 26.175825357437134,
+        "resumed_from_shards": 0
       },
       "by_policy": {
         "strict": {
@@ -3528,8 +3568,8 @@
     },
     {
       "family": "trust",
-      "rows_csv": "/home/marco/dockmaster/data/crossgame-vector/acts/trust/rows.csv",
-      "acts_dir": "/home/marco/dockmaster/data/crossgame-vector/acts/trust",
+      "rows_csv": "/home/marco/dockmaster/data/pr-crossgame/acts_v2/trust/rows.csv",
+      "acts_dir": "/home/marco/dockmaster/data/pr-crossgame/acts_v2/trust",
       "n_generated_rows": 720,
       "tag_counts": {
         "a2_near": 93,
@@ -3543,7 +3583,7 @@
         "answer_is": 1
       },
       "activation_meta": {
-        "rows_csv": "/home/marco/dockmaster/state/worktrees/crossgame-vector/scratch/rows/trust.csv",
+        "rows_csv": "/home/marco/dockmaster/state/worktrees/pr-crossgame/results/crossgame-decision-vectors/extraction/trust.csv",
         "model_id": "Qwen/Qwen2.5-7B-Instruct",
         "model_revision": "a09a35458c702b33eeacc393d103063234e8bc28",
         "dtype": "torch.bfloat16",
@@ -3557,11 +3597,21 @@
         "device": "cuda:0",
         "batch_size": 1,
         "padding": "none",
+        "poolings": [
+          "prompt_avg",
+          "prompt_last",
+          "response_avg"
+        ],
+        "extractor": "audit.extract",
+        "shard_rows": 250,
+        "limit_rows": 0,
+        "n_scored_rows": 699,
+        "complete": true,
         "n_shards": 3,
         "dropped": [],
-        "n_scored_rows": 699,
         "n_captured": 699,
-        "seconds": 179.5174081325531
+        "seconds": 140.0958230495453,
+        "resumed_from_shards": 0
       },
       "by_policy": {
         "strict": {
@@ -4445,8 +4495,8 @@
     },
     {
       "family": "ultimatum",
-      "rows_csv": "/home/marco/dockmaster/data/crossgame-vector/acts/ultimatum/rows.csv",
-      "acts_dir": "/home/marco/dockmaster/data/crossgame-vector/acts/ultimatum",
+      "rows_csv": "/home/marco/dockmaster/data/pr-crossgame/acts_v2/ultimatum/rows.csv",
+      "acts_dir": "/home/marco/dockmaster/data/pr-crossgame/acts_v2/ultimatum",
       "n_generated_rows": 720,
       "tag_counts": {
         "a2_anchor": 520,
@@ -4460,7 +4510,7 @@
         "answer_is": 2
       },
       "activation_meta": {
-        "rows_csv": "/home/marco/dockmaster/state/worktrees/crossgame-vector/scratch/rows/ultimatum.csv",
+        "rows_csv": "/home/marco/dockmaster/state/worktrees/pr-crossgame/results/crossgame-decision-vectors/extraction/ultimatum.csv",
         "model_id": "Qwen/Qwen2.5-7B-Instruct",
         "model_revision": "a09a35458c702b33eeacc393d103063234e8bc28",
         "dtype": "torch.bfloat16",
@@ -4474,11 +4524,21 @@
         "device": "cuda:0",
         "batch_size": 1,
         "padding": "none",
+        "poolings": [
+          "prompt_avg",
+          "prompt_last",
+          "response_avg"
+        ],
+        "extractor": "audit.extract",
+        "shard_rows": 250,
+        "limit_rows": 0,
+        "n_scored_rows": 713,
+        "complete": true,
         "n_shards": 3,
         "dropped": [],
-        "n_scored_rows": 713,
         "n_captured": 713,
-        "seconds": 247.66442012786865
+        "seconds": 70.22763633728027,
+        "resumed_from_shards": 0
       },
       "by_policy": {
         "strict": {

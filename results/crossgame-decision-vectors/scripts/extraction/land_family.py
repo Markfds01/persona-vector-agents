@@ -18,10 +18,13 @@ from pathlib import Path
 
 import torch
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+HERE = Path(__file__).resolve().parent
+# this directory holds the grid and pole definitions; the repo root is four up
+sys.path.insert(0, str(HERE))
+sys.path.insert(0, str(HERE.parents[3]))
 
-from scratch import analyze_crossgame as A
-from scratch import poles
+import analyze_crossgame as A  # noqa: E402
+import poles  # noqa: E402
 
 
 def main():

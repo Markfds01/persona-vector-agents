@@ -21,10 +21,13 @@ from pathlib import Path
 
 import torch
 
-ROOT = Path(__file__).resolve().parents[1]
+HERE = Path(__file__).resolve().parent
+# this directory holds the grid definition; the repo root is four up
+ROOT = HERE.parents[3]
+sys.path.insert(0, str(HERE))
 sys.path.insert(0, str(ROOT))
 
-from scratch import crossgame_grid
+import crossgame_grid  # noqa: E402
 
 LAYERS, HIDDEN = 29, 3584
 
@@ -85,7 +88,7 @@ def build(tmp, planted_strength):
 
 def run(tmp, manifest, label):
     out = tmp / ("out_" + label)
-    cmd = [sys.executable, str(ROOT / "scratch" / "analyze_crossgame.py"),
+    cmd = [sys.executable, str(HERE / "analyze_crossgame.py"),
            "--manifest", str(manifest), "--out", str(out),
            "--their-vectors", str(ROOT / "persona_vectors" / "Qwen2.5-7B-Instruct"),
            "--shuffles", "40", "--pair-shuffles", "20"]

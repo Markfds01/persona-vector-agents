@@ -9,15 +9,24 @@ its own linear algebra.
 What it recomputes, all from the activation shards:
 
   A  the six per-game cell-balanced vectors, against the committed .pt files
+  A2 the nine pooled vectors, against the committed .pt files
   B  the 6x6 agreement matrix at layer 20, and at layer 0
   C  leave-one-game-out AUC under the cell-balanced pool
-  D  leave-one-game-out AUC under game_equal_unit
-  E  pooled cosines against the archived Dictator vector and the shipped altruism
+  D  leave-one-game-out AUC under every one of the nine weightings
+  E  pooled cosines against the Dictator-only vector and the shipped altruism
      vector, per scheme
   F  the Dictator-projected-out collapse
-  G  the layer-0 digit-span share, its control bands, and the token decode
+  G  the layer-0 digit-span share, its control bands, the per-digit decomposition
+     and the token decode
   H  the pole census, tag counts, parse coverage, focal shares, effective n
   I  the PD wording breakdown and the payoff-matrix probe
+  J  split-half within cell at an INDEPENDENT seed - a robustness check on the
+     run's own split, not a reproduction of it: the number depends on the draw
+  K  the leave-one-game-out cosine between a pool and the game it never saw
+
+The nine weightings and `effective_n` are restated in this file rather than
+imported from `scripts/pooling/common.py`. That duplication is the point: sharing
+the code would make this a re-execution of the analysis instead of a check on it.
 
 CPU only. No GPU, no model loaded, no forward pass: G reads the embedding matrix
 off the safetensors shard because layer 0 of `response_avg` IS an average of rows
@@ -52,6 +61,28 @@ DIR = HERE.parent
 FAMILY_ORDER = ("dictator", "trust", "ultimatum", "apology", "overfishing",
                 "prisoners_dilemma")
 DIGIT_CONTROL_SEED = 20260820
+
+#: the ANSWER-FORMAT partition: four games answer in dollars, one in fish counts,
+#: one in the words Cooperate/Defect. This is the axis the confound lives on.
+FORMAT_GROUPS = (("dollar", ("dictator", "trust", "ultimatum", "apology")),
+                 ("fish", ("overfishing",)),
+                 ("binary", ("prisoners_dilemma",)))
+NON_DOLLAR = ("overfishing", "prisoners_dilemma")
+
+#: scheme -> (across-game weight kind, whether each game is unit-normalised first).
+#: `cell_balanced` is not here: it is the flat mean over every usable cell of every
+#: game, which is not a weighted sum of the per-game vectors.
+SCHEMES = {
+    "game_equal_raw": ("equal", False),
+    "game_equal_unit": ("equal", True),
+    "game_precision_raw": ("precision", False),
+    "game_precision_unit": ("precision", True),
+    "family_balanced_raw": ("family", False),
+    "family_balanced_unit": ("family", True),
+    "non_dollar_raw": ("non_dollar", False),
+    "non_dollar_unit": ("non_dollar", True),
+}
+ALL_SCHEMES = ("cell_balanced",) + tuple(SCHEMES)
 
 
 # --- loading ------------------------------------------------------------------
@@ -162,6 +193,51 @@ def effective_n(cells):
     return (c * c) / inv if inv > 0 else 0.0
 
 
+def across_game_weights(cells_by_family, scheme):
+    """{family: weight}, normalised to sum 1.
+
+    `equal` still leaves 4/6 of the weight on dollar-format answers, because four
+    of the six games are dollar games: balancing the game axis is not balancing
+    the format axis. `family` equalises the format axis instead, and was chosen
+    AFTER the agreement matrix showed the dollar / non-dollar split.
+    """
+    kind, _unit_first = SCHEMES[scheme]
+    families = sorted(cells_by_family)
+    if kind == "equal":
+        raw = {f: 1.0 for f in families}
+    elif kind == "precision":
+        raw = {f: effective_n(cells_by_family[f]) for f in families}
+    elif kind == "family":
+        present = [(name, [f for f in group if f in cells_by_family])
+                   for name, group in FORMAT_GROUPS]
+        present = [(name, group) for name, group in present if group]
+        share = 1.0 / len(present)
+        raw = {f: 0.0 for f in families}
+        for _name, group in present:
+            for f in group:
+                raw[f] = share / len(group)
+    elif kind == "non_dollar":
+        keep = [f for f in NON_DOLLAR if f in cells_by_family]
+        raw = {f: (1.0 / len(keep) if f in keep else 0.0) for f in families}
+    else:
+        raise ValueError("unknown weight kind %r" % (kind,))
+    total = sum(raw.values())
+    if total <= 0:
+        raise ValueError("%s: no game carries any weight here" % scheme)
+    return {f: w / total for f, w in raw.items()}
+
+
+def weighted_pool(game_vecs, cells_by_family, scheme):
+    """One pooled direction: sum_g w_g * (v_g, unit-normalised per layer or not)."""
+    _kind, unit_first = SCHEMES[scheme]
+    weights = across_game_weights(cells_by_family, scheme)
+    families = sorted(game_vecs)
+    stack = torch.stack([unit(game_vecs[f]) if unit_first else game_vecs[f]
+                         for f in families])
+    w = torch.tensor([weights[f] for f in families], dtype=torch.double)
+    return (stack * w.view(-1, 1, 1)).sum(dim=0)
+
+
 def auc(pos, neg):
     """Mann-Whitney AUC with tie correction."""
     values = torch.cat([pos, neg])
@@ -240,8 +316,12 @@ def digit_section(snapshot, acts_root, vectors, control_draws):
         for _ in range(control_draws)]
 
     big = emb[[tok.encode(d)[0] for d in "4567"]].double().mean(dim=0)
-    axis = big - emb[tok.encode("0")[0]].double()
+    zero = emb[tok.encode("0")[0]].double()
+    axis = big - zero
     axis = axis / axis.norm()
+    # the aggregate share is unsigned and cannot tell "'5' marks generous" from
+    # "'0' marks the extreme", which is exactly what changes across weightings
+    zero_basis = (zero / zero.norm()).view(-1, 1)
 
     normed = emb.double()
     normed = normed / normed.norm(dim=1, keepdim=True).clamp_min(1e-12)
@@ -263,6 +343,10 @@ def digit_section(snapshot, acts_root, vectors, control_draws):
         out["per_vector"][name] = {
             "digit_span_share": float((basis.T @ v).norm() / v.norm()),
             "cos_vs_big_digit_minus_zero": float(torch.dot(axis, v) / v.norm()),
+            "zero_only_span_share": float((zero_basis.T @ v).norm() / v.norm()),
+            "cos_per_digit": {str(d): float(
+                torch.dot(emb[digit_ids[d]].double(), v)
+                / (emb[digit_ids[d]].double().norm() * v.norm())) for d in range(10)},
             "response_control_32": band(response32, v),
             "response_control_many": band(response_many, v),
             "vocab_control_32": band(vocab32, v),
@@ -271,6 +355,68 @@ def digit_section(snapshot, acts_root, vectors, control_draws):
             "toward_self_interested": [[tok.convert_ids_to_tokens(int(i)),
                                         round(-float(s), 3)]
                                        for s, i in zip(bottom.values, bottom.indices)],
+        }
+    return out
+
+
+# --- J: split-half within cell, at a seed the run did not use -----------------
+
+def independent_split(cells_by_family, seed):
+    """Two disjoint halves of every cell, from a generator this file owns.
+
+    Splitting INSIDE each cell keeps the design identical on both sides, so the
+    only thing that differs is which rows landed where. The seed is deliberately
+    NOT the run's: reproducing a randomised statistic would mean replaying its
+    exact draw, which tests the RNG rather than the conclusion. This asks the
+    weaker and more useful question - does the ordering survive a different split.
+    """
+    generator = torch.Generator().manual_seed(seed)
+    fit, score = {}, {}
+    for family in FAMILY_ORDER:
+        for cell, (alt, self_) in sorted(cells_by_family[family].items()):
+            halves = []
+            for group in (alt, self_):
+                order = torch.randperm(len(group), generator=generator).tolist()
+                cut = max(1, len(group) // 2)
+                halves.append(([group[i] for i in order[:cut]],
+                               [group[i] for i in order[cut:]]))
+            (alt_a, alt_b), (self_a, self_b) = halves
+            if alt_a and self_a:
+                fit.setdefault(family, {})[cell] = (alt_a, self_a)
+            if alt_b and self_b:
+                score.setdefault(family, {})[cell] = (alt_b, self_b)
+    return fit, score
+
+
+def split_half_section(acts, cells_by_family, seed):
+    fit, score = independent_split(cells_by_family, seed)
+    fit_games = {f: cell_balanced(acts, c) for f, c in fit.items()}
+    flat_fit = {}
+    for f, c in fit.items():
+        flat_fit.update({"%s/%s" % (f, cell): v for cell, v in c.items()})
+    directions = {"cell_balanced": cell_balanced(acts, flat_fit)}
+    for scheme in SCHEMES:
+        directions[scheme] = weighted_pool(fit_games, fit, scheme)
+
+    out = {"seed": seed, "n_fit_cells": {f: len(c) for f, c in sorted(fit.items())},
+           "n_score_cells": {f: len(c) for f, c in sorted(score.items())},
+           "schemes": {}}
+    all_alt = [p for c in score.values() for a, _s in c.values() for p in a]
+    all_self = [p for c in score.values() for _a, s in c.values() for p in s]
+    for scheme, direction in directions.items():
+        per_game = {}
+        for family, cells in sorted(score.items()):
+            alt = [p for a, _s in cells.values() for p in a]
+            self_ = [p for _a, s in cells.values() for p in s]
+            layers = auc_by_layer(acts, direction, alt, self_)
+            per_game[family] = {"n_alt": len(alt), "n_self": len(self_),
+                                "layer0": layers[0], "layer20": layers[20]}
+        layers = auc_by_layer(acts, direction, all_alt, all_self)
+        out["schemes"][scheme] = {
+            "pooled": summarise_auc(layers),
+            "macro_layer0": sum(e["layer0"] for e in per_game.values()) / len(per_game),
+            "macro_layer20": sum(e["layer20"] for e in per_game.values()) / len(per_game),
+            "per_game": per_game,
         }
     return out
 
@@ -367,6 +513,8 @@ def main():
                     help="local Qwen2.5-7B-Instruct snapshot; omit to skip the "
                          "layer-0 digit share and token decode")
     ap.add_argument("--control-draws", type=int, default=1000)
+    ap.add_argument("--split-seed", type=int, default=20260821,
+                    help="deliberately not the run's seed; see section J")
     ap.add_argument("--policy", default="strict", choices=("strict", "relaxed"))
     ap.add_argument("--out", required=True)
     args = ap.parse_args()
@@ -412,47 +560,60 @@ def main():
             out["B_agreement"]["layer20"]["%s|%s" % (a, b)] = c[20].item()
             out["B_agreement"]["layer0"]["%s|%s" % (a, b)] = c[0].item()
 
-    # the pools
+    # the pools, all nine weightings
     all_cells = {}
     for f in FAMILY_ORDER:
         all_cells.update({"%s/%s" % (f, c): v for c, v in cells[f].items()})
-    pools = {
-        "cell_balanced": cell_balanced(acts, all_cells),
-        "game_equal_unit": torch.stack([unit(game_vecs[f])
-                                        for f in FAMILY_ORDER]).mean(dim=0),
-        "game_equal_raw": torch.stack([game_vecs[f]
-                                       for f in FAMILY_ORDER]).mean(dim=0),
-    }
-    w = torch.tensor([effective_n(cells[f]) for f in sorted(FAMILY_ORDER)],
-                     dtype=torch.double)
-    w = w / w.sum()
-    pools["game_precision_raw"] = (
-        torch.stack([game_vecs[f] for f in sorted(FAMILY_ORDER)])
-        * w.view(-1, 1, 1)).sum(dim=0)
-    pools["game_precision_unit"] = (
-        torch.stack([unit(game_vecs[f]) for f in sorted(FAMILY_ORDER)])
-        * w.view(-1, 1, 1)).sum(dim=0)
+    pools = {"cell_balanced": cell_balanced(acts, all_cells)}
+    for scheme in SCHEMES:
+        pools[scheme] = weighted_pool(game_vecs, cells, scheme)
+    out["E_weights"] = {scheme: across_game_weights(cells, scheme) for scheme in SCHEMES}
+
+    # A2 -- the committed POOLED vectors against this recomputation. Section A
+    # covers the six per-game files; without this the nine pooled files, which is
+    # what most of README section 5 is read off, would carry no independent check.
+    out["A2_pooled_vs_committed"] = {}
+    for scheme in ALL_SCHEMES:
+        path = vec_dir / ("decision_pooled_%s_response_avg_diff_%s.pt"
+                          % (scheme, args.policy))
+        if not path.is_file():
+            out["A2_pooled_vs_committed"][scheme] = {
+                "error": "not committed: %s" % path.name}
+            continue
+        c = cosines(pools[scheme], torch.load(path, map_location="cpu"))
+        out["A2_pooled_vs_committed"][scheme] = {
+            "cos_layer20": c[20].item(),
+            "min_cos_over_layers": c.min().item(),
+            "norm_layer20": pools[scheme][20].norm().item(),
+        }
 
     # C, D -- leave-one-game-out AUC
     out["C_logo_cell_balanced"] = {}
-    out["D_logo_game_equal_unit"] = {}
-    logo_geu = {}
+    out["D_logo_by_scheme"] = {scheme: {} for scheme in SCHEMES}
+    out["K_logo_cos_vs_held_game"] = {scheme: {} for scheme in ALL_SCHEMES}
+    logo = {scheme: {} for scheme in ALL_SCHEMES}
     for held in FAMILY_ORDER:
         alt, self_ = pole_positions(labels, poles, held)
-        rest_cells = {}
-        for f in FAMILY_ORDER:
-            if f != held:
-                rest_cells.update({"%s/%s" % (f, c): v for c, v in cells[f].items()})
-        entry = summarise_auc(auc_by_layer(acts, cell_balanced(acts, rest_cells),
-                                           alt, self_))
+        rest = {f: v for f, v in game_vecs.items() if f != held}
+        rest_cells_by_family = {f: c for f, c in cells.items() if f != held}
+        flat = {}
+        for f, c in rest_cells_by_family.items():
+            flat.update({"%s/%s" % (f, cell): v for cell, v in c.items()})
+        flat_pool = cell_balanced(acts, flat)
+        entry = summarise_auc(auc_by_layer(acts, flat_pool, alt, self_))
         entry.update({"n_altruistic": len(alt), "n_self_interested": len(self_)})
         out["C_logo_cell_balanced"][held] = entry
-
-        direction = torch.stack([unit(game_vecs[f]) for f in FAMILY_ORDER
-                                 if f != held]).mean(dim=0)
-        logo_geu[held] = direction
-        out["D_logo_game_equal_unit"][held] = summarise_auc(
-            auc_by_layer(acts, direction, alt, self_))
+        logo["cell_balanced"][held] = flat_pool
+        for scheme in SCHEMES:
+            direction = weighted_pool(rest, rest_cells_by_family, scheme)
+            logo[scheme][held] = direction
+            out["D_logo_by_scheme"][scheme][held] = summarise_auc(
+                auc_by_layer(acts, direction, alt, self_))
+        for scheme in ALL_SCHEMES:
+            c = cosines(logo[scheme][held], game_vecs[held])
+            out["K_logo_cos_vs_held_game"][scheme][held] = {
+                "layer0": c[0].item(), "layer20": c[20].item()}
+    logo_geu = logo["game_equal_unit"]
 
     # E -- the pooled cosines
     out["E_pool_cosines"] = {"n_usable_cells_total": len(all_cells)}
@@ -483,7 +644,7 @@ def main():
         alt, self_ = pole_positions(labels, poles, held)
         direction = logo_geu[held]
         residual = direction - (direction * u).sum(dim=1, keepdim=True) * u
-        before = out["D_logo_game_equal_unit"][held]
+        before = out["D_logo_by_scheme"]["game_equal_unit"][held]
         after = summarise_auc(auc_by_layer(acts, residual, alt, self_))
         out["F_dictator_projected_out"][held] = {
             "auc_layer20_before": before["layer20"],
@@ -492,6 +653,10 @@ def main():
             "residual_norm_fraction_layer20":
                 (residual[20].norm() / direction[20].norm()).item(),
         }
+
+    # J -- split-half within cell, independent draw
+    out["J_split_half_independent_seed"] = split_half_section(
+        acts, cells, args.split_seed)
 
     # H -- census, effective n, focal points
     out["H_census"] = census_section(args.acts, grid, poles, args.policy)

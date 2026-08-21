@@ -26,7 +26,9 @@ import sys
 import time
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+HERE = Path(__file__).resolve().parent
+# the repo root is four levels up from this directory
+sys.path.insert(0, str(HERE.parents[3]))
 
 from dataclasses import dataclass
 

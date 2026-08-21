@@ -78,6 +78,119 @@
       "overfishing|prisoners_dilemma": -0.08131442712704519
     }
   },
+  "E_weights": {
+    "game_equal_raw": {
+      "apology": 0.16666666666666666,
+      "dictator": 0.16666666666666666,
+      "overfishing": 0.16666666666666666,
+      "prisoners_dilemma": 0.16666666666666666,
+      "trust": 0.16666666666666666,
+      "ultimatum": 0.16666666666666666
+    },
+    "game_equal_unit": {
+      "apology": 0.16666666666666666,
+      "dictator": 0.16666666666666666,
+      "overfishing": 0.16666666666666666,
+      "prisoners_dilemma": 0.16666666666666666,
+      "trust": 0.16666666666666666,
+      "ultimatum": 0.16666666666666666
+    },
+    "game_precision_raw": {
+      "apology": 0.3100459616516597,
+      "dictator": 0.3076480196679405,
+      "overfishing": 0.11824498617128909,
+      "prisoners_dilemma": 0.041637846240032535,
+      "trust": 0.16054220513514383,
+      "ultimatum": 0.06188098113393436
+    },
+    "game_precision_unit": {
+      "apology": 0.3100459616516597,
+      "dictator": 0.3076480196679405,
+      "overfishing": 0.11824498617128909,
+      "prisoners_dilemma": 0.041637846240032535,
+      "trust": 0.16054220513514383,
+      "ultimatum": 0.06188098113393436
+    },
+    "family_balanced_raw": {
+      "apology": 0.08333333333333333,
+      "dictator": 0.08333333333333333,
+      "overfishing": 0.3333333333333333,
+      "prisoners_dilemma": 0.3333333333333333,
+      "trust": 0.08333333333333333,
+      "ultimatum": 0.08333333333333333
+    },
+    "family_balanced_unit": {
+      "apology": 0.08333333333333333,
+      "dictator": 0.08333333333333333,
+      "overfishing": 0.3333333333333333,
+      "prisoners_dilemma": 0.3333333333333333,
+      "trust": 0.08333333333333333,
+      "ultimatum": 0.08333333333333333
+    },
+    "non_dollar_raw": {
+      "apology": 0.0,
+      "dictator": 0.0,
+      "overfishing": 0.5,
+      "prisoners_dilemma": 0.5,
+      "trust": 0.0,
+      "ultimatum": 0.0
+    },
+    "non_dollar_unit": {
+      "apology": 0.0,
+      "dictator": 0.0,
+      "overfishing": 0.5,
+      "prisoners_dilemma": 0.5,
+      "trust": 0.0,
+      "ultimatum": 0.0
+    }
+  },
+  "A2_pooled_vs_committed": {
+    "cell_balanced": {
+      "cos_layer20": 0.9999999999999989,
+      "min_cos_over_layers": 0.9999999999999989,
+      "norm_layer20": 5.066440388785507
+    },
+    "game_equal_raw": {
+      "cos_layer20": 1.0000000000000002,
+      "min_cos_over_layers": 0.9999999999999988,
+      "norm_layer20": 4.492976002700415
+    },
+    "game_equal_unit": {
+      "cos_layer20": 0.9999999999999994,
+      "min_cos_over_layers": 0.9999999999999989,
+      "norm_layer20": 0.6900225929326327
+    },
+    "game_precision_raw": {
+      "cos_layer20": 0.9999999999999991,
+      "min_cos_over_layers": 0.999999999999999,
+      "norm_layer20": 5.628407656628802
+    },
+    "game_precision_unit": {
+      "cos_layer20": 0.9999999999999998,
+      "min_cos_over_layers": 0.999999999999999,
+      "norm_layer20": 0.8016451305480073
+    },
+    "family_balanced_raw": {
+      "cos_layer20": 1.0000000000000002,
+      "min_cos_over_layers": 0.9999999999999992,
+      "norm_layer20": 4.039350139860891
+    },
+    "family_balanced_unit": {
+      "cos_layer20": 0.9999999999999992,
+      "min_cos_over_layers": 0.9999999999999989,
+      "norm_layer20": 0.6454869981199084
+    },
+    "non_dollar_raw": {
+      "cos_layer20": 0.9999999999999997,
+      "min_cos_over_layers": 0.9999999999999988,
+      "norm_layer20": 4.455534928817718
+    },
+    "non_dollar_unit": {
+      "cos_layer20": 1.0,
+      "min_cos_over_layers": 0.999999999999999,
+      "norm_layer20": 0.7301333506596281
+    }
+  },
   "C_logo_cell_balanced": {
     "dictator": {
       "layer0": 0.8696581520503297,
@@ -128,42 +241,546 @@
       "n_self_interested": 213
     }
   },
-  "D_logo_game_equal_unit": {
-    "dictator": {
-      "layer0": 0.8335480936860457,
-      "layer20": 0.9219282953081179,
-      "best": 0.922974304555446,
-      "best_layer": 17
+  "D_logo_by_scheme": {
+    "game_equal_raw": {
+      "dictator": {
+        "layer0": 0.790464640339574,
+        "layer20": 0.9271431819904494,
+        "best": 0.9271431819904494,
+        "best_layer": 20
+      },
+      "trust": {
+        "layer0": 0.9179324894514768,
+        "layer20": 0.9670464135021097,
+        "best": 0.9676793248945148,
+        "best_layer": 19
+      },
+      "ultimatum": {
+        "layer0": 0.6533935413245758,
+        "layer20": 0.6769293924466339,
+        "best": 0.7863984674329502,
+        "best_layer": 2
+      },
+      "apology": {
+        "layer0": 0.6833380653897394,
+        "layer20": 0.9159149977067726,
+        "best": 0.9174765763207897,
+        "best_layer": 15
+      },
+      "overfishing": {
+        "layer0": 0.5459059367771781,
+        "layer20": 0.649745566692367,
+        "best": 0.677301464919044,
+        "best_layer": 25
+      },
+      "prisoners_dilemma": {
+        "layer0": 0.6825769431403235,
+        "layer20": 0.97339593114241,
+        "best": 0.9791340636411059,
+        "best_layer": 21
+      }
     },
-    "trust": {
-      "layer0": 0.9286497890295359,
-      "layer20": 0.9667932489451477,
-      "best": 0.9667932489451477,
-      "best_layer": 19
+    "game_equal_unit": {
+      "dictator": {
+        "layer0": 0.8335480936860457,
+        "layer20": 0.9219282953081179,
+        "best": 0.922974304555446,
+        "best_layer": 17
+      },
+      "trust": {
+        "layer0": 0.9286497890295359,
+        "layer20": 0.9667932489451477,
+        "best": 0.9667932489451477,
+        "best_layer": 19
+      },
+      "ultimatum": {
+        "layer0": 0.6264367816091954,
+        "layer20": 0.6964969896004378,
+        "best": 0.8006294471811713,
+        "best_layer": 28
+      },
+      "apology": {
+        "layer0": 0.7625636097582283,
+        "layer20": 0.9285495883110927,
+        "best": 0.9322296721776924,
+        "best_layer": 15
+      },
+      "overfishing": {
+        "layer0": 0.5561912104857363,
+        "layer20": 0.6512413261372397,
+        "best": 0.6753122590593678,
+        "best_layer": 25
+      },
+      "prisoners_dilemma": {
+        "layer0": 0.6593635889410537,
+        "layer20": 0.9574856546687532,
+        "best": 0.9710485133020345,
+        "best_layer": 21
+      }
     },
-    "ultimatum": {
-      "layer0": 0.6264367816091954,
-      "layer20": 0.6964969896004378,
-      "best": 0.8006294471811713,
-      "best_layer": 28
+    "game_precision_raw": {
+      "dictator": {
+        "layer0": 0.9050102326991586,
+        "layer20": 0.9488516637610854,
+        "best": 0.9488516637610854,
+        "best_layer": 20
+      },
+      "trust": {
+        "layer0": 0.9165400843881857,
+        "layer20": 0.9682278481012658,
+        "best": 0.9691983122362869,
+        "best_layer": 19
+      },
+      "ultimatum": {
+        "layer0": 0.5912698412698413,
+        "layer20": 0.7138752052545156,
+        "best": 0.8191023535851122,
+        "best_layer": 28
+      },
+      "apology": {
+        "layer0": 0.8692751217594513,
+        "layer20": 0.9431825627361479,
+        "best": 0.9431825627361479,
+        "best_layer": 20
+      },
+      "overfishing": {
+        "layer0": 0.6340478026214341,
+        "layer20": 0.6775173477255204,
+        "best": 0.6987663839629915,
+        "best_layer": 25
+      },
+      "prisoners_dilemma": {
+        "layer0": 0.5307772561293688,
+        "layer20": 0.96452790818988,
+        "best": 0.974960876369327,
+        "best_layer": 21
+      }
     },
-    "apology": {
-      "layer0": 0.7625636097582283,
-      "layer20": 0.9285495883110927,
-      "best": 0.9322296721776924,
-      "best_layer": 15
+    "game_precision_unit": {
+      "dictator": {
+        "layer0": 0.908299855984234,
+        "layer20": 0.9413780034866975,
+        "best": 0.9413780034866975,
+        "best_layer": 20
+      },
+      "trust": {
+        "layer0": 0.910759493670886,
+        "layer20": 0.9679324894514768,
+        "best": 0.9681856540084388,
+        "best_layer": 19
+      },
+      "ultimatum": {
+        "layer0": 0.5904488232074439,
+        "layer20": 0.7204433497536946,
+        "best": 0.8742474001094691,
+        "best_layer": 28
+      },
+      "apology": {
+        "layer0": 0.8817568305414201,
+        "layer20": 0.945170026426715,
+        "best": 0.9455085504619215,
+        "best_layer": 17
+      },
+      "overfishing": {
+        "layer0": 0.6348033924441018,
+        "layer20": 0.6749884348496531,
+        "best": 0.6951734772552043,
+        "best_layer": 25
+      },
+      "prisoners_dilemma": {
+        "layer0": 0.5333854981742305,
+        "layer20": 0.9580073030777256,
+        "best": 0.9713093375065206,
+        "best_layer": 21
+      }
     },
-    "overfishing": {
-      "layer0": 0.5561912104857363,
-      "layer20": 0.6512413261372397,
-      "best": 0.6753122590593678,
-      "best_layer": 25
+    "family_balanced_raw": {
+      "dictator": {
+        "layer0": 0.6753429849162434,
+        "layer20": 0.9088152808307436,
+        "best": 0.9088152808307436,
+        "best_layer": 20
+      },
+      "trust": {
+        "layer0": 0.8302109704641351,
+        "layer20": 0.9570886075949367,
+        "best": 0.9572151898734177,
+        "best_layer": 27
+      },
+      "ultimatum": {
+        "layer0": 0.6895183360700602,
+        "layer20": 0.6123426382047071,
+        "best": 0.7639573070607554,
+        "best_layer": 2
+      },
+      "apology": {
+        "layer0": 0.5483980169043615,
+        "layer20": 0.8626247624871688,
+        "best": 0.87951820385699,
+        "best_layer": 15
+      },
+      "overfishing": {
+        "layer0": 0.5165458750963763,
+        "layer20": 0.6009406322282189,
+        "best": 0.6484194294525829,
+        "best_layer": 25
+      },
+      "prisoners_dilemma": {
+        "layer0": 0.5618153364632238,
+        "layer20": 0.92018779342723,
+        "best": 0.9580073030777256,
+        "best_layer": 21
+      }
     },
-    "prisoners_dilemma": {
-      "layer0": 0.6593635889410537,
-      "layer20": 0.9574856546687532,
-      "best": 0.9710485133020345,
-      "best_layer": 21
+    "family_balanced_unit": {
+      "dictator": {
+        "layer0": 0.7588569696050936,
+        "layer20": 0.9079511862351247,
+        "best": 0.9110892139771091,
+        "best_layer": 25
+      },
+      "trust": {
+        "layer0": 0.850548523206751,
+        "layer20": 0.9593248945147679,
+        "best": 0.9593248945147679,
+        "best_layer": 20
+      },
+      "ultimatum": {
+        "layer0": 0.6340996168582376,
+        "layer20": 0.6323207443897099,
+        "best": 0.7718938149972633,
+        "best_layer": 2
+      },
+      "apology": {
+        "layer0": 0.6581453250922751,
+        "layer20": 0.8992290388101426,
+        "best": 0.9141131762290606,
+        "best_layer": 15
+      },
+      "overfishing": {
+        "layer0": 0.5299922898997687,
+        "layer20": 0.6089282960678489,
+        "best": 0.6526137239784117,
+        "best_layer": 25
+      },
+      "prisoners_dilemma": {
+        "layer0": 0.4282733437663015,
+        "layer20": 0.7696922274387064,
+        "best": 0.8346374543557642,
+        "best_layer": 21
+      }
+    },
+    "non_dollar_raw": {
+      "dictator": {
+        "layer0": 0.5239293564769196,
+        "layer20": 0.8363374516789206,
+        "best": 0.8604259834760858,
+        "best_layer": 25
+      },
+      "trust": {
+        "layer0": 0.6424894514767933,
+        "layer20": 0.919324894514768,
+        "best": 0.940717299578059,
+        "best_layer": 27
+      },
+      "ultimatum": {
+        "layer0": 0.6692665571975916,
+        "layer20": 0.4768746579091407,
+        "best": 0.7308429118773946,
+        "best_layer": 1
+      },
+      "apology": {
+        "layer0": 0.4090899163518029,
+        "layer20": 0.7129862187957281,
+        "best": 0.776639657544718,
+        "best_layer": 15
+      },
+      "overfishing": {
+        "layer0": 0.4910717039321511,
+        "layer20": 0.5301464919043948,
+        "best": 0.5997841171935235,
+        "best_layer": 25
+      },
+      "prisoners_dilemma": {
+        "layer0": 0.25143453312467395,
+        "layer20": 0.5093896713615024,
+        "best": 0.6058946270213876,
+        "best_layer": 25
+      }
+    },
+    "non_dollar_unit": {
+      "dictator": {
+        "layer0": 0.5834457666944591,
+        "layer20": 0.865155764420526,
+        "best": 0.8867732888653074,
+        "best_layer": 25
+      },
+      "trust": {
+        "layer0": 0.5676793248945148,
+        "layer20": 0.9345991561181435,
+        "best": 0.9367088607594937,
+        "best_layer": 24
+      },
+      "ultimatum": {
+        "layer0": 0.5871647509578544,
+        "layer20": 0.5046524356869184,
+        "best": 0.710727969348659,
+        "best_layer": 2
+      },
+      "apology": {
+        "layer0": 0.4894402341275908,
+        "layer20": 0.8017668770611746,
+        "best": 0.857175617533361,
+        "best_layer": 25
+      },
+      "overfishing": {
+        "layer0": 0.4910717039321511,
+        "layer20": 0.5301464919043948,
+        "best": 0.5997841171935235,
+        "best_layer": 25
+      },
+      "prisoners_dilemma": {
+        "layer0": 0.25143453312467395,
+        "layer20": 0.5093896713615024,
+        "best": 0.6058946270213876,
+        "best_layer": 25
+      }
+    }
+  },
+  "K_logo_cos_vs_held_game": {
+    "cell_balanced": {
+      "dictator": {
+        "layer0": 0.750996411287892,
+        "layer20": 0.8954925964417665
+      },
+      "trust": {
+        "layer0": 0.6070968552585095,
+        "layer20": 0.7819437906556019
+      },
+      "ultimatum": {
+        "layer0": 0.34540695807777044,
+        "layer20": 0.49912377871217867
+      },
+      "apology": {
+        "layer0": 0.6237551296057291,
+        "layer20": 0.7760503947030434
+      },
+      "overfishing": {
+        "layer0": 0.09865503764066544,
+        "layer20": 0.20884470472383193
+      },
+      "prisoners_dilemma": {
+        "layer0": 0.049586889389081866,
+        "layer20": 0.32749488729631104
+      }
+    },
+    "game_equal_raw": {
+      "dictator": {
+        "layer0": 0.6037891318891937,
+        "layer20": 0.8400542746858729
+      },
+      "trust": {
+        "layer0": 0.5764319940842534,
+        "layer20": 0.7759585470701468
+      },
+      "ultimatum": {
+        "layer0": 0.32364180592324576,
+        "layer20": 0.46778045330836204
+      },
+      "apology": {
+        "layer0": 0.43982500768518884,
+        "layer20": 0.6880238788759905
+      },
+      "overfishing": {
+        "layer0": 0.034733098153737686,
+        "layer20": 0.20001945600954435
+      },
+      "prisoners_dilemma": {
+        "layer0": 0.06422756069596082,
+        "layer20": 0.3205730222420873
+      }
+    },
+    "game_equal_unit": {
+      "dictator": {
+        "layer0": 0.6795866410339779,
+        "layer20": 0.8235077484743418
+      },
+      "trust": {
+        "layer0": 0.5847584384941745,
+        "layer20": 0.7568705928183415
+      },
+      "ultimatum": {
+        "layer0": 0.3224095357161929,
+        "layer20": 0.46993244697501296
+      },
+      "apology": {
+        "layer0": 0.521181764461325,
+        "layer20": 0.6755774826491316
+      },
+      "overfishing": {
+        "layer0": 0.057369350937847036,
+        "layer20": 0.20390576994787468
+      },
+      "prisoners_dilemma": {
+        "layer0": 0.054564412657170096,
+        "layer20": 0.31367506149978375
+      }
+    },
+    "game_precision_raw": {
+      "dictator": {
+        "layer0": 0.7971280463873799,
+        "layer20": 0.9019182979433914
+      },
+      "trust": {
+        "layer0": 0.5887571263014284,
+        "layer20": 0.7644290110525616
+      },
+      "ultimatum": {
+        "layer0": 0.33076653191961963,
+        "layer20": 0.4986107889446452
+      },
+      "apology": {
+        "layer0": 0.6839271505782833,
+        "layer20": 0.8033610456301177
+      },
+      "overfishing": {
+        "layer0": 0.12160263808134633,
+        "layer20": 0.20659875911231596
+      },
+      "prisoners_dilemma": {
+        "layer0": 0.036830684213526504,
+        "layer20": 0.3186293482602647
+      }
+    },
+    "game_precision_unit": {
+      "dictator": {
+        "layer0": 0.79460532462869,
+        "layer20": 0.8914555099962973
+      },
+      "trust": {
+        "layer0": 0.5753370395942874,
+        "layer20": 0.7635399961316471
+      },
+      "ultimatum": {
+        "layer0": 0.32578332346215527,
+        "layer20": 0.5019349693322385
+      },
+      "apology": {
+        "layer0": 0.6824171729712546,
+        "layer20": 0.7771999924230176
+      },
+      "overfishing": {
+        "layer0": 0.12502362264439376,
+        "layer20": 0.2095531885020347
+      },
+      "prisoners_dilemma": {
+        "layer0": 0.035562466907930995,
+        "layer20": 0.32394036064621984
+      }
+    },
+    "family_balanced_raw": {
+      "dictator": {
+        "layer0": 0.35418528535667876,
+        "layer20": 0.6776521638523424
+      },
+      "trust": {
+        "layer0": 0.3949823399131295,
+        "layer20": 0.6845216579788369
+      },
+      "ultimatum": {
+        "layer0": 0.21274278874241856,
+        "layer20": 0.3681760774223097
+      },
+      "apology": {
+        "layer0": 0.2232995376602663,
+        "layer20": 0.528700306904582
+      },
+      "overfishing": {
+        "layer0": -0.038530141544782806,
+        "layer20": 0.1505331920076771
+      },
+      "prisoners_dilemma": {
+        "layer0": 0.02232568976474613,
+        "layer20": 0.30212031193561334
+      }
+    },
+    "family_balanced_unit": {
+      "dictator": {
+        "layer0": 0.47496599848128057,
+        "layer20": 0.6652991269652913
+      },
+      "trust": {
+        "layer0": 0.42007473806181456,
+        "layer20": 0.647755000968697
+      },
+      "ultimatum": {
+        "layer0": 0.20617769815340162,
+        "layer20": 0.36753085633918336
+      },
+      "apology": {
+        "layer0": 0.33810865850942506,
+        "layer20": 0.5261879368011348
+      },
+      "overfishing": {
+        "layer0": -0.010156760157693555,
+        "layer20": 0.16246858001834957
+      },
+      "prisoners_dilemma": {
+        "layer0": -0.011885565172203206,
+        "layer20": 0.23717677060574438
+      }
+    },
+    "non_dollar_raw": {
+      "dictator": {
+        "layer0": 0.08926854007190796,
+        "layer20": 0.3777805474689349
+      },
+      "trust": {
+        "layer0": 0.1646059952774779,
+        "layer20": 0.4286504305314502
+      },
+      "ultimatum": {
+        "layer0": 0.07415928475033445,
+        "layer20": 0.16128305427255984
+      },
+      "apology": {
+        "layer0": 0.00360107707461304,
+        "layer20": 0.2587456287723004
+      },
+      "overfishing": {
+        "layer0": -0.08131442712704519,
+        "layer20": 0.06618941949091131
+      },
+      "prisoners_dilemma": {
+        "layer0": -0.08131442712704519,
+        "layer20": 0.06618941949091131
+      }
+    },
+    "non_dollar_unit": {
+      "dictator": {
+        "layer0": 0.1581689398713186,
+        "layer20": 0.3809411443291982
+      },
+      "trust": {
+        "layer0": 0.14761325234771933,
+        "layer20": 0.41086326294525627
+      },
+      "ultimatum": {
+        "layer0": 0.023566352606095825,
+        "layer20": 0.18018787001187897
+      },
+      "apology": {
+        "layer0": 0.0650517755861175,
+        "layer20": 0.2688420046760204
+      },
+      "overfishing": {
+        "layer0": -0.08131442712704519,
+        "layer20": 0.06618941949091131
+      },
+      "prisoners_dilemma": {
+        "layer0": -0.08131442712704522,
+        "layer20": 0.0661894194909113
+      }
     }
   },
   "E_pool_cosines": {
@@ -176,14 +793,6 @@
       "vs_cell_balanced_pool_layer20": 1.0,
       "norm_layer20": 5.066440388785507
     },
-    "game_equal_unit": {
-      "vs_dictator_layer0": 0.8187411132300295,
-      "vs_dictator_layer20": 0.9007761970876631,
-      "vs_dictator_min_layer10_27": 0.8955881210591051,
-      "vs_altruism_layer20": 0.06696739017678743,
-      "vs_cell_balanced_pool_layer20": 0.965621889208208,
-      "norm_layer20": 0.6900225929326328
-    },
     "game_equal_raw": {
       "vs_dictator_layer0": 0.7688205995884292,
       "vs_dictator_layer20": 0.9163576065763482,
@@ -192,21 +801,61 @@
       "vs_cell_balanced_pool_layer20": 0.9798562778826571,
       "norm_layer20": 4.492976002700415
     },
+    "game_equal_unit": {
+      "vs_dictator_layer0": 0.8187411132300295,
+      "vs_dictator_layer20": 0.9007761970876633,
+      "vs_dictator_min_layer10_27": 0.8955881210591051,
+      "vs_altruism_layer20": 0.06696739017678743,
+      "vs_cell_balanced_pool_layer20": 0.965621889208208,
+      "norm_layer20": 0.6900225929326327
+    },
     "game_precision_raw": {
       "vs_dictator_layer0": 0.9050056525487807,
       "vs_dictator_layer20": 0.9608960464052931,
-      "vs_dictator_min_layer10_27": 0.9451862145188206,
-      "vs_altruism_layer20": 0.11746002585802687,
+      "vs_dictator_min_layer10_27": 0.9451862145188205,
+      "vs_altruism_layer20": 0.11746002585802684,
       "vs_cell_balanced_pool_layer20": 0.9947295141641955,
-      "norm_layer20": 5.628407656628803
+      "norm_layer20": 5.628407656628802
     },
     "game_precision_unit": {
-      "vs_dictator_layer0": 0.9041522066702107,
-      "vs_dictator_layer20": 0.956554844264444,
-      "vs_dictator_min_layer10_27": 0.9444848755640908,
-      "vs_altruism_layer20": 0.08994136203537656,
+      "vs_dictator_layer0": 0.9041522066702106,
+      "vs_dictator_layer20": 0.9565548442644439,
+      "vs_dictator_min_layer10_27": 0.9444848755640909,
+      "vs_altruism_layer20": 0.08994136203537657,
       "vs_cell_balanced_pool_layer20": 0.993686421197386,
-      "norm_layer20": 0.8016451305480075
+      "norm_layer20": 0.8016451305480073
+    },
+    "family_balanced_raw": {
+      "vs_dictator_layer0": 0.44649698249889364,
+      "vs_dictator_layer20": 0.7318814999592144,
+      "vs_dictator_min_layer10_27": 0.7056897596395447,
+      "vs_altruism_layer20": 0.11340199160586566,
+      "vs_cell_balanced_pool_layer20": 0.8171164264594866,
+      "norm_layer20": 4.039350139860891
+    },
+    "family_balanced_unit": {
+      "vs_dictator_layer0": 0.5659989811430637,
+      "vs_dictator_layer20": 0.7144083557660204,
+      "vs_dictator_min_layer10_27": 0.6979177273496859,
+      "vs_altruism_layer20": 0.03309984202517124,
+      "vs_cell_balanced_pool_layer20": 0.794933847704901,
+      "norm_layer20": 0.6454869981199084
+    },
+    "non_dollar_raw": {
+      "vs_dictator_layer0": 0.14335798209654968,
+      "vs_dictator_layer20": 0.40297709947043675,
+      "vs_dictator_min_layer10_27": 0.3635291241731957,
+      "vs_altruism_layer20": 0.09289389171162478,
+      "vs_cell_balanced_pool_layer20": 0.4934913530045731,
+      "norm_layer20": 4.455534928817718
+    },
+    "non_dollar_unit": {
+      "vs_dictator_layer0": 0.20521514696056498,
+      "vs_dictator_layer20": 0.41187912119377024,
+      "vs_dictator_min_layer10_27": 0.3703788182515766,
+      "vs_altruism_layer20": -0.004763481731705747,
+      "vs_cell_balanced_pool_layer20": 0.49297570917525463,
+      "norm_layer20": 0.7301333506596281
     },
     "dictator_vs_altruism_layer20": 0.08750851730799492
   },
@@ -235,37 +884,69 @@
       "overfishing": 0.2741083889645942,
       "prisoners_dilemma": 0.445767623703276
     },
-    "game_equal_unit": {
-      "dictator": 0.8934753787824486,
-      "trust": 0.8505526894754578,
-      "ultimatum": 0.6473249808596213,
-      "apology": 0.7960775141815756,
-      "overfishing": 0.4296185074891636,
-      "prisoners_dilemma": 0.5230864868075288
-    },
     "game_equal_raw": {
       "dictator": 0.9123504478472075,
-      "trust": 0.8491084312649916,
+      "trust": 0.8491084312649915,
       "ultimatum": 0.6159918900795408,
       "apology": 0.8282050983241388,
       "overfishing": 0.28030646206968224,
       "prisoners_dilemma": 0.5878601571157174
     },
+    "game_equal_unit": {
+      "dictator": 0.8934753787824488,
+      "trust": 0.850552689475458,
+      "ultimatum": 0.6473249808596213,
+      "apology": 0.7960775141815757,
+      "overfishing": 0.42961850748916364,
+      "prisoners_dilemma": 0.5230864868075289
+    },
     "game_precision_raw": {
       "dictator": 0.9641713624382998,
-      "trust": 0.8243921467063192,
-      "ultimatum": 0.5422909548162632,
+      "trust": 0.8243921467063193,
+      "ultimatum": 0.5422909548162631,
       "apology": 0.9315133075720314,
-      "overfishing": 0.2521029758180938,
+      "overfishing": 0.25210297581809377,
       "prisoners_dilemma": 0.374344634210254
     },
     "game_precision_unit": {
       "dictator": 0.9566651689011784,
       "trust": 0.8406403310393151,
-      "ultimatum": 0.5585597539167406,
+      "ultimatum": 0.5585597539167407,
       "apology": 0.9069744321997523,
-      "overfishing": 0.34838788228216083,
+      "overfishing": 0.3483878822821609,
       "prisoners_dilemma": 0.3700390108800942
+    },
+    "family_balanced_raw": {
+      "dictator": 0.7157566059754027,
+      "trust": 0.7086400748422106,
+      "ultimatum": 0.43153464555109144,
+      "apology": 0.6033094000271826,
+      "overfishing": 0.331304469836294,
+      "prisoners_dilemma": 0.8602802532851838
+    },
+    "family_balanced_unit": {
+      "dictator": 0.6930085612165396,
+      "trust": 0.6869894712349389,
+      "ultimatum": 0.44790215506045167,
+      "apology": 0.5775499633259719,
+      "overfishing": 0.6425700197456781,
+      "prisoners_dilemma": 0.6925284369045712
+    },
+    "non_dollar_raw": {
+      "dictator": 0.3777805474689349,
+      "trust": 0.4286504305314502,
+      "ultimatum": 0.16128305427255984,
+      "apology": 0.2587456287723004,
+      "overfishing": 0.31805368565130704,
+      "prisoners_dilemma": 0.9670454418663583
+    },
+    "non_dollar_unit": {
+      "dictator": 0.3809411443291982,
+      "trust": 0.41086326294525627,
+      "ultimatum": 0.18018787001187897,
+      "apology": 0.2688420046760204,
+      "overfishing": 0.7301333506596283,
+      "prisoners_dilemma": 0.7301333506596283
     }
   },
   "F_dictator_projected_out": {
@@ -274,7 +955,7 @@
       "auc_layer20_after": 0.5001440157659365,
       "best_after": 0.5433032668839536,
       "best_after_layer": 27,
-      "residual_norm_fraction_layer20": 0.5458556795930023
+      "residual_norm_fraction_layer20": 0.5458556795930022
     },
     "trust": {
       "auc_layer20_before": 0.9667932489451477,
@@ -288,7 +969,7 @@
       "auc_layer20_after": 0.32936507936507936,
       "best_after": 0.5970169677066228,
       "best_after_layer": 1,
-      "residual_norm_fraction_layer20": 0.4294071628386859
+      "residual_norm_fraction_layer20": 0.42940716283868596
     },
     "apology": {
       "auc_layer20_before": 0.9285495883110927,
@@ -309,7 +990,460 @@
       "auc_layer20_after": 0.3137715179968701,
       "best_after": 0.819509650495566,
       "best_after_layer": 28,
-      "residual_norm_fraction_layer20": 0.42123406179480855
+      "residual_norm_fraction_layer20": 0.4212340617948085
+    }
+  },
+  "J_split_half_independent_seed": {
+    "seed": 20260821,
+    "n_fit_cells": {
+      "apology": 25,
+      "dictator": 30,
+      "overfishing": 17,
+      "prisoners_dilemma": 9,
+      "trust": 20,
+      "ultimatum": 10
+    },
+    "n_score_cells": {
+      "apology": 22,
+      "dictator": 27,
+      "overfishing": 11,
+      "prisoners_dilemma": 4,
+      "trust": 18,
+      "ultimatum": 7
+    },
+    "schemes": {
+      "cell_balanced": {
+        "pooled": {
+          "layer0": 0.8938022667253521,
+          "layer20": 0.9264964788732394,
+          "best": 0.9264964788732394,
+          "best_layer": 20
+        },
+        "macro_layer0": 0.8055849165614039,
+        "macro_layer20": 0.8785283531816578,
+        "per_game": {
+          "apology": {
+            "n_alt": 127,
+            "n_self": 113,
+            "layer0": 0.8834227579959585,
+            "layer20": 0.9489234199707337
+          },
+          "dictator": {
+            "n_alt": 89,
+            "n_self": 181,
+            "layer0": 0.9247625550934261,
+            "layer20": 0.9506487056924701
+          },
+          "overfishing": {
+            "n_alt": 235,
+            "n_self": 25,
+            "layer0": 0.6476595744680851,
+            "layer20": 0.7211914893617021
+          },
+          "prisoners_dilemma": {
+            "n_alt": 7,
+            "n_self": 10,
+            "layer0": 0.8285714285714286,
+            "layer20": 1.0
+          },
+          "trust": {
+            "n_alt": 82,
+            "n_self": 42,
+            "layer0": 0.9117305458768873,
+            "layer20": 0.971835075493612
+          },
+          "ultimatum": {
+            "n_alt": 28,
+            "n_self": 13,
+            "layer0": 0.6373626373626373,
+            "layer20": 0.6785714285714286
+          }
+        }
+      },
+      "game_equal_raw": {
+        "pooled": {
+          "layer0": 0.8517275528169014,
+          "layer20": 0.91477314407277,
+          "best": 0.91477314407277,
+          "best_layer": 20
+        },
+        "macro_layer0": 0.8146640768671812,
+        "macro_layer20": 0.8752084597102612,
+        "per_game": {
+          "apology": {
+            "n_alt": 127,
+            "n_self": 113,
+            "layer0": 0.8197338164587834,
+            "layer20": 0.9425127168838409
+          },
+          "dictator": {
+            "n_alt": 89,
+            "n_self": 181,
+            "layer0": 0.8842882860512756,
+            "layer20": 0.9491588552982805
+          },
+          "overfishing": {
+            "n_alt": 235,
+            "n_self": 25,
+            "layer0": 0.5783829787234043,
+            "layer20": 0.715404255319149
+          },
+          "prisoners_dilemma": {
+            "n_alt": 7,
+            "n_self": 10,
+            "layer0": 1.0,
+            "layer20": 1.0
+          },
+          "trust": {
+            "n_alt": 82,
+            "n_self": 42,
+            "layer0": 0.8995354239256679,
+            "layer20": 0.9683507549361208
+          },
+          "ultimatum": {
+            "n_alt": 28,
+            "n_self": 13,
+            "layer0": 0.7060439560439561,
+            "layer20": 0.6758241758241759
+          }
+        }
+      },
+      "game_equal_unit": {
+        "pooled": {
+          "layer0": 0.8554504107981221,
+          "layer20": 0.9209809639084507,
+          "best": 0.9209809639084507,
+          "best_layer": 20
+        },
+        "macro_layer0": 0.8179012517292096,
+        "macro_layer20": 0.8784723863821006,
+        "per_game": {
+          "apology": {
+            "n_alt": 127,
+            "n_self": 113,
+            "layer0": 0.8381994286112466,
+            "layer20": 0.9393073653403944
+          },
+          "dictator": {
+            "n_alt": 89,
+            "n_self": 181,
+            "layer0": 0.9024768762803402,
+            "layer20": 0.9434477621205537
+          },
+          "overfishing": {
+            "n_alt": 235,
+            "n_self": 25,
+            "layer0": 0.5843404255319149,
+            "layer20": 0.7203404255319149
+          },
+          "prisoners_dilemma": {
+            "n_alt": 7,
+            "n_self": 10,
+            "layer0": 0.9714285714285714,
+            "layer20": 1.0
+          },
+          "trust": {
+            "n_alt": 82,
+            "n_self": 42,
+            "layer0": 0.9076655052264808,
+            "layer20": 0.9671893147502904
+          },
+          "ultimatum": {
+            "n_alt": 28,
+            "n_self": 13,
+            "layer0": 0.7032967032967034,
+            "layer20": 0.7005494505494505
+          }
+        }
+      },
+      "game_precision_raw": {
+        "pooled": {
+          "layer0": 0.9069789832746479,
+          "layer20": 0.9310537705399061,
+          "best": 0.9310537705399061,
+          "best_layer": 20
+        },
+        "macro_layer0": 0.7890190412323573,
+        "macro_layer20": 0.8797680414524417,
+        "per_game": {
+          "apology": {
+            "n_alt": 127,
+            "n_self": 113,
+            "layer0": 0.9075325761270991,
+            "layer20": 0.9544282628388265
+          },
+          "dictator": {
+            "n_alt": 89,
+            "n_self": 181,
+            "layer0": 0.9357502017505742,
+            "layer20": 0.953752560680365
+          },
+          "overfishing": {
+            "n_alt": 235,
+            "n_self": 25,
+            "layer0": 0.6992340425531914,
+            "layer20": 0.7325957446808511
+          },
+          "prisoners_dilemma": {
+            "n_alt": 7,
+            "n_self": 10,
+            "layer0": 0.6714285714285714,
+            "layer20": 1.0
+          },
+          "trust": {
+            "n_alt": 82,
+            "n_self": 42,
+            "layer0": 0.9102787456445993,
+            "layer20": 0.9729965156794426
+          },
+          "ultimatum": {
+            "n_alt": 28,
+            "n_self": 13,
+            "layer0": 0.6098901098901099,
+            "layer20": 0.6648351648351648
+          }
+        }
+      },
+      "game_precision_unit": {
+        "pooled": {
+          "layer0": 0.9015047315140845,
+          "layer20": 0.9323650234741784,
+          "best": 0.9323650234741784,
+          "best_layer": 20
+        },
+        "macro_layer0": 0.7827596982921197,
+        "macro_layer20": 0.8807030487009996,
+        "per_game": {
+          "apology": {
+            "n_alt": 127,
+            "n_self": 113,
+            "layer0": 0.9056511741342067,
+            "layer20": 0.9506654588530415
+          },
+          "dictator": {
+            "n_alt": 89,
+            "n_self": 181,
+            "layer0": 0.9353777391520268,
+            "layer20": 0.9500900117946489
+          },
+          "overfishing": {
+            "n_alt": 235,
+            "n_self": 25,
+            "layer0": 0.6881702127659575,
+            "layer20": 0.7327659574468085
+          },
+          "prisoners_dilemma": {
+            "n_alt": 7,
+            "n_self": 10,
+            "layer0": 0.6428571428571429,
+            "layer20": 1.0
+          },
+          "trust": {
+            "n_alt": 82,
+            "n_self": 42,
+            "layer0": 0.9091173054587689,
+            "layer20": 0.9721254355400697
+          },
+          "ultimatum": {
+            "n_alt": 28,
+            "n_self": 13,
+            "layer0": 0.6153846153846154,
+            "layer20": 0.6785714285714286
+          }
+        }
+      },
+      "family_balanced_raw": {
+        "pooled": {
+          "layer0": 0.7150729900234741,
+          "layer20": 0.8335946669600939,
+          "best": 0.8504667326877934,
+          "best_layer": 21
+        },
+        "macro_layer0": 0.7229837840617628,
+        "macro_layer20": 0.8545788865184946,
+        "per_game": {
+          "apology": {
+            "n_alt": 127,
+            "n_self": 113,
+            "layer0": 0.6115253292453487,
+            "layer20": 0.8987527001602675
+          },
+          "dictator": {
+            "n_alt": 89,
+            "n_self": 181,
+            "layer0": 0.7534918368613819,
+            "layer20": 0.9417096033273326
+          },
+          "overfishing": {
+            "n_alt": 235,
+            "n_self": 25,
+            "layer0": 0.5314042553191489,
+            "layer20": 0.6660425531914894
+          },
+          "prisoners_dilemma": {
+            "n_alt": 7,
+            "n_self": 10,
+            "layer0": 1.0,
+            "layer20": 1.0
+          },
+          "trust": {
+            "n_alt": 82,
+            "n_self": 42,
+            "layer0": 0.7601626016260162,
+            "layer20": 0.9506387921022067
+          },
+          "ultimatum": {
+            "n_alt": 28,
+            "n_self": 13,
+            "layer0": 0.6813186813186813,
+            "layer20": 0.6703296703296703
+          }
+        }
+      },
+      "family_balanced_unit": {
+        "pooled": {
+          "layer0": 0.7578583480046949,
+          "layer20": 0.8702639011150235,
+          "best": 0.8821522887323944,
+          "best_layer": 25
+        },
+        "macro_layer0": 0.7533995068982459,
+        "macro_layer20": 0.8582564510664602,
+        "per_game": {
+          "apology": {
+            "n_alt": 127,
+            "n_self": 113,
+            "layer0": 0.6572364295171068,
+            "layer20": 0.8962441641697443
+          },
+          "dictator": {
+            "n_alt": 89,
+            "n_self": 181,
+            "layer0": 0.8038363647650382,
+            "layer20": 0.9312806505680055
+          },
+          "overfishing": {
+            "n_alt": 235,
+            "n_self": 25,
+            "layer0": 0.5300425531914894,
+            "layer20": 0.6902127659574468
+          },
+          "prisoners_dilemma": {
+            "n_alt": 7,
+            "n_self": 10,
+            "layer0": 1.0,
+            "layer20": 1.0
+          },
+          "trust": {
+            "n_alt": 82,
+            "n_self": 42,
+            "layer0": 0.8397212543554007,
+            "layer20": 0.9477351916376306
+          },
+          "ultimatum": {
+            "n_alt": 28,
+            "n_self": 13,
+            "layer0": 0.6895604395604396,
+            "layer20": 0.6840659340659341
+          }
+        }
+      },
+      "non_dollar_raw": {
+        "pooled": {
+          "layer0": 0.5413365610328639,
+          "layer20": 0.6256464568661971,
+          "best": 0.7430540272887324,
+          "best_layer": 27
+        },
+        "macro_layer0": 0.6071381327755664,
+        "macro_layer20": 0.7823018165343619,
+        "per_game": {
+          "apology": {
+            "n_alt": 127,
+            "n_self": 113,
+            "layer0": 0.4431746916591178,
+            "layer20": 0.7361856316632988
+          },
+          "dictator": {
+            "n_alt": 89,
+            "n_self": 181,
+            "layer0": 0.5519274939474828,
+            "layer20": 0.8839779005524862
+          },
+          "overfishing": {
+            "n_alt": 235,
+            "n_self": 25,
+            "layer0": 0.4968510638297872,
+            "layer20": 0.6044255319148936
+          },
+          "prisoners_dilemma": {
+            "n_alt": 7,
+            "n_self": 10,
+            "layer0": 1.0,
+            "layer20": 1.0
+          },
+          "trust": {
+            "n_alt": 82,
+            "n_self": 42,
+            "layer0": 0.5519744483159117,
+            "layer20": 0.8977932636469221
+          },
+          "ultimatum": {
+            "n_alt": 28,
+            "n_self": 13,
+            "layer0": 0.5989010989010989,
+            "layer20": 0.5714285714285714
+          }
+        }
+      },
+      "non_dollar_unit": {
+        "pooled": {
+          "layer0": 0.5997102406103286,
+          "layer20": 0.7389185372652582,
+          "best": 0.8244250660211268,
+          "best_layer": 25
+        },
+        "macro_layer0": 0.6206354779799023,
+        "macro_layer20": 0.7964762109224756,
+        "per_game": {
+          "apology": {
+            "n_alt": 127,
+            "n_self": 113,
+            "layer0": 0.4322346874782245,
+            "layer20": 0.746010730959515
+          },
+          "dictator": {
+            "n_alt": 89,
+            "n_self": 181,
+            "layer0": 0.5759513315537899,
+            "layer20": 0.8804395058662859
+          },
+          "overfishing": {
+            "n_alt": 235,
+            "n_self": 25,
+            "layer0": 0.48561702127659573,
+            "layer20": 0.6505531914893617
+          },
+          "prisoners_dilemma": {
+            "n_alt": 7,
+            "n_self": 10,
+            "layer0": 1.0,
+            "layer20": 1.0
+          },
+          "trust": {
+            "n_alt": 82,
+            "n_self": 42,
+            "layer0": 0.633855981416957,
+            "layer20": 0.8864692218350755
+          },
+          "ultimatum": {
+            "n_alt": 28,
+            "n_self": 13,
+            "layer0": 0.5961538461538461,
+            "layer20": 0.6153846153846154
+          }
+        }
+      }
     }
   },
   "H_census": {
@@ -713,6 +1847,19 @@
       "pool_cell_balanced": {
         "digit_span_share": 0.4186391098431848,
         "cos_vs_big_digit_minus_zero": 0.27480300580598427,
+        "zero_only_span_share": 0.030121752126834076,
+        "cos_per_digit": {
+          "0": 0.030121752126834028,
+          "1": 0.13310175832416735,
+          "2": 0.18828669432590056,
+          "3": 0.1310091180230378,
+          "4": 0.2421768632934758,
+          "5": 0.3715125504189023,
+          "6": 0.25654762367369355,
+          "7": 0.23433495813270278,
+          "8": 0.17823912146710386,
+          "9": 0.14032160150508452
+        },
         "response_control_32": {
           "n_draws": 32,
           "mean": 0.10201801359653473,
@@ -832,131 +1979,22 @@
           ]
         ]
       },
-      "pool_game_equal_unit": {
-        "digit_span_share": 0.42620464586367246,
-        "cos_vs_big_digit_minus_zero": 0.3216209092871741,
-        "response_control_32": {
-          "n_draws": 32,
-          "mean": 0.09766533970832825,
-          "p97.5": 0.13959749042987823,
-          "max": 0.1437845230102539
-        },
-        "response_control_many": {
-          "n_draws": 1000,
-          "mean": 0.10092753171920776,
-          "p97.5": 0.17706060409545898,
-          "max": 0.3774840533733368
-        },
-        "vocab_control_32": {
-          "n_draws": 32,
-          "mean": 0.08849474042654037,
-          "p97.5": 0.1298450529575348,
-          "max": 0.1380482017993927
-        },
-        "toward_altruistic": [
-          [
-            "5",
-            0.36
-          ],
-          [
-            "6",
-            0.241
-          ],
-          [
-            "4",
-            0.201
-          ],
-          [
-            "\u0120fair",
-            0.201
-          ],
-          [
-            "7",
-            0.2
-          ],
-          [
-            "A",
-            0.171
-          ],
-          [
-            "\u0120a",
-            0.17
-          ],
-          [
-            "\u00ef\u00bc\u0137",
-            0.167
-          ],
-          [
-            "8",
-            0.156
-          ],
-          [
-            "\u0120significant",
-            0.139
-          ],
-          [
-            "\u0120reasonable",
-            0.136
-          ],
-          [
-            "\u0120balanced",
-            0.134
-          ]
-        ],
-        "toward_self_interested": [
-          [
-            "\u0120Agent",
-            -0.325
-          ],
-          [
-            "\u0120any",
-            -0.201
-          ],
-          [
-            "\u0120no",
-            -0.199
-          ],
-          [
-            ",",
-            -0.169
-          ],
-          [
-            "\u0120",
-            -0.166
-          ],
-          [
-            "\u0120is",
-            -0.159
-          ],
-          [
-            "Agent",
-            -0.156
-          ],
-          [
-            "\u0120\u0120",
-            -0.15
-          ],
-          [
-            ")",
-            -0.144
-          ],
-          [
-            "\u0120$",
-            -0.133
-          ],
-          [
-            "\u0120No",
-            -0.128
-          ],
-          [
-            "),",
-            -0.128
-          ]
-        ]
-      },
       "pool_game_equal_raw": {
         "digit_span_share": 0.38041354129870425,
-        "cos_vs_big_digit_minus_zero": 0.27827103073163273,
+        "cos_vs_big_digit_minus_zero": 0.2782710307316327,
+        "zero_only_span_share": 0.045673842646104475,
+        "cos_per_digit": {
+          "0": -0.04567384264610439,
+          "1": 0.03326933086846964,
+          "2": 0.07274563708192949,
+          "3": 0.06214721461361566,
+          "4": 0.15949298066796366,
+          "5": 0.3079911748509543,
+          "6": 0.21197207852259095,
+          "7": 0.15475176504352695,
+          "8": 0.12138985661067524,
+          "9": 0.07901056859629783
+        },
         "response_control_32": {
           "n_draws": 32,
           "mean": 0.10530123859643936,
@@ -1076,9 +2114,157 @@
           ]
         ]
       },
+      "pool_game_equal_unit": {
+        "digit_span_share": 0.42620464586367246,
+        "cos_vs_big_digit_minus_zero": 0.3216209092871741,
+        "zero_only_span_share": 0.04222483109092291,
+        "cos_per_digit": {
+          "0": -0.04222483109092293,
+          "1": 0.07833621064166872,
+          "2": 0.10809660401076061,
+          "3": 0.09852504953866392,
+          "4": 0.2013680043669635,
+          "5": 0.36045160194822096,
+          "6": 0.24141754491700493,
+          "7": 0.20036582554298868,
+          "8": 0.15648724760701285,
+          "9": 0.1230702745804572
+        },
+        "response_control_32": {
+          "n_draws": 32,
+          "mean": 0.09766533970832825,
+          "p97.5": 0.13959749042987823,
+          "max": 0.1437845230102539
+        },
+        "response_control_many": {
+          "n_draws": 1000,
+          "mean": 0.10092753171920776,
+          "p97.5": 0.17706060409545898,
+          "max": 0.3774840533733368
+        },
+        "vocab_control_32": {
+          "n_draws": 32,
+          "mean": 0.08849474042654037,
+          "p97.5": 0.1298450529575348,
+          "max": 0.1380482017993927
+        },
+        "toward_altruistic": [
+          [
+            "5",
+            0.36
+          ],
+          [
+            "6",
+            0.241
+          ],
+          [
+            "4",
+            0.201
+          ],
+          [
+            "\u0120fair",
+            0.201
+          ],
+          [
+            "7",
+            0.2
+          ],
+          [
+            "A",
+            0.171
+          ],
+          [
+            "\u0120a",
+            0.17
+          ],
+          [
+            "\u00ef\u00bc\u0137",
+            0.167
+          ],
+          [
+            "8",
+            0.156
+          ],
+          [
+            "\u0120significant",
+            0.139
+          ],
+          [
+            "\u0120reasonable",
+            0.136
+          ],
+          [
+            "\u0120balanced",
+            0.134
+          ]
+        ],
+        "toward_self_interested": [
+          [
+            "\u0120Agent",
+            -0.325
+          ],
+          [
+            "\u0120any",
+            -0.201
+          ],
+          [
+            "\u0120no",
+            -0.199
+          ],
+          [
+            ",",
+            -0.169
+          ],
+          [
+            "\u0120",
+            -0.166
+          ],
+          [
+            "\u0120is",
+            -0.159
+          ],
+          [
+            "Agent",
+            -0.156
+          ],
+          [
+            "\u0120\u0120",
+            -0.15
+          ],
+          [
+            ")",
+            -0.144
+          ],
+          [
+            "\u0120$",
+            -0.133
+          ],
+          [
+            "\u0120No",
+            -0.128
+          ],
+          [
+            "),",
+            -0.128
+          ]
+        ]
+      },
       "pool_game_precision_raw": {
         "digit_span_share": 0.42665486643209255,
-        "cos_vs_big_digit_minus_zero": 0.24899206470736698,
+        "cos_vs_big_digit_minus_zero": 0.248992064707367,
+        "zero_only_span_share": 0.07445128847940817,
+        "cos_per_digit": {
+          "0": 0.07445128847940848,
+          "1": 0.17302185381633303,
+          "2": 0.2414705490052594,
+          "3": 0.16113302126528076,
+          "4": 0.2709421785750744,
+          "5": 0.38133093039928345,
+          "6": 0.26440040623441313,
+          "7": 0.2601514042363708,
+          "8": 0.1979129312398451,
+          "9": 0.16110603664173112
+        },
         "response_control_32": {
           "n_draws": 32,
           "mean": 0.10494017601013184,
@@ -1200,7 +2386,20 @@
       },
       "pool_game_precision_unit": {
         "digit_span_share": 0.43709467014874986,
-        "cos_vs_big_digit_minus_zero": 0.2702518445319262,
+        "cos_vs_big_digit_minus_zero": 0.27025184453192624,
+        "zero_only_span_share": 0.060098076361549,
+        "cos_per_digit": {
+          "0": 0.06009807636154908,
+          "1": 0.17870025265418826,
+          "2": 0.2356415165739105,
+          "3": 0.16459453796274512,
+          "4": 0.2740218600935588,
+          "5": 0.39193392923696335,
+          "6": 0.2678432515791568,
+          "7": 0.2662228810440668,
+          "8": 0.20246430230627993,
+          "9": 0.17136570693944309
+        },
         "response_control_32": {
           "n_draws": 32,
           "mean": 0.10533350706100464,
@@ -1320,9 +2519,562 @@
           ]
         ]
       },
+      "pool_family_balanced_raw": {
+        "digit_span_share": 0.29255017924363796,
+        "cos_vs_big_digit_minus_zero": 0.2145588862483531,
+        "zero_only_span_share": 0.1588499387122084,
+        "cos_per_digit": {
+          "0": -0.15884993871220818,
+          "1": -0.09530306521272365,
+          "2": -0.11368024417530985,
+          "3": -0.05288082885957509,
+          "4": -0.010695901136265172,
+          "5": 0.12440434084446221,
+          "6": 0.07554425566655174,
+          "7": -0.007416833635110861,
+          "8": -0.0005342071074295987,
+          "9": -0.019935393886581602
+        },
+        "response_control_32": {
+          "n_draws": 32,
+          "mean": 0.12025972455739975,
+          "p97.5": 0.1981174796819687,
+          "max": 0.2572252154350281
+        },
+        "response_control_many": {
+          "n_draws": 1000,
+          "mean": 0.11737291514873505,
+          "p97.5": 0.19469569623470306,
+          "max": 0.41962966322898865
+        },
+        "vocab_control_32": {
+          "n_draws": 32,
+          "mean": 0.08921019732952118,
+          "p97.5": 0.12743794918060303,
+          "max": 0.13062109053134918
+        },
+        "toward_altruistic": [
+          [
+            "\u00e5\u00a4\u00aa\u00e8\u00bf\u0129",
+            0.144
+          ],
+          [
+            "\u0120comfortable",
+            0.134
+          ],
+          [
+            "\u00e9\u0122\u012b\u00e6\u012d\u00a9",
+            0.133
+          ],
+          [
+            "\u00eb\u00b8\u013e",
+            0.132
+          ],
+          [
+            "\u00e6\u013d\u00b4\u00e9\u0122\u0124\u00e5\u0132\u012a",
+            0.129
+          ],
+          [
+            "5",
+            0.124
+          ],
+          [
+            "\u00e5\u0122\u00be\u00e5\u0132\u0133\u00e4\u00ba\u0130",
+            0.124
+          ],
+          [
+            "\u00e8\u00b6\u012c\u00e6\u013f\u00a5\u00e8\u00b6\u012c\u00e5\u00a5\u00bd",
+            0.122
+          ],
+          [
+            "\u0120Cooper",
+            0.122
+          ],
+          [
+            "\u00e9\u00ab\u013a\u00e7\u00b4\u0142\u00e8\u00b4\u00a8",
+            0.121
+          ],
+          [
+            "\u00e9\u00a2\u013f\u00e5\u00a4\u0138",
+            0.12
+          ],
+          [
+            "\u00e5\u00be\u012a\u00e6\u013e\u012b\u00e5\u0131\u00af\u00e8\u0125\u00bd",
+            0.119
+          ]
+        ],
+        "toward_self_interested": [
+          [
+            "\u0120Agent",
+            -0.399
+          ],
+          [
+            "\u0120Def",
+            -0.238
+          ],
+          [
+            "\u0120$",
+            -0.225
+          ],
+          [
+            "ect",
+            -0.219
+          ],
+          [
+            "\u0120\u0120",
+            -0.215
+          ],
+          [
+            "\u0120agent",
+            -0.21
+          ],
+          [
+            "\u0120",
+            -0.199
+          ],
+          [
+            "\u0120defect",
+            -0.181
+          ],
+          [
+            "Agent",
+            -0.18
+          ],
+          [
+            "D",
+            -0.163
+          ],
+          [
+            "\u0120the",
+            -0.16
+          ],
+          [
+            "0",
+            -0.159
+          ]
+        ]
+      },
+      "pool_family_balanced_unit": {
+        "digit_span_share": 0.3679551287705065,
+        "cos_vs_big_digit_minus_zero": 0.3131587770791853,
+        "zero_only_span_share": 0.18088936247671525,
+        "cos_per_digit": {
+          "0": -0.18088936247671566,
+          "1": -0.028770027144261186,
+          "2": -0.07482274590327537,
+          "3": 0.0019173431513380993,
+          "4": 0.05127824893636584,
+          "5": 0.21892671048661366,
+          "6": 0.12345487549262937,
+          "7": 0.061963617565758994,
+          "8": 0.05500458623390622,
+          "9": 0.055232778523096736
+        },
+        "response_control_32": {
+          "n_draws": 32,
+          "mean": 0.10163995623588562,
+          "p97.5": 0.17043404281139374,
+          "max": 0.2246897667646408
+        },
+        "response_control_many": {
+          "n_draws": 1000,
+          "mean": 0.10217930376529694,
+          "p97.5": 0.17667889595031738,
+          "max": 0.3712252080440521
+        },
+        "vocab_control_32": {
+          "n_draws": 32,
+          "mean": 0.08275602757930756,
+          "p97.5": 0.11945293843746185,
+          "max": 0.11998509615659714
+        },
+        "toward_altruistic": [
+          [
+            "5",
+            0.219
+          ],
+          [
+            "\u0120fish",
+            0.167
+          ],
+          [
+            "\u0120risk",
+            0.128
+          ],
+          [
+            "\u0120catch",
+            0.126
+          ],
+          [
+            "6",
+            0.123
+          ],
+          [
+            "\u00e5\u00a4\u00aa\u00e8\u00bf\u0129",
+            0.116
+          ],
+          [
+            "\u00e7\u00bc\u00ba\u00e4\u00b9\u0131",
+            0.113
+          ],
+          [
+            "\u0120t\u00c4\u0125ng",
+            0.112
+          ],
+          [
+            "\u0120comfortable",
+            0.112
+          ],
+          [
+            "\u00ef\u00bc\u0137",
+            0.112
+          ],
+          [
+            "\u00e5\u00a3\u0135\u00e5\u012c\u013d",
+            0.112
+          ],
+          [
+            "\u0120cybersecurity",
+            0.107
+          ]
+        ],
+        "toward_self_interested": [
+          [
+            "\u0120Agent",
+            -0.35
+          ],
+          [
+            "\u0120",
+            -0.189
+          ],
+          [
+            ",",
+            -0.184
+          ],
+          [
+            "0",
+            -0.181
+          ],
+          [
+            "\u0120\u0120",
+            -0.179
+          ],
+          [
+            "\u0120is",
+            -0.175
+          ],
+          [
+            "Agent",
+            -0.167
+          ],
+          [
+            "\u0120$",
+            -0.166
+          ],
+          [
+            "ect",
+            -0.158
+          ],
+          [
+            "\u0120Def",
+            -0.152
+          ],
+          [
+            "\u0120agent",
+            -0.15
+          ],
+          [
+            "\u0120any",
+            -0.15
+          ]
+        ]
+      },
+      "pool_non_dollar_raw": {
+        "digit_span_share": 0.2801355349282745,
+        "cos_vs_big_digit_minus_zero": 0.13131458060955617,
+        "zero_only_span_share": 0.2070028251985106,
+        "cos_per_digit": {
+          "0": -0.20700282519851107,
+          "1": -0.16573252816506756,
+          "2": -0.2203262968435412,
+          "3": -0.1218710817247007,
+          "4": -0.12524323279229593,
+          "5": -0.024265184504967122,
+          "6": -0.03181406373421598,
+          "7": -0.1170784976237464,
+          "8": -0.08391282381361327,
+          "9": -0.08399885161359913
+        },
+        "response_control_32": {
+          "n_draws": 32,
+          "mean": 0.12780879437923431,
+          "p97.5": 0.21280278265476227,
+          "max": 0.30426475405693054
+        },
+        "response_control_many": {
+          "n_draws": 1000,
+          "mean": 0.12719443440437317,
+          "p97.5": 0.21955174207687378,
+          "max": 0.36665427684783936
+        },
+        "vocab_control_32": {
+          "n_draws": 32,
+          "mean": 0.09036439657211304,
+          "p97.5": 0.12021010369062424,
+          "max": 0.12136305868625641
+        },
+        "toward_altruistic": [
+          [
+            "\u00e9\u0122\u012b\u00e6\u012d\u00a9",
+            0.155
+          ],
+          [
+            "\u00eb\u00b8\u013e",
+            0.149
+          ],
+          [
+            "\u00e5\u00a4\u00aa\u00e8\u00bf\u0129",
+            0.146
+          ],
+          [
+            "\u00e6\u013d\u00b4\u00e9\u0122\u0124\u00e5\u0132\u012a",
+            0.142
+          ],
+          [
+            "\u00e4\u00bc\u013c\u00e9\u0122\u012b\u00e6\u012d\u00a9",
+            0.139
+          ],
+          [
+            "\u00e9\u00ab\u013a\u00e7\u00b4\u0142\u00e8\u00b4\u00a8",
+            0.136
+          ],
+          [
+            "\u0120Cooper",
+            0.135
+          ],
+          [
+            "\u00e5\u0131\u00af\u00e8\u0125\u00bd\u00e5\u0143\u013a\u00e5\u013e\u00a8",
+            0.135
+          ],
+          [
+            "\u00e5\u00be\u012a\u00e5\u0138\u013e\u00e6\u00ac\u00a2",
+            0.134
+          ],
+          [
+            "\u00e5\u00be\u012a\u00e6\u013e\u012b\u00e5\u0131\u00af\u00e8\u0125\u00bd",
+            0.133
+          ],
+          [
+            "\u00e9\u00a2\u013f\u00e5\u00a4\u0138",
+            0.132
+          ],
+          [
+            "\u00e4\u00bb\u013a\u00e5\u0129\u00ba",
+            0.132
+          ]
+        ],
+        "toward_self_interested": [
+          [
+            "\u0120Agent",
+            -0.347
+          ],
+          [
+            "\u0120Def",
+            -0.275
+          ],
+          [
+            "ect",
+            -0.256
+          ],
+          [
+            "\u0120the",
+            -0.247
+          ],
+          [
+            "D",
+            -0.232
+          ],
+          [
+            "\u0120$",
+            -0.221
+          ],
+          [
+            "2",
+            -0.22
+          ],
+          [
+            "0",
+            -0.207
+          ],
+          [
+            "\u0120and",
+            -0.206
+          ],
+          [
+            "\u0120defect",
+            -0.205
+          ],
+          [
+            "\u0120The",
+            -0.204
+          ],
+          [
+            "\u0120\u0120",
+            -0.203
+          ]
+        ]
+      },
+      "pool_non_dollar_unit": {
+        "digit_span_share": 0.33363733458532413,
+        "cos_vs_big_digit_minus_zero": 0.22738044559571305,
+        "zero_only_span_share": 0.255730047211597,
+        "cos_per_digit": {
+          "0": -0.2557300472115966,
+          "1": -0.11437105161940701,
+          "2": -0.21457991492967463,
+          "3": -0.08227381864840795,
+          "4": -0.09162011315188928,
+          "5": 0.04145410631030018,
+          "6": -0.00968542091903959,
+          "7": -0.07348412031069736,
+          "8": -0.04670902448745714,
+          "9": -0.01738435654895309
+        },
+        "response_control_32": {
+          "n_draws": 32,
+          "mean": 0.10980887711048126,
+          "p97.5": 0.19397351145744324,
+          "max": 0.29369744658470154
+        },
+        "response_control_many": {
+          "n_draws": 1000,
+          "mean": 0.11153258383274078,
+          "p97.5": 0.19784997403621674,
+          "max": 0.3147445321083069
+        },
+        "vocab_control_32": {
+          "n_draws": 32,
+          "mean": 0.07826526463031769,
+          "p97.5": 0.10532473772764206,
+          "max": 0.10679959505796432
+        },
+        "toward_altruistic": [
+          [
+            "\u0120fish",
+            0.179
+          ],
+          [
+            "\u0120risk",
+            0.153
+          ],
+          [
+            "\u0120catch",
+            0.148
+          ],
+          [
+            "\u0120unsustainable",
+            0.124
+          ],
+          [
+            "=\"<?=",
+            0.121
+          ],
+          [
+            "\u0120t\u00c4\u0125ng",
+            0.121
+          ],
+          [
+            "\u00e5\u012a\u00a9\u00e5\u00a5\u00bd",
+            0.12
+          ],
+          [
+            "\u00e5\u00a4\u00aa\u00e8\u00bf\u0129",
+            0.12
+          ],
+          [
+            "\u00e5\u00a3\u0135\u00e5\u012c\u013d",
+            0.117
+          ],
+          [
+            "\u0120cybersecurity",
+            0.113
+          ],
+          [
+            "\u00e5\u0122\u00be\u00e5\u0132\u0133\u00e4\u00ba\u0130",
+            0.113
+          ],
+          [
+            "\u00e5\u012f\u0139\u00e6\u00b2\u013b",
+            0.112
+          ]
+        ],
+        "toward_self_interested": [
+          [
+            "\u0120Agent",
+            -0.285
+          ],
+          [
+            "\u0120the",
+            -0.267
+          ],
+          [
+            "\u0120and",
+            -0.259
+          ],
+          [
+            "0",
+            -0.256
+          ],
+          [
+            "\u0120a",
+            -0.231
+          ],
+          [
+            "2",
+            -0.215
+          ],
+          [
+            "ect",
+            -0.204
+          ],
+          [
+            "\u0120Def",
+            -0.194
+          ],
+          [
+            "\u0120The",
+            -0.19
+          ],
+          [
+            "\u0120or",
+            -0.188
+          ],
+          [
+            "D",
+            -0.18
+          ],
+          [
+            "\u00e7\u013c\u0126",
+            -0.178
+          ]
+        ]
+      },
       "archived_dictator": {
         "digit_span_share": 0.386993160783821,
         "cos_vs_big_digit_minus_zero": 0.25338483444293186,
+        "zero_only_span_share": 0.007644095753131574,
+        "cos_per_digit": {
+          "0": 0.007644095753131706,
+          "1": 0.15608374270981956,
+          "2": 0.16643614996275133,
+          "3": 0.06441364549281064,
+          "4": 0.189428749103782,
+          "5": 0.33538138138105994,
+          "6": 0.2247594271263673,
+          "7": 0.19341599839027465,
+          "8": 0.12784835931565863,
+          "9": 0.11197135342788783
+        },
         "response_control_32": {
           "n_draws": 32,
           "mean": 0.1226235032081604,
@@ -1445,6 +3197,19 @@
       "shipped_altruism": {
         "digit_span_share": 0.10631926547853202,
         "cos_vs_big_digit_minus_zero": -0.07097512566548292,
+        "zero_only_span_share": 0.004404035540162073,
+        "cos_per_digit": {
+          "0": 0.004404035540162134,
+          "1": -0.006497682340614806,
+          "2": -0.026429535121728076,
+          "3": -0.06352814384240063,
+          "4": -0.05976189354723038,
+          "5": -0.061851043298030775,
+          "6": -0.04591269555533772,
+          "7": -0.07232896394905074,
+          "8": -0.06303966856698645,
+          "9": -0.06492871394320153
+        },
         "response_control_32": {
           "n_draws": 32,
           "mean": 0.11934399604797363,
@@ -1567,6 +3332,19 @@
       "game_dictator": {
         "digit_span_share": 0.34179876012613697,
         "cos_vs_big_digit_minus_zero": 0.20819394068814306,
+        "zero_only_span_share": 0.038198810768151965,
+        "cos_per_digit": {
+          "0": 0.03819881076815198,
+          "1": 0.15984901310824456,
+          "2": 0.1768907476692793,
+          "3": 0.0754815141338193,
+          "4": 0.2064192291828105,
+          "5": 0.29173259584906697,
+          "6": 0.20585727052775055,
+          "7": 0.1904619591053995,
+          "8": 0.12651661531959543,
+          "9": 0.1067517681026513
+        },
         "response_control_32": {
           "n_draws": 32,
           "mean": 0.11861111968755722,
@@ -1689,6 +3467,19 @@
       "game_trust": {
         "digit_span_share": 0.4887786492440792,
         "cos_vs_big_digit_minus_zero": 0.3240509412187604,
+        "zero_only_span_share": 0.050597033322408794,
+        "cos_per_digit": {
+          "0": 0.05059703332240904,
+          "1": 0.15750815941701488,
+          "2": 0.21846126864626758,
+          "3": 0.19053000092087383,
+          "4": 0.29772740972728495,
+          "5": 0.4359827882294983,
+          "6": 0.3111555720300826,
+          "7": 0.3135500143080748,
+          "8": 0.235012982540147,
+          "9": 0.19163343297092986
+        },
         "response_control_32": {
           "n_draws": 32,
           "mean": 0.09962587058544159,
@@ -1811,6 +3602,19 @@
       "game_ultimatum": {
         "digit_span_share": 0.2865255846421603,
         "cos_vs_big_digit_minus_zero": 0.1624248207783966,
+        "zero_only_span_share": 0.076919300498979,
+        "cos_per_digit": {
+          "0": -0.07691930049897895,
+          "1": -0.10532672213951287,
+          "2": -0.06628301513722654,
+          "3": -0.041409411763094546,
+          "4": 0.03257044761851206,
+          "5": 0.13897653307122235,
+          "6": 0.1057842487632319,
+          "7": 0.02209613256416921,
+          "8": 0.026752227594737017,
+          "9": -0.028439331624266
+        },
         "response_control_32": {
           "n_draws": 32,
           "mean": 0.10919073224067688,
@@ -1933,6 +3737,19 @@
       "game_apology": {
         "digit_span_share": 0.4218211666011962,
         "cos_vs_big_digit_minus_zero": 0.13038860754046325,
+        "zero_only_span_share": 0.18598017146267712,
+        "cos_per_digit": {
+          "0": 0.18598017146267676,
+          "1": 0.21902662055349834,
+          "2": 0.3426853379763745,
+          "3": 0.23408519018558946,
+          "4": 0.29701916892989244,
+          "5": 0.34721375290527695,
+          "6": 0.24099655918681043,
+          "7": 0.27951356890845797,
+          "8": 0.22643460674514662,
+          "9": 0.18727216481455194
+        },
         "response_control_32": {
           "n_draws": 32,
           "mean": 0.10732000321149826,
@@ -2055,6 +3872,19 @@
       "game_overfishing": {
         "digit_span_share": 0.30696560370818243,
         "cos_vs_big_digit_minus_zero": 0.24012851943883917,
+        "zero_only_span_share": 0.18747382179861907,
+        "cos_per_digit": {
+          "0": -0.1874738217986189,
+          "1": 0.01801746696594056,
+          "2": -0.09237385662944993,
+          "3": 0.01665088318453163,
+          "4": 0.003960308389501585,
+          "5": 0.11090103904577893,
+          "6": 0.026282078523137752,
+          "7": 0.026328212076720234,
+          "8": 0.029954496014576996,
+          "9": 0.08462433626446486
+        },
         "response_control_32": {
           "n_draws": 32,
           "mean": 0.10910271853208542,
@@ -2177,6 +4007,19 @@
       "game_prisoners_dilemma": {
         "digit_span_share": 0.2455281414631331,
         "cos_vs_big_digit_minus_zero": 0.06808491096160696,
+        "zero_only_span_share": 0.1591673983865887,
+        "cos_per_digit": {
+          "0": -0.15916739838658847,
+          "1": -0.17304704334736964,
+          "2": -0.19848849744079725,
+          "3": -0.12817276806489133,
+          "4": -0.12815106408196558,
+          "5": -0.05471013715617817,
+          "6": -0.03941063405265385,
+          "7": -0.1259356903784786,
+          "8": -0.09326842184588875,
+          "9": -0.10818877318523726
+        },
         "response_control_32": {
           "n_draws": 32,
           "mean": 0.13412126898765564,

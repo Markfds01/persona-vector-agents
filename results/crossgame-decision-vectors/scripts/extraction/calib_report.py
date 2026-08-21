@@ -11,9 +11,13 @@ import csv
 import sys
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+HERE = Path(__file__).resolve().parent
+# this directory holds the grid and pole definitions; the repo root is four up
+sys.path.insert(0, str(HERE))
+sys.path.insert(0, str(HERE.parents[3]))
 
-from scratch import crossgame_grid, poles
+import crossgame_grid  # noqa: E402
+import poles  # noqa: E402
 
 crossgame_grid.register()
 POLICY = sys.argv[2] if len(sys.argv) > 2 else "strict"

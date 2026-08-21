@@ -32,50 +32,50 @@
         "game_equal_unit": {
           "apology": {
             "layer0": {
-              "observed": 0.5211817644613249,
-              "reliability_pool": 0.6717453157509033,
+              "observed": 0.521181764461325,
+              "reliability_pool": 0.6717453157509036,
               "reliability_game": 0.8579102569594663,
               "attenuation_corrected": 0.6865401782284803
             },
             "layer20": {
-              "observed": 0.6755774826491318,
+              "observed": 0.6755774826491316,
               "reliability_pool": 0.8597211112411411,
               "reliability_game": 0.9688130584291855,
-              "attenuation_corrected": 0.7402465265374435
+              "attenuation_corrected": 0.7402465265374434
             }
           },
           "dictator": {
             "layer0": {
-              "observed": 0.679586641033978,
-              "reliability_pool": 0.6143604815537672,
+              "observed": 0.6795866410339779,
+              "reliability_pool": 0.614360481553767,
               "reliability_game": 0.88381799607424,
               "attenuation_corrected": 0.9222566107089463
             },
             "layer20": {
-              "observed": 0.8235077484743419,
-              "reliability_pool": 0.8464941197048411,
+              "observed": 0.8235077484743418,
+              "reliability_pool": 0.8464941197048412,
               "reliability_game": 0.9654243074240373,
-              "attenuation_corrected": 0.910954325664985
+              "attenuation_corrected": 0.9109543256649849
             }
           },
           "overfishing": {
             "layer0": {
-              "observed": 0.057369350937847015,
-              "reliability_pool": 0.7948191307851485,
+              "observed": 0.057369350937847036,
+              "reliability_pool": 0.7948191307851483,
               "reliability_game": 0.15795097100980177,
-              "attenuation_corrected": 0.16191408521117506
+              "attenuation_corrected": 0.16191408521117515
             },
             "layer20": {
               "observed": 0.20390576994787468,
-              "reliability_pool": 0.9387712383663591,
+              "reliability_pool": 0.9387712383663595,
               "reliability_game": 0.43576671362720387,
-              "attenuation_corrected": 0.31880314781043867
+              "attenuation_corrected": 0.3188031478104386
             }
           },
           "prisoners_dilemma": {
             "layer0": {
-              "observed": 0.0545644126571701,
-              "reliability_pool": 0.7806762309355206,
+              "observed": 0.054564412657170096,
+              "reliability_pool": 0.7806762309355207,
               "reliability_game": 0.5987866214511581,
               "attenuation_corrected": 0.07980644439034544
             },
@@ -88,16 +88,16 @@
           },
           "trust": {
             "layer0": {
-              "observed": 0.5847584384941744,
-              "reliability_pool": 0.6726605865924324,
+              "observed": 0.5847584384941745,
+              "reliability_pool": 0.6726605865924323,
               "reliability_game": 0.7685508491101188,
-              "attenuation_corrected": 0.8132839534616614
+              "attenuation_corrected": 0.8132839534616615
             },
             "layer20": {
               "observed": 0.7568705928183415,
-              "reliability_pool": 0.8764721952738895,
+              "reliability_pool": 0.8764721952738893,
               "reliability_game": 0.9095700542201534,
-              "attenuation_corrected": 0.8476849704978654
+              "attenuation_corrected": 0.8476849704978655
             }
           },
           "ultimatum": {
@@ -109,9 +109,9 @@
             },
             "layer20": {
               "observed": 0.46993244697501296,
-              "reliability_pool": 0.9289801464132736,
+              "reliability_pool": 0.9289801464132735,
               "reliability_game": 0.5432293863541733,
-              "attenuation_corrected": 0.6615163587290719
+              "attenuation_corrected": 0.661516358729072
             }
           }
         },
@@ -198,6 +198,178 @@
               "reliability_pool": 0.9782376991296227,
               "reliability_game": 0.5432293863541733,
               "attenuation_corrected": 0.6846907096205864
+            }
+          }
+        },
+        "family_balanced_unit": {
+          "apology": {
+            "layer0": {
+              "observed": 0.33810865850942506,
+              "reliability_pool": 0.47313216728693713,
+              "reliability_game": 0.8579102569594663,
+              "attenuation_corrected": 0.5306939353010234
+            },
+            "layer20": {
+              "observed": 0.5261879368011348,
+              "reliability_pool": 0.7652484757092516,
+              "reliability_game": 0.9688130584291855,
+              "attenuation_corrected": 0.6111103776501651
+            }
+          },
+          "dictator": {
+            "layer0": {
+              "observed": 0.47496599848128057,
+              "reliability_pool": 0.4404315473339965,
+              "reliability_game": 0.88381799607424,
+              "attenuation_corrected": 0.7612755663549161
+            },
+            "layer20": {
+              "observed": 0.6652991269652913,
+              "reliability_pool": 0.75585418902678,
+              "reliability_game": 0.9654243074240373,
+              "attenuation_corrected": 0.7788231044357248
+            }
+          },
+          "overfishing": {
+            "layer0": {
+              "observed": -0.010156760157693555,
+              "reliability_pool": 0.6707037412568018,
+              "reliability_game": 0.15795097100980177,
+              "attenuation_corrected": -0.03120532302831247
+            },
+            "layer20": {
+              "observed": 0.16246858001834957,
+              "reliability_pool": 0.8875267227423136,
+              "reliability_game": 0.43576671362720387,
+              "attenuation_corrected": 0.2612471967235621
+            }
+          },
+          "prisoners_dilemma": {
+            "layer0": {
+              "observed": -0.011885565172203206,
+              "reliability_pool": 0.44203520960782117,
+              "reliability_game": 0.5987866214511581,
+              "attenuation_corrected": -0.023102307578848395
+            },
+            "layer20": {
+              "observed": 0.23717677060574438,
+              "reliability_pool": 0.6674091828232895,
+              "reliability_game": 0.7900632671652014,
+              "attenuation_corrected": 0.3266217695288704
+            }
+          },
+          "trust": {
+            "layer0": {
+              "observed": 0.42007473806181456,
+              "reliability_pool": 0.45855089983071823,
+              "reliability_game": 0.7685508491101188,
+              "attenuation_corrected": 0.7076141142788543
+            },
+            "layer20": {
+              "observed": 0.647755000968697,
+              "reliability_pool": 0.7710228680778439,
+              "reliability_game": 0.9095700542201534,
+              "attenuation_corrected": 0.7734977740364194
+            }
+          },
+          "ultimatum": {
+            "layer0": {
+              "observed": 0.20617769815340162,
+              "reliability_pool": 0.5396724828432474,
+              "reliability_game": 0.2304728745672619,
+              "attenuation_corrected": 0.5846105387756043
+            },
+            "layer20": {
+              "observed": 0.36753085633918336,
+              "reliability_pool": 0.8104654120055642,
+              "reliability_game": 0.5432293863541733,
+              "attenuation_corrected": 0.5539045544744013
+            }
+          }
+        },
+        "non_dollar_unit": {
+          "apology": {
+            "layer0": {
+              "observed": 0.0650517755861175,
+              "reliability_pool": 0.3252102720578265,
+              "reliability_game": 0.8579102569594663,
+              "attenuation_corrected": 0.12315614823010237
+            },
+            "layer20": {
+              "observed": 0.2688420046760204,
+              "reliability_pool": 0.6468754699602115,
+              "reliability_game": 0.9688130584291855,
+              "attenuation_corrected": 0.33959930427569895
+            }
+          },
+          "dictator": {
+            "layer0": {
+              "observed": 0.1581689398713186,
+              "reliability_pool": 0.3252102720578265,
+              "reliability_game": 0.88381799607424,
+              "attenuation_corrected": 0.29502421010178026
+            },
+            "layer20": {
+              "observed": 0.3809411443291982,
+              "reliability_pool": 0.6468754699602115,
+              "reliability_game": 0.9654243074240373,
+              "attenuation_corrected": 0.4820459363365187
+            }
+          },
+          "overfishing": {
+            "layer0": {
+              "observed": -0.08131442712704519,
+              "reliability_pool": 0.5987866214511585,
+              "reliability_game": 0.15795097100980177,
+              "attenuation_corrected": -0.264405455906429
+            },
+            "layer20": {
+              "observed": 0.06618941949091131,
+              "reliability_pool": 0.7900632671652019,
+              "reliability_game": 0.43576671362720387,
+              "attenuation_corrected": 0.1128055871445762
+            }
+          },
+          "prisoners_dilemma": {
+            "layer0": {
+              "observed": -0.08131442712704522,
+              "reliability_pool": 0.1579509710098017,
+              "reliability_game": 0.5987866214511581,
+              "attenuation_corrected": -0.2644054559064292
+            },
+            "layer20": {
+              "observed": 0.0661894194909113,
+              "reliability_pool": 0.43576671362720387,
+              "reliability_game": 0.7900632671652014,
+              "attenuation_corrected": 0.11280558714457622
+            }
+          },
+          "trust": {
+            "layer0": {
+              "observed": 0.14761325234771933,
+              "reliability_pool": 0.3252102720578265,
+              "reliability_game": 0.7685508491101188,
+              "attenuation_corrected": 0.2952615657047076
+            },
+            "layer20": {
+              "observed": 0.41086326294525627,
+              "reliability_pool": 0.6468754699602115,
+              "reliability_game": 0.9095700542201534,
+              "attenuation_corrected": 0.5356349325829761
+            }
+          },
+          "ultimatum": {
+            "layer0": {
+              "observed": 0.023566352606095825,
+              "reliability_pool": 0.3252102720578265,
+              "reliability_game": 0.2304728745672619,
+              "attenuation_corrected": 0.08607961874118163
+            },
+            "layer20": {
+              "observed": 0.18018787001187897,
+              "reliability_pool": 0.6468754699602115,
+              "reliability_game": 0.5432293863541733,
+              "attenuation_corrected": 0.30396500197435644
             }
           }
         }
@@ -308,28 +480,28 @@
         "game_equal_unit": {
           "apology": {
             "layer0": {
-              "observed": 0.52744431107251,
-              "reliability_pool": 0.7443815549628054,
+              "observed": 0.5274443110725101,
+              "reliability_pool": 0.7443815549628056,
               "reliability_game": 0.8799768949456138,
-              "attenuation_corrected": 0.6516931801707475
+              "attenuation_corrected": 0.6516931801707476
             },
             "layer20": {
-              "observed": 0.623303135648762,
-              "reliability_pool": 0.8960466393145142,
+              "observed": 0.6233031356487619,
+              "reliability_pool": 0.896046639314514,
               "reliability_game": 0.9544788042986927,
-              "attenuation_corrected": 0.6739859755266562
+              "attenuation_corrected": 0.6739859755266561
             }
           },
           "dictator": {
             "layer0": {
-              "observed": 0.6595106557763011,
-              "reliability_pool": 0.7394316860529104,
+              "observed": 0.659510655776301,
+              "reliability_pool": 0.7394316860529107,
               "reliability_game": 0.817916477605768,
-              "attenuation_corrected": 0.8480438512358061
+              "attenuation_corrected": 0.848043851235806
             },
             "layer20": {
               "observed": 0.8069136164560593,
-              "reliability_pool": 0.87639151276913,
+              "reliability_pool": 0.8763915127691301,
               "reliability_game": 0.9553659922299991,
               "attenuation_corrected": 0.8818466586431583
             }
@@ -337,23 +509,23 @@
           "overfishing": {
             "layer0": {
               "observed": 0.16303262804773233,
-              "reliability_pool": 0.8700957116087138,
+              "reliability_pool": 0.8700957116087137,
               "reliability_game": 0.15421595649489503,
-              "attenuation_corrected": 0.44506798904359174
+              "attenuation_corrected": 0.4450679890435918
             },
             "layer20": {
               "observed": 0.23560398138400354,
-              "reliability_pool": 0.9410904882970575,
+              "reliability_pool": 0.9410904882970578,
               "reliability_game": 0.20285442453146818,
               "attenuation_corrected": 0.5392308004697316
             }
           },
           "prisoners_dilemma": {
             "layer0": {
-              "observed": 0.12408046204557321,
-              "reliability_pool": 0.8640613621423185,
+              "observed": 0.1240804620455732,
+              "reliability_pool": 0.8640613621423187,
               "reliability_game": 0.3394708403628501,
-              "attenuation_corrected": 0.22910252282509994
+              "attenuation_corrected": 0.22910252282509985
             },
             "layer20": {
               "observed": 0.3662512210038098,
@@ -371,17 +543,17 @@
             },
             "layer20": {
               "observed": 0.7598761871071515,
-              "reliability_pool": 0.8990999108143446,
+              "reliability_pool": 0.8990999108143445,
               "reliability_game": 0.8397033599422403,
               "attenuation_corrected": 0.8745324162713062
             }
           },
           "ultimatum": {
             "layer0": {
-              "observed": 0.5139245794836954,
-              "reliability_pool": 0.7483094969865769,
+              "observed": 0.5139245794836955,
+              "reliability_pool": 0.7483094969865768,
               "reliability_game": 0.9288585635694828,
-              "attenuation_corrected": 0.6164302831351198
+              "attenuation_corrected": 0.6164302831351199
             },
             "layer20": {
               "observed": 0.5639616469462039,
@@ -474,6 +646,178 @@
               "reliability_pool": 0.9676190755069749,
               "reliability_game": 0.9633398007896248,
               "attenuation_corrected": 0.5802818699589043
+            }
+          }
+        },
+        "family_balanced_unit": {
+          "apology": {
+            "layer0": {
+              "observed": 0.3260524922461757,
+              "reliability_pool": 0.4723948189041063,
+              "reliability_game": 0.8799768949456138,
+              "attenuation_corrected": 0.5057074209182557
+            },
+            "layer20": {
+              "observed": 0.47050177834095075,
+              "reliability_pool": 0.7558510367024003,
+              "reliability_game": 0.9544788042986927,
+              "attenuation_corrected": 0.5539365456117293
+            }
+          },
+          "dictator": {
+            "layer0": {
+              "observed": 0.44189875573009024,
+              "reliability_pool": 0.4590295263954412,
+              "reliability_game": 0.817916477605768,
+              "attenuation_corrected": 0.7211871651677123
+            },
+            "layer20": {
+              "observed": 0.6373963634104391,
+              "reliability_pool": 0.7364598133597772,
+              "reliability_game": 0.9553659922299991,
+              "attenuation_corrected": 0.7598890137410302
+            }
+          },
+          "overfishing": {
+            "layer0": {
+              "observed": 0.18013827015462983,
+              "reliability_pool": 0.5670297463798601,
+              "reliability_game": 0.15421595649489503,
+              "attenuation_corrected": 0.6091698644991931
+            },
+            "layer20": {
+              "observed": 0.22251279544315786,
+              "reliability_pool": 0.7809456397813623,
+              "reliability_game": 0.20285442453146818,
+              "attenuation_corrected": 0.5590521799037096
+            }
+          },
+          "prisoners_dilemma": {
+            "layer0": {
+              "observed": 0.1531777599283418,
+              "reliability_pool": 0.5011785691408042,
+              "reliability_game": 0.3394708403628501,
+              "attenuation_corrected": 0.3713626570371591
+            },
+            "layer20": {
+              "observed": 0.31395500018285,
+              "reliability_pool": 0.6024994488238133,
+              "reliability_game": 0.5607413497708358,
+              "attenuation_corrected": 0.5401417981607326
+            }
+          },
+          "trust": {
+            "layer0": {
+              "observed": 0.40117542771591863,
+              "reliability_pool": 0.4868416652909383,
+              "reliability_game": 0.6944247987928177,
+              "attenuation_corrected": 0.6899662440932631
+            },
+            "layer20": {
+              "observed": 0.639502578425226,
+              "reliability_pool": 0.7487200582985882,
+              "reliability_game": 0.8397033599422403,
+              "attenuation_corrected": 0.8065283177117389
+            }
+          },
+          "ultimatum": {
+            "layer0": {
+              "observed": 0.3836388580912262,
+              "reliability_pool": 0.46166468280727,
+              "reliability_game": 0.9288585635694828,
+              "attenuation_corrected": 0.5858473485407968
+            },
+            "layer20": {
+              "observed": 0.49397221960858956,
+              "reliability_pool": 0.7639187086875386,
+              "reliability_game": 0.9633398007896248,
+              "attenuation_corrected": 0.5758232553902544
+            }
+          }
+        },
+        "non_dollar_unit": {
+          "apology": {
+            "layer0": {
+              "observed": 0.05139960064827458,
+              "reliability_pool": 0.28126934246119123,
+              "reliability_game": 0.8799768949456138,
+              "attenuation_corrected": 0.10331488845520513
+            },
+            "layer20": {
+              "observed": 0.2244887079309082,
+              "reliability_pool": 0.5848419823091536,
+              "reliability_game": 0.9544788042986927,
+              "attenuation_corrected": 0.3004637517409837
+            }
+          },
+          "dictator": {
+            "layer0": {
+              "observed": 0.13529569619356704,
+              "reliability_pool": 0.28126934246119123,
+              "reliability_game": 0.817916477605768,
+              "attenuation_corrected": 0.28207740786088226
+            },
+            "layer20": {
+              "observed": 0.35601611086655915,
+              "reliability_pool": 0.5848419823091536,
+              "reliability_game": 0.9553659922299991,
+              "attenuation_corrected": 0.4762834518295446
+            }
+          },
+          "overfishing": {
+            "layer0": {
+              "observed": 0.13417654688377914,
+              "reliability_pool": 0.3394708403628502,
+              "reliability_game": 0.15421595649489503,
+              "attenuation_corrected": 0.5864226243830248
+            },
+            "layer20": {
+              "observed": 0.14916287057725444,
+              "reliability_pool": 0.5607413497708365,
+              "reliability_game": 0.20285442453146818,
+              "attenuation_corrected": 0.4422697123367407
+            }
+          },
+          "prisoners_dilemma": {
+            "layer0": {
+              "observed": 0.1341765468837791,
+              "reliability_pool": 0.15421595649489492,
+              "reliability_game": 0.3394708403628501,
+              "attenuation_corrected": 0.5864226243830251
+            },
+            "layer20": {
+              "observed": 0.14916287057725444,
+              "reliability_pool": 0.20285442453146818,
+              "reliability_game": 0.5607413497708358,
+              "attenuation_corrected": 0.4422697123367409
+            }
+          },
+          "trust": {
+            "layer0": {
+              "observed": 0.1335382935510427,
+              "reliability_pool": 0.28126934246119123,
+              "reliability_game": 0.6944247987928177,
+              "attenuation_corrected": 0.30215654952265814
+            },
+            "layer20": {
+              "observed": 0.40248674393981493,
+              "reliability_pool": 0.5848419823091536,
+              "reliability_game": 0.8397033599422403,
+              "attenuation_corrected": 0.5743403990207767
+            }
+          },
+          "ultimatum": {
+            "layer0": {
+              "observed": 0.16205790132125747,
+              "reliability_pool": 0.28126934246119123,
+              "reliability_game": 0.9288585635694828,
+              "attenuation_corrected": 0.31705471549820236
+            },
+            "layer20": {
+              "observed": 0.3277872429927327,
+              "reliability_pool": 0.5848419823091536,
+              "reliability_game": 0.9633398007896248,
+              "attenuation_corrected": 0.4366998325092427
             }
           }
         }

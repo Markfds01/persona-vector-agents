@@ -14,10 +14,13 @@ import sys
 import time
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+HERE = Path(__file__).resolve().parent
+# this directory holds the grid definition; the repo root is four up
+sys.path.insert(0, str(HERE))
+sys.path.insert(0, str(HERE.parents[3]))
 
-from audit import generate
-from scratch import crossgame_grid
+from audit import generate  # noqa: E402
+import crossgame_grid  # noqa: E402
 
 
 def main():

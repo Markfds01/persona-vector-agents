@@ -1,0 +1,7 @@
+loaded dictator: 712 rows
+loaded trust: 699 rows
+loaded ultimatum: 713 rows
+loaded apology: 714 rows
+loaded overfishing: 1425 rows
+loaded prisoners_dilemma: 240 rows
+wrote /home/marco/dockmaster/state/worktrees/pr-crossgame/results/crossgame-decision-vectors/analysis/verification_relaxed.json
