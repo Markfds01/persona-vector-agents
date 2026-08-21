@@ -2,7 +2,7 @@
   "policy": "strict",
   "inputs": {
     "paths_relative_to": "the repository root, which is not recorded: it is wherever this checkout happens to sit",
-    "grid": "results/crossgame-decision-vectors/scripts/extraction",
+    "grid": "results/crossgame-decision-vectors/scripts/prompting",
     "vectors": "results/crossgame-decision-vectors/vectors",
     "dictator": "results/dictator-decision-vector/vectors/decision_response_avg_diff_cellbalanced.pt",
     "altruism": "persona_vectors/Qwen2.5-7B-Instruct/altruism_response_avg_diff.pt",

@@ -47,7 +47,7 @@ of how the pool was weighted. Section 6.
 
 ## 2. The prompt grid
 
-`scripts/extraction/crossgame_grid.py`, question set `crossgame_grid_v1`. Six
+`scripts/prompting/crossgame_grid.py`, question set `crossgame_grid_v1`. Six
 game families x six stakes x five wordings = **180 cells, 30 per game**.
 
 | family | scorer | stakes | `pole_scale` |
@@ -89,7 +89,7 @@ put a parser artefact inside the labels.
 
 ## 3. Generation
 
-`scripts/extraction/gen_crossgame.py`, one model load per invocation, `neutral`
+`scripts/prompting/gen_crossgame.py`, one model load per invocation, `neutral`
 preset, seed 0, batch size 32, `cuda:0`. `Qwen/Qwen2.5-7B-Instruct` at revision
 `a09a35458c702b33eeacc393d103063234e8bc28`, bfloat16, `sdpa`, temperature 1.0,
 top_p 1.0, top_k 0, min_p 0.0, repetition_penalty 1.0, max_new_tokens 1000, stop
@@ -122,7 +122,7 @@ anything outside the file. 4560 generated, 4503 scored and captured, 0 dropped.
 
 ## 4. Labels: the poles, under two policies
 
-`scripts/extraction/poles.py`. The label is always what the model **did**, read
+`scripts/prompting/poles.py`. The label is always what the model **did**, read
 off the scorer's resolved value — never a rating, never the wording of the answer,
 never an LLM judge. What differs per family is what "the payoff-maximising choice"
 and "restraint" mean in that game's own units, so each family declares both.
@@ -186,7 +186,7 @@ repository**, matching upstream `generate_vec.py:28-38`:
    `[prompt_len, end)`.
 
 **Nothing in that loop is per game.** A grid declares its own games and registers
-them into `audit.games.GAMES_BY_ID` — `scripts/extraction/crossgame_grid.py` here,
+them into `audit.games.GAMES_BY_ID` — `scripts/prompting/crossgame_grid.py` here,
 `results/dictator-decision-vector/scripts/decision_grid.py` for the earlier
 Dictator-only run — and every row names its own `game_id` and `mode`, so which
 prompt is re-rendered, which stakes it carried and which answer space scored it
@@ -213,10 +213,10 @@ revision `a09a35458c702b33eeacc393d103063234e8bc28`.
 
 Shards are written in complete blocks of 250 rows and a run resumes from them
 (`--resume`), reading the row indices back out of the shards themselves so there
-is no sidecar index to drift. The device is shared with a tenant that cycles
-models without warning, and an eviction has to cost a shard rather than a corpus.
-The **load** is retried on OOM; a partially captured run never is, and nothing
-about dtype, kernel, batch semantics or revision is relaxed to make a run fit.
+is no sidecar index to drift. An interruption has to cost a shard rather than a
+corpus. The **load** is retried on OOM; a partially captured run never is, and
+nothing about dtype, kernel, batch semantics or revision is relaxed to make a run
+fit.
 
 Output is `acts/<game>/shard_*.pt` — 5.3 GB for the six games, 2.1 GB for the
 Dictator-only grid, neither committed. See `README.md` §12.
@@ -480,7 +480,7 @@ itself.
 
 Three separate checks, and they answer different questions.
 
-**Before the data.** `scripts/extraction/selftest_analysis.py` runs the whole
+**Before the data.** `scripts/measurement/selftest_analysis.py` runs the whole
 battery on **synthetic** activations with a known answer, so the analysis code was
 checked before it saw this data. It plants a shared direction and requires the
 battery to recover it (pooled AUC 1.000, agreement 0.837, LOGO 1.000), runs it on

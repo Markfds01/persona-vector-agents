@@ -49,7 +49,7 @@ Usage, from a checkout of this repository:
 
     python results/crossgame-decision-vectors/scripts/verify_committed.py \
         --acts   <dir holding acts/<game>/shard_*.pt and rows.csv> \
-        --grid   results/crossgame-decision-vectors/scripts/extraction \
+        --grid   results/crossgame-decision-vectors/scripts/prompting \
         --dictator <path to the archived Dictator-only cell-balanced vector> \
         --snapshot <local Qwen2.5-7B-Instruct snapshot dir> \
         --out    results/crossgame-decision-vectors/analysis/verification.json
@@ -636,7 +636,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--acts", required=True,
                     help="directory holding <game>/shard_*.pt and <game>/rows.csv")
-    ap.add_argument("--grid", default=str(HERE / "extraction"),
+    ap.add_argument("--grid", default=str(HERE / "prompting"),
                     help="directory holding crossgame_grid.py and poles.py")
     ap.add_argument("--repo-root", default=None,
                     help="repository root, so crossgame_grid can import audit "

@@ -727,7 +727,7 @@ cooperating cannot lose money — produced **0 cooperations in 96 draws**
 **That probe is weaker evidence than it looks, and the difference matters.** It
 holds the wording fixed to isolate the matrix, but the wording it holds fixed is a
 **sixth** one, written for the probe and absent from the grid
-(`scripts/extraction/pd_probe.py`), so its own cooperation rate was never measured
+(`scripts/prompting/pd_probe.py`), so its own cooperation rate was never measured
 against the payoff ladder. A wording that cooperates 0% regardless — which is what
 `upstream` does in the grid, 0 of 46 — would produce exactly this result whatever
 the matrix did. So the probe bounds the matrix's effect *within one untested
@@ -821,7 +821,7 @@ an identical activation there, so the measurement is all ties. `prompt_avg` reac
 
 ### i. The analysis code was validated before it saw this data
 
-`scripts/extraction/selftest_analysis.py` runs the six-game battery — §1–§4, §7
+`scripts/measurement/selftest_analysis.py` runs the six-game battery — §1–§4, §7
 and §8, i.e. `analyze_crossgame.py`, not the pooling stage — twice on synthetic
 activations: it recovers a planted shared direction (pooled AUC 1.000, agreement
 +0.837 against a null p97.5 of +0.032, leave-one-out 1.000 on both games),
@@ -882,12 +882,14 @@ extraction/                THE GENERATIONS THE VECTORS WERE BUILT FROM — 4560 
 evidence/                  the PD payoff-matrix probe and the calibration pass
 analysis/                  every number above, both policies, all layers, all nulls
 provenance/                the manifest and the execution logs of every stage
-scripts/                   the code that produced all of it
+scripts/                   prompting/, measurement/, pooling/ and the two drivers
 ```
 
 There is **no `rows/` directory and no steering output**, because no steering was
 run. `extraction/` is the analogue of the Dictator directory's `extraction/`: the
-unsteered answers whose outcomes became the pole labels.
+unsteered answers whose outcomes became the pole labels. It holds the extracted
+rows, not an extractor — the extractor is `lab/extract.py`, one level up and shared
+with the Dictator study.
 
 ### `vectors/`
 
@@ -970,28 +972,38 @@ the NUL error, then PD regenerated. `extraction.log` is this revision's
 re-extraction of the whole corpus, and `analysis.log` and the rest are the CPU
 stages it fed.
 
+`generation_run_notes.md` is a **temporary** note beside those four logs: how that
+run was launched, and what the machine was doing while it ran. It is a record of
+one past run, not part of the pipeline, and it is meant to be deleted once it
+stops being worth remembering. Everything in it that is a property of the
+committed data — and not of that machine — is stated in this file instead.
+
 ### `scripts/`
 
 | path | what it is |
 |---|---|
 | `run_extraction.sh` | drives `lab/extract.py` over the whole corpus, one game at a time, resumable |
 | `run_analysis.sh` | everything downstream of the activations, in order, CPU only |
-| `extraction/crossgame_grid.py`, `poles.py` | the grid and pole **definitions** — declarations, not computation |
-| `extraction/gen_crossgame.py` + `run_all.sh`, `main_run.sh`, `resume_run.sh`, `finish.sh`, `finish_pd.sh` | the generation stage as it was launched; not re-run by this revision |
-| `extraction/analyze_crossgame.py`, `land_family.py` | §1–§4, §7, §8 |
-| `extraction/decode_layer0.py` | the §3 token decode |
-| `extraction/selftest_analysis.py` | the six-game battery on synthetic data with a known answer; **manual**, no test command runs it |
-| `extraction/calib_report.py`, `summarize.py`, `pd_probe.py` | the calibration read-out, a summary printer, and the §8b probe |
+| `prompting/crossgame_grid.py`, `poles.py` | the grid and pole **definitions** — declarations, not computation |
+| `prompting/gen_crossgame.py` | the generation stage; not re-run by this revision |
+| `prompting/calib_report.py`, `pd_probe.py` | the calibration read-out and the §8b probe |
+| `measurement/analyze_crossgame.py`, `land_family.py` | §1–§4, §7, §8 |
+| `measurement/decode_layer0.py` | the §3 token decode |
+| `measurement/summarize.py` | a printer for the analysis JSON; computes nothing |
+| `measurement/selftest_analysis.py` | the six-game battery on synthetic data with a known answer; **manual**, no test command runs it |
 | `pooling/` | the nine weightings and everything measured on them |
 | `verify_committed.py` | §11, the independent recomputation |
 | `compare_activations.py`, `compare_published.py` | §0 and §12, the two diffs |
 | `tests/` | the reproduction gate and the rebuild comparator, offline; part of `python -m pytest -q` from the repository root |
 
-The directory is named `extraction/` for historical reasons and no longer contains
-an extractor: the teacher-forced capture is `lab/extract.py`, a top-level package
-that holds this project's own experimental pipeline (`audit/` is the clean-room
-reimplementation of the upstream paper, and `lab/` borrows its prompt rendering
-and game declarations rather than the other way round).
+`prompting/` is the front half — what was asked, in which wording, at which stake
+— and `measurement/` is what was measured off the activations that came back.
+Neither holds an extractor: the teacher-forced capture is `lab/extract.py`, a
+top-level package that holds this project's own experimental pipeline (`audit/` is
+the clean-room reimplementation of the upstream paper, and `lab/` borrows its
+prompt rendering and game declarations rather than the other way round). One
+extractor serves this study and the Dictator-only one, which is why it sits beside
+them rather than inside either.
 
 ## 11. How to check these numbers
 
@@ -1083,15 +1095,15 @@ To check things by hand from what is committed:
 
 | stage | what it does | code | needs |
 |---|---|---|---|
-| 1. the grid | the 180 prompt cells, each fingerprint checked against its own text | `scripts/extraction/crossgame_grid.py` | nothing |
-| 2. generation | 4560 generations, `neutral` preset, seed 0, batch 32. Output is `extraction/*.csv`. **Not re-run by this revision.** | `scripts/extraction/gen_crossgame.py`, driven by the four wrappers | GPU + model weights |
+| 1. the grid | the 180 prompt cells, each fingerprint checked against its own text | `scripts/prompting/crossgame_grid.py` | nothing |
+| 2. generation | 4560 generations, `neutral` preset, seed 0, batch 32. Output is `extraction/*.csv`. **Not re-run by this revision.** | `scripts/prompting/gen_crossgame.py`, one game per invocation | GPU + model weights |
 | 3. activations | teacher-forced forward pass over prompt+response, batch 1, no padding, three poolings x 29 layers. **5.3 GB for the six games, 2.1 GB for the Dictator grid, not committed.** | `lab/extract.py`, driven by `scripts/run_extraction.sh` | GPU + model weights |
 | 4. everything CPU-side | per-game landing, the six-game battery, the nine weightings, both token decodes, the digit share | `scripts/run_analysis.sh` | the activations |
 | 5. the two diffs | the re-extraction against the archived activations; the rebuild against what was published | `scripts/compare_activations.py`, `scripts/compare_published.py` | the activations |
 | 6. the verification | recomputes §1–§8 from the activations without either stage's analysis code | `scripts/verify_committed.py` | the activations, and the model weights for §3 |
-| the self-test | the whole battery on synthetic activations with a known answer | `scripts/extraction/selftest_analysis.py` | nothing |
-| the PD probe | §8b's six extra payoff matrices | `scripts/extraction/pd_probe.py` | GPU + model weights |
-| the calibration | the pass that set the per-game sample counts | `scripts/extraction/calib_report.py` | `evidence/calibration_*.csv` |
+| the self-test | the whole battery on synthetic activations with a known answer | `scripts/measurement/selftest_analysis.py` | nothing |
+| the PD probe | §8b's six extra payoff matrices | `scripts/prompting/pd_probe.py` | GPU + model weights |
+| the calibration | the pass that set the per-game sample counts | `scripts/prompting/calib_report.py` | `evidence/calibration_*.csv` |
 
 ```
 ACTS=<8 GB somewhere> PY=<python with torch+transformers> DEVICE=0 \
@@ -1169,20 +1181,24 @@ archive in §0 (1,960,648,704 of 1,960,648,704 elements exactly equal), consumed
 `scripts/verify_committed.py`, which reproduces all 15 committed vectors from it
 under both pole policies.
 
-### What still does not run from where it sits
+### What runs from where it sits
 
-**The generation wrappers.** `run_all.sh`, `main_run.sh`, `resume_run.sh`,
-`finish.sh` and `finish_pd.sh` hardcode a worktree that no longer exists, a
-`.venv` interpreter inside it, and an output directory outside this repository.
-They are the record of what was actually launched — the sample counts, the batch
-size, the seed, the device, the family order and the retry policy — which is why
-they are here, and `main_run.sh` carries the reasoning for the per-game sample
-counts in its own header. They also invoke an `extract_crossgame.py` that no longer
-exists: that step is now `lab/extract.py`, driven by `run_extraction.sh`, and
-every activation behind every number in this file came off it.
+Everything in `scripts/` does, with no `PYTHONPATH` and no copying, provided the
+repository root is its ancestor. Stage 2 is the one stage with no driver here:
+`prompting/gen_crossgame.py` generates one game per invocation, and the five shell
+wrappers that chained those invocations are gone. They hardcoded a worktree, a
+`.venv` inside it, an output directory outside this repository, and an
+`extract_crossgame.py` that was never committed — a record of five particular
+launches on one machine, not pipeline code.
+`provenance/generation_run_notes.md` records what they did, and `METHOD.md` §3
+carries the part of it that is method rather than circumstance. The capture step
+they called is now `lab/extract.py`, driven by `run_extraction.sh`, and every
+activation behind every number in this file came off it.
 
-Everything else in `scripts/` runs from where it sits, with no `PYTHONPATH` and no
-copying, provided the repository root is its ancestor.
+**Records of past runs still name paths that no longer exist.** The four
+generation logs in `provenance/` quote the `scratch/` worktree those runs executed
+from, the deleted wrappers by name, and the tracebacks they raised. They are frozen
+history and are not rewritten to match the current layout.
 
 ## 13. Provenance
 
@@ -1208,17 +1224,18 @@ activations they produced are bit-identical to the ones the original scripts
 produced (§0), which is the strongest available evidence that the generation-time
 extractor was the same computation too.
 
-**The generation run was interrupted twice and one game was generated twice.** The
-GPU is shared with another tenant that swings between roughly 21.6 and 27.4 GiB and
-cycles models without warning. `main_run.log` records the model load OOMing twice
-and retrying before the first pass started, and then a CUDA OOM inside a forward
-pass that killed `trust`; `resume_run.log` records `trust` regenerated from
-scratch, and a second OOM on its first retry. `finish.log` and `finish_pd.log`
+**The generation run was interrupted twice and one game was generated twice.**
+`main_run.log` records the model load OOMing twice and retrying before the first
+pass started, and then a CUDA OOM inside a forward pass that killed `trust`;
+`resume_run.log` records `trust` regenerated from scratch, and a second OOM on its
+first retry. `finish.log` and `finish_pd.log`
 record the PD generation that completed and reported success but whose CSV could
 not be read (`_csv.Error: line contains NUL`), and the regeneration that followed.
 **Each game is internally seed-consistent** — one run, seed 0, batch 32 — but the
 set was not produced by a single uninterrupted invocation, and two games were
 produced by their second attempt rather than their first.
+`provenance/generation_run_notes.md` is the temporary record of what the machine
+was doing at the time.
 
 All six CSVs were verified NUL-free with row counts and SHA-256 recorded at landing
 time, re-verified during packaging, and each `extraction/<game>.csv` is

@@ -1,6 +1,6 @@
 """Exercise the six-game battery on synthetic activations. No GPU, no real data.
 
-The real run costs hours on a shared GPU, so the analysis must not be first
+The real run costs hours of GPU time, so the analysis must not be first
 executed on its output. This builds fake rows and fake activations for three
 families - one of them deliberately single-poled, like the Prisoner's Dilemma -
 and runs `analyze_crossgame.py` over them twice, once with a planted direction and
@@ -28,9 +28,9 @@ from pathlib import Path
 import torch
 
 HERE = Path(__file__).resolve().parent
-# this directory holds the grid definition; the repo root is four up
+# the grid definition is the sibling prompting/; the repo root is four up
 ROOT = HERE.parents[3]
-sys.path.insert(0, str(HERE))
+sys.path.insert(0, str(HERE.parent / "prompting"))
 sys.path.insert(0, str(ROOT))
 
 import crossgame_grid  # noqa: E402

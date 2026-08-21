@@ -40,10 +40,10 @@ contrast: causal masking makes every prompt-side activation identical within a
 prompt cell. All three are captured anyway so that stays checkable rather than
 asserted.
 
-Shards are written in complete blocks and a run is resumable from them, because
-the GPU is shared and an eviction should cost a shard rather than a corpus. What
-is in flight when a row fails is flushed on the way out, and `meta.json` — the
-file the resume reads — is replaced rather than truncated, for the same reason.
+Shards are written in complete blocks and a run is resumable from them, so an
+interruption costs a shard rather than a corpus. What is in flight when a row
+fails is flushed on the way out, and `meta.json` — the file the resume reads —
+is replaced rather than truncated, for the same reason.
 """
 
 import argparse
@@ -388,8 +388,7 @@ def load_model(model_id: str, revision: str, device: int, dtype: str, attn: str,
                attempts: int = 1, retry_seconds: int = 30, on_retry=None):
     """Load the weights onto ONE named device, with the kernel and dtype pinned.
 
-    The device is shared and the other tenant cycles models on it without warning,
-    so a load that OOMs is transient rather than a result: the LOAD is retried,
+    A load that OOMs is transient rather than a result, so the LOAD is retried,
     never a partially captured run, and every attempt is reported. Nothing about
     the configuration is relaxed to make it fit — that would silently break
     comparability with every vector already built.

@@ -1,8 +1,7 @@
 """Generate cross-game grid cells at the `neutral` preset and write scored rows.
 
 One model load, one engine, one sampling configuration. Rows are flushed per
-batch so a GPU eviction keeps everything generated so far - the device is shared
-and another tenant cycles models on it without warning.
+batch, so an interrupted run keeps everything generated so far.
 
 `--families` and `--wordings` restrict the run to part of the grid, which is how
 the calibration pass checks that a stake ladder actually populates both poles
@@ -63,9 +62,8 @@ def main():
     print("cells=%d samples=%d total=%d" % (len(pairs), args.samples,
                                             len(pairs) * args.samples), flush=True)
 
-    # The device is shared and the other tenant cycles models on it without
-    # warning; a load that OOMs is transient, not a result. Retry the LOAD only -
-    # never a partially generated run - and report every attempt.
+    # A load that OOMs is transient, not a result. Retry the LOAD only - never a
+    # partially generated run - and report every attempt.
     engine = None
     for attempt in range(1, args.load_attempts + 1):
         try:

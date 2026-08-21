@@ -34,8 +34,8 @@ from pathlib import Path
 import torch
 
 HERE = Path(__file__).resolve().parent
-# this directory holds the grid and pole definitions; the repo root is four up
-sys.path.insert(0, str(HERE))
+# the grid and pole definitions are the sibling prompting/; the repo root is four up
+sys.path.insert(0, str(HERE.parent / "prompting"))
 sys.path.insert(0, str(HERE.parents[3]))
 
 import crossgame_grid  # noqa: E402

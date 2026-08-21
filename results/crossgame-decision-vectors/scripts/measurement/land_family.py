@@ -1,10 +1,9 @@
 """Land one game the moment it finishes: its vector, its counts, its manifest entry.
 
-The GPU is shared with another tenant that loads and unloads models on its own
-schedule, so this run assumes it will be interrupted. Landing per game means an
-interruption costs the game in flight, not the set, and it means partial output
-is interpretable: the manifest says which games are present, how many rows each
-pole holds, and what the vector's own split-half separation was.
+Landing per game is what makes an interrupted run interpretable instead of lost:
+the interruption costs the game in flight and not the set, and the manifest says
+which games are present, how many rows each pole holds, and what each landed
+vector's own split-half separation was.
 
 The vector written here is built exactly as the pooled one is - same poles, same
 cell balancing, same code path in `analyze_crossgame` - so a per-game vector and
@@ -19,8 +18,9 @@ import tempfile
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
-# this directory holds the grid and pole definitions; the repo root is four up
+# the pole definitions are the sibling prompting/; the repo root is four up
 sys.path.insert(0, str(HERE))
+sys.path.insert(0, str(HERE.parent / "prompting"))
 sys.path.insert(0, str(HERE.parents[3]))
 
 import analyze_crossgame as A  # noqa: E402

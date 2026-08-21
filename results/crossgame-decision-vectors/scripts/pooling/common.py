@@ -30,9 +30,8 @@ from pathlib import Path
 
 import torch
 
-# This box is shared and its load average runs into the hundreds. Grabbing all
-# 256 cores makes every run slower, not faster, so cap the thread pool unless the
-# caller says otherwise.
+# Torch takes every core by default, which is rarely the fastest setting for these
+# reductions and is antisocial on a shared machine. DM_THREADS overrides the cap.
 torch.set_num_threads(int(os.environ.get("DM_THREADS", "16")))
 
 HERE = Path(__file__).resolve().parent
@@ -40,7 +39,7 @@ HERE = Path(__file__).resolve().parent
 RESULTS = HERE.parents[1]
 REPO = RESULTS.parents[1]
 #: where crossgame_grid.py and poles.py live - the grid and pole DEFINITIONS
-GRID = HERE.parent / "extraction"
+GRID = HERE.parent / "prompting"
 
 
 def _required(name, what):

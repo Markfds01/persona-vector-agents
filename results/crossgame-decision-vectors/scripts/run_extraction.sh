@@ -6,9 +6,8 @@
 # against the archived activations is exact rather than distributional. Nothing
 # is re-generated here — the rows are the ones already committed.
 #
-# One game per invocation, resumable: the device is shared with a tenant that
-# cycles models without warning, so an eviction costs the shard in flight and
-# `--resume` picks the game back up from the shards already on disk. Nothing
+# One game per invocation, resumable: an interruption costs the shard in flight
+# and `--resume` picks the game back up from the shards already on disk. Nothing
 # about dtype, attention implementation, batch semantics or revision is ever
 # relaxed to make a run fit — that would silently break comparability with every
 # vector already built.
@@ -29,7 +28,7 @@ RESUME_FLAG=""
 [ "${RESUME:-0}" = "1" ] && RESUME_FLAG="--resume"
 export OMP_NUM_THREADS="${OMP_NUM_THREADS:-8}"
 
-XGRID="$HERE/extraction/crossgame_grid.py"
+XGRID="$HERE/prompting/crossgame_grid.py"
 DGRID="$REPO/results/dictator-decision-vector/scripts/decision_grid.py"
 
 cd "$REPO"

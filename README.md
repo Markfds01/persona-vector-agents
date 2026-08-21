@@ -157,6 +157,6 @@ python -m pytest -q
 Needs `pytest` and `torch`, both in `requirements.txt`. `audit/tests` alone runs
 without torch; the other two do not, and they fail loudly rather than skipping.
 One check is deliberately left out of that command because it takes about forty
-seconds: `results/crossgame-decision-vectors/scripts/extraction/selftest_analysis.py`
+seconds: `results/crossgame-decision-vectors/scripts/measurement/selftest_analysis.py`
 runs the six-game battery twice on synthetic activations with a known answer. Run
 it by hand.

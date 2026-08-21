@@ -138,9 +138,8 @@ def main():
 
     preset = generate.preset("neutral")
     sampling = preset.sampling.with_seed(args.seed)
-    # The device is shared and the other tenant cycles models on it without warning
-    # - it went from 21 GiB to 43 GiB and back inside a minute during this run. A
-    # load that OOMs is transient, not a result: retry the LOAD, report every attempt.
+    # A load that OOMs is transient, not a result: retry the LOAD, report every
+    # attempt.
     engine = None
     for attempt in range(1, args.load_attempts + 1):
         try:
