@@ -1,5 +1,5 @@
 {
-  "acts_dir": "/home/marco/dockmaster/data/pr-crossgame/acts_v2/dictator_only",
+  "acts_dir": "/home/marco/dockmaster/data/pr-crossgame/acts_v3/dictator_only",
   "committed_vector": "/home/marco/dockmaster/state/worktrees/pr-crossgame/results/dictator-decision-vector/vectors/decision_response_avg_diff_cellbalanced.pt",
   "n_rows_captured": 1785,
   "n_rows_in_the_vector": 1391,

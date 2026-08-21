@@ -8,6 +8,10 @@ cleanly is dropped and named rather than pooled with the wrong slice.
 
 The model is a fake whose hidden states encode their own (layer, position), so a
 slice that is off by one is visible in the assertion rather than plausible.
+
+`torch` is imported outright rather than skipped past: the whole contract here is
+about tensors, `requirements.txt` pins it, and a module-scope skip turned a
+torch-less environment into a green run that had checked nothing.
 """
 
 import csv
@@ -15,10 +19,10 @@ import errno
 import json
 import sys
 import types
+from pathlib import Path
 
 import pytest
-
-torch = pytest.importorskip("torch")
+import torch
 
 from audit import elicit  # noqa: E402
 from audit.games import by_id  # noqa: E402
@@ -26,10 +30,12 @@ from audit.generate import ProvenanceError  # noqa: E402
 from audit.tests import fakes  # noqa: E402
 from audit.tests.fakes import QwenLikeTokenizer  # noqa: E402
 from lab import extract  # noqa: E402
-from lab.extract import (EMPTY_RESPONSE, POOLINGS, PREFIX_UNSTABLE, Dropped,  # noqa: E402
-                         PromptMismatch, Seam, ShardWriter, ShardsUnusable,
-                         captured_row_indices, capture, load_grid, pool, scored,
-                         seam_of, Prompts)
+from lab.extract import (EMPTY_RESPONSE, NON_FINITE, POOLINGS,  # noqa: E402
+                         PREFIX_UNSTABLE, Dropped, PromptMismatch, Seam,
+                         ShardWriter, ShardsUnusable, captured_row_indices,
+                         capture, load_grid, load_model, non_finite_poolings,
+                         pool, scored, seam_of, shards_cover, sweep_staging,
+                         write_json_atomically, Prompts)
 
 DICTATOR = "altruism_v3/dictator"
 TRUST = "altruism_v3/trust"
@@ -88,6 +94,19 @@ class PositionCodedModel:
             + layer * 1000.0
             for layer in range(self.n_states))
         return types.SimpleNamespace(hidden_states=states)
+
+
+class EvictedModel(PositionCodedModel):
+    """Dies partway through, the way a shared card takes a run away from you."""
+
+    def __init__(self, rows_before_eviction, **kwargs):
+        super().__init__(**kwargs)
+        self._limit = rows_before_eviction
+
+    def __call__(self, **kwargs):
+        if len(self.calls) >= self._limit:
+            raise RuntimeError("evicted")
+        return super().__call__(**kwargs)
 
 
 @pytest.fixture
@@ -212,13 +231,20 @@ def test_the_mean_is_taken_before_the_cast():
     assert not torch.equal(got, states[0][0, 1:, :].float().mean(dim=0))
 
 
-def test_a_non_finite_activation_is_an_error():
+def test_a_non_finite_activation_is_named_rather_than_raised():
+    """A property of ONE row's activations, so it is a drop reason, not a raise.
+
+    Raising here killed the run and took every completed forward pass still
+    queued in the writer with it.
+    """
     states = list(hidden_states(total=4))
     states[0] = states[0].clone()
     states[0][0, 2, 0] = float("nan")
-    with pytest.raises(ValueError) as excinfo:
-        pool(tuple(states), prompt_len=2)
-    assert "response_avg" in str(excinfo.value)
+    assert non_finite_poolings(pool(tuple(states), prompt_len=2)) == ["response_avg"]
+
+
+def test_a_finite_pooling_names_nothing():
+    assert non_finite_poolings(pool(hidden_states(total=4), prompt_len=2)) == []
 
 
 @pytest.mark.parametrize("prompt_len", [0, 4])
@@ -320,6 +346,76 @@ def test_a_shard_another_run_claimed_is_refused_without_hard_links(tmp_path,
     assert not list(tmp_path.glob("*.tmp"))
 
 
+def test_a_kill_during_the_shard_write_leaks_no_staging_file(tmp_path, monkeypatch):
+    """A shard stages at ~312 MB and nothing else sweeps one; the budget is ~8 GB
+    against a ~5.3 GB corpus, so a leak per interrupted run is a real ceiling."""
+    staged = []
+
+    def die(payload, path):
+        staged.append(Path(path))
+        raise OSError(errno.ENOSPC, "no space left on device")
+
+    monkeypatch.setattr(torch, "save", die)
+    with pytest.raises(OSError):
+        add_rows(ShardWriter(tmp_path, shard_rows=1), 1)
+    assert staged and not list(tmp_path.glob("*.tmp"))
+
+
+def test_two_shard_writes_do_not_share_a_staging_name(tmp_path, monkeypatch):
+    """os.getpid() is not unique across PID namespaces sharing one volume."""
+    staged = []
+    real_save = torch.save
+
+    def record(payload, path):
+        staged.append(Path(path).name)
+        return real_save(payload, path)
+
+    monkeypatch.setattr(torch, "save", record)
+    add_rows(ShardWriter(tmp_path, shard_rows=1), 2)
+    assert len(staged) == 2 and staged[0] != staged[1]
+
+
+def test_staging_files_an_interrupted_run_left_are_swept(tmp_path):
+    (tmp_path / "shard_0000.pt.12345.tmp").write_bytes(b"half a shard")
+    (tmp_path / "meta.json.12345.tmp").write_bytes(b"{")
+    keep = tmp_path / "shard_0000.pt"
+    keep.write_bytes(b"a landed shard")
+    assert sweep_staging(tmp_path) == 2
+    assert not list(tmp_path.glob("*.tmp"))
+    assert keep.read_bytes() == b"a landed shard"
+
+
+def test_a_shard_that_cannot_be_read_back_is_named(tmp_path):
+    """torch.load's UnpicklingError went straight past main and printed a traceback."""
+    add_rows(ShardWriter(tmp_path, shard_rows=1), 1)
+    (tmp_path / "shard_0000.pt").write_bytes(b"not a torch archive")
+    with pytest.raises(ShardsUnusable) as excinfo:
+        captured_row_indices(tmp_path)
+    assert "shard_0000.pt" in str(excinfo.value)
+
+
+def test_the_fallback_claims_the_name_before_it_renames(tmp_path, monkeypatch):
+    """Where there are no hard links the claim is an O_EXCL create, which is atomic
+    on every such filesystem. A check-then-rename let two runs both pass the same
+    `exists()` and land their own blocks under one numbering."""
+    def no_links(src, dst):
+        raise OSError(errno.EPERM, "no hard links here")
+
+    monkeypatch.setattr(extract.os, "link", no_links)
+    claimed = {}
+    real_replace = extract.os.replace
+
+    def watch(src, dst):
+        target = Path(dst)
+        claimed["before_rename"] = target.is_file() and target.stat().st_size == 0
+        return real_replace(src, dst)
+
+    monkeypatch.setattr(extract.os, "replace", watch)
+    add_rows(ShardWriter(tmp_path, shard_rows=1), 1)
+    assert claimed["before_rename"], "the shard name must be taken before the rename"
+    assert captured_row_indices(tmp_path)[0] == {0}
+
+
 def test_a_hole_in_the_shard_numbering_is_refused(tmp_path):
     writer = ShardWriter(tmp_path, shard_rows=1)
     add_rows(writer, 3)
@@ -389,6 +485,50 @@ def test_capture_refuses_a_model_with_the_wrong_state_count(tmp_path, tokenizer)
     with pytest.raises(RuntimeError) as excinfo:
         capture([make_row(tokenizer)], model, tokenizer, tmp_path)
     assert "hidden states" in str(excinfo.value)
+
+
+class PoisonedModel(PositionCodedModel):
+    """Returns a NaN on the nth forward pass; every other row is clean."""
+
+    def __init__(self, poison_call=1, **kwargs):
+        super().__init__(**kwargs)
+        self._poison_call = poison_call
+
+    def __call__(self, **kwargs):
+        out = super().__call__(**kwargs)
+        if len(self.calls) != self._poison_call:
+            return out
+        states = list(out.hidden_states)
+        states[0] = states[0].clone()
+        states[0][0, -1, 0] = float("nan")
+        out.hidden_states = tuple(states)
+        return out
+
+
+def test_a_non_finite_activation_is_dropped_counted_and_named(tmp_path, tokenizer):
+    rows = [make_row(tokenizer, answer="50"), make_row(tokenizer, answer="0")]
+    done = capture(rows, PoisonedModel(poison_call=1), tokenizer, tmp_path,
+                   shard_rows=4)
+    assert len(done.dropped) == 1
+    dropped = done.dropped[0]
+    assert (dropped.row_index, dropped.game_id) == (0, DICTATOR)
+    assert dropped.reason.startswith(NON_FINITE) and "response_avg" in dropped.reason
+    assert done.n_written_now == 1
+
+
+def test_a_failing_row_still_lands_the_rows_before_it(tmp_path, tokenizer):
+    """One raise used to throw away up to `shard_rows` - 1 completed forward passes.
+
+    A shard was only ever flushed by a full block or by the clean exit, so the rows
+    already captured behind a mid-block failure went with it — and since `--resume`
+    reads the SHARDS, the documented recovery re-ran them forever.
+    """
+    rows = [make_row(tokenizer, answer=str(index)) for index in range(9)]
+    evicted = EvictedModel(7, dtype=torch.float32)
+    with pytest.raises(RuntimeError):
+        capture(rows, evicted, tokenizer, tmp_path, shard_rows=10)
+    seen, n_shards = captured_row_indices(tmp_path)
+    assert seen == {0, 1, 2, 3, 4, 5, 6} and n_shards == 1
 
 
 # --- the grid is data, named on the command line ----------------------------------
@@ -498,6 +638,181 @@ def test_the_meta_fingerprints_the_rows_csv_by_content(tokenizer, monkeypatch, t
     assert a["rows_csv_sha256"] == b["rows_csv_sha256"]
 
 
+# --- loading the weights: the two guards that make the meta true -----------------
+
+def fake_auto_transformers(model, tokenizer, ooms=0):
+    """`transformers` with only the two `from_pretrained` entry points load_model calls.
+
+    `model_calls` records what each load was ASKED for, which is the other half of
+    the pin: the guards check what came back, these check what went in.
+    """
+    module = fakes.fake_transformers()
+    module.model_calls = []
+    module.tokenizer_calls = []
+    remaining = [ooms]
+
+    class AutoModelForCausalLM:
+        @staticmethod
+        def from_pretrained(model_id, **kwargs):
+            module.model_calls.append(dict(kwargs, model_id=model_id))
+            if remaining[0]:
+                remaining[0] -= 1
+                raise torch.OutOfMemoryError("the other tenant took the card")
+            return model
+
+    class AutoTokenizer:
+        @staticmethod
+        def from_pretrained(model_id, **kwargs):
+            module.tokenizer_calls.append(dict(kwargs, model_id=model_id))
+            return tokenizer
+
+    module.AutoModelForCausalLM = AutoModelForCausalLM
+    module.AutoTokenizer = AutoTokenizer
+    return module
+
+
+#: what a run pins, and what `load_with` uses unless a test overrides it
+PINS = {"model_id": MODEL_ID, "revision": "a" * 40, "device": 0,
+        "dtype": "bfloat16", "attn": "sdpa"}
+
+
+def load_with(monkeypatch, model, tokenizer, ooms=0, **overrides):
+    """`load_model` against a fake `transformers`. Returns ((model, tokenizer), fake)."""
+    fake = fake_auto_transformers(model, tokenizer, ooms)
+    monkeypatch.setitem(sys.modules, "transformers", fake)
+    pins = dict(PINS)
+    retry = {}
+    for key, value in overrides.items():
+        (pins if key in pins else retry)[key] = value
+    got = load_model(pins["model_id"], pins["revision"], pins["device"], pins["dtype"],
+                     pins["attn"], **retry)
+    return got, fake
+
+
+def test_load_model_pins_the_kernel_dtype_and_card_on_the_request(monkeypatch,
+                                                                  tokenizer):
+    """Nothing about the configuration is relaxed to make a load fit."""
+    model = pinned_model()
+    (got_model, got_tokenizer), fake = load_with(monkeypatch, model, tokenizer)
+    assert got_model is model and got_tokenizer is tokenizer
+    assert fake.model_calls == [{"model_id": MODEL_ID, "revision": "a" * 40,
+                                 "torch_dtype": torch.bfloat16,
+                                 "attn_implementation": "sdpa",
+                                 "device_map": {"": 0}}]
+    assert fake.tokenizer_calls == [{"model_id": MODEL_ID, "revision": "a" * 40}]
+
+
+def test_load_model_refuses_a_kernel_the_model_did_not_load_with(monkeypatch,
+                                                                 tokenizer):
+    """sdpa and eager diverge at bf16, so a vector built under one is not
+    comparable with one built under the other. Resolving from the model is the
+    only thing that makes the meta's `attn_implementation` a fact."""
+    with pytest.raises(RuntimeError) as excinfo:
+        load_with(monkeypatch, pinned_model(attn="eager"), tokenizer, attn="sdpa")
+    assert "sdpa" in str(excinfo.value) and "eager" in str(excinfo.value)
+
+
+def test_load_model_refuses_weights_from_another_revision(monkeypatch, tokenizer):
+    """A silent mismatch builds every future vector off different weights while the
+    meta asserts the pinned sha."""
+    with pytest.raises(RuntimeError) as excinfo:
+        load_with(monkeypatch, pinned_model(commit="b" * 40), tokenizer,
+                  revision="a" * 40)
+    assert "b" * 40 in str(excinfo.value)
+
+
+def test_load_model_refuses_weights_whose_revision_is_not_a_sha(monkeypatch,
+                                                                tokenizer):
+    with pytest.raises(ProvenanceError):
+        load_with(monkeypatch, pinned_model(commit="main"), tokenizer)
+
+
+def no_card(monkeypatch):
+    """Take CUDA out of the retry path, so these run the same with or without one."""
+    monkeypatch.setattr(extract.time, "sleep", lambda seconds: None)
+    monkeypatch.setattr(torch.cuda, "empty_cache", lambda: None)
+    monkeypatch.setattr(torch.cuda, "mem_get_info",
+                        lambda device: (1 << 30, 44 << 30))
+
+
+def test_load_model_retries_an_oom_because_the_card_is_shared(monkeypatch, tokenizer):
+    """The LOAD is retried, never a partially captured run, and every attempt reported."""
+    no_card(monkeypatch)
+    seen = []
+    _got, fake = load_with(monkeypatch, pinned_model(), tokenizer, ooms=2, attempts=3,
+                           retry_seconds=0,
+                           on_retry=lambda *reported: seen.append(reported))
+    assert len(fake.model_calls) == 3
+    assert [(attempt, attempts) for attempt, attempts, _f, _t, _e in seen] == [(1, 3),
+                                                                               (2, 3)]
+    assert all(isinstance(exc, torch.OutOfMemoryError) for *_rest, exc in seen)
+
+
+def test_load_model_gives_up_after_the_last_attempt(monkeypatch, tokenizer):
+    no_card(monkeypatch)
+    with pytest.raises(torch.OutOfMemoryError):
+        load_with(monkeypatch, pinned_model(), tokenizer, ooms=5, attempts=2,
+                  retry_seconds=0)
+
+
+def test_load_model_refuses_a_nonsense_attempt_count(monkeypatch, tokenizer):
+    with pytest.raises(ValueError):
+        load_with(monkeypatch, pinned_model(), tokenizer, attempts=0)
+
+
+# --- meta.json is the resume gate, so it is replaced rather than truncated --------
+
+def test_a_failed_meta_write_leaves_the_previous_record_intact(tmp_path):
+    """Truncate-in-place is the one write here that costs a corpus, not a shard."""
+    path = tmp_path / "meta.json"
+    write_json_atomically(path, {"complete": False, "n_shards": 3})
+    with pytest.raises(TypeError):
+        write_json_atomically(path, {"complete": True, "device": object()})
+    assert json.loads(path.read_text(encoding="utf-8")) == {"complete": False,
+                                                            "n_shards": 3}
+    assert not list(tmp_path.glob("*.tmp"))
+
+
+def test_the_meta_is_replaced_in_one_step(tmp_path):
+    path = tmp_path / "meta.json"
+    write_json_atomically(path, {"complete": False})
+    write_json_atomically(path, {"complete": True})
+    assert json.loads(path.read_text(encoding="utf-8")) == {"complete": True}
+    assert not list(tmp_path.glob("*.tmp"))
+
+
+def test_a_meta_that_will_not_parse_is_a_named_refusal(tmp_path):
+    """A kill mid-write used to leave truncated JSON and a raw JSONDecodeError."""
+    add_rows(ShardWriter(tmp_path, shard_rows=1), 1)
+    (tmp_path / "meta.json").write_text('{"rows_csv": "/a/b.csv"', encoding="utf-8")
+    with pytest.raises(ShardsUnusable) as excinfo:
+        extract.plan_resume(tmp_path, {key: "x" for key in extract.PINNED}, True)
+    assert "meta.json" in str(excinfo.value)
+
+
+# --- what landed is measured, not counted ----------------------------------------
+
+def test_shards_cover_measures_the_rows_that_actually_landed(tmp_path):
+    add_rows(ShardWriter(tmp_path, shard_rows=2), 4, first=0)
+    todo = [(index, {}) for index in range(4)]
+    assert shards_cover(tmp_path, todo, ()) == (4, 2)
+
+
+def test_shards_cover_refuses_a_corpus_the_shards_do_not_hold(tmp_path):
+    """`n_captured` was arithmetic over the row list: it could not see a lost shard."""
+    add_rows(ShardWriter(tmp_path, shard_rows=2), 4, first=0)
+    todo = [(index, {}) for index in range(6)]
+    with pytest.raises(ShardsUnusable) as excinfo:
+        shards_cover(tmp_path, todo, ())
+    assert "missing [4, 5]" in str(excinfo.value)
+
+
+def test_shards_cover_does_not_expect_a_dropped_row(tmp_path):
+    add_rows(ShardWriter(tmp_path, shard_rows=2), 2, first=0)
+    todo = [(index, {}) for index in range(3)]
+    assert shards_cover(tmp_path, todo, (Dropped(2, DICTATOR, EMPTY_RESPONSE),)) == (2, 1)
+
+
 # --- resuming a corpus ------------------------------------------------------------
 
 def test_a_resume_that_changes_a_pinned_field_is_refused():
@@ -543,21 +858,6 @@ def test_a_duplicated_row_across_shards_is_refused(tmp_path):
     with pytest.raises(ShardsUnusable) as excinfo:
         captured_row_indices(tmp_path)
     assert "row 7" in str(excinfo.value)
-
-
-def test_a_non_finite_activation_names_its_row(tmp_path, tokenizer):
-    class Poisoned(PositionCodedModel):
-        def __call__(self, **kwargs):
-            out = super().__call__(**kwargs)
-            states = list(out.hidden_states)
-            states[0] = states[0].clone()
-            states[0][0, -1, 0] = float("nan")
-            out.hidden_states = tuple(states)
-            return out
-
-    with pytest.raises(RuntimeError) as excinfo:
-        capture([make_row(tokenizer)], Poisoned(), tokenizer, tmp_path)
-    assert "row 0" in str(excinfo.value) and DICTATOR in str(excinfo.value)
 
 
 def write_meta(tmp_path, **overrides):
@@ -704,19 +1004,6 @@ def test_main_names_the_rows_it_could_not_pool(monkeypatch, tmp_path, tokenizer)
                                 "reason": EMPTY_RESPONSE}]
 
 
-class EvictedModel(PositionCodedModel):
-    """Dies partway through, the way a shared card takes a run away from you."""
-
-    def __init__(self, rows_before_eviction, **kwargs):
-        super().__init__(**kwargs)
-        self._limit = rows_before_eviction
-
-    def __call__(self, **kwargs):
-        if len(self.calls) >= self._limit:
-            raise RuntimeError("evicted")
-        return super().__call__(**kwargs)
-
-
 def test_main_resumes_from_the_shards_a_killed_run_left(monkeypatch, tmp_path,
                                                         tokenizer):
     out_dir = tmp_path / "acts"
@@ -734,6 +1021,123 @@ def test_main_resumes_from_the_shards_a_killed_run_left(monkeypatch, tmp_path,
     assert meta["complete"] is True
     assert meta["n_captured"] == 2
     assert captured_row_indices(out_dir)[0] == {0, 1}
+
+
+def test_main_resumes_after_a_kill_inside_a_block(monkeypatch, tmp_path, tokenizer):
+    """The reported failure, end to end: `--resume` used to advance by nothing.
+
+    A shard was flushed only by a full block or by a clean exit, so a run killed
+    seven rows into a ten-row block left ZERO shards — and `--resume` reads the
+    shards, so `RESUME=1`, which `run_extraction.sh` advertises as the recovery
+    lever, re-ran the same seven forward passes forever.
+    """
+    out_dir = tmp_path / "acts"
+    rows = [make_row(tokenizer, answer=str(index)) for index in range(20)]
+    evicted = pin(EvictedModel(7, dtype=torch.bfloat16))
+    with pytest.raises(RuntimeError):
+        run_main(monkeypatch, tmp_path, rows, out_dir, tokenizer, model=evicted,
+                 extra=["--shard-rows", "10"])
+    assert captured_row_indices(out_dir)[0] == set(range(7))
+
+    meta = run_main(monkeypatch, tmp_path, rows, out_dir, tokenizer,
+                    extra=["--resume", "--shard-rows", "10"])
+    assert meta["complete"] is True
+    assert meta["n_captured"] == 20
+    assert meta["resumed_from_shards"] == 1
+
+
+def test_main_drops_a_poison_row_and_captures_the_rest(monkeypatch, tmp_path,
+                                                       tokenizer):
+    """A non-finite pooling is one row's problem; it used to be the corpus's."""
+    out_dir = tmp_path / "acts"
+    rows = [make_row(tokenizer, answer=str(index)) for index in range(12)]
+    model = pin(PoisonedModel(poison_call=8, dtype=torch.bfloat16))
+    meta = run_main(monkeypatch, tmp_path, rows, out_dir, tokenizer, model=model,
+                    extra=["--shard-rows", "10"])
+    assert meta["complete"] is True
+    assert meta["n_captured"] == 11
+    assert [d["row_index"] for d in meta["dropped"]] == [7]
+    assert meta["dropped"][0]["reason"].startswith(NON_FINITE)
+    assert captured_row_indices(out_dir)[0] == set(range(12)) - {7}
+
+
+def test_main_never_truncates_the_meta_in_place(monkeypatch, tmp_path, tokenizer):
+    """`meta.json` is the resume gate and was the one file here written by
+    truncation. Nothing in a run may take that path."""
+    real_write_text = Path.write_text
+
+    def guard(self, *args, **kwargs):
+        assert self.name != "meta.json", "meta.json must be replaced, not truncated"
+        return real_write_text(self, *args, **kwargs)
+
+    monkeypatch.setattr(Path, "write_text", guard)
+    meta = run_main(monkeypatch, tmp_path, [make_row(tokenizer, answer="50")],
+                    tmp_path / "acts", tokenizer, extra=["--shard-rows", "1"])
+    assert meta["complete"] is True
+
+
+def test_main_refuses_a_meta_the_shards_do_not_support(monkeypatch, tmp_path,
+                                                       tokenizer):
+    """`n_captured` was arithmetic over the row list, so a shard that never landed
+    still came out the far side as a complete corpus."""
+    real_flush = extract.ShardWriter.flush
+
+    def lose_the_trailing_block(self):
+        if 0 < len(self._pending) < self._shard_rows:
+            self._pending = []
+            return 0
+        return real_flush(self)
+
+    monkeypatch.setattr(extract.ShardWriter, "flush", lose_the_trailing_block)
+    rows = [make_row(tokenizer, answer=str(index)) for index in range(3)]
+    with pytest.raises(SystemExit) as excinfo:
+        run_main(monkeypatch, tmp_path, rows, tmp_path / "acts", tokenizer,
+                 extra=["--shard-rows", "2"])
+    assert "the shards are not" in str(excinfo.value)
+
+
+def test_main_captures_only_the_first_n_rows_under_limit_rows(monkeypatch, tmp_path,
+                                                              tokenizer):
+    """An equivalence probe, never a result — so the meta records the limit."""
+    out_dir = tmp_path / "acts"
+    rows = [make_row(tokenizer, answer=str(index)) for index in range(5)]
+    meta = run_main(monkeypatch, tmp_path, rows, out_dir, tokenizer,
+                    extra=["--limit-rows", "2", "--shard-rows", "10"])
+    assert meta["limit_rows"] == 2
+    assert meta["n_scored_rows"] == 2 and meta["n_captured"] == 2
+    assert captured_row_indices(out_dir)[0] == {0, 1}
+
+
+def test_limit_rows_and_resume_together_are_refused(monkeypatch, tmp_path, tokenizer):
+    """A probe and a continuation would leave a directory that is neither."""
+    with pytest.raises(SystemExit) as excinfo:
+        run_main(monkeypatch, tmp_path, [make_row(tokenizer)], tmp_path / "acts",
+                 tokenizer, extra=["--limit-rows", "1", "--resume"])
+    assert "--limit-rows" in str(excinfo.value)
+
+
+def test_a_directory_that_already_holds_shards_is_refused_without_resume(monkeypatch,
+                                                                         tmp_path,
+                                                                         tokenizer):
+    out_dir = tmp_path / "acts"
+    rows = [make_row(tokenizer, answer="50")]
+    run_main(monkeypatch, tmp_path, rows, out_dir, tokenizer, extra=["--shard-rows", "1"])
+    with pytest.raises(SystemExit) as excinfo:
+        run_main(monkeypatch, tmp_path, rows, out_dir, tokenizer,
+                 extra=["--shard-rows", "1"])
+    assert "--resume" in str(excinfo.value)
+    assert captured_row_indices(out_dir)[1] == 1
+
+
+def test_main_sweeps_the_staging_a_killed_run_abandoned(monkeypatch, tmp_path,
+                                                        tokenizer):
+    out_dir = tmp_path / "acts"
+    out_dir.mkdir()
+    (out_dir / "shard_0000.pt.999.tmp").write_bytes(b"half a shard")
+    meta = run_main(monkeypatch, tmp_path, [make_row(tokenizer, answer="50")],
+                    out_dir, tokenizer, extra=["--shard-rows", "1"])
+    assert meta["complete"] is True
+    assert not list(out_dir.glob("*.tmp"))
 
 
 def test_main_refuses_to_resume_a_rows_csv_that_was_regenerated(monkeypatch, tmp_path,

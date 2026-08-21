@@ -15,10 +15,13 @@ import torch
 import common
 
 SEED = 20260820
+#: this repository is public - the default is the caller's own HF cache, not the
+#: box a run happened on
 SNAPSHOT = os.environ.get(
     "DM_SNAPSHOT",
-    "/home/marco/.cache/huggingface/hub/models--Qwen--Qwen2.5-7B-Instruct/"
-    "snapshots/a09a35458c702b33eeacc393d103063234e8bc28")
+    str(Path.home() / ".cache/huggingface/hub"
+        / "models--Qwen--Qwen2.5-7B-Instruct"
+        / "snapshots/a09a35458c702b33eeacc393d103063234e8bc28"))
 
 
 def response_token_ids(tok, per_family=200):

@@ -31,8 +31,9 @@ The invariants, each checkable against the code below:
     a vector built under one is not comparable with one built under the other;
   * the model revision is recorded as the sha the weights actually came from,
     never a moving ref;
-  * prefix instability and empty responses are dropped, counted and named — never
-    absorbed into a mean.
+  * prefix instability, empty responses and a non-finite pooling are dropped,
+    counted and named — never absorbed into a mean, and never fatal to the rows
+    already captured.
 
 Only `response_avg` carries decision information for an outcome-conditioned
 contrast: causal masking makes every prompt-side activation identical within a
@@ -40,7 +41,9 @@ prompt cell. All three are captured anyway so that stays checkable rather than
 asserted.
 
 Shards are written in complete blocks and a run is resumable from them, because
-the GPU is shared and an eviction should cost a shard rather than a corpus.
+the GPU is shared and an eviction should cost a shard rather than a corpus. What
+is in flight when a row fails is flushed on the way out, and `meta.json` — the
+file the resume reads — is replaced rather than truncated, for the same reason.
 """
 
 import argparse
@@ -49,6 +52,7 @@ import hashlib
 import importlib.util
 import json
 import os
+import tempfile
 import time
 from dataclasses import dataclass
 from pathlib import Path
@@ -67,9 +71,16 @@ SHARD_ROWS = 250
 #: can be checked instead of asserted.
 POOLINGS = ("prompt_avg", "prompt_last", "response_avg")
 
-#: Why a scored row can still not be pooled. Both strings are recorded per row.
+#: Why a scored row can still not be pooled. The reason is recorded per row.
 PREFIX_UNSTABLE = "prompt tokens are not a prefix of prompt+answer tokens"
 EMPTY_RESPONSE = "empty response"
+NON_FINITE = "non-finite pooled activation"
+
+#: Staging names this module writes and nothing else reads. An interrupted run
+#: leaves them behind at ~312 MB each, so the next run into the directory sweeps
+#: them — which assumes one run per directory at a time, as the rest of the module
+#: does.
+STAGING_GLOBS = ("shard_*.pt.*.tmp", "meta.json.*.tmp")
 
 
 class PromptMismatch(RuntimeError):
@@ -202,10 +213,19 @@ def pool(hidden_states, prompt_len: int) -> Dict[str, object]:
     if set(pooled) != set(POOLINGS):
         raise ValueError("pooled %s but POOLINGS declares %s; the shards and the meta "
                          "are written from POOLINGS" % (sorted(pooled), list(POOLINGS)))
-    for name, tensor in pooled.items():
-        if not torch.isfinite(tensor).all():
-            raise ValueError("non-finite %s" % name)
     return pooled
+
+
+def non_finite_poolings(pooled: Dict[str, object]) -> List[str]:
+    """Which poolings hold a NaN or an inf, in POOLINGS order.
+
+    Not a raise inside `pool`: this is a property of one row's activations, so it
+    is a drop reason like the other two, and killing the run over it would throw
+    away every completed forward pass still queued in the writer.
+    """
+    import torch
+
+    return [name for name in POOLINGS if not torch.isfinite(pooled[name]).all()]
 
 
 def claim_shard(staging, path):
@@ -213,10 +233,11 @@ def claim_shard(staging, path):
 
     `os.link` is the claim: it is atomic and fails on EEXIST, so two runs cannot
     both pass an `exists()` check and interleave into one inode. Not every
-    filesystem has hard links (FUSE mounts, exFAT, some network mounts), and
-    there the rename is the only way to land the shard at all — losing an hour of
-    GPU work to a portability failure is the worse outcome, so it falls back, with
-    the check-then-rename race that implies.
+    filesystem has hard links (FUSE mounts, exFAT, some network mounts), and there
+    the claim is an O_EXCL create of the same name — also atomic, on all of them —
+    after which the rename only ever overwrites the empty file this run owns. A
+    plain `exists()` check would leave two runs free to interleave their blocks
+    under one numbering while `meta.json` still claimed the full count.
     """
     try:
         os.link(staging, path)
@@ -226,10 +247,18 @@ def claim_shard(staging, path):
                              "directory" % path) from None
     except OSError:
         pass
-    if path.exists():
+    try:
+        os.close(os.open(str(path), os.O_CREAT | os.O_EXCL | os.O_WRONLY, 0o644))
+    except FileExistsError:
         raise ShardsUnusable("%s already exists; another run is writing into this "
-                             "directory" % path)
-    os.replace(staging, path)
+                             "directory" % path) from None
+    try:
+        os.replace(staging, path)
+    except BaseException:
+        # the empty claim is this run's; left behind it reads as a corrupt shard
+        # and costs the whole directory instead of one flush
+        os.unlink(path)
+        raise
 
 
 class ShardWriter:
@@ -275,10 +304,15 @@ class ShardWriter:
         path = self.out_dir / ("shard_%04d.pt" % self.shard_index)
         # written under a name no other run can be using, then claimed: a kill
         # during the write leaves a temp file the resume path ignores, never a
-        # truncated shard it would trust
-        staging = path.parent / ("%s.%d.tmp" % (path.name, os.getpid()))
-        torch.save(payload, staging)
+        # truncated shard it would trust. mkstemp rather than the pid, which
+        # repeats across PID namespaces sharing a volume; and the save is INSIDE
+        # the try, so a kill or ENOSPC mid-write does not leak 312 MB.
+        handle, name = tempfile.mkstemp(dir=str(self.out_dir),
+                                        prefix=path.name + ".", suffix=".tmp")
+        os.close(handle)
+        staging = Path(name)
         try:
+            torch.save(payload, staging)
             claim_shard(staging, path)
         finally:
             if staging.exists():
@@ -308,7 +342,12 @@ def captured_row_indices(out_dir):
                              % (out_dir, [p.name for p in shards]))
     seen = set()
     for path in shards:
-        payload = torch.load(path, map_location="cpu", mmap=True)
+        try:
+            payload = torch.load(path, map_location="cpu", mmap=True)
+        except Exception as exc:
+            raise ShardsUnusable("%s cannot be read back (%s: %s); it is truncated "
+                                 "or corrupt — move it aside rather than resuming "
+                                 "into it" % (path, type(exc).__name__, exc)) from exc
         for index in payload["row_index"]:
             index = int(index)
             if index in seen:
@@ -451,33 +490,44 @@ def capture(rows: Sequence[dict], model, tokenizer, out_dir, *, skip=(),
     writer = ShardWriter(out_dir, first_shard, shard_rows)
     dropped: List[Dropped] = []
 
-    for done, (row_index, row) in enumerate(todo):
-        if row_index in skip:
-            continue
-        prompt = prompts.for_row(row)
-        prompt_ids = tokenizer.encode(prompt, add_special_tokens=False)
-        inputs = tokenizer(prompt + row["answer"], return_tensors="pt",
-                           add_special_tokens=False)
-        seam, reason = seam_of(prompt_ids, inputs["input_ids"][0].tolist())
-        if seam is None:
-            dropped.append(Dropped(row_index, row["game_id"], reason))
-            continue
+    try:
+        for done, (row_index, row) in enumerate(todo):
+            if row_index in skip:
+                continue
+            prompt = prompts.for_row(row)
+            prompt_ids = tokenizer.encode(prompt, add_special_tokens=False)
+            inputs = tokenizer(prompt + row["answer"], return_tensors="pt",
+                               add_special_tokens=False)
+            seam, reason = seam_of(prompt_ids, inputs["input_ids"][0].tolist())
+            if seam is None:
+                dropped.append(Dropped(row_index, row["game_id"], reason))
+                continue
 
-        inputs = {key: value.to(model.device) for key, value in inputs.items()}
-        with torch.no_grad():
-            out = model(**inputs, output_hidden_states=True)
-        states = out.hidden_states
-        if len(states) != n_states:
-            raise RuntimeError("expected %d hidden states, got %d"
-                               % (n_states, len(states)))
-        try:
-            pooled = pool(states, seam.prompt_len)
-        except ValueError as exc:
-            raise RuntimeError("row %d (%s): %s" % (row_index, row["game_id"], exc)) from exc
-        del out, states
-        if writer.add(row_index, seam, pooled) and on_shard is not None:
-            on_shard(done + 1, len(todo), writer)
-    writer.flush()
+            inputs = {key: value.to(model.device) for key, value in inputs.items()}
+            with torch.no_grad():
+                out = model(**inputs, output_hidden_states=True)
+            states = out.hidden_states
+            if len(states) != n_states:
+                raise RuntimeError("expected %d hidden states, got %d"
+                                   % (n_states, len(states)))
+            try:
+                pooled = pool(states, seam.prompt_len)
+            except ValueError as exc:
+                raise RuntimeError("row %d (%s): %s"
+                                   % (row_index, row["game_id"], exc)) from exc
+            del out, states
+            bad = non_finite_poolings(pooled)
+            if bad:
+                dropped.append(Dropped(row_index, row["game_id"],
+                                       "%s: %s" % (NON_FINITE, ", ".join(bad))))
+                continue
+            if writer.add(row_index, seam, pooled) and on_shard is not None:
+                on_shard(done + 1, len(todo), writer)
+    finally:
+        # every completed forward pass still queued is worth a shard: without this
+        # one failing row discarded up to `shard_rows` - 1 of them and left the
+        # advertised `--resume` nothing to resume from
+        writer.flush()
     return Captured(len(todo), writer.shard_index, writer.written, tuple(dropped))
 
 
@@ -511,12 +561,73 @@ def plan_resume(out_dir, meta: Dict[str, object], resuming: bool):
     if not meta_path.is_file():
         raise ShardsUnusable("%s holds shards but no meta.json, so there is nothing "
                              "to check this run against; move it aside" % out_dir)
-    conflicts = resume_conflicts(json.loads(meta_path.read_text(encoding="utf-8")), meta)
+    try:
+        previous = json.loads(meta_path.read_text(encoding="utf-8"))
+    except ValueError as exc:
+        raise ShardsUnusable("%s is not readable JSON (%s); it is the record this "
+                             "run would be checked against — move the directory "
+                             "aside rather than resuming into it"
+                             % (meta_path, exc)) from exc
+    conflicts = resume_conflicts(previous, meta)
     if conflicts:
         raise ShardsUnusable("refusing to resume %s: %s"
                              % (out_dir, "; ".join("%s was %r, now %r" % c
                                                    for c in conflicts)))
     return captured_row_indices(out_dir)
+
+
+def write_json_atomically(path, payload: Dict[str, object]):
+    """Replace `path` in one step, so a kill leaves the old file or the new one.
+
+    Every shard in this directory is staged and claimed; `meta.json` is the file
+    the resume path is gated on and it was the one truncated in place. It is
+    rewritten on every invocation, carrying the whole `dropped` list, so the
+    window is not small.
+    """
+    path = Path(path)
+    handle, name = tempfile.mkstemp(dir=str(path.parent),
+                                    prefix=path.name + ".", suffix=".tmp")
+    try:
+        with os.fdopen(handle, "w", encoding="utf-8") as out:
+            json.dump(payload, out, indent=2)
+        os.replace(name, path)
+    except BaseException:
+        if os.path.exists(name):
+            os.unlink(name)
+        raise
+
+
+def sweep_staging(out_dir) -> int:
+    """Delete staging files an interrupted run abandoned. Returns how many.
+
+    A shard stages at ~312 MB and nothing else ever removes one, while
+    `run_extraction.sh` budgets barely above the corpus itself.
+    """
+    removed = 0
+    for pattern in STAGING_GLOBS:
+        for path in sorted(Path(out_dir).glob(pattern)):
+            os.unlink(path)
+            removed += 1
+    return removed
+
+
+def shards_cover(out_dir, todo, dropped) -> Tuple[int, int]:
+    """(rows on disk, shards) once the shards are read back and checked.
+
+    `n_captured` was arithmetic over the row list, which cannot see a shard that
+    never landed. This measures it — mmap means only the small index tensor is
+    read — and it is also the only caller of `captured_row_indices` outside the
+    resume path, so it is where a row duplicated across shards is caught.
+    """
+    seen, n_shards = captured_row_indices(out_dir)
+    expected = {index for index, _row in todo} - {d.row_index for d in dropped}
+    if seen != expected:
+        raise ShardsUnusable(
+            "%s holds %d captured rows, this run accounts for %d (missing %s, "
+            "unexpected %s); the meta would describe a corpus the shards are not"
+            % (out_dir, len(seen), len(expected), sorted(expected - seen)[:10],
+               sorted(seen - expected)[:10]))
+    return len(seen), n_shards
 
 
 def load_grid(path):
@@ -568,6 +679,10 @@ def main():
     out_dir = Path(args.out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
     meta_path = out_dir / "meta.json"
+    swept = sweep_staging(out_dir)
+    if swept:
+        print("swept %d staging file(s) an interrupted run left in %s"
+              % (swept, out_dir), flush=True)
     resuming = bool(list(out_dir.glob("shard_*.pt")))
     if resuming and not args.resume:
         raise SystemExit("%s already holds shards; pass --resume to continue into it, "
@@ -606,7 +721,7 @@ def main():
     if resuming:
         print("resuming: %d shards, %d rows already captured"
               % (first_shard, len(skip)), flush=True)
-    meta_path.write_text(json.dumps(meta, indent=2), encoding="utf-8")
+    write_json_atomically(meta_path, meta)
 
     started = time.time()
 
@@ -618,18 +733,19 @@ def main():
         done = capture(rows, model, tokenizer, out_dir, skip=skip,
                        first_shard=first_shard, on_shard=on_shard,
                        shard_rows=args.shard_rows)
+        n_captured, n_shards = shards_cover(out_dir, todo, done.dropped)
     except ShardsUnusable as exc:
         # a collision with a concurrent run is an operator mistake, not a crash
         raise SystemExit(str(exc))
     meta.update({
-        "n_shards": done.n_shards,
+        "n_shards": n_shards,
         "dropped": [d.as_record() for d in done.dropped],
-        "n_captured": done.n_scored - len(done.dropped),
+        "n_captured": n_captured,
         "seconds": time.time() - started,
         "resumed_from_shards": first_shard,
         "complete": True,
     })
-    meta_path.write_text(json.dumps(meta, indent=2), encoding="utf-8")
+    write_json_atomically(meta_path, meta)
     print("captured %d of %d scored rows, dropped %d, %.1f min"
           % (meta["n_captured"], done.n_scored, len(done.dropped),
              meta["seconds"] / 60.0), flush=True)

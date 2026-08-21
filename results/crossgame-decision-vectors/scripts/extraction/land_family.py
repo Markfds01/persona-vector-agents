@@ -13,7 +13,9 @@ the pooled vector are directly comparable.
 
 import argparse
 import json
+import os
 import sys
+import tempfile
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
@@ -23,6 +25,26 @@ sys.path.insert(0, str(HERE.parents[3]))
 
 import analyze_crossgame as A  # noqa: E402
 import poles  # noqa: E402
+
+
+def write_json_atomically(path, payload):
+    """Replace `path` in one step, so a kill cannot lose what is already landed.
+
+    This manifest accumulates: it is read, extended by one family and written
+    back six times. Truncating it in place puts every earlier family at risk of
+    the sixth write.
+    """
+    path = Path(path)
+    handle, staging = tempfile.mkstemp(dir=str(path.parent),
+                                       prefix=path.name + ".", suffix=".tmp")
+    try:
+        with os.fdopen(handle, "w", encoding="utf-8") as out:
+            json.dump(payload, out, indent=2)
+        os.replace(staging, path)
+    except BaseException:
+        if os.path.exists(staging):
+            os.unlink(staging)
+        raise
 
 
 def main():
@@ -80,8 +102,7 @@ def main():
     manifest["families"] = [f for f in manifest["families"]
                             if f["family"] != args.family] + [record]
     manifest["families"].sort(key=lambda f: f["family"])
-    with manifest_path.open("w", encoding="utf-8") as handle:
-        json.dump(manifest, handle, indent=2)
+    write_json_atomically(manifest_path, manifest)
     print("landed %s (%d rows): %s"
           % (args.family, record["n_generated_rows"], json.dumps(summary)), flush=True)
 

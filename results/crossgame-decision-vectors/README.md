@@ -49,10 +49,14 @@ revision is.
 
 **One extractor, for every grid.** The teacher-forced capture used to exist twice
 — once for the Dictator-only study and once here — and the two copies were only
-asserted to agree. There is now a single implementation, `lab/extract.py`, with
-tests under `lab/tests/`. Nothing in it is per game: a grid declares its own
-games and every row names its own `game_id`, so which prompt is re-rendered and
-which stakes it carried are read off the data (`METHOD.md` §5).
+asserted to agree. Every activation behind every number in this file now comes off
+one implementation, `lab/extract.py`, with tests under `lab/tests/`. Nothing in it
+is per game: a grid declares its own games and every row names its own `game_id`,
+so which prompt is re-rendered and which stakes it carried are read off the data
+(`METHOD.md` §5). That is a statement about the pipeline, not the repository:
+`results/dictator-decision-vector/scripts/extract_acts.py` is still committed as
+the record of the run that produced that directory, and nothing calls it any more
+— its corpus was re-extracted through `lab/extract.py` and is in the table below.
 
 **The whole corpus was re-extracted with it**, from the committed rows CSVs — the
 six games here (4503 rows) and the earlier Dictator-only grid (1785 rows), so
@@ -77,6 +81,14 @@ matrix and AUC published before this revision is unaffected by the refactor.
 published (`scripts/compare_published.py`, output in
 `analysis/rebuild_deltas.json`). What moved is reported in §12; nothing moved
 enough to touch a conclusion.
+
+It is the same activations throughout — one directory, written by `lab/extract.py`
+and reported bit-identical in the table above, read by `scripts/run_analysis.sh`
+for every number in this file and read again independently by
+`scripts/verify_committed.py` for §11. `provenance/manifest.json` records that
+directory per game, together with the `meta.json` the extractor wrote beside the
+shards: the module that produced them, the revision, the kernel, and the
+`rows_csv_sha256` that pins each rows CSV by content rather than by path.
 
 **And the reweighting is now complete.** The first version of this file measured
 five weightings, all of which balance the *game* axis or do not balance at all.
@@ -197,11 +209,15 @@ individual layer-0 magnitudes of those rows are not.
 ## 2. Separation per game, and the pooled layer-0 test that failed
 
 All AUCs are **out of sample**: the direction is fit on half the rows and scored
-on the other half, per layer (`METHOD.md` §7).
+on the other half, per layer (`METHOD.md` §7). Every row here is the **whole-game**
+split-half — a random half of the pole rows, unbalanced rebuild — including the
+pooled one, so the table is read down a single column. The cell-balanced pool
+under the within-cell split is 0.855 at layer 0 and 0.908 at layer 20 (§5); the two
+constructions are not comparable and `METHOD.md` §7 says why.
 
 | | layer 0 | layer 20 | best layer |
 |---|---|---|---|
-| **pooled (cell-balanced)** | **0.906** | **0.917** | 0.928 @10 |
+| **pooled (whole-game)** | **0.906** | **0.917** | 0.928 @10 |
 | dictator | 0.933 | 0.947 | 0.947 @20 |
 | trust | 0.830 | 0.936 | 0.939 @19 |
 | ultimatum | 0.861 | 0.871 | 0.878 @26 |
@@ -550,10 +566,11 @@ gives the same ordering and a steeper layer-20 decline (0.926 → 0.921 → 0.87
 | **family_balanced_unit** | **0.713** | **0.914** | 0.368 |
 
 Format balancing genuinely moves the pool across to the non-dollar side — it is no
-longer the dollar vector. But the last column does not move at all: the two halves
-are 0.368 apart no matter how they are mixed. **The format-balanced vector is not
-a shared direction, it is the midpoint of a disagreement**, and a midpoint
-inherits neither half's ability to separate poles.
+longer the dollar vector. But the last column barely moves: the two halves agree
+at +0.379 under cell balancing and +0.368 under either game-level scheme, so how
+they are mixed does not bring them any closer to each other. **The format-balanced
+vector is not a shared direction, it is the midpoint of a disagreement**, and a
+midpoint inherits neither half's ability to separate poles.
 
 ### Two caveats that bound the two new schemes
 
@@ -804,13 +821,16 @@ an identical activation there, so the measurement is all ties. `prompt_avg` reac
 
 ### i. The analysis code was validated before it saw this data
 
-`scripts/extraction/selftest_analysis.py` runs the whole battery on synthetic
+`scripts/extraction/selftest_analysis.py` runs the six-game battery — §1–§4, §7
+and §8, i.e. `analyze_crossgame.py`, not the pooling stage — twice on synthetic
 activations: it recovers a planted shared direction (pooled AUC 1.000, agreement
 +0.837 against a null p97.5 of +0.032, leave-one-out 1.000 on both games),
 returns chance on pure noise (pooled 0.513, agreement +0.012, leave-one-out 0.539
 and 0.537), and confirms a single-poled game is excluded from every pooled
 structure and gets no vector. **Re-run from the committed copy, from where it
-sits: all 7 checks pass**, with the numbers above.
+sits: all 7 checks pass**, with the numbers above. It takes about forty seconds
+and no test command runs it — it is a manual check, deliberately kept out of
+`python -m pytest -q`.
 
 ## 9. What this does not establish
 
@@ -960,11 +980,12 @@ stages it fed.
 | `extraction/gen_crossgame.py` + `run_all.sh`, `main_run.sh`, `resume_run.sh`, `finish.sh`, `finish_pd.sh` | the generation stage as it was launched; not re-run by this revision |
 | `extraction/analyze_crossgame.py`, `land_family.py` | §1–§4, §7, §8 |
 | `extraction/decode_layer0.py` | the §3 token decode |
-| `extraction/selftest_analysis.py` | the analysis battery on synthetic data with a known answer |
+| `extraction/selftest_analysis.py` | the six-game battery on synthetic data with a known answer; **manual**, no test command runs it |
 | `extraction/calib_report.py`, `summarize.py`, `pd_probe.py` | the calibration read-out, a summary printer, and the §8b probe |
 | `pooling/` | the nine weightings and everything measured on them |
 | `verify_committed.py` | §11, the independent recomputation |
 | `compare_activations.py`, `compare_published.py` | §0 and §12, the two diffs |
+| `tests/` | the reproduction gate and the rebuild comparator, offline; part of `python -m pytest -q` from the repository root |
 
 The directory is named `extraction/` for historical reasons and no longer contains
 an extractor: the teacher-forced capture is `lab/extract.py`, a top-level package
@@ -991,10 +1012,12 @@ directly, imports only `crossgame_grid` and `poles` (the grid and pole
 *definitions*, not the computation), does its own linear algebra, and rebuilds:
 
 The two vector sections are a **gate**, not a report: if any committed vector came
-back at a worst-layer cosine below `--min-cosine` (default 1 − 1e-9) or at a
-layer-20 norm further than `--max-norm-drift` (default 1e-6) from the committed
+back at a worst-layer cosine below `--min-cosine` (default 1 − 1e-9), or at a norm
+on **any** layer further than `--max-norm-drift` (default 1e-6) from the committed
 one, the script writes its report and exits non-zero. The cosine alone would not
-be enough — it is scale-invariant, so a vector twice as long still reads 1.000000.
+be enough — it is scale-invariant, so a vector twice as long still reads 1.000000
+— and the norm is checked on every layer, not only on layer 20: §1, §3 and §5 are
+read at layer 0, and a scale error there is just as much a failure to reproduce.
 The two tolerances are different sizes because the committed vectors are stored
 **float32**: that rounding leaves the cosine at 1 − 1e-15 but moves the norm by up
 to ~1e-8, so the norm tolerance has to clear the storage floor. At 1e-6 it still
@@ -1002,10 +1025,18 @@ fails on a scale error of one part in 100,000. Every other row below is a
 recomputation with no committed artifact to disagree with, and is reported rather
 than gated.
 
+The gate itself is tested, offline and with no activations, in
+`scripts/tests/test_verify_committed.py`: a scale error on any layer fails, a
+turned vector fails, a NaN fails, and a gate that compared nothing does not pass.
+The storage floor is not taken on the docstring's word either — one test exhibits
+two float64 vectors 3.0e-8 apart in norm that save to exactly the same committed
+`.pt` bytes, and another reads the drifts the two committed reports actually
+recorded and shows a 1e-9 tolerance failing on them.
+
 | check | result |
 |---|---|
-| the six per-game cell-balanced vectors, against the committed `.pt` files | **gated, passes**: worst-layer cosine 1 − 1.1e-15, layer-20 norms within 3.1e-9, all six, both policies |
-| the nine pooled vectors, against the committed `.pt` files | **gated, passes**: worst-layer cosine 1 − 1.8e-15, layer-20 norms within 4.1e-9, all nine, both policies |
+| the six per-game cell-balanced vectors, against the committed `.pt` files | **gated, passes**: worst-layer cosine 1 − 1.1e-15, every layer's norm within 8.8e-09, all six, both policies |
+| the nine pooled vectors, against the committed `.pt` files | **gated, passes**: worst-layer cosine 1 − 1.8e-15, every layer's norm within 7.8e-09, all nine, both policies |
 | the 6x6 agreement matrix at layers 20 and 0 | matches to 4 decimal places, all 15 pairs |
 | leave-one-game-out AUC, all nine weightings | matches L0, L20, best and best-layer for all six games |
 | `cos(pool, Dictator-only)` at layers 0 and 20, and `cos(pool, cell-balanced pool)` at layer 20 | matches all nine schemes |
@@ -1092,16 +1123,19 @@ the previous one, produced by `scripts/compare_published.py`. **No published
 statistic moved.**
 
 The comparator itself was corrected in this revision, and the table below is its
-output, not the older one's: it used to abandon a subtree whose two lists differed
+output, not the older one's. It used to abandon a subtree whose two lists differed
 in length, which meant it compared **nothing** in the token files while still
-reporting them as unmoved, and it walked only the old tree, which hid every vector
-the rebuild added.
+reporting them as unmoved; it walked only the old tree, which hid every vector the
+rebuild added; and it counted a NaN leaf as identical, because `nan > 0` is False,
+so a NaN that appeared or vanished came out the far side as agreement. A NaN on one
+side only is now a difference, and a NaN on both is counted apart from the leaves
+that were actually compared.
 
 | | |
 |---|---|
 | committed vectors rebuilt | **22 of 22 to bit-identical tensors**; worst per-layer cosine 0.9999999999999986. (The `.pt` files differ as bytes — `torch.save` writes a zip with timestamps — but every element of every tensor is equal.) |
 | the other 8 committed vectors | the four new schemes, ×2 policies. The previous revision has no counterpart to diff them against, so this table cannot cover them and does not claim to: they are gated in §11 instead, and `n_missing: 9` in the report names them (the ninth is the Dictator-only vector, which moved directory). |
-| `crossgame_analysis.json` (§1–§4, §7, §8) | 8940 numeric leaves, **all 8940 identical** |
+| `crossgame_analysis.json` (§1–§4, §7, §8) | 8936 numeric leaves, **all 8936 identical**. Four more leaves are NaN on both sides — the layer-0 `prompt_last` split-half, where within-cell variance is zero (§8h) — and are reported as unverifiable in either direction rather than as agreement. |
 | `pooled_build.json` (§8a census, effective n, weights) | no numeric movement |
 | `crossgame_layer0_tokens.json`, `pooled_layer0_tokens.json` (§3) | 96 and 240 numeric leaves, **all identical**; every shared token and cosine equal |
 | `pooled_reliability.json` (§5) | largest delta 3.3e-16 — float64 noise |
@@ -1113,7 +1147,7 @@ moves a null's `mean`/`sd`/`min`/`max`/`p97.5` in the seventh decimal and moves
 no cosine, AUC, census figure or vector at all. Every verdict in this file is
 read against a null's p97.5, and none of them is within 7.6e-07 of its bar.
 
-The 215 structural differences are all **additions**: the four weightings the
+The 221 structural differences are all **additions**: the four weightings the
 previous revision could not commit (`family_balanced_raw`/`_unit`,
 `non_dollar_raw`/`_unit`) and everything measured on them, the per-digit
 decomposition and the `'0'`-only share, the cross-pipeline check in
@@ -1124,19 +1158,16 @@ Dictator-only vector is decoded under
 `decision_response_avg_diff_cellbalanced.pt`; its tokens and cosines are
 unchanged.
 
-**Three committed artifacts still name the extractor `audit.extract`.** That is the
-module path it had when they were produced: the `activation_meta` embedded in
-`analysis/crossgame_analysis.json`, `provenance/manifest.json`, and the provenance
-entries `analysis/rebuild_deltas.json` records for them. All three are records of
-runs and are not restated. The module is now `lab/extract.py`, and the move is
-part of this revision; what it computes did not move with it, and that is measured
-rather than asserted — the whole corpus was re-extracted through `lab.extract`,
-which is the run `analysis/activation_equivalence.json` above reports:
-1,960,648,704 of 1,960,648,704 elements exactly equal to the archive. From that
-same corpus `scripts/verify_committed.py` reproduces all 15 committed vectors
-under both pole policies. A `meta.json` written by the current code differs from
-the committed ones in two fields and no number: `extractor` reads `lab.extract`,
-and `rows_csv_sha256` is present.
+**Every committed artifact names the extractor `lab.extract`.** The `activation_meta`
+embedded in `analysis/crossgame_analysis.json` and in `provenance/manifest.json` is
+the `meta.json` the extractor wrote beside the shards those numbers were computed
+from — same module, same revision, same kernel, and a `rows_csv_sha256` that pins
+each rows CSV by content. There is no chain to follow and none to take on trust:
+one corpus, re-extracted through `lab.extract` and reported bit-identical to the
+archive in §0 (1,960,648,704 of 1,960,648,704 elements exactly equal), consumed by
+`scripts/run_analysis.sh` for everything in this file, and read again by
+`scripts/verify_committed.py`, which reproduces all 15 committed vectors from it
+under both pole policies.
 
 ### What still does not run from where it sits
 

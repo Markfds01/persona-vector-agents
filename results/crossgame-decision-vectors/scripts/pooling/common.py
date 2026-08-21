@@ -25,6 +25,7 @@ import json
 import math
 import os
 import sys
+import tempfile
 from pathlib import Path
 
 import torch
@@ -95,6 +96,25 @@ def cache_fingerprint():
     return hashlib.sha256("|".join(parts).encode("utf-8")).hexdigest()
 
 
+def replace_atomically(path, write):
+    """`write` into a sibling temp file, then rename it over `path`.
+
+    The cache payload is 1.9 GB. Overwriting it in place leaves a truncated file
+    behind any kill, and two stages doing it at once interleave; a rename cannot.
+    """
+    path = Path(path)
+    handle, staging = tempfile.mkstemp(dir=str(path.parent),
+                                       prefix=path.name + ".", suffix=".tmp")
+    os.close(handle)
+    try:
+        write(Path(staging))
+        os.replace(staging, path)
+    except BaseException:
+        if os.path.exists(staging):
+            os.unlink(staging)
+        raise
+
+
 def load_response_avg(cache_dir=OUT / "cache"):
     """(N, 29, 3584) float32 response_avg for all six games + aligned labels.
 
@@ -115,6 +135,10 @@ def load_response_avg(cache_dir=OUT / "cache"):
         print("cache fingerprint changed; rebuilding %s" % cache_dir, flush=True)
 
     cache_dir.mkdir(parents=True, exist_ok=True)
+    # cleared BEFORE the payload moves: while a rebuild is in flight there must be
+    # no stamp for a concurrent reader - or a second rebuild - to trust
+    if stamp_path.exists():
+        stamp_path.unlink()
     labels, blocks, offset = [], [], 0
     for family in FAMILIES:
         game_dir = ACTS / family
@@ -133,6 +157,9 @@ def load_response_avg(cache_dir=OUT / "cache"):
         del chunks
         if len(index) != block.shape[0]:
             raise SystemExit("%s: shard row count disagrees with activations" % family)
+        if len(set(index)) != len(index):
+            raise SystemExit("%s: a row index appears in more than one shard; it "
+                             "would be double-weighted in every pole mean" % family)
         for position, row_index in enumerate(index):
             row = rows[row_index]
             game = crossgame_grid.GRID_BY_ID[row["game_id"]]
@@ -161,8 +188,9 @@ def load_response_avg(cache_dir=OUT / "cache"):
     del blocks
     if acts.shape[0] != len(labels):
         raise SystemExit("activation count disagrees with label count")
-    torch.save(acts, acts_path)
-    labels_path.write_text(json.dumps(labels))
+    replace_atomically(acts_path, lambda path: torch.save(acts, path))
+    replace_atomically(labels_path,
+                       lambda path: path.write_text(json.dumps(labels)))
     # written last: a fingerprint present means the two files beside it are complete
     stamp_path.write_text(fingerprint, encoding="utf-8")
     return acts, labels

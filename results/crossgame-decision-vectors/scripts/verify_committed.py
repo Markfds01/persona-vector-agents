@@ -8,9 +8,11 @@ its own linear algebra.
 
 Sections A and A2 are the only ones with a committed artifact to disagree with,
 and they are a GATE: every committed vector must come back at cosine >= the
-`--min-cosine` floor AND at the same layer-20 norm, or this exits non-zero. A
-cosine is scale-invariant, so the norm is checked separately — without it a
-vector twice as long still reads 1.000000. The two tolerances sit on different
+`--min-cosine` floor AND at the same norm ON EVERY LAYER, or this exits non-zero.
+A cosine is scale-invariant, so the norm is checked separately — without it a
+vector twice as long still reads 1.000000 — and it is checked per layer, because
+gating layer 20 alone left a doubled layer 5 passing at 1.000000 on both numbers
+while sections 1, 3 and 5 read layer 0. The two tolerances sit on different
 floors: a cosine is blind to how the committed vector is STORED, a norm is not,
 and the committed `.pt` files are float32, whose rounding alone moves the norm by
 ~1e-8. `--max-norm-drift` is set above that floor and still a thousandfold below
@@ -121,6 +123,9 @@ def load(acts_root, grid, poles, policy):
         del chunks
         if len(index) != block.shape[0]:
             raise SystemExit("%s: shard row count disagrees with activations" % family)
+        if len(set(index)) != len(index):
+            raise SystemExit("%s: a row index appears in more than one shard; it "
+                             "would be double-weighted in every pole mean" % game_dir)
         for position, row_index in enumerate(index):
             row = rows[row_index]
             game = grid.GRID_BY_ID[row["game_id"]]
@@ -511,16 +516,28 @@ def committed_comparison(recomputed, committed):
     bits rounding threw away. The ratio's floor is that rounding, ~1e-8, which is
     what `--max-norm-drift` has to clear. The cosine is not affected — rounding
     barely turns the vector.
+
+    The ratio is taken on EVERY layer and the worst one is reported: layer 20 is
+    where the claims are read, but a scale error on any other layer is just as
+    much a failure to reproduce, and no cosine can see it.
     """
     committed = committed.double()
     c = cosines(recomputed, committed)
-    mine, theirs = recomputed[20].norm().item(), committed[20].norm().item()
+    mine, theirs = recomputed.norm(dim=1), committed.norm(dim=1)
+    ratios = torch.where(theirs > 0, mine / theirs.clamp_min(1e-300),
+                         torch.full_like(theirs, float("inf")))
+    drift = (ratios - 1.0).abs()
+    worst = int(drift.argmax())
     return {
         "cos_layer20": c[20].item(),
         "min_cos_over_layers": c.min().item(),
-        "norm_layer20": mine,
-        "norm_layer20_committed": theirs,
-        "norm_ratio_layer20": mine / theirs if theirs else float("inf"),
+        "norm_layer20": mine[20].item(),
+        "norm_layer20_committed": theirs[20].item(),
+        "norm_ratio_layer20": ratios[20].item(),
+        "worst_norm_drift": drift[worst].item(),
+        "worst_norm_drift_layer": worst,
+        "norm_at_worst_drift": mine[worst].item(),
+        "norm_at_worst_drift_committed": theirs[worst].item(),
     }
 
 
@@ -543,13 +560,14 @@ def reproduction_gate(out, min_cosine, max_norm_drift):
             if not worst >= min_cosine:
                 failures.append("%s.%s: worst layer cosine %.12f < %.12f"
                                 % (section, name, worst, min_cosine))
-            drift = abs(entry["norm_ratio_layer20"] - 1.0)
+            drift = entry["worst_norm_drift"]
             seen_drifts.append(drift)
             if not drift <= max_norm_drift:
-                failures.append("%s.%s: layer-20 norm %.6f against the committed "
+                failures.append("%s.%s: layer-%d norm %.6f against the committed "
                                 "%.6f (%.3e drift)"
-                                % (section, name, entry["norm_layer20"],
-                                   entry["norm_layer20_committed"], drift))
+                                % (section, name, entry["worst_norm_drift_layer"],
+                                   entry["norm_at_worst_drift"],
+                                   entry["norm_at_worst_drift_committed"], drift))
     # a gate over nothing would report `passed` while proving nothing
     if not seen_cosines:
         failures.append("no committed vector was compared, so this gate proves nothing")
@@ -558,7 +576,7 @@ def reproduction_gate(out, min_cosine, max_norm_drift):
     return {"min_cosine": min_cosine, "max_norm_drift": max_norm_drift,
             "n_vectors_checked": len(seen_cosines),
             "worst_min_cos_over_layers": min(seen_cosines, default=None),
-            "worst_norm_drift_layer20": max(seen_drifts, default=None),
+            "worst_norm_drift_over_layers": max(seen_drifts, default=None),
             "failures": failures, "passed": not failures}
 
 
@@ -590,9 +608,10 @@ def main():
                     help="floor for every committed vector's worst layer cosine; "
                          "float64 reassociation noise is ~2e-15")
     ap.add_argument("--max-norm-drift", type=float, default=1e-6,
-                    help="allowed |1 - recomputed/committed| on the layer-20 norm, "
-                         "which a cosine cannot see; the floor is the float32 the "
-                         "committed vectors are STORED in, ~1e-8, not float64 epsilon")
+                    help="allowed |1 - recomputed/committed| on the worst layer's "
+                         "norm, which a cosine cannot see; the floor is the float32 "
+                         "the committed vectors are STORED in, ~1e-8, not float64 "
+                         "epsilon")
     ap.add_argument("--out", required=True)
     args = ap.parse_args()
 
@@ -609,8 +628,23 @@ def main():
                      / "altruism_response_avg_diff.pt")
     altruism = torch.load(altruism_path, map_location="cpu").double()
 
+    # every resolved input, recorded: this is the file that decides whether the
+    # committed vectors reproduce, and a verdict is only as readable as its inputs
+    inputs = {
+        "acts": str(Path(args.acts).resolve()),
+        "grid": str(Path(args.grid).resolve()),
+        "repo_root": str(root.resolve()),
+        "vectors": str(vec_dir.resolve()),
+        "dictator": str(Path(args.dictator).resolve()),
+        "altruism": str(altruism_path.resolve()),
+        "probe": str(Path(args.probe).resolve()),
+        "snapshot": str(Path(args.snapshot).resolve()) if args.snapshot else None,
+        "control_draws": args.control_draws,
+        "split_seed": args.split_seed,
+    }
+
     acts, labels = load(args.acts, grid, poles, args.policy)
-    out = {"policy": args.policy, "n_rows": acts.shape[0],
+    out = {"policy": args.policy, "inputs": inputs, "n_rows": acts.shape[0],
            "hidden_size": acts.shape[2], "n_hidden_states": acts.shape[1],
            "theoretical_random_cosine_sd": 1.0 / math.sqrt(acts.shape[2])}
 
@@ -622,8 +656,13 @@ def main():
         path = vec_dir / ("decision_%s_response_avg_diff_cellbalanced_%s.pt"
                           % (f, args.policy))
         entry = {"usable_cells": len(cells[f])}
-        entry.update(committed_comparison(game_vecs[f],
-                                          torch.load(path, map_location="cpu")))
+        # "the report is written either way" has to hold for a MISSING file too,
+        # or the gate's own error branch is unreachable from here
+        if path.is_file():
+            entry.update(committed_comparison(game_vecs[f],
+                                              torch.load(path, map_location="cpu")))
+        else:
+            entry["error"] = "not committed: %s" % path.name
         out["A_per_game_vs_committed"][f] = entry
 
     # B -- the agreement matrix
@@ -764,9 +803,10 @@ def main():
                          "activations" % len(out["gate"]["failures"]))
     gate = out["gate"]
     print("gate: %d committed vectors reproduce; worst layer cosine %.15f (floor "
-          "%.15f), worst layer-20 norm drift %.3e (allowed %.1e)"
+          "%.15f), worst per-layer norm drift %.3e (allowed %.1e)"
           % (gate["n_vectors_checked"], gate["worst_min_cos_over_layers"],
-             args.min_cosine, gate["worst_norm_drift_layer20"], args.max_norm_drift))
+             args.min_cosine, gate["worst_norm_drift_over_layers"],
+             args.max_norm_drift))
 
 
 if __name__ == "__main__":

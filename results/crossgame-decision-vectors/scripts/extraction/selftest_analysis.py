@@ -1,9 +1,15 @@
-"""Exercise every analysis code path on synthetic activations. No GPU, no real data.
+"""Exercise the six-game battery on synthetic activations. No GPU, no real data.
 
 The real run costs hours on a shared GPU, so the analysis must not be first
 executed on its output. This builds fake rows and fake activations for three
 families - one of them deliberately single-poled, like the Prisoner's Dilemma -
-and runs the whole battery, checking that:
+and runs `analyze_crossgame.py` over them twice, once with a planted direction and
+once with none. That is the battery of README sections 1-4 and 8; the pooling
+stage (`scripts/pooling/`) is NOT covered here.
+
+MANUAL: about forty seconds, and no test command runs it. `python -m pytest -q`
+from the repository root is the suite; this is the check you run by hand before
+trusting the analysis on real data. It checks that:
 
   * a planted direction is recovered with a high out-of-sample AUC
   * pure noise gives an AUC near 0.5, so the measurement is not self-fulfilling

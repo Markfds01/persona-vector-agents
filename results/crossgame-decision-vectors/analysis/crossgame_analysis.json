@@ -20,6 +20,7 @@
   "activation_meta": {
     "apology": {
       "rows_csv": "/home/marco/dockmaster/state/worktrees/pr-crossgame/results/crossgame-decision-vectors/extraction/apology.csv",
+      "rows_csv_sha256": "197c269a10d6c9e0a8dd3082c0867692373a96a3eec3b14ff5bf01f7c02091e7",
       "model_id": "Qwen/Qwen2.5-7B-Instruct",
       "model_revision": "a09a35458c702b33eeacc393d103063234e8bc28",
       "dtype": "torch.bfloat16",
@@ -38,7 +39,7 @@
         "prompt_last",
         "response_avg"
       ],
-      "extractor": "audit.extract",
+      "extractor": "lab.extract",
       "shard_rows": 250,
       "limit_rows": 0,
       "n_scored_rows": 714,
@@ -46,11 +47,12 @@
       "n_shards": 3,
       "dropped": [],
       "n_captured": 714,
-      "seconds": 141.22611689567566,
+      "seconds": 74.43327569961548,
       "resumed_from_shards": 0
     },
     "dictator": {
       "rows_csv": "/home/marco/dockmaster/state/worktrees/pr-crossgame/results/crossgame-decision-vectors/extraction/dictator.csv",
+      "rows_csv_sha256": "4dd50b14200754f2b396fb6974039e4ec81671a0053a545e5c3dd5b0f48e9ce4",
       "model_id": "Qwen/Qwen2.5-7B-Instruct",
       "model_revision": "a09a35458c702b33eeacc393d103063234e8bc28",
       "dtype": "torch.bfloat16",
@@ -69,7 +71,7 @@
         "prompt_last",
         "response_avg"
       ],
-      "extractor": "audit.extract",
+      "extractor": "lab.extract",
       "shard_rows": 250,
       "limit_rows": 0,
       "n_scored_rows": 712,
@@ -77,11 +79,12 @@
       "n_shards": 3,
       "dropped": [],
       "n_captured": 712,
-      "seconds": 107.40324878692627,
+      "seconds": 174.65444684028625,
       "resumed_from_shards": 0
     },
     "overfishing": {
       "rows_csv": "/home/marco/dockmaster/state/worktrees/pr-crossgame/results/crossgame-decision-vectors/extraction/overfishing.csv",
+      "rows_csv_sha256": "7ba0357b38c15a16746a12e999a4cbb6c681d8cd3e03d493a06b73871112bace",
       "model_id": "Qwen/Qwen2.5-7B-Instruct",
       "model_revision": "a09a35458c702b33eeacc393d103063234e8bc28",
       "dtype": "torch.bfloat16",
@@ -100,7 +103,7 @@
         "prompt_last",
         "response_avg"
       ],
-      "extractor": "audit.extract",
+      "extractor": "lab.extract",
       "shard_rows": 250,
       "limit_rows": 0,
       "n_scored_rows": 1425,
@@ -108,11 +111,12 @@
       "n_shards": 6,
       "dropped": [],
       "n_captured": 1425,
-      "seconds": 212.13966846466064,
+      "seconds": 361.3494529724121,
       "resumed_from_shards": 0
     },
     "prisoners_dilemma": {
       "rows_csv": "/home/marco/dockmaster/state/worktrees/pr-crossgame/results/crossgame-decision-vectors/extraction/prisoners_dilemma.csv",
+      "rows_csv_sha256": "957e433b597631ce989657b56c59dc75793c2240719d281dd68115dac32ceb15",
       "model_id": "Qwen/Qwen2.5-7B-Instruct",
       "model_revision": "a09a35458c702b33eeacc393d103063234e8bc28",
       "dtype": "torch.bfloat16",
@@ -131,7 +135,7 @@
         "prompt_last",
         "response_avg"
       ],
-      "extractor": "audit.extract",
+      "extractor": "lab.extract",
       "shard_rows": 250,
       "limit_rows": 0,
       "n_scored_rows": 240,
@@ -139,11 +143,12 @@
       "n_shards": 1,
       "dropped": [],
       "n_captured": 240,
-      "seconds": 26.175825357437134,
+      "seconds": 29.468414783477783,
       "resumed_from_shards": 0
     },
     "trust": {
       "rows_csv": "/home/marco/dockmaster/state/worktrees/pr-crossgame/results/crossgame-decision-vectors/extraction/trust.csv",
+      "rows_csv_sha256": "af567764dd3a19f180ab530b17d6ec7285a4b592994240042c9ea4d4e1ae36fe",
       "model_id": "Qwen/Qwen2.5-7B-Instruct",
       "model_revision": "a09a35458c702b33eeacc393d103063234e8bc28",
       "dtype": "torch.bfloat16",
@@ -162,7 +167,7 @@
         "prompt_last",
         "response_avg"
       ],
-      "extractor": "audit.extract",
+      "extractor": "lab.extract",
       "shard_rows": 250,
       "limit_rows": 0,
       "n_scored_rows": 699,
@@ -170,11 +175,12 @@
       "n_shards": 3,
       "dropped": [],
       "n_captured": 699,
-      "seconds": 140.0958230495453,
+      "seconds": 136.55007886886597,
       "resumed_from_shards": 0
     },
     "ultimatum": {
       "rows_csv": "/home/marco/dockmaster/state/worktrees/pr-crossgame/results/crossgame-decision-vectors/extraction/ultimatum.csv",
+      "rows_csv_sha256": "9a440232993fc5bb1bca3629c12770ecb72c33a491c23c029031d0b45d304253",
       "model_id": "Qwen/Qwen2.5-7B-Instruct",
       "model_revision": "a09a35458c702b33eeacc393d103063234e8bc28",
       "dtype": "torch.bfloat16",
@@ -193,7 +199,7 @@
         "prompt_last",
         "response_avg"
       ],
-      "extractor": "audit.extract",
+      "extractor": "lab.extract",
       "shard_rows": 250,
       "limit_rows": 0,
       "n_scored_rows": 713,
@@ -201,7 +207,7 @@
       "n_shards": 3,
       "dropped": [],
       "n_captured": 713,
-      "seconds": 70.22763633728027,
+      "seconds": 120.62474274635315,
       "resumed_from_shards": 0
     }
   },

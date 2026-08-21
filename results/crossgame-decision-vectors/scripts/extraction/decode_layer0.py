@@ -20,8 +20,11 @@ from pathlib import Path
 
 import torch
 
-SNAPSHOT = ("/home/marco/.cache/huggingface/hub/models--Qwen--Qwen2.5-7B-Instruct/"
-            "snapshots/a09a35458c702b33eeacc393d103063234e8bc28")
+#: this repository is public - the default is the caller's own HF cache, not the
+#: box a run happened on
+SNAPSHOT = str(Path.home() / ".cache/huggingface/hub"
+               / "models--Qwen--Qwen2.5-7B-Instruct"
+               / "snapshots/a09a35458c702b33eeacc393d103063234e8bc28")
 EMBED_KEY = "model.embed_tokens.weight"
 
 

@@ -145,8 +145,18 @@ uses, and it too needs no keys and no network — only a GPU when it is actually
 capturing.
 
 Both suites run offline, and both are needed: `lab/tests` is where the extractor
-is covered, so `audit/tests` alone leaves it untested.
+is covered, so `audit/tests` alone leaves it untested. A third suite,
+`results/crossgame-decision-vectors/scripts/tests`, covers that directory's
+reproduction gate and rebuild comparator. `pytest.ini` names all three, so one
+command is the whole thing:
 
 ```bash
-python -m pytest audit/tests lab/tests -q
+python -m pytest -q
 ```
+
+Needs `pytest` and `torch`, both in `requirements.txt`. `audit/tests` alone runs
+without torch; the other two do not, and they fail loudly rather than skipping.
+One check is deliberately left out of that command because it takes about forty
+seconds: `results/crossgame-decision-vectors/scripts/extraction/selftest_analysis.py`
+runs the six-game battery twice on synthetic activations with a known answer. Run
+it by hand.

@@ -1,6 +1,6 @@
 {
   "old": "/home/marco/dockmaster/data/pr-crossgame/round1/results/crossgame-decision-vectors",
-  "new": "/home/marco/dockmaster/data/pr-crossgame/work2",
+  "new": "/home/marco/dockmaster/data/pr-crossgame/work3",
   "vectors": {
     "decision_apology_response_avg_diff_cellbalanced_relaxed.pt": {
       "bit_identical": true,
@@ -204,20 +204,43 @@
   "json": {
     "analysis/crossgame_analysis.json": {
       "old": "/home/marco/dockmaster/data/pr-crossgame/round1/results/crossgame-decision-vectors/analysis/crossgame_analysis.json",
-      "new": "/home/marco/dockmaster/data/pr-crossgame/work2/crossgame/analysis.json",
-      "n_numeric_leaves": 8940,
-      "n_numeric_leaves_identical": 8940,
+      "new": "/home/marco/dockmaster/data/pr-crossgame/work3/crossgame/analysis.json",
+      "n_numeric_leaves": 8936,
+      "n_numeric_leaves_identical": 8936,
       "n_numeric_leaves_that_moved": 0,
       "max_abs_delta": null,
       "max_abs_delta_path": null,
       "largest_moves": [],
       "n_integer_valued_moves": 0,
       "integer_valued_moves": [],
+      "n_non_finite_leaves": 4,
+      "non_finite_leaves": [
+        {
+          "path": "by_policy.relaxed.prompt_side_check.prompt_last.split_half.by_layer[0].cohens_d",
+          "old": NaN,
+          "new": NaN
+        },
+        {
+          "path": "by_policy.relaxed.prompt_side_check.prompt_last.split_half.reliability_cos_by_layer[0]",
+          "old": NaN,
+          "new": NaN
+        },
+        {
+          "path": "by_policy.strict.prompt_side_check.prompt_last.split_half.by_layer[0].cohens_d",
+          "old": NaN,
+          "new": NaN
+        },
+        {
+          "path": "by_policy.strict.prompt_side_check.prompt_last.split_half.reliability_cos_by_layer[0]",
+          "old": NaN,
+          "new": NaN
+        }
+      ],
       "provenance_differences": [
         {
           "path": "activation_meta.apology.extractor",
           "old": null,
-          "new": "audit.extract"
+          "new": "lab.extract"
         },
         {
           "path": "activation_meta.apology.poolings",
@@ -241,7 +264,7 @@
         {
           "path": "activation_meta.apology.seconds",
           "old": 154.88058376312256,
-          "new": 141.22611689567566
+          "new": 74.43327569961548
         },
         {
           "path": "activation_meta.apology.shard_rows",
@@ -251,7 +274,7 @@
         {
           "path": "activation_meta.dictator.extractor",
           "old": null,
-          "new": "audit.extract"
+          "new": "lab.extract"
         },
         {
           "path": "activation_meta.dictator.poolings",
@@ -275,7 +298,7 @@
         {
           "path": "activation_meta.dictator.seconds",
           "old": 233.68784141540527,
-          "new": 107.40324878692627
+          "new": 174.65444684028625
         },
         {
           "path": "activation_meta.dictator.shard_rows",
@@ -285,7 +308,7 @@
         {
           "path": "activation_meta.overfishing.extractor",
           "old": null,
-          "new": "audit.extract"
+          "new": "lab.extract"
         },
         {
           "path": "activation_meta.overfishing.poolings",
@@ -309,7 +332,7 @@
         {
           "path": "activation_meta.overfishing.seconds",
           "old": 373.6330671310425,
-          "new": 212.13966846466064
+          "new": 361.3494529724121
         },
         {
           "path": "activation_meta.overfishing.shard_rows",
@@ -319,7 +342,7 @@
         {
           "path": "activation_meta.prisoners_dilemma.extractor",
           "old": null,
-          "new": "audit.extract"
+          "new": "lab.extract"
         },
         {
           "path": "activation_meta.prisoners_dilemma.poolings",
@@ -343,7 +366,7 @@
         {
           "path": "activation_meta.prisoners_dilemma.seconds",
           "old": 25.430579662322998,
-          "new": 26.175825357437134
+          "new": 29.468414783477783
         },
         {
           "path": "activation_meta.prisoners_dilemma.shard_rows",
@@ -353,7 +376,7 @@
         {
           "path": "activation_meta.trust.extractor",
           "old": null,
-          "new": "audit.extract"
+          "new": "lab.extract"
         },
         {
           "path": "activation_meta.trust.poolings",
@@ -377,7 +400,7 @@
         {
           "path": "activation_meta.trust.seconds",
           "old": 179.5174081325531,
-          "new": 140.0958230495453
+          "new": 136.55007886886597
         },
         {
           "path": "activation_meta.trust.shard_rows",
@@ -387,7 +410,7 @@
         {
           "path": "activation_meta.ultimatum.extractor",
           "old": null,
-          "new": "audit.extract"
+          "new": "lab.extract"
         },
         {
           "path": "activation_meta.ultimatum.poolings",
@@ -411,7 +434,7 @@
         {
           "path": "activation_meta.ultimatum.seconds",
           "old": 247.66442012786865,
-          "new": 70.22763633728027
+          "new": 120.62474274635315
         },
         {
           "path": "activation_meta.ultimatum.shard_rows",
@@ -434,11 +457,19 @@
           "only_in": "new"
         },
         {
+          "path": "activation_meta.apology.rows_csv_sha256",
+          "only_in": "new"
+        },
+        {
           "path": "activation_meta.dictator.complete",
           "only_in": "new"
         },
         {
           "path": "activation_meta.dictator.limit_rows",
+          "only_in": "new"
+        },
+        {
+          "path": "activation_meta.dictator.rows_csv_sha256",
           "only_in": "new"
         },
         {
@@ -450,11 +481,19 @@
           "only_in": "new"
         },
         {
+          "path": "activation_meta.overfishing.rows_csv_sha256",
+          "only_in": "new"
+        },
+        {
           "path": "activation_meta.prisoners_dilemma.complete",
           "only_in": "new"
         },
         {
           "path": "activation_meta.prisoners_dilemma.limit_rows",
+          "only_in": "new"
+        },
+        {
+          "path": "activation_meta.prisoners_dilemma.rows_csv_sha256",
           "only_in": "new"
         },
         {
@@ -466,19 +505,27 @@
           "only_in": "new"
         },
         {
+          "path": "activation_meta.trust.rows_csv_sha256",
+          "only_in": "new"
+        },
+        {
           "path": "activation_meta.ultimatum.complete",
           "only_in": "new"
         },
         {
           "path": "activation_meta.ultimatum.limit_rows",
           "only_in": "new"
+        },
+        {
+          "path": "activation_meta.ultimatum.rows_csv_sha256",
+          "only_in": "new"
         }
       ],
-      "n_structural_differences": 12
+      "n_structural_differences": 18
     },
     "analysis/crossgame_layer0_tokens.json": {
       "old": "/home/marco/dockmaster/data/pr-crossgame/round1/results/crossgame-decision-vectors/analysis/crossgame_layer0_tokens.json",
-      "new": "/home/marco/dockmaster/data/pr-crossgame/work2/crossgame/crossgame_layer0_tokens.json",
+      "new": "/home/marco/dockmaster/data/pr-crossgame/work3/crossgame/crossgame_layer0_tokens.json",
       "n_numeric_leaves": 96,
       "n_numeric_leaves_identical": 96,
       "n_numeric_leaves_that_moved": 0,
@@ -487,6 +534,8 @@
       "largest_moves": [],
       "n_integer_valued_moves": 0,
       "integer_valued_moves": [],
+      "n_non_finite_leaves": 0,
+      "non_finite_leaves": [],
       "provenance_differences": [],
       "structural_differences": [
         {
@@ -532,7 +581,7 @@
     },
     "analysis/pooled_build.json": {
       "old": "/home/marco/dockmaster/data/pr-crossgame/round1/results/crossgame-decision-vectors/analysis/pooled_build.json",
-      "new": "/home/marco/dockmaster/data/pr-crossgame/work2/pooled/build.json",
+      "new": "/home/marco/dockmaster/data/pr-crossgame/work3/pooled/build.json",
       "n_numeric_leaves": 162,
       "n_numeric_leaves_identical": 162,
       "n_numeric_leaves_that_moved": 0,
@@ -541,6 +590,8 @@
       "largest_moves": [],
       "n_integer_valued_moves": 0,
       "integer_valued_moves": [],
+      "n_non_finite_leaves": 0,
+      "non_finite_leaves": [],
       "provenance_differences": [],
       "structural_differences": [
         {
@@ -556,7 +607,7 @@
     },
     "analysis/pooled_analysis.json": {
       "old": "/home/marco/dockmaster/data/pr-crossgame/round1/results/crossgame-decision-vectors/analysis/pooled_analysis.json",
-      "new": "/home/marco/dockmaster/data/pr-crossgame/work2/pooled/analysis.json",
+      "new": "/home/marco/dockmaster/data/pr-crossgame/work3/pooled/analysis.json",
       "n_numeric_leaves": 5258,
       "n_numeric_leaves_identical": 3467,
       "n_numeric_leaves_that_moved": 1791,
@@ -741,6 +792,8 @@
       ],
       "n_integer_valued_moves": 0,
       "integer_valued_moves": [],
+      "n_non_finite_leaves": 0,
+      "non_finite_leaves": [],
       "provenance_differences": [
         {
           "path": "dictator_vector",
@@ -1704,7 +1757,7 @@
     },
     "analysis/pooled_addendum.json": {
       "old": "/home/marco/dockmaster/data/pr-crossgame/round1/results/crossgame-decision-vectors/analysis/pooled_addendum.json",
-      "new": "/home/marco/dockmaster/data/pr-crossgame/work2/pooled/addendum.json",
+      "new": "/home/marco/dockmaster/data/pr-crossgame/work3/pooled/addendum.json",
       "n_numeric_leaves": 1069,
       "n_numeric_leaves_identical": 331,
       "n_numeric_leaves_that_moved": 738,
@@ -1889,6 +1942,8 @@
       ],
       "n_integer_valued_moves": 0,
       "integer_valued_moves": [],
+      "n_non_finite_leaves": 0,
+      "non_finite_leaves": [],
       "provenance_differences": [],
       "structural_differences": [
         {
@@ -1996,7 +2051,7 @@
     },
     "analysis/pooled_reliability.json": {
       "old": "/home/marco/dockmaster/data/pr-crossgame/round1/results/crossgame-decision-vectors/analysis/pooled_reliability.json",
-      "new": "/home/marco/dockmaster/data/pr-crossgame/work2/pooled/reliability.json",
+      "new": "/home/marco/dockmaster/data/pr-crossgame/work3/pooled/reliability.json",
       "n_numeric_leaves": 289,
       "n_numeric_leaves_identical": 246,
       "n_numeric_leaves_that_moved": 43,
@@ -2181,6 +2236,8 @@
       ],
       "n_integer_valued_moves": 0,
       "integer_valued_moves": [],
+      "n_non_finite_leaves": 0,
+      "non_finite_leaves": [],
       "provenance_differences": [],
       "structural_differences": [
         {
@@ -2204,7 +2261,7 @@
     },
     "analysis/pooled_layer0_tokens.json": {
       "old": "/home/marco/dockmaster/data/pr-crossgame/round1/results/crossgame-decision-vectors/analysis/pooled_layer0_tokens.json",
-      "new": "/home/marco/dockmaster/data/pr-crossgame/work2/pooled/layer0_tokens.json",
+      "new": "/home/marco/dockmaster/data/pr-crossgame/work3/pooled/layer0_tokens.json",
       "n_numeric_leaves": 240,
       "n_numeric_leaves_identical": 240,
       "n_numeric_leaves_that_moved": 0,
@@ -2213,6 +2270,8 @@
       "largest_moves": [],
       "n_integer_valued_moves": 0,
       "integer_valued_moves": [],
+      "n_non_finite_leaves": 0,
+      "non_finite_leaves": [],
       "provenance_differences": [],
       "structural_differences": [
         {
@@ -2364,8 +2423,9 @@
     "worst_vector_cosine": 0.9999999999999986,
     "n_json_files_compared": 7,
     "json_files_with_no_numeric_leaves": [],
-    "n_structural_differences": 215,
+    "n_structural_differences": 221,
     "n_numeric_leaves_that_moved": 2572,
+    "n_non_finite_leaves": 4,
     "n_missing": 9,
     "largest_numeric_delta": 7.640687752219488e-07,
     "largest_numeric_delta_path": "analysis/pooled_analysis.json :: policies.strict.null_game_wide.0.game_equal_unit.game:overfishing.min"
