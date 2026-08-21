@@ -1,14 +1,64 @@
 {
   "policy": "strict",
   "inputs": {
-    "acts": "/home/marco/dockmaster/data/pr-crossgame/acts_v3",
-    "grid": "/home/marco/dockmaster/state/worktrees/pr-crossgame/results/crossgame-decision-vectors/scripts/extraction",
-    "repo_root": "/home/marco/dockmaster/state/worktrees/pr-crossgame",
-    "vectors": "/home/marco/dockmaster/state/worktrees/pr-crossgame/results/crossgame-decision-vectors/vectors",
-    "dictator": "/home/marco/dockmaster/state/worktrees/pr-crossgame/results/dictator-decision-vector/vectors/decision_response_avg_diff_cellbalanced.pt",
-    "altruism": "/home/marco/dockmaster/state/worktrees/pr-crossgame/persona_vectors/Qwen2.5-7B-Instruct/altruism_response_avg_diff.pt",
-    "probe": "/home/marco/dockmaster/state/worktrees/pr-crossgame/results/crossgame-decision-vectors/evidence/pd_probe_6matrices_16samples.csv",
-    "snapshot": "/home/marco/.cache/huggingface/hub/models--Qwen--Qwen2.5-7B-Instruct/snapshots/a09a35458c702b33eeacc393d103063234e8bc28",
+    "paths_relative_to": "the repository root, which is not recorded: it is wherever this checkout happens to sit",
+    "grid": "results/crossgame-decision-vectors/scripts/extraction",
+    "vectors": "results/crossgame-decision-vectors/vectors",
+    "dictator": "results/dictator-decision-vector/vectors/decision_response_avg_diff_cellbalanced.pt",
+    "altruism": "persona_vectors/Qwen2.5-7B-Instruct/altruism_response_avg_diff.pt",
+    "probe": "results/crossgame-decision-vectors/evidence/pd_probe_6matrices_16samples.csv",
+    "acts": {
+      "what": "the uncommitted activation directory, outside the repository",
+      "dir_name": "acts_v3",
+      "games": {
+        "dictator": {
+          "model_id": "Qwen/Qwen2.5-7B-Instruct",
+          "model_revision": "a09a35458c702b33eeacc393d103063234e8bc28",
+          "rows_csv_sha256": "4dd50b14200754f2b396fb6974039e4ec81671a0053a545e5c3dd5b0f48e9ce4",
+          "extractor": "lab.extract",
+          "n_captured": 712
+        },
+        "trust": {
+          "model_id": "Qwen/Qwen2.5-7B-Instruct",
+          "model_revision": "a09a35458c702b33eeacc393d103063234e8bc28",
+          "rows_csv_sha256": "af567764dd3a19f180ab530b17d6ec7285a4b592994240042c9ea4d4e1ae36fe",
+          "extractor": "lab.extract",
+          "n_captured": 699
+        },
+        "ultimatum": {
+          "model_id": "Qwen/Qwen2.5-7B-Instruct",
+          "model_revision": "a09a35458c702b33eeacc393d103063234e8bc28",
+          "rows_csv_sha256": "9a440232993fc5bb1bca3629c12770ecb72c33a491c23c029031d0b45d304253",
+          "extractor": "lab.extract",
+          "n_captured": 713
+        },
+        "apology": {
+          "model_id": "Qwen/Qwen2.5-7B-Instruct",
+          "model_revision": "a09a35458c702b33eeacc393d103063234e8bc28",
+          "rows_csv_sha256": "197c269a10d6c9e0a8dd3082c0867692373a96a3eec3b14ff5bf01f7c02091e7",
+          "extractor": "lab.extract",
+          "n_captured": 714
+        },
+        "overfishing": {
+          "model_id": "Qwen/Qwen2.5-7B-Instruct",
+          "model_revision": "a09a35458c702b33eeacc393d103063234e8bc28",
+          "rows_csv_sha256": "7ba0357b38c15a16746a12e999a4cbb6c681d8cd3e03d493a06b73871112bace",
+          "extractor": "lab.extract",
+          "n_captured": 1425
+        },
+        "prisoners_dilemma": {
+          "model_id": "Qwen/Qwen2.5-7B-Instruct",
+          "model_revision": "a09a35458c702b33eeacc393d103063234e8bc28",
+          "rows_csv_sha256": "957e433b597631ce989657b56c59dc75793c2240719d281dd68115dac32ceb15",
+          "extractor": "lab.extract",
+          "n_captured": 240
+        }
+      }
+    },
+    "snapshot": {
+      "model_id": "Qwen/Qwen2.5-7B-Instruct",
+      "revision": "a09a35458c702b33eeacc393d103063234e8bc28"
+    },
     "control_draws": 1000,
     "split_seed": 20260821
   },

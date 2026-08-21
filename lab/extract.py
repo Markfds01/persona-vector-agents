@@ -248,7 +248,9 @@ def claim_shard(staging, path):
     except OSError:
         pass
     try:
-        os.close(os.open(str(path), os.O_CREAT | os.O_EXCL | os.O_WRONLY, 0o644))
+        # 0600 to match the staging inode `os.replace` swaps in below: the claim
+        # file is transient, and a mode it cannot keep only misleads
+        os.close(os.open(str(path), os.O_CREAT | os.O_EXCL | os.O_WRONLY, 0o600))
     except FileExistsError:
         raise ShardsUnusable("%s already exists; another run is writing into this "
                              "directory" % path) from None

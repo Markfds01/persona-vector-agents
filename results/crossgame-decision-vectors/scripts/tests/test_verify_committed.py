@@ -216,3 +216,63 @@ def test_the_recorded_drifts_clear_1e_6_and_would_not_have_cleared_1e_9(name):
     assert not strict["passed"]
     assert gate({"A_per_game_vs_committed": out["A_per_game_vs_committed"],
                  "A2_pooled_vs_committed": out["A2_pooled_vs_committed"]})["passed"]
+
+
+# --- provenance without the checkout's absolute path --------------------------
+
+def test_repo_path_is_relative_inside_the_repo_and_a_bare_name_outside(tmp_path):
+    root = tmp_path / "repo"
+    (root / "vectors").mkdir(parents=True)
+    assert verify.repo_path(root / "vectors" / "a.pt", root) == "vectors/a.pt"
+
+    outside = tmp_path / "elsewhere" / "acts_v3"
+    outside.mkdir(parents=True)
+    recorded = verify.repo_path(outside, root)
+    assert recorded == "(outside the repository) acts_v3"
+    assert str(tmp_path) not in recorded
+
+
+def test_snapshot_identity_reads_the_model_off_the_huggingface_cache_layout(tmp_path):
+    cache = (tmp_path / "hub" / "models--Qwen--Qwen2.5-7B-Instruct"
+             / "snapshots" / "a09a35458c702b33eeacc393d103063234e8bc28")
+    cache.mkdir(parents=True)
+    assert verify.snapshot_identity(cache) == {
+        "model_id": "Qwen/Qwen2.5-7B-Instruct",
+        "revision": "a09a35458c702b33eeacc393d103063234e8bc28"}
+
+    plain = tmp_path / "weights" / "qwen"
+    plain.mkdir(parents=True)
+    identity = verify.snapshot_identity(plain)
+    assert identity["dir_name"] == "qwen"
+    assert str(tmp_path) not in json.dumps(identity)
+
+
+def test_acts_identity_names_the_corpus_and_reports_a_missing_meta(tmp_path):
+    acts = tmp_path / "acts_v3"
+    for family in verify.FAMILY_ORDER:
+        (acts / family).mkdir(parents=True)
+    meta = {"model_id": "Qwen/Qwen2.5-7B-Instruct", "model_revision": "a09a354",
+            "rows_csv_sha256": "4dd50b14", "extractor": "lab.extract",
+            "n_captured": 712,
+            "rows_csv": "/home/someone/checkout/extraction/dictator.csv"}
+    (acts / "dictator" / "meta.json").write_text(json.dumps(meta), encoding="utf-8")
+
+    identity = verify.acts_identity(acts)
+    assert identity["dir_name"] == "acts_v3"
+    assert identity["games"]["dictator"]["model_revision"] == "a09a354"
+    assert "error" in identity["games"]["trust"]
+    # the meta's own absolute rows_csv must not be copied through
+    assert "/home/someone" not in json.dumps(identity)
+
+
+@pytest.mark.parametrize("name", ["verification.json", "verification_relaxed.json"])
+def test_the_committed_reports_carry_no_absolute_path(name):
+    """These files are public. An absolute path in them is somebody's home dir."""
+    path = ANALYSIS / name
+    if not path.is_file():
+        pytest.skip("%s is not in this checkout" % name)
+    inputs = json.loads(path.read_text(encoding="utf-8"))["inputs"]
+    for value in json.dumps(inputs).split('"'):
+        assert not value.startswith("/"), "%s records %r" % (name, value)
+    assert inputs["acts"]["dir_name"]
+    assert inputs["snapshot"]["model_id"]

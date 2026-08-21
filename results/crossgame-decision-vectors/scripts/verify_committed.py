@@ -98,6 +98,58 @@ SCHEMES = {
 ALL_SCHEMES = ("cell_balanced",) + tuple(SCHEMES)
 
 
+# --- provenance ---------------------------------------------------------------
+#
+# This report is committed to a public repository, so nothing recorded here may
+# carry the absolute path of the checkout that produced it: an input is named by
+# where it sits in the repository, or by what identifies it.
+
+def repo_path(path, root):
+    """A path as `root`-relative posix, or a bare name when it is outside `root`."""
+    resolved = Path(path).resolve()
+    try:
+        return resolved.relative_to(root).as_posix()
+    except ValueError:
+        return "(outside the repository) %s" % resolved.name
+
+
+def acts_identity(acts_root):
+    """What the activation directory IS, from each game's extraction meta.
+
+    The directory is 5.3 GB and not committed, so its own name plus the model and
+    the digest of the rows each game was extracted from is what tells a reader
+    which corpus the gate ran against.
+    """
+    games = {}
+    for family in FAMILY_ORDER:
+        meta_path = Path(acts_root) / family / "meta.json"
+        if not meta_path.is_file():
+            games[family] = {"error": "no meta.json beside the shards"}
+            continue
+        meta = json.loads(meta_path.read_text(encoding="utf-8"))
+        games[family] = {key: meta.get(key) for key in
+                         ("model_id", "model_revision", "rows_csv_sha256",
+                          "extractor", "n_captured")}
+    return {"what": "the uncommitted activation directory, outside the repository",
+            "dir_name": Path(acts_root).resolve().name, "games": games}
+
+
+def snapshot_identity(snapshot):
+    """The model behind a local weights directory, not the cache path to it.
+
+    HuggingFace lays its cache out as `models--<org>--<name>/snapshots/<sha>`,
+    which is exactly the model id and revision; anything else keeps its name.
+    """
+    path = Path(snapshot).resolve()
+    revisions = path.parent
+    repo = revisions.parent
+    if revisions.name == "snapshots" and repo.name.startswith("models--"):
+        return {"model_id": repo.name[len("models--"):].replace("--", "/"),
+                "revision": path.name}
+    return {"what": "not a HuggingFace cache snapshot; only its name is recorded",
+            "dir_name": path.name}
+
+
 # --- loading ------------------------------------------------------------------
 
 def load(acts_root, grid, poles, policy):
@@ -615,7 +667,7 @@ def main():
     ap.add_argument("--out", required=True)
     args = ap.parse_args()
 
-    root = Path(args.repo_root) if args.repo_root else DIR.parents[1]
+    root = (Path(args.repo_root) if args.repo_root else DIR.parents[1]).resolve()
     sys.path.insert(0, str(root))
     sys.path.insert(0, str(Path(args.grid).resolve()))
     import crossgame_grid as grid  # noqa: E402
@@ -631,14 +683,15 @@ def main():
     # every resolved input, recorded: this is the file that decides whether the
     # committed vectors reproduce, and a verdict is only as readable as its inputs
     inputs = {
-        "acts": str(Path(args.acts).resolve()),
-        "grid": str(Path(args.grid).resolve()),
-        "repo_root": str(root.resolve()),
-        "vectors": str(vec_dir.resolve()),
-        "dictator": str(Path(args.dictator).resolve()),
-        "altruism": str(altruism_path.resolve()),
-        "probe": str(Path(args.probe).resolve()),
-        "snapshot": str(Path(args.snapshot).resolve()) if args.snapshot else None,
+        "paths_relative_to": "the repository root, which is not recorded: it is "
+                             "wherever this checkout happens to sit",
+        "grid": repo_path(args.grid, root),
+        "vectors": repo_path(vec_dir, root),
+        "dictator": repo_path(args.dictator, root),
+        "altruism": repo_path(altruism_path, root),
+        "probe": repo_path(args.probe, root),
+        "acts": acts_identity(args.acts),
+        "snapshot": snapshot_identity(args.snapshot) if args.snapshot else None,
         "control_draws": args.control_draws,
         "split_seed": args.split_seed,
     }
@@ -795,7 +848,7 @@ def main():
 
     out["gate"] = reproduction_gate(out, args.min_cosine, args.max_norm_drift)
     Path(args.out).write_text(json.dumps(out, indent=2))
-    print("wrote %s" % args.out)
+    print("wrote %s" % repo_path(args.out, root))
     for failure in out["gate"]["failures"]:
         print("FAIL %s" % failure)
     if out["gate"]["failures"]:
