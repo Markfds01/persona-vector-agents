@@ -31,7 +31,9 @@ Resumable at the granularity of one beta point. Each point is an independent
 point regenerated on its own is bit-identical to the same point inside an
 uninterrupted run — which is what makes skipping a finished CSV safe. A SHORT CSV
 is never appended to: its remaining rows would land in differently composed
-batches, so it is regenerated whole.
+batches, so it is regenerated whole. A FULL one is trusted only once its rows name
+the vector this run steers with: the file name carries the coefficient but neither
+the vector nor the pole policy, so nothing else would tell the two arms apart.
 
 The card is shared. The model load waits for real headroom rather than racing
 another tenant for it, and retries a load that OOMs anyway; nothing else is
@@ -95,20 +97,43 @@ def vector_paths(family: str, policy: str, vectors_dir: Path, nulls_dir: Path,
     return real, null
 
 
-def completed_rows(path: Path, expected: int) -> bool:
-    """True when `path` already holds a whole point: `expected` readable data rows.
+def completed_rows(path: Path, expected: int, vector_sha256: str) -> bool:
+    """True when `path` already holds THIS vector's whole point.
 
-    A partial CSV is not resumable — see this module's docstring — so anything
-    short is reported as absent and regenerated.
+    `expected` readable data rows, every one of them generated with
+    `vector_sha256`. A partial CSV is not resumable — see this module's docstring
+    — so anything short is reported as absent and regenerated.
+
+    The vector check is the one the file name cannot make. `steer.rows_path`
+    encodes the game, the mode, the layer, the positions, the norm and the
+    coefficient, but NOT the vector and not the pole policy, so
+    `--policy relaxed --resume` over a strict rows directory would otherwise find
+    every point complete, regenerate nothing, and write a manifest recording the
+    relaxed vector, its sha, its norm and its raw-beta equivalent against strict
+    rows. A rows directory holding another vector's answers is the wrong
+    directory rather than a stale point, so this refuses instead of silently
+    rebuilding one point of a set whose others would still be the wrong arm.
     """
     if not path.is_file():
         return False
     try:
         with path.open(encoding="utf-8", newline="") as handle:
-            count = sum(1 for _ in csv.DictReader(handle))
+            found = [row.get("steer_vector_sha256") for row in csv.DictReader(handle)]
     except (OSError, csv.Error):
         return False
-    return count == expected
+    if len(found) != expected:
+        return False
+    wrong = sorted({sha for sha in found if sha != vector_sha256})
+    if wrong:
+        raise SystemExit(
+            "%s holds %d rows steered with %s, not the %s this run steers with. "
+            "The row path carries the coefficient but not the vector, so resuming "
+            "here would report this point complete and record a vector it was not "
+            "generated with. Point --out-dir at this policy's own rows directory, "
+            "or re-run it without --resume."
+            % (path, len(found), ", ".join(repr(sha) for sha in wrong),
+               vector_sha256))
+    return True
 
 
 def wait_for_headroom(device: int, min_free_mib: int, timeout_seconds: int,
@@ -180,9 +205,12 @@ def run_arm(family, game_id, vector_path, ks, betas, arm, engine, model, tokeniz
     steerings = [steer.Steering(str(vector_path), args.layer, beta, positions="all",
                                 norm="unit") for beta in betas]
     paths = {s.coeff: steer.rows_path(arm_dir, s, game_id, "free") for s in steerings}
+    # every steering here is the same vector file; hashing it once is enough
+    vector_sha256 = steerings[0].vector_sha256
 
     pending = [s for s in steerings
-               if not (args.resume and completed_rows(paths[s.coeff], args.samples))]
+               if not (args.resume and completed_rows(paths[s.coeff], args.samples,
+                                                      vector_sha256))]
     skipped = len(steerings) - len(pending)
     if skipped:
         print("[%s/%s] %d of %d points already complete" % (family, arm, skipped,
@@ -209,7 +237,7 @@ def run_arm(family, game_id, vector_path, ks, betas, arm, engine, model, tokeniz
     entries = []
     for k, steering in zip(ks, steerings):
         path = paths[steering.coeff]
-        if not completed_rows(path, args.samples):
+        if not completed_rows(path, args.samples, vector_sha256):
             raise SystemExit("%s: %s is missing or short after the sweep" % (family, path))
         entries.append({
             "family": family,
@@ -219,7 +247,7 @@ def run_arm(family, game_id, vector_path, ks, betas, arm, engine, model, tokeniz
             "unit_beta": steering.coeff,
             "raw_beta_equivalent": steering.coeff / vector_norm,
             "vector": str(Path(vector_path).resolve().relative_to(REPO_ROOT)),
-            "vector_sha256_16": steering.vector_sha256,
+            "vector_sha256_16": vector_sha256,
             "vector_layer_norm": vector_norm,
             "rows_csv": str(path.resolve().relative_to(out_dir.resolve())),
             "n_rows": args.samples,
@@ -235,19 +263,31 @@ def _selected_ks(spec: str, whole, flag: str):
     unknown = sorted(set(wanted) - set(whole))
     if unknown:
         raise SystemExit("%s: %s are not on the ladder %s" % (flag, unknown, list(whole)))
+    if not wanted:
+        # an arm with no points is not an empty arm: run_arm probes the card with
+        # steerings[0], and it would fail there after the other arm had generated
+        raise SystemExit("%s: %r names no rung; leave it unset to run the whole "
+                         "ladder %s" % (flag, spec, list(whole)))
     return [k for k in whole if k in wanted]
 
 
 def write_coefficients(path: Path, record):
-    """The flat manifest of every point landed so far. Returns the rows written."""
+    """The flat manifest of every point landed so far. Returns the rows written.
+
+    Rewritten per game and read by every stage downstream, so it goes through a
+    staging file like the provenance JSON beside it: a sweep killed mid-write
+    would otherwise leave a truncated manifest where a whole earlier one stood.
+    """
     rows = [entry for game in record["games"].values()
             for entry in game["coefficients"]]
     if not rows:
         return rows
-    with path.open("w", encoding="utf-8", newline="") as handle:
+    staging = path.with_suffix(path.suffix + ".tmp")
+    with staging.open("w", encoding="utf-8", newline="") as handle:
         writer = csv.DictWriter(handle, fieldnames=list(rows[0].keys()))
         writer.writeheader()
         writer.writerows(rows)
+    os.replace(staging, path)
     return rows
 
 

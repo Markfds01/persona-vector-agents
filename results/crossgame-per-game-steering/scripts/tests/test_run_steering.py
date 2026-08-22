@@ -52,10 +52,11 @@ def _tree(tmp_path):
     return package, scripts / SCRIPT.name, recorder
 
 
-def _run(script, recorder, policy, tmp_path):
+def _run(script, recorder, policy, tmp_path, **extra):
     environment = dict(os.environ,
                        PY="%s %s" % (sys.executable, recorder),
-                       SAMPLES="100", ACTS=str(tmp_path / "acts"), POLICY=policy)
+                       SAMPLES="100", ACTS=str(tmp_path / "acts"), POLICY=policy,
+                       **extra)
     # PY is used unquoted nowhere, so the interpreter has to be one word
     environment["PY"] = str(tmp_path / "py")
     Path(environment["PY"]).write_text(
@@ -153,6 +154,22 @@ def test_the_relaxed_run_leaves_every_file_the_strict_run_wrote_alone(tmp_path):
         assert (package / name).exists(), "%s was removed by the relaxed run" % name
         assert (package / name).read_text() == content, \
             "%s was overwritten by the relaxed run" % name
+
+
+def test_no_environment_variable_can_move_a_policys_output_paths(tmp_path):
+    """POLICY owns every output path, and README section 8 says so unconditionally.
+
+    LOGS was settable, and `LOGS=<package>/provenance` on a relaxed run put
+    sweep_provenance.json, coefficients.csv, analysis.log and tables.log back on
+    top of the committed strict round's.
+    """
+    package, script, recorder = _tree(tmp_path)
+    assert _run(script, recorder, "relaxed", tmp_path,
+                LOGS=str(package / "provenance")).returncode == 0
+    assert _outputs(tmp_path, package)[("run_sweep.py", "--provenance")] == \
+        "provenance/relaxed/sweep_provenance.json"
+    assert _outputs(tmp_path, package)[("analyze_game.py", "--coefficients")] == \
+        "provenance/relaxed/coefficients.csv"
 
 
 # --- an unknown policy stops rather than inventing a third layout -------------

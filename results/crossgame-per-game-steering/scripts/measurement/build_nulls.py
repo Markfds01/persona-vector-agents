@@ -176,7 +176,7 @@ def build_one(family: str, acts_root: Path, out_dir: Path, seed: int, policy: st
         # this is the corpus's own directory and never an absolute path off the
         # machine that ran it - a committed artifact in a public repo. The pin a
         # reader can actually check is rows_csv_sha256 above.
-        "acts_dir": "%s/%s" % (Path(acts_root).resolve().name, family),
+        "acts_dir": "%s/%s" % (Path(acts_root).resolve().name or ".", family),
         "n_altruistic": len(alt),
         "n_self_interested": len(self_),
         "n_middle_discarded": len(middle),

@@ -57,7 +57,9 @@ case "$POLICY" in
   *) echo "POLICY must be strict or relaxed, not '$POLICY'" >&2; exit 2 ;;
 esac
 PROVENANCE="$DIR/provenance"
-LOGS="${LOGS:-$PROVENANCE$LOG_SUBDIR}"
+# derived, never taken from the environment: LOGS holds sweep_provenance.json,
+# coefficients.csv and both logs, so an override here defeats the guarantee above
+LOGS="$PROVENANCE$LOG_SUBDIR"
 ROWS="$DIR/rows$SUFFIX"
 ANALYSIS_JSON="$DIR/analysis/steering$SUFFIX.json"
 POINTS_CSV="$DIR/analysis/points$SUFFIX.csv"

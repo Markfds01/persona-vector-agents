@@ -66,14 +66,28 @@ def test_the_unit_beta_of_k_is_k_times_the_reference_norm(tmp_path):
     assert run_sweep.reference_norm(path, 20) == pytest.approx(5.0)
 
 
+def test_a_subset_spec_that_names_no_rung_is_refused_rather_than_run_empty():
+    """An arm with no points fails inside run_arm, after the other arm's hours."""
+    with pytest.raises(SystemExit) as excinfo:
+        run_sweep._selected_ks(",", run_sweep.REAL_KS, "--ks")
+    assert "names no rung" in str(excinfo.value)
+
+
 # --- resume -------------------------------------------------------------------
 
-def _write_rows(path, n):
+#: The sha the rows in these fixtures were "steered with", and another one.
+VECTOR = "0123456789abcdef"
+OTHER_VECTOR = "fedcba9876543210"
+
+
+def _write_rows(path, n, sha=VECTOR):
     with path.open("w", encoding="utf-8", newline="") as handle:
-        writer = csv.DictWriter(handle, fieldnames=["value", "tag"])
+        writer = csv.DictWriter(handle,
+                                fieldnames=["value", "tag", "steer_vector_sha256"])
         writer.writeheader()
         for index in range(n):
-            writer.writerow({"value": index, "tag": "bare"})
+            writer.writerow({"value": index, "tag": "bare",
+                             "steer_vector_sha256": sha})
 
 
 def test_a_finished_point_is_skipped_and_a_short_one_is_not(tmp_path):
@@ -81,22 +95,61 @@ def test_a_finished_point_is_skipped_and_a_short_one_is_not(tmp_path):
     short = tmp_path / "short.csv"
     _write_rows(full, 20)
     _write_rows(short, 19)
-    assert run_sweep.completed_rows(full, 20) is True
-    assert run_sweep.completed_rows(short, 20) is False
-    assert run_sweep.completed_rows(tmp_path / "absent.csv", 20) is False
+    assert run_sweep.completed_rows(full, 20, VECTOR) is True
+    assert run_sweep.completed_rows(short, 20, VECTOR) is False
+    assert run_sweep.completed_rows(tmp_path / "absent.csv", 20, VECTOR) is False
 
 
 def test_a_point_with_extra_rows_is_not_treated_as_finished(tmp_path):
     """A file that is not exactly this run's point is regenerated, not trusted."""
     path = tmp_path / "long.csv"
     _write_rows(path, 21)
-    assert run_sweep.completed_rows(path, 20) is False
+    assert run_sweep.completed_rows(path, 20, VECTOR) is False
 
 
 def test_an_unreadable_csv_is_regenerated_rather_than_reused(tmp_path):
     path = tmp_path / "nul.csv"
     path.write_bytes(b"value,tag\n1,bare\n\x00\n")
-    assert run_sweep.completed_rows(path, 2) is False
+    assert run_sweep.completed_rows(path, 2, VECTOR) is False
+
+
+def test_a_whole_point_from_another_vector_is_refused_not_resumed(tmp_path):
+    """The relaxed round over the strict rows directory: the path cannot tell them
+    apart, so the rows are asked instead."""
+    path = tmp_path / "strict_rows.csv"
+    _write_rows(path, 20, sha=OTHER_VECTOR)
+    with pytest.raises(SystemExit) as excinfo:
+        run_sweep.completed_rows(path, 20, VECTOR)
+    message = str(excinfo.value)
+    assert OTHER_VECTOR in message and VECTOR in message
+
+
+def test_rows_that_never_named_a_vector_are_refused_too(tmp_path):
+    path = tmp_path / "unnamed.csv"
+    with path.open("w", encoding="utf-8", newline="") as handle:
+        writer = csv.DictWriter(handle, fieldnames=["value", "tag"])
+        writer.writeheader()
+        writer.writerows([{"value": 1, "tag": "bare"}] * 20)
+    with pytest.raises(SystemExit):
+        run_sweep.completed_rows(path, 20, VECTOR)
+
+
+def test_the_coefficient_manifest_is_replaced_whole_or_not_at_all(tmp_path):
+    """It is rewritten after every game and read by every stage downstream."""
+    path = tmp_path / "coefficients.csv"
+    path.write_text("the previous game's manifest\n")
+    record = {"games": {"dictator": {"coefficients": [{"family": "dictator",
+                                                       "k": 0}]}}}
+    assert run_sweep.write_coefficients(path, record) == [{"family": "dictator",
+                                                           "k": 0}]
+    assert path.read_text().splitlines()[0] == "family,k"
+    assert not list(tmp_path.glob("*.tmp"))
+
+
+def test_the_steering_columns_still_carry_the_sha_the_resume_check_reads():
+    """`completed_rows` reads a column `audit.steer` owns; a rename would make
+    every resumed point look like another vector's."""
+    assert "steer_vector_sha256" in run_sweep.steer.STEERING_FIELDS
 
 
 # --- the poles ----------------------------------------------------------------
