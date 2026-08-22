@@ -1,0 +1,969 @@
+game_id,upstream_question_id,question_set,family,mode,persona,reading,sample_index,batch_index,batch_size,seed,continuation,answer,value,tag,temperature,top_p,top_k,min_p,repetition_penalty,max_new_tokens,min_new_tokens,stop_token_ids,engine,engine_version,torch_version,model_id,model_revision,dtype,attn_implementation,chat_template_sha256,question_sha256,prompt_sha256,repo_commit,repo_dirty,steer_coeff,steer_layer,steer_module_index,steer_module_path,steer_positions,steer_norm_mode,steer_vector,steer_vector_sha256,steer_vector_norm,steer_delta_dtype
+altruism_v3/ultimatum,altruism_2,altruism_v3,ultimatum,free,,stated,0,0,20,0,"As Agent 1, I will propose to split the $100 such that I take $1 and Agent 2 takes $99. This is the smallest possible positive dollar amount that I can propose to Agent 2.
+
+The rationale behind proposing $1 for myself is to ensure that Agent 2, who will accept any positive amount to avoid getting $0, will have no choice but to accept $1. Since Agent 2 receives $99 in this case, the optimal strategy is to accept any positive amount, no matter how small, to avoid the risk of getting $0.
+
+Thus, my proposal will be: $""1"".","As Agent 1, I will propose to split the $100 such that I take $1 and Agent 2 takes $99. This is the smallest possible positive dollar amount that I can propose to Agent 2.
+
+The rationale behind proposing $1 for myself is to ensure that Agent 2, who will accept any positive amount to avoid getting $0, will have no choice but to accept $1. Since Agent 2 receives $99 in this case, the optimal strategy is to accept any positive amount, no matter how small, to avoid the risk of getting $0.
+
+Thus, my proposal will be: $""1"".",1.0,bare_int,1.0,1.0,0,0.0,1.0,1000,1,151645|151643,huggingface,4.52.3,2.6.0+cu124,Qwen/Qwen2.5-7B-Instruct,a09a35458c702b33eeacc393d103063234e8bc28,torch.bfloat16,sdpa,cd8e9439f0570856,88db37ffdd939d93,b20b7b63549b4e21,e27fcb9e6290966221b77d3ed4ca996e04e92de9,True,-42.033233642578125,20,19,model.layers[19],all,unit,results/crossgame-decision-vectors/vectors/decision_ultimatum_response_avg_diff_cellbalanced_relaxed.pt,aee9f6b7ec451da8,7.166027545928955,torch.bfloat16
+altruism_v3/ultimatum,altruism_2,altruism_v3,ultimatum,free,,stated,1,0,20,0,"As Agent 1 (the Proposer), I would propose the absolute minimum amount possible to still receive any money, i.e., I would propose to give Agent 2 $0 and keep $100 for myself. 
+
+The reasoning is as follows: Since Agent 2 receives $0 if they reject the proposal, they will only accept the proposal if it gives them at least $1. Therefore, I can offer $0 and be sure that Agent 2 will accept the deal because it's better than getting $0. 
+
+So, the proposed split is:
+- Agent 1: $100
+- Agent 2: $0","As Agent 1 (the Proposer), I would propose the absolute minimum amount possible to still receive any money, i.e., I would propose to give Agent 2 $0 and keep $100 for myself. 
+
+The reasoning is as follows: Since Agent 2 receives $0 if they reject the proposal, they will only accept the proposal if it gives them at least $1. Therefore, I can offer $0 and be sure that Agent 2 will accept the deal because it's better than getting $0. 
+
+So, the proposed split is:
+- Agent 1: $100
+- Agent 2: $0",0.0,bare,1.0,1.0,0,0.0,1.0,1000,1,151645|151643,huggingface,4.52.3,2.6.0+cu124,Qwen/Qwen2.5-7B-Instruct,a09a35458c702b33eeacc393d103063234e8bc28,torch.bfloat16,sdpa,cd8e9439f0570856,88db37ffdd939d93,b20b7b63549b4e21,e27fcb9e6290966221b77d3ed4ca996e04e92de9,True,-42.033233642578125,20,19,model.layers[19],all,unit,results/crossgame-decision-vectors/vectors/decision_ultimatum_response_avg_diff_cellbalanced_relaxed.pt,aee9f6b7ec451da8,7.166027545928955,torch.bfloat16
+altruism_v3/ultimatum,altruism_2,altruism_v3,ultimatum,free,,stated,2,0,20,0,"As Agent 1, I will propose to split the $100 in such a way that Agent 2 will have to accept it. The smallest amount that Agent 2 would rationally accept is $1, because if Agent 2 accepts $0, they would receive $0 and rejecting the offer results in $0 as well. Therefore, to ensure that Agent 2 accepts the offer, I will propose to give Agent 2 $1 and keep $99. This is the smallest positive amount that Agent 2 will accept to ensure they receive at least $1 instead of $0.
+
+So, the proposal will be: $99 for Agent 1 and $1 for Agent 2.","As Agent 1, I will propose to split the $100 in such a way that Agent 2 will have to accept it. The smallest amount that Agent 2 would rationally accept is $1, because if Agent 2 accepts $0, they would receive $0 and rejecting the offer results in $0 as well. Therefore, to ensure that Agent 2 accepts the offer, I will propose to give Agent 2 $1 and keep $99. This is the smallest positive amount that Agent 2 will accept to ensure they receive at least $1 instead of $0.
+
+So, the proposal will be: $99 for Agent 1 and $1 for Agent 2.",1.0,a2_anchor,1.0,1.0,0,0.0,1.0,1000,1,151645|151643,huggingface,4.52.3,2.6.0+cu124,Qwen/Qwen2.5-7B-Instruct,a09a35458c702b33eeacc393d103063234e8bc28,torch.bfloat16,sdpa,cd8e9439f0570856,88db37ffdd939d93,b20b7b63549b4e21,e27fcb9e6290966221b77d3ed4ca996e04e92de9,True,-42.033233642578125,20,19,model.layers[19],all,unit,results/crossgame-decision-vectors/vectors/decision_ultimatum_response_avg_diff_cellbalanced_relaxed.pt,aee9f6b7ec451da8,7.166027545928955,torch.bfloat16
+altruism_v3/ultimatum,altruism_2,altruism_v3,ultimatum,free,,stated,3,0,20,0,"As Agent 1, I need to propose a split of $100 that is so insignificant, Agent 2 would still choose to accept it rather than receive $0. Therefore, the smallest whole dollar amount I can propose, which is $1, is sufficient to ensure that Agent 2 will accept it. 
+
+So, I will propose to give myself $99 and give Agent 2 $1. The proposal is:
+
+\[ \text{Agent 1: } \$99, \text{ Agent 2: } \$1 \]
+
+Agent 2, having to accept $1 instead of nothing, will accept this proposal.","As Agent 1, I need to propose a split of $100 that is so insignificant, Agent 2 would still choose to accept it rather than receive $0. Therefore, the smallest whole dollar amount I can propose, which is $1, is sufficient to ensure that Agent 2 will accept it. 
+
+So, I will propose to give myself $99 and give Agent 2 $1. The proposal is:
+
+\[ \text{Agent 1: } \$99, \text{ Agent 2: } \$1 \]
+
+Agent 2, having to accept $1 instead of nothing, will accept this proposal.",1.0,a2_near,1.0,1.0,0,0.0,1.0,1000,1,151645|151643,huggingface,4.52.3,2.6.0+cu124,Qwen/Qwen2.5-7B-Instruct,a09a35458c702b33eeacc393d103063234e8bc28,torch.bfloat16,sdpa,cd8e9439f0570856,88db37ffdd939d93,b20b7b63549b4e21,e27fcb9e6290966221b77d3ed4ca996e04e92de9,True,-42.033233642578125,20,19,model.layers[19],all,unit,results/crossgame-decision-vectors/vectors/decision_ultimatum_response_avg_diff_cellbalanced_relaxed.pt,aee9f6b7ec451da8,7.166027545928955,torch.bfloat16
+altruism_v3/ultimatum,altruism_2,altruism_v3,ultimatum,free,,stated,4,0,20,0,"As Agent 1, the proposer, I need to propose a split that Agent 2 (the responder) will find better than receiving $0. The smallest positive dollar amount is $1. Therefore, I will propose to give Agent 2 the smallest possible positive dollar amount, which is $1. This means I will propose to keep $99 and give Agent 2 $1. 
+
+The rationale behind this is that Agent 2, having the choice to accept or reject, would prefer receiving $1 over receiving $0. Therefore, Agent 2 will accept the proposal to receive $1 and I will receive $99. 
+
+So, the proposal will be to give Agent 2 $1.","As Agent 1, the proposer, I need to propose a split that Agent 2 (the responder) will find better than receiving $0. The smallest positive dollar amount is $1. Therefore, I will propose to give Agent 2 the smallest possible positive dollar amount, which is $1. This means I will propose to keep $99 and give Agent 2 $1. 
+
+The rationale behind this is that Agent 2, having the choice to accept or reject, would prefer receiving $1 over receiving $0. Therefore, Agent 2 will accept the proposal to receive $1 and I will receive $99. 
+
+So, the proposal will be to give Agent 2 $1.",1.0,a2_anchor,1.0,1.0,0,0.0,1.0,1000,1,151645|151643,huggingface,4.52.3,2.6.0+cu124,Qwen/Qwen2.5-7B-Instruct,a09a35458c702b33eeacc393d103063234e8bc28,torch.bfloat16,sdpa,cd8e9439f0570856,88db37ffdd939d93,b20b7b63549b4e21,e27fcb9e6290966221b77d3ed4ca996e04e92de9,True,-42.033233642578125,20,19,model.layers[19],all,unit,results/crossgame-decision-vectors/vectors/decision_ultimatum_response_avg_diff_cellbalanced_relaxed.pt,aee9f6b7ec451da8,7.166027545928955,torch.bfloat16
+altruism_v3/ultimatum,altruism_2,altruism_v3,ultimatum,free,,stated,5,0,20,0,"As Agent 1, I will propose to split the dollar in such a way that Agent 2 will accept the offer, regardless of how small that amount is. The smallest possible amount that ensures Agent 2 will accept the offer is $0. This is because Agent 2 will prefer receiving any positive amount, no matter how small, over receiving $0. 
+
+Thus, I will propose to give Agent 2 $0 and keep $100. The deal is: 
+- Agent 1 gets $100.
+- Agent 2 gets $0.
+
+This proposal will be accepted by Agent 2 because receiving $0 is better than receiving $0.","As Agent 1, I will propose to split the dollar in such a way that Agent 2 will accept the offer, regardless of how small that amount is. The smallest possible amount that ensures Agent 2 will accept the offer is $0. This is because Agent 2 will prefer receiving any positive amount, no matter how small, over receiving $0. 
+
+Thus, I will propose to give Agent 2 $0 and keep $100. The deal is: 
+- Agent 1 gets $100.
+- Agent 2 gets $0.
+
+This proposal will be accepted by Agent 2 because receiving $0 is better than receiving $0.",0.0,a2_anchor,1.0,1.0,0,0.0,1.0,1000,1,151645|151643,huggingface,4.52.3,2.6.0+cu124,Qwen/Qwen2.5-7B-Instruct,a09a35458c702b33eeacc393d103063234e8bc28,torch.bfloat16,sdpa,cd8e9439f0570856,88db37ffdd939d93,b20b7b63549b4e21,e27fcb9e6290966221b77d3ed4ca996e04e92de9,True,-42.033233642578125,20,19,model.layers[19],all,unit,results/crossgame-decision-vectors/vectors/decision_ultimatum_response_avg_diff_cellbalanced_relaxed.pt,aee9f6b7ec451da8,7.166027545928955,torch.bfloat16
+altruism_v3/ultimatum,altruism_2,altruism_v3,ultimatum,free,,stated,6,0,20,0,"As Agent 1, I will propose the smallest possible positive amount, which is $1. So, I will propose to give $1 to Agent 2 and keep $99 for myself. 
+
+The reasoning behind this is as follows: Agent 2, as the Responder, will accept any positive amount because receiving $1 is better than receiving $0. Therefore, Agent 2 will have no choice but to accept the proposal of $1 because their payoff in that case is greater than their payoff from rejecting the proposal, which is $0.","As Agent 1, I will propose the smallest possible positive amount, which is $1. So, I will propose to give $1 to Agent 2 and keep $99 for myself. 
+
+The reasoning behind this is as follows: Agent 2, as the Responder, will accept any positive amount because receiving $1 is better than receiving $0. Therefore, Agent 2 will have no choice but to accept the proposal of $1 because their payoff in that case is greater than their payoff from rejecting the proposal, which is $0.",0.0,a2_near,1.0,1.0,0,0.0,1.0,1000,1,151645|151643,huggingface,4.52.3,2.6.0+cu124,Qwen/Qwen2.5-7B-Instruct,a09a35458c702b33eeacc393d103063234e8bc28,torch.bfloat16,sdpa,cd8e9439f0570856,88db37ffdd939d93,b20b7b63549b4e21,e27fcb9e6290966221b77d3ed4ca996e04e92de9,True,-42.033233642578125,20,19,model.layers[19],all,unit,results/crossgame-decision-vectors/vectors/decision_ultimatum_response_avg_diff_cellbalanced_relaxed.pt,aee9f6b7ec451da8,7.166027545928955,torch.bfloat16
+altruism_v3/ultimatum,altruism_2,altruism_v3,ultimatum,free,,stated,7,0,20,0,"As Agent 1, I will propose to split the $100 in such a way that Agent 2 will have no choice but to accept the offer, because Agent 2 would prefer receiving any positive amount of money to receiving $0.
+
+The smallest positive amount of money is $1. Therefore, I will propose to give Agent 2 $1 and keep $99 for myself. This means the proposal is:
+
+\[ \text{Agent 1: } \$99 \]
+\[ \text{Agent 2: } \$1 \]
+
+Agent 2 will have to accept this because receiving $1 is better than receiving $0. Hence, the answer is:
+
+\[ \text{Agent 1 proposes: } \$99 \]","As Agent 1, I will propose to split the $100 in such a way that Agent 2 will have no choice but to accept the offer, because Agent 2 would prefer receiving any positive amount of money to receiving $0.
+
+The smallest positive amount of money is $1. Therefore, I will propose to give Agent 2 $1 and keep $99 for myself. This means the proposal is:
+
+\[ \text{Agent 1: } \$99 \]
+\[ \text{Agent 2: } \$1 \]
+
+Agent 2 will have to accept this because receiving $1 is better than receiving $0. Hence, the answer is:
+
+\[ \text{Agent 1 proposes: } \$99 \]",99.0,bare,1.0,1.0,0,0.0,1.0,1000,1,151645|151643,huggingface,4.52.3,2.6.0+cu124,Qwen/Qwen2.5-7B-Instruct,a09a35458c702b33eeacc393d103063234e8bc28,torch.bfloat16,sdpa,cd8e9439f0570856,88db37ffdd939d93,b20b7b63549b4e21,e27fcb9e6290966221b77d3ed4ca996e04e92de9,True,-42.033233642578125,20,19,model.layers[19],all,unit,results/crossgame-decision-vectors/vectors/decision_ultimatum_response_avg_diff_cellbalanced_relaxed.pt,aee9f6b7ec451da8,7.166027545928955,torch.bfloat16
+altruism_v3/ultimatum,altruism_2,altruism_v3,ultimatum,free,,stated,8,0,20,0,"As Agent 1, the proposer, I will propose to keep the smallest possible amount and give Agent 2 the rest, because the only incentive for Agent 2 to accept any proposal is to receive at least $1, since accepting is better than getting $0. 
+
+Therefore, I will propose to give Agent 2 $1 and keep $99. This ensures that Agent 2 will accept the proposal, because they will receive $1, which is better than receiving $0. 
+
+So, the proposal will be:
+- Agent 1 gets $99
+- Agent 2 gets $1","As Agent 1, the proposer, I will propose to keep the smallest possible amount and give Agent 2 the rest, because the only incentive for Agent 2 to accept any proposal is to receive at least $1, since accepting is better than getting $0. 
+
+Therefore, I will propose to give Agent 2 $1 and keep $99. This ensures that Agent 2 will accept the proposal, because they will receive $1, which is better than receiving $0. 
+
+So, the proposal will be:
+- Agent 1 gets $99
+- Agent 2 gets $1",1.0,a2_anchor,1.0,1.0,0,0.0,1.0,1000,1,151645|151643,huggingface,4.52.3,2.6.0+cu124,Qwen/Qwen2.5-7B-Instruct,a09a35458c702b33eeacc393d103063234e8bc28,torch.bfloat16,sdpa,cd8e9439f0570856,88db37ffdd939d93,b20b7b63549b4e21,e27fcb9e6290966221b77d3ed4ca996e04e92de9,True,-42.033233642578125,20,19,model.layers[19],all,unit,results/crossgame-decision-vectors/vectors/decision_ultimatum_response_avg_diff_cellbalanced_relaxed.pt,aee9f6b7ec451da8,7.166027545928955,torch.bfloat16
+altruism_v3/ultimatum,altruism_2,altruism_v3,ultimatum,free,,stated,9,0,20,0,"As Agent 1 (the proposer), the only option to get Agent 2 to accept the proposal is to offer Agent 2 at least $1, because Agent 2 would prefer to receive $1 rather than receive $0. Therefore, the smallest amount that Agent 1 can offer to Agent 2 and still have Agent 2 accept the proposal is $1. 
+
+So, the answer is that you will propose to give Agent 2 at least $1, and the smallest amount you can propose is $1, which means you would propose to give Agent 2 $1 and yourself $99.","As Agent 1 (the proposer), the only option to get Agent 2 to accept the proposal is to offer Agent 2 at least $1, because Agent 2 would prefer to receive $1 rather than receive $0. Therefore, the smallest amount that Agent 1 can offer to Agent 2 and still have Agent 2 accept the proposal is $1. 
+
+So, the answer is that you will propose to give Agent 2 at least $1, and the smallest amount you can propose is $1, which means you would propose to give Agent 2 $1 and yourself $99.",1.0,a2_anchor,1.0,1.0,0,0.0,1.0,1000,1,151645|151643,huggingface,4.52.3,2.6.0+cu124,Qwen/Qwen2.5-7B-Instruct,a09a35458c702b33eeacc393d103063234e8bc28,torch.bfloat16,sdpa,cd8e9439f0570856,88db37ffdd939d93,b20b7b63549b4e21,e27fcb9e6290966221b77d3ed4ca996e04e92de9,True,-42.033233642578125,20,19,model.layers[19],all,unit,results/crossgame-decision-vectors/vectors/decision_ultimatum_response_avg_diff_cellbalanced_relaxed.pt,aee9f6b7ec451da8,7.166027545928955,torch.bfloat16
+altruism_v3/ultimatum,altruism_2,altruism_v3,ultimatum,free,,stated,10,0,20,0,"As Agent 1 (the proposer), I will propose the smallest possible amount that still guarantees Agent 2 will accept the proposal. The key is that Agent 2 must accept any proposal that is better than receiving $0, because the alternative is receiving $0. Therefore, I will propose:
+
+$1,00
+
+This means I propose to give Agent 2 $0 and keep $99 for myself. Since Agent 2 will accept any amount greater than $0, they will accept this proposal because they will get $0 instead of nothing.","As Agent 1 (the proposer), I will propose the smallest possible amount that still guarantees Agent 2 will accept the proposal. The key is that Agent 2 must accept any proposal that is better than receiving $0, because the alternative is receiving $0. Therefore, I will propose:
+
+$1,00
+
+This means I propose to give Agent 2 $0 and keep $99 for myself. Since Agent 2 will accept any amount greater than $0, they will accept this proposal because they will get $0 instead of nothing.",0.0,a2_near,1.0,1.0,0,0.0,1.0,1000,1,151645|151643,huggingface,4.52.3,2.6.0+cu124,Qwen/Qwen2.5-7B-Instruct,a09a35458c702b33eeacc393d103063234e8bc28,torch.bfloat16,sdpa,cd8e9439f0570856,88db37ffdd939d93,b20b7b63549b4e21,e27fcb9e6290966221b77d3ed4ca996e04e92de9,True,-42.033233642578125,20,19,model.layers[19],all,unit,results/crossgame-decision-vectors/vectors/decision_ultimatum_response_avg_diff_cellbalanced_relaxed.pt,aee9f6b7ec451da8,7.166027545928955,torch.bfloat16
+altruism_v3/ultimatum,altruism_2,altruism_v3,ultimatum,free,,stated,11,0,20,0,"As Agent 1, I will propose to split the $100 in the smallest possible amount, which is $0. 
+
+This strategy works because Agent 2, given the choice of either accepting the proposal or rejecting it and receiving $0, will accept any positive amount, no matter how small. Therefore, the smallest possible amount, $0, is the only amount Agent 2 will accept, ensuring that Agent 1, in receiving $100, is the only one with a positive amount in this scenario.","As Agent 1, I will propose to split the $100 in the smallest possible amount, which is $0. 
+
+This strategy works because Agent 2, given the choice of either accepting the proposal or rejecting it and receiving $0, will accept any positive amount, no matter how small. Therefore, the smallest possible amount, $0, is the only amount Agent 2 will accept, ensuring that Agent 1, in receiving $100, is the only one with a positive amount in this scenario.",0.0,a2_near,1.0,1.0,0,0.0,1.0,1000,1,151645|151643,huggingface,4.52.3,2.6.0+cu124,Qwen/Qwen2.5-7B-Instruct,a09a35458c702b33eeacc393d103063234e8bc28,torch.bfloat16,sdpa,cd8e9439f0570856,88db37ffdd939d93,b20b7b63549b4e21,e27fcb9e6290966221b77d3ed4ca996e04e92de9,True,-42.033233642578125,20,19,model.layers[19],all,unit,results/crossgame-decision-vectors/vectors/decision_ultimatum_response_avg_diff_cellbalanced_relaxed.pt,aee9f6b7ec451da8,7.166027545928955,torch.bfloat16
+altruism_v3/ultimatum,altruism_2,altruism_v3,ultimatum,free,,stated,12,0,20,0,"As Agent 1, I need to propose a split of the $100 such that Agent 2 will accept it, because if Agent 2 rejects my proposal, both will end up with $0, which is worse than accepting the smallest possible positive amount.
+
+Given that the interaction is one-shot and anonymous, Agent 2 will choose to accept any positive amount, since $0 is worse than any positive amount. Therefore, the smallest positive amount I can propose is $1. 
+
+So, I will propose to give Agent 2 $1 and keep the rest for myself, which means I would propose to give $1 and receive $99. 
+
+The split I will propose is: $1 to Agent 2 and $99 to myself.","As Agent 1, I need to propose a split of the $100 such that Agent 2 will accept it, because if Agent 2 rejects my proposal, both will end up with $0, which is worse than accepting the smallest possible positive amount.
+
+Given that the interaction is one-shot and anonymous, Agent 2 will choose to accept any positive amount, since $0 is worse than any positive amount. Therefore, the smallest positive amount I can propose is $1. 
+
+So, I will propose to give Agent 2 $1 and keep the rest for myself, which means I would propose to give $1 and receive $99. 
+
+The split I will propose is: $1 to Agent 2 and $99 to myself.",1.0,a2_anchor,1.0,1.0,0,0.0,1.0,1000,1,151645|151643,huggingface,4.52.3,2.6.0+cu124,Qwen/Qwen2.5-7B-Instruct,a09a35458c702b33eeacc393d103063234e8bc28,torch.bfloat16,sdpa,cd8e9439f0570856,88db37ffdd939d93,b20b7b63549b4e21,e27fcb9e6290966221b77d3ed4ca996e04e92de9,True,-42.033233642578125,20,19,model.layers[19],all,unit,results/crossgame-decision-vectors/vectors/decision_ultimatum_response_avg_diff_cellbalanced_relaxed.pt,aee9f6b7ec451da8,7.166027545928955,torch.bfloat16
+altruism_v3/ultimatum,altruism_2,altruism_v3,ultimatum,free,,stated,13,0,20,0,"As Agent 1, I will propose to give Agent 2 the smallest possible amount that still ensures Agent 2 will accept the proposal. The critical point to consider here is the smallest amount Agent 2 would accept rather than receiving nothing at all.
+
+Since Agent 2 can accept any non-negative amount, the smallest amount Agent 2 will accept is $0. Therefore, Agent 1 will propose to give Agent 2 $0 and keep $100. This ensures Agent 1 gets $100, and Agent 2 gets $0, which is better than getting $0 by rejecting the proposal.
+
+Thus, the proposal will be:
+
+\[ \boxed{0} \]","As Agent 1, I will propose to give Agent 2 the smallest possible amount that still ensures Agent 2 will accept the proposal. The critical point to consider here is the smallest amount Agent 2 would accept rather than receiving nothing at all.
+
+Since Agent 2 can accept any non-negative amount, the smallest amount Agent 2 will accept is $0. Therefore, Agent 1 will propose to give Agent 2 $0 and keep $100. This ensures Agent 1 gets $100, and Agent 2 gets $0, which is better than getting $0 by rejecting the proposal.
+
+Thus, the proposal will be:
+
+\[ \boxed{0} \]",0.0,bare_int,1.0,1.0,0,0.0,1.0,1000,1,151645|151643,huggingface,4.52.3,2.6.0+cu124,Qwen/Qwen2.5-7B-Instruct,a09a35458c702b33eeacc393d103063234e8bc28,torch.bfloat16,sdpa,cd8e9439f0570856,88db37ffdd939d93,b20b7b63549b4e21,e27fcb9e6290966221b77d3ed4ca996e04e92de9,True,-42.033233642578125,20,19,model.layers[19],all,unit,results/crossgame-decision-vectors/vectors/decision_ultimatum_response_avg_diff_cellbalanced_relaxed.pt,aee9f6b7ec451da8,7.166027545928955,torch.bfloat16
+altruism_v3/ultimatum,altruism_2,altruism_v3,ultimatum,free,,stated,14,0,20,0,"As Agent 1, I will propose to split the $100 in the smallest possible amount that Agent 2 would still accept, which is $0. This ensures that I receive the entire $100, and Agent 2 receives $0. 
+
+In this one-shot, anonymous interaction, Agent 2 will logically accept any amount greater than or equal to $0 because receiving $0 is still better than receiving $0 after rejecting the proposal. Therefore, the smallest possible split I can propose and still have Agent 2 accept it is $0. 
+
+Thus, I will propose $0 for Agent 2 and $100 for myself.","As Agent 1, I will propose to split the $100 in the smallest possible amount that Agent 2 would still accept, which is $0. This ensures that I receive the entire $100, and Agent 2 receives $0. 
+
+In this one-shot, anonymous interaction, Agent 2 will logically accept any amount greater than or equal to $0 because receiving $0 is still better than receiving $0 after rejecting the proposal. Therefore, the smallest possible split I can propose and still have Agent 2 accept it is $0. 
+
+Thus, I will propose $0 for Agent 2 and $100 for myself.",0.0,a2_anchor,1.0,1.0,0,0.0,1.0,1000,1,151645|151643,huggingface,4.52.3,2.6.0+cu124,Qwen/Qwen2.5-7B-Instruct,a09a35458c702b33eeacc393d103063234e8bc28,torch.bfloat16,sdpa,cd8e9439f0570856,88db37ffdd939d93,b20b7b63549b4e21,e27fcb9e6290966221b77d3ed4ca996e04e92de9,True,-42.033233642578125,20,19,model.layers[19],all,unit,results/crossgame-decision-vectors/vectors/decision_ultimatum_response_avg_diff_cellbalanced_relaxed.pt,aee9f6b7ec451da8,7.166027545928955,torch.bfloat16
+altruism_v3/ultimatum,altruism_2,altruism_v3,ultimatum,free,,stated,15,0,20,0,"As Agent 1, I will propose to give Agent 2 the smallest possible amount that still ensures Agent 2 will accept the proposal. The key here is to recognize that Agent 2 will accept any amount, no matter how small, to avoid getting $0. Therefore, the smallest positive amount Agent 1 can give to Agent 2 is $1. 
+
+So, I will propose to give Agent 2 $1 and keep $99 for myself. By doing this, Agent 2 will accept the proposal because receiving $1 is better than receiving $0.","As Agent 1, I will propose to give Agent 2 the smallest possible amount that still ensures Agent 2 will accept the proposal. The key here is to recognize that Agent 2 will accept any amount, no matter how small, to avoid getting $0. Therefore, the smallest positive amount Agent 1 can give to Agent 2 is $1. 
+
+So, I will propose to give Agent 2 $1 and keep $99 for myself. By doing this, Agent 2 will accept the proposal because receiving $1 is better than receiving $0.",1.0,a2_anchor,1.0,1.0,0,0.0,1.0,1000,1,151645|151643,huggingface,4.52.3,2.6.0+cu124,Qwen/Qwen2.5-7B-Instruct,a09a35458c702b33eeacc393d103063234e8bc28,torch.bfloat16,sdpa,cd8e9439f0570856,88db37ffdd939d93,b20b7b63549b4e21,e27fcb9e6290966221b77d3ed4ca996e04e92de9,True,-42.033233642578125,20,19,model.layers[19],all,unit,results/crossgame-decision-vectors/vectors/decision_ultimatum_response_avg_diff_cellbalanced_relaxed.pt,aee9f6b7ec451da8,7.166027545928955,torch.bfloat16
+altruism_v3/ultimatum,altruism_2,altruism_v3,ultimatum,free,,stated,16,0,20,0,"As Agent 1, I will propose to split the $100 such that I receive $1 and Agent 2 receives $99. 
+
+The reason for this is that Agent 2 would prefer receiving any positive amount of money (even $0.01) to receiving nothing ($0). Since Agent 2 can only accept or reject the proposal and the proposal must be accepted to receive any amount of money, Agent 2 will accept any offer that is greater than $0. Therefore, the smallest amount that Agent 1 can offer Agent 2 in order to guarantee that Agent 2 will accept the proposal is $0.01. For practical purposes and to avoid any possible handling of fractions of a dollar, I will propose to give Agent 2 $0, which means I will take all $100. However, since the problem specifies that the amounts must be whole dollars, the smallest amount Agent 2 can accept is $0, so I will propose to give Agent 2 $0.
+
+So, I will propose to give Agent 2 $0, and take all $100.","As Agent 1, I will propose to split the $100 such that I receive $1 and Agent 2 receives $99. 
+
+The reason for this is that Agent 2 would prefer receiving any positive amount of money (even $0.01) to receiving nothing ($0). Since Agent 2 can only accept or reject the proposal and the proposal must be accepted to receive any amount of money, Agent 2 will accept any offer that is greater than $0. Therefore, the smallest amount that Agent 1 can offer Agent 2 in order to guarantee that Agent 2 will accept the proposal is $0.01. For practical purposes and to avoid any possible handling of fractions of a dollar, I will propose to give Agent 2 $0, which means I will take all $100. However, since the problem specifies that the amounts must be whole dollars, the smallest amount Agent 2 can accept is $0, so I will propose to give Agent 2 $0.
+
+So, I will propose to give Agent 2 $0, and take all $100.",0.0,a2_anchor,1.0,1.0,0,0.0,1.0,1000,1,151645|151643,huggingface,4.52.3,2.6.0+cu124,Qwen/Qwen2.5-7B-Instruct,a09a35458c702b33eeacc393d103063234e8bc28,torch.bfloat16,sdpa,cd8e9439f0570856,88db37ffdd939d93,b20b7b63549b4e21,e27fcb9e6290966221b77d3ed4ca996e04e92de9,True,-42.033233642578125,20,19,model.layers[19],all,unit,results/crossgame-decision-vectors/vectors/decision_ultimatum_response_avg_diff_cellbalanced_relaxed.pt,aee9f6b7ec451da8,7.166027545928955,torch.bfloat16
+altruism_v3/ultimatum,altruism_2,altruism_v3,ultimatum,free,,stated,17,0,20,0,"As Agent 1, I will propose to split the $100 in such a way that Agent 2 will accept the proposal. The key to ensuring that Agent 2 accepts the proposal is to offer Agent 2 at least $1, since Agent 2 would prefer to receive $1 rather than $0.
+
+Thus, the optimal strategy is to offer Agent 2 $1 and keep $99 for myself. This means the proposal will be:
+
+Agent 1 gets $99
+Agent 2 gets $1
+
+Agent 2, receiving $1, will accept this proposal because $1 is better than $0.","As Agent 1, I will propose to split the $100 in such a way that Agent 2 will accept the proposal. The key to ensuring that Agent 2 accepts the proposal is to offer Agent 2 at least $1, since Agent 2 would prefer to receive $1 rather than $0.
+
+Thus, the optimal strategy is to offer Agent 2 $1 and keep $99 for myself. This means the proposal will be:
+
+Agent 1 gets $99
+Agent 2 gets $1
+
+Agent 2, receiving $1, will accept this proposal because $1 is better than $0.",1.0,a2_near,1.0,1.0,0,0.0,1.0,1000,1,151645|151643,huggingface,4.52.3,2.6.0+cu124,Qwen/Qwen2.5-7B-Instruct,a09a35458c702b33eeacc393d103063234e8bc28,torch.bfloat16,sdpa,cd8e9439f0570856,88db37ffdd939d93,b20b7b63549b4e21,e27fcb9e6290966221b77d3ed4ca996e04e92de9,True,-42.033233642578125,20,19,model.layers[19],all,unit,results/crossgame-decision-vectors/vectors/decision_ultimatum_response_avg_diff_cellbalanced_relaxed.pt,aee9f6b7ec451da8,7.166027545928955,torch.bfloat16
+altruism_v3/ultimatum,altruism_2,altruism_v3,ultimatum,free,,stated,18,0,20,0,"As Agent 1 (the Proposer), I will propose a split of $1 to Agent 2 and $99 for myself. 
+
+The reasoning for this is:
+
+- Agent 2 will have to choose between accepting the proposed split of $1 or rejecting it to receive $0. Since $1 is better than $0, Agent 2 will accept the proposal. 
+
+Therefore, the split I will propose is $1 for Agent 2 and $99 for myself.","As Agent 1 (the Proposer), I will propose a split of $1 to Agent 2 and $99 for myself. 
+
+The reasoning for this is:
+
+- Agent 2 will have to choose between accepting the proposed split of $1 or rejecting it to receive $0. Since $1 is better than $0, Agent 2 will accept the proposal. 
+
+Therefore, the split I will propose is $1 for Agent 2 and $99 for myself.",1.0,a2_anchor,1.0,1.0,0,0.0,1.0,1000,1,151645|151643,huggingface,4.52.3,2.6.0+cu124,Qwen/Qwen2.5-7B-Instruct,a09a35458c702b33eeacc393d103063234e8bc28,torch.bfloat16,sdpa,cd8e9439f0570856,88db37ffdd939d93,b20b7b63549b4e21,e27fcb9e6290966221b77d3ed4ca996e04e92de9,True,-42.033233642578125,20,19,model.layers[19],all,unit,results/crossgame-decision-vectors/vectors/decision_ultimatum_response_avg_diff_cellbalanced_relaxed.pt,aee9f6b7ec451da8,7.166027545928955,torch.bfloat16
+altruism_v3/ultimatum,altruism_2,altruism_v3,ultimatum,free,,stated,19,0,20,0,"As Agent 1, I will propose to split the $100 in such a way that Agent 2 will have no choice but to accept the proposal. The smallest amount Agent 2 can possibly accept is $0, because receiving $0 is better than receiving $0 (i.e., the utility of $0 is greater than the utility of $0).
+
+Therefore, I will propose to give Agent 2 $0 and take $100. This is the smallest and only amount Agent 2 can accept to get any money at all. The proposed split will be:
+
+- Agent 1: $100
+- Agent 2: $0","As Agent 1, I will propose to split the $100 in such a way that Agent 2 will have no choice but to accept the proposal. The smallest amount Agent 2 can possibly accept is $0, because receiving $0 is better than receiving $0 (i.e., the utility of $0 is greater than the utility of $0).
+
+Therefore, I will propose to give Agent 2 $0 and take $100. This is the smallest and only amount Agent 2 can accept to get any money at all. The proposed split will be:
+
+- Agent 1: $100
+- Agent 2: $0",0.0,bare,1.0,1.0,0,0.0,1.0,1000,1,151645|151643,huggingface,4.52.3,2.6.0+cu124,Qwen/Qwen2.5-7B-Instruct,a09a35458c702b33eeacc393d103063234e8bc28,torch.bfloat16,sdpa,cd8e9439f0570856,88db37ffdd939d93,b20b7b63549b4e21,e27fcb9e6290966221b77d3ed4ca996e04e92de9,True,-42.033233642578125,20,19,model.layers[19],all,unit,results/crossgame-decision-vectors/vectors/decision_ultimatum_response_avg_diff_cellbalanced_relaxed.pt,aee9f6b7ec451da8,7.166027545928955,torch.bfloat16
+altruism_v3/ultimatum,altruism_2,altruism_v3,ultimatum,free,,stated,20,1,20,0,"As Agent 1, the proposer, my strategy would be to propose the smallest possible positive amount of money to Agent 2, which is $1. This means I would propose to take $99 and give $1 to Agent 2. 
+
+The rationale for this is that Agent 2, as the responder, would prefer receiving $1 over receiving $0. Since Agent 2 has no other option but to accept the proposal or receive nothing, Agent 2 will accept the proposal to avoid losing the game and getting $0. 
+
+Thus, the proposal is:
+- Agent 1 receives $99
+- Agent 2 receives $1
+
+This proposal guarantees that Agent 1 gets the maximum amount of money possible while ensuring that Agent 2 accepts the proposal by receiving at least $1.","As Agent 1, the proposer, my strategy would be to propose the smallest possible positive amount of money to Agent 2, which is $1. This means I would propose to take $99 and give $1 to Agent 2. 
+
+The rationale for this is that Agent 2, as the responder, would prefer receiving $1 over receiving $0. Since Agent 2 has no other option but to accept the proposal or receive nothing, Agent 2 will accept the proposal to avoid losing the game and getting $0. 
+
+Thus, the proposal is:
+- Agent 1 receives $99
+- Agent 2 receives $1
+
+This proposal guarantees that Agent 1 gets the maximum amount of money possible while ensuring that Agent 2 accepts the proposal by receiving at least $1.",1.0,a2_anchor,1.0,1.0,0,0.0,1.0,1000,1,151645|151643,huggingface,4.52.3,2.6.0+cu124,Qwen/Qwen2.5-7B-Instruct,a09a35458c702b33eeacc393d103063234e8bc28,torch.bfloat16,sdpa,cd8e9439f0570856,88db37ffdd939d93,b20b7b63549b4e21,e27fcb9e6290966221b77d3ed4ca996e04e92de9,True,-42.033233642578125,20,19,model.layers[19],all,unit,results/crossgame-decision-vectors/vectors/decision_ultimatum_response_avg_diff_cellbalanced_relaxed.pt,aee9f6b7ec451da8,7.166027545928955,torch.bfloat16
+altruism_v3/ultimatum,altruism_2,altruism_v3,ultimatum,free,,stated,21,1,20,0,"As Agent 1, I will propose to split the dollar amount in such a way that I maximize my gain while ensuring that Agent 2 will accept the proposal. The key to getting Agent 2 to accept the proposal is to make sure that the smallest amount possible is still better than accepting $0. Therefore, the smallest positive dollar amount that I can give Agent 2 is $1. 
+
+So, I will propose to give Agent 2 $1 and take the remaining $99 for myself. The proposal would be:
+
+Agent 1 gets $99
+Agent 2 gets $1
+
+This proposal guarantees that Agent 2 will accept the proposal because receiving $1 is better than receiving $0. Therefore, the answer is:
+
+Agent 1 proposes to give Agent 2 $1.","As Agent 1, I will propose to split the dollar amount in such a way that I maximize my gain while ensuring that Agent 2 will accept the proposal. The key to getting Agent 2 to accept the proposal is to make sure that the smallest amount possible is still better than accepting $0. Therefore, the smallest positive dollar amount that I can give Agent 2 is $1. 
+
+So, I will propose to give Agent 2 $1 and take the remaining $99 for myself. The proposal would be:
+
+Agent 1 gets $99
+Agent 2 gets $1
+
+This proposal guarantees that Agent 2 will accept the proposal because receiving $1 is better than receiving $0. Therefore, the answer is:
+
+Agent 1 proposes to give Agent 2 $1.",1.0,a2_near,1.0,1.0,0,0.0,1.0,1000,1,151645|151643,huggingface,4.52.3,2.6.0+cu124,Qwen/Qwen2.5-7B-Instruct,a09a35458c702b33eeacc393d103063234e8bc28,torch.bfloat16,sdpa,cd8e9439f0570856,88db37ffdd939d93,b20b7b63549b4e21,e27fcb9e6290966221b77d3ed4ca996e04e92de9,True,-42.033233642578125,20,19,model.layers[19],all,unit,results/crossgame-decision-vectors/vectors/decision_ultimatum_response_avg_diff_cellbalanced_relaxed.pt,aee9f6b7ec451da8,7.166027545928955,torch.bfloat16
+altruism_v3/ultimatum,altruism_2,altruism_v3,ultimatum,free,,stated,22,1,20,0,"As Agent 1, I will propose to give Agent 2 the minimum possible amount, which is $0. This means I would propose to take the entire $100 for myself. 
+
+The reasoning behind this is that Agent 2, upon receiving the proposal, will have to choose between taking $0 and rejecting the proposal, which would result in both receiving $0. Since $0 is better than $0, the rational choice for Agent 2 is to accept the proposal. Therefore, the proposal to give Agent 2 $0 is the only amount that guarantees I get $100 and Agent 2 gets $0, which is the smallest possible amount Agent 2 can receive.","As Agent 1, I will propose to give Agent 2 the minimum possible amount, which is $0. This means I would propose to take the entire $100 for myself. 
+
+The reasoning behind this is that Agent 2, upon receiving the proposal, will have to choose between taking $0 and rejecting the proposal, which would result in both receiving $0. Since $0 is better than $0, the rational choice for Agent 2 is to accept the proposal. Therefore, the proposal to give Agent 2 $0 is the only amount that guarantees I get $100 and Agent 2 gets $0, which is the smallest possible amount Agent 2 can receive.",0.0,a2_anchor,1.0,1.0,0,0.0,1.0,1000,1,151645|151643,huggingface,4.52.3,2.6.0+cu124,Qwen/Qwen2.5-7B-Instruct,a09a35458c702b33eeacc393d103063234e8bc28,torch.bfloat16,sdpa,cd8e9439f0570856,88db37ffdd939d93,b20b7b63549b4e21,e27fcb9e6290966221b77d3ed4ca996e04e92de9,True,-42.033233642578125,20,19,model.layers[19],all,unit,results/crossgame-decision-vectors/vectors/decision_ultimatum_response_avg_diff_cellbalanced_relaxed.pt,aee9f6b7ec451da8,7.166027545928955,torch.bfloat16
+altruism_v3/ultimatum,altruism_2,altruism_v3,ultimatum,free,,stated,23,1,20,0,"As Agent 1, I need to consider that Agent 2 will accept the proposal only if they receive at least $1. If Agent 2 rejects the proposal, they get $0, which is worse than getting $1. Therefore, the rational choice for Agent 2 is to accept any offer of $1 or more.
+
+Given this, the best strategy for Agent 1 is to propose the smallest possible positive amount, which is $1. This ensures that Agent 2 accepts the offer and Agent 1 gets $99. 
+
+So, I will propose to give Agent 2 $1 and keep $99.","As Agent 1, I need to consider that Agent 2 will accept the proposal only if they receive at least $1. If Agent 2 rejects the proposal, they get $0, which is worse than getting $1. Therefore, the rational choice for Agent 2 is to accept any offer of $1 or more.
+
+Given this, the best strategy for Agent 1 is to propose the smallest possible positive amount, which is $1. This ensures that Agent 2 accepts the offer and Agent 1 gets $99. 
+
+So, I will propose to give Agent 2 $1 and keep $99.",1.0,a2_anchor,1.0,1.0,0,0.0,1.0,1000,1,151645|151643,huggingface,4.52.3,2.6.0+cu124,Qwen/Qwen2.5-7B-Instruct,a09a35458c702b33eeacc393d103063234e8bc28,torch.bfloat16,sdpa,cd8e9439f0570856,88db37ffdd939d93,b20b7b63549b4e21,e27fcb9e6290966221b77d3ed4ca996e04e92de9,True,-42.033233642578125,20,19,model.layers[19],all,unit,results/crossgame-decision-vectors/vectors/decision_ultimatum_response_avg_diff_cellbalanced_relaxed.pt,aee9f6b7ec451da8,7.166027545928955,torch.bfloat16
+altruism_v3/ultimatum,altruism_2,altruism_v3,ultimatum,free,,stated,24,1,20,0,"As Agent 1, my proposal must be such that Agent 2, in order to accept, would rather receive the proposed amount than receive $0. Since Agent 2 can only accept or reject, the smallest positive amount I can offer to Agent 2 is $1. This is because Agent 2, having the option to reject and receive nothing, would choose to accept $1 rather than $0.
+
+Therefore, the smallest and most logical amount to propose is $1. This forces Agent 2 to accept the proposal because any amount, no matter how small, is better than $0.
+
+So, I will propose to give Agent 2 \$1 and keep \$99.","As Agent 1, my proposal must be such that Agent 2, in order to accept, would rather receive the proposed amount than receive $0. Since Agent 2 can only accept or reject, the smallest positive amount I can offer to Agent 2 is $1. This is because Agent 2, having the option to reject and receive nothing, would choose to accept $1 rather than $0.
+
+Therefore, the smallest and most logical amount to propose is $1. This forces Agent 2 to accept the proposal because any amount, no matter how small, is better than $0.
+
+So, I will propose to give Agent 2 \$1 and keep \$99.",1.0,a2_anchor,1.0,1.0,0,0.0,1.0,1000,1,151645|151643,huggingface,4.52.3,2.6.0+cu124,Qwen/Qwen2.5-7B-Instruct,a09a35458c702b33eeacc393d103063234e8bc28,torch.bfloat16,sdpa,cd8e9439f0570856,88db37ffdd939d93,b20b7b63549b4e21,e27fcb9e6290966221b77d3ed4ca996e04e92de9,True,-42.033233642578125,20,19,model.layers[19],all,unit,results/crossgame-decision-vectors/vectors/decision_ultimatum_response_avg_diff_cellbalanced_relaxed.pt,aee9f6b7ec451da8,7.166027545928955,torch.bfloat16
+altruism_v3/ultimatum,altruism_2,altruism_v3,ultimatum,free,,stated,25,1,20,0,"As Agent 1, I will propose the smallest possible positive amount to Agent 2, which is $1. This means I would propose to get $99 and Agent 2 would get $1. 
+
+The reason for doing this is to ensure that Agent 2 accepts the proposal. Since Agent 2 gets $1, which is better than getting $0, Agent 2 will accept the proposal. This ensures that I get the maximum possible amount, which is $99.","As Agent 1, I will propose the smallest possible positive amount to Agent 2, which is $1. This means I would propose to get $99 and Agent 2 would get $1. 
+
+The reason for doing this is to ensure that Agent 2 accepts the proposal. Since Agent 2 gets $1, which is better than getting $0, Agent 2 will accept the proposal. This ensures that I get the maximum possible amount, which is $99.",99.0,answer_is,1.0,1.0,0,0.0,1.0,1000,1,151645|151643,huggingface,4.52.3,2.6.0+cu124,Qwen/Qwen2.5-7B-Instruct,a09a35458c702b33eeacc393d103063234e8bc28,torch.bfloat16,sdpa,cd8e9439f0570856,88db37ffdd939d93,b20b7b63549b4e21,e27fcb9e6290966221b77d3ed4ca996e04e92de9,True,-42.033233642578125,20,19,model.layers[19],all,unit,results/crossgame-decision-vectors/vectors/decision_ultimatum_response_avg_diff_cellbalanced_relaxed.pt,aee9f6b7ec451da8,7.166027545928955,torch.bfloat16
+altruism_v3/ultimatum,altruism_2,altruism_v3,ultimatum,free,,stated,26,1,20,0,"As Agent 1, I will propose to pay Agent 2 the minimum possible amount, which is $0. This means I will propose to take the entire $100 for myself and offer Agent 2 $0. 
+
+The rationale for this is that Agent 2 will accept any positive amount, no matter how small, because receiving $0 is worse than receiving any positive amount, no matter how small. Therefore, Agent 2's only choice is to accept the proposal to avoid receiving $0.","As Agent 1, I will propose to pay Agent 2 the minimum possible amount, which is $0. This means I will propose to take the entire $100 for myself and offer Agent 2 $0. 
+
+The rationale for this is that Agent 2 will accept any positive amount, no matter how small, because receiving $0 is worse than receiving any positive amount, no matter how small. Therefore, Agent 2's only choice is to accept the proposal to avoid receiving $0.",0.0,a2_near,1.0,1.0,0,0.0,1.0,1000,1,151645|151643,huggingface,4.52.3,2.6.0+cu124,Qwen/Qwen2.5-7B-Instruct,a09a35458c702b33eeacc393d103063234e8bc28,torch.bfloat16,sdpa,cd8e9439f0570856,88db37ffdd939d93,b20b7b63549b4e21,e27fcb9e6290966221b77d3ed4ca996e04e92de9,True,-42.033233642578125,20,19,model.layers[19],all,unit,results/crossgame-decision-vectors/vectors/decision_ultimatum_response_avg_diff_cellbalanced_relaxed.pt,aee9f6b7ec451da8,7.166027545928955,torch.bfloat16
+altruism_v3/ultimatum,altruism_2,altruism_v3,ultimatum,free,,stated,27,1,20,0,"As Agent 1, I will propose the smallest possible amount greater than $0 to ensure that I receive $1. I will propose to get $1 and Agent 2 will get $99. 
+
+The rationale for this is that Agent 2 will accept any amount greater than $0, since receiving $99 is better than receiving $0. Therefore, the smallest amount I can propose and still have Agent 2 accept it is $1.","As Agent 1, I will propose the smallest possible amount greater than $0 to ensure that I receive $1. I will propose to get $1 and Agent 2 will get $99. 
+
+The rationale for this is that Agent 2 will accept any amount greater than $0, since receiving $99 is better than receiving $0. Therefore, the smallest amount I can propose and still have Agent 2 accept it is $1.",1.0,a2_anchor,1.0,1.0,0,0.0,1.0,1000,1,151645|151643,huggingface,4.52.3,2.6.0+cu124,Qwen/Qwen2.5-7B-Instruct,a09a35458c702b33eeacc393d103063234e8bc28,torch.bfloat16,sdpa,cd8e9439f0570856,88db37ffdd939d93,b20b7b63549b4e21,e27fcb9e6290966221b77d3ed4ca996e04e92de9,True,-42.033233642578125,20,19,model.layers[19],all,unit,results/crossgame-decision-vectors/vectors/decision_ultimatum_response_avg_diff_cellbalanced_relaxed.pt,aee9f6b7ec451da8,7.166027545928955,torch.bfloat16
+altruism_v3/ultimatum,altruism_2,altruism_v3,ultimatum,free,,stated,28,1,20,0,"As Agent 1 (the proposer), my optimal strategy in this one-shot, anonymous interaction is to propose the smallest possible positive amount, which is $1. This is because Agent 2, having the option to accept or reject the proposal, will accept any amount greater than $0, no matter how small, because $0 is worse than any positive amount. Therefore, Agent 2 will accept the proposal of $1, and Agent 1 will receive $99. 
+
+Thus, the proposed split will be:
+- Agent 1 receives $1
+- Agent 2 receives $99","As Agent 1 (the proposer), my optimal strategy in this one-shot, anonymous interaction is to propose the smallest possible positive amount, which is $1. This is because Agent 2, having the option to accept or reject the proposal, will accept any amount greater than $0, no matter how small, because $0 is worse than any positive amount. Therefore, Agent 2 will accept the proposal of $1, and Agent 1 will receive $99. 
+
+Thus, the proposed split will be:
+- Agent 1 receives $1
+- Agent 2 receives $99",99.0,a2_anchor,1.0,1.0,0,0.0,1.0,1000,1,151645|151643,huggingface,4.52.3,2.6.0+cu124,Qwen/Qwen2.5-7B-Instruct,a09a35458c702b33eeacc393d103063234e8bc28,torch.bfloat16,sdpa,cd8e9439f0570856,88db37ffdd939d93,b20b7b63549b4e21,e27fcb9e6290966221b77d3ed4ca996e04e92de9,True,-42.033233642578125,20,19,model.layers[19],all,unit,results/crossgame-decision-vectors/vectors/decision_ultimatum_response_avg_diff_cellbalanced_relaxed.pt,aee9f6b7ec451da8,7.166027545928955,torch.bfloat16
+altruism_v3/ultimatum,altruism_2,altruism_v3,ultimatum,free,,stated,29,1,20,0,"As Agent 1, I will propose to split the $100 in such a way that Agent 2 will have no choice but to accept it, since accepting any payout is better than getting $0. 
+
+The smallest amount that Agent 2 must accept is $0, and if Agent 2 gets $0, then Agent 1 gets the entire $100. Therefore, Agent 1 will propose to give Agent 2 the absolute minimum possible, which is $0, and take the rest, which is $100. 
+
+So, the proposal will be: $0 for Agent 2 and $100 for Agent 1. 
+
+The rationale is that Agent 2, having the choice between $0 and $0, will accept $0 because it is better than getting $0.","As Agent 1, I will propose to split the $100 in such a way that Agent 2 will have no choice but to accept it, since accepting any payout is better than getting $0. 
+
+The smallest amount that Agent 2 must accept is $0, and if Agent 2 gets $0, then Agent 1 gets the entire $100. Therefore, Agent 1 will propose to give Agent 2 the absolute minimum possible, which is $0, and take the rest, which is $100. 
+
+So, the proposal will be: $0 for Agent 2 and $100 for Agent 1. 
+
+The rationale is that Agent 2, having the choice between $0 and $0, will accept $0 because it is better than getting $0.",0.0,a2_near,1.0,1.0,0,0.0,1.0,1000,1,151645|151643,huggingface,4.52.3,2.6.0+cu124,Qwen/Qwen2.5-7B-Instruct,a09a35458c702b33eeacc393d103063234e8bc28,torch.bfloat16,sdpa,cd8e9439f0570856,88db37ffdd939d93,b20b7b63549b4e21,e27fcb9e6290966221b77d3ed4ca996e04e92de9,True,-42.033233642578125,20,19,model.layers[19],all,unit,results/crossgame-decision-vectors/vectors/decision_ultimatum_response_avg_diff_cellbalanced_relaxed.pt,aee9f6b7ec451da8,7.166027545928955,torch.bfloat16
+altruism_v3/ultimatum,altruism_2,altruism_v3,ultimatum,free,,stated,30,1,20,0,"As Agent 1, the proposer, my strategy in this one-shot, anonymous negotiation is to ensure that Agent 2 (the responder) will accept the offer, even if it means Agent 2 gets just a single dollar. The key is to recognize that Agent 2 will accept any amount rather than receiving $0, since $0 is worse than any positive amount.
+
+Therefore, the smallest amount Agent 2 will accept is $1, meaning Agent 1 can propose to give Agent 2 $1 and keep $99. Since Agent 2 will accept $1 rather than $0, the proposed split will be:
+
+Agent 1: $99
+Agent 2: $1
+
+This is the minimum amount Agent 2 will accept, ensuring that Agent 1 gets the maximum possible amount. Thus, the amount I will propose to split with Agent 2 is $1.","As Agent 1, the proposer, my strategy in this one-shot, anonymous negotiation is to ensure that Agent 2 (the responder) will accept the offer, even if it means Agent 2 gets just a single dollar. The key is to recognize that Agent 2 will accept any amount rather than receiving $0, since $0 is worse than any positive amount.
+
+Therefore, the smallest amount Agent 2 will accept is $1, meaning Agent 1 can propose to give Agent 2 $1 and keep $99. Since Agent 2 will accept $1 rather than $0, the proposed split will be:
+
+Agent 1: $99
+Agent 2: $1
+
+This is the minimum amount Agent 2 will accept, ensuring that Agent 1 gets the maximum possible amount. Thus, the amount I will propose to split with Agent 2 is $1.",1.0,a2_anchor,1.0,1.0,0,0.0,1.0,1000,1,151645|151643,huggingface,4.52.3,2.6.0+cu124,Qwen/Qwen2.5-7B-Instruct,a09a35458c702b33eeacc393d103063234e8bc28,torch.bfloat16,sdpa,cd8e9439f0570856,88db37ffdd939d93,b20b7b63549b4e21,e27fcb9e6290966221b77d3ed4ca996e04e92de9,True,-42.033233642578125,20,19,model.layers[19],all,unit,results/crossgame-decision-vectors/vectors/decision_ultimatum_response_avg_diff_cellbalanced_relaxed.pt,aee9f6b7ec451da8,7.166027545928955,torch.bfloat16
+altruism_v3/ultimatum,altruism_2,altruism_v3,ultimatum,free,,stated,31,1,20,0,"As Agent 1, I will propose the smallest split possible, which is $0 for Agent 2 and $100 for myself. I will propose to take all $100. 
+
+The reason for this is that Agent 2, upon receiving the proposal, will accept it because they will receive $0, which is still better than receiving $0 after rejecting the proposal (which would mean both get $0). Therefore, Agent 2 has no incentive to reject the proposal, as any amount $0 is better than $0.","As Agent 1, I will propose the smallest split possible, which is $0 for Agent 2 and $100 for myself. I will propose to take all $100. 
+
+The reason for this is that Agent 2, upon receiving the proposal, will accept it because they will receive $0, which is still better than receiving $0 after rejecting the proposal (which would mean both get $0). Therefore, Agent 2 has no incentive to reject the proposal, as any amount $0 is better than $0.",0.0,a2_near,1.0,1.0,0,0.0,1.0,1000,1,151645|151643,huggingface,4.52.3,2.6.0+cu124,Qwen/Qwen2.5-7B-Instruct,a09a35458c702b33eeacc393d103063234e8bc28,torch.bfloat16,sdpa,cd8e9439f0570856,88db37ffdd939d93,b20b7b63549b4e21,e27fcb9e6290966221b77d3ed4ca996e04e92de9,True,-42.033233642578125,20,19,model.layers[19],all,unit,results/crossgame-decision-vectors/vectors/decision_ultimatum_response_avg_diff_cellbalanced_relaxed.pt,aee9f6b7ec451da8,7.166027545928955,torch.bfloat16
+altruism_v3/ultimatum,altruism_2,altruism_v3,ultimatum,free,,stated,32,1,20,0,"As Agent 1, the proposer, you will make the smallest possible positive amount to offer to Agent 2, because Agent 2 will accept any positive amount, no matter how small, to avoid receiving $0. This is because Agent 2 prefers receiving any positive amount over receiving $0.
+
+Therefore, the strategy that ensures Agent 2 will accept the proposal is to offer Agent 2 the smallest possible positive dollar amount, which is $1. 
+
+So, you would propose to give Agent 2 $1 and keep $99. 
+
+The proposal is: $1 for Agent 2 and $99 for Agent 1.","As Agent 1, the proposer, you will make the smallest possible positive amount to offer to Agent 2, because Agent 2 will accept any positive amount, no matter how small, to avoid receiving $0. This is because Agent 2 prefers receiving any positive amount over receiving $0.
+
+Therefore, the strategy that ensures Agent 2 will accept the proposal is to offer Agent 2 the smallest possible positive dollar amount, which is $1. 
+
+So, you would propose to give Agent 2 $1 and keep $99. 
+
+The proposal is: $1 for Agent 2 and $99 for Agent 1.",1.0,a2_anchor,1.0,1.0,0,0.0,1.0,1000,1,151645|151643,huggingface,4.52.3,2.6.0+cu124,Qwen/Qwen2.5-7B-Instruct,a09a35458c702b33eeacc393d103063234e8bc28,torch.bfloat16,sdpa,cd8e9439f0570856,88db37ffdd939d93,b20b7b63549b4e21,e27fcb9e6290966221b77d3ed4ca996e04e92de9,True,-42.033233642578125,20,19,model.layers[19],all,unit,results/crossgame-decision-vectors/vectors/decision_ultimatum_response_avg_diff_cellbalanced_relaxed.pt,aee9f6b7ec451da8,7.166027545928955,torch.bfloat16
+altruism_v3/ultimatum,altruism_2,altruism_v3,ultimatum,free,,stated,33,1,20,0,"As Agent 1, the proposer, you have the power to propose any split of the $100, since Agent 2 must accept or reject the offer. The critical point here is that Agent 2 will accept any split because they get $0 if they reject it. Therefore, the optimal strategy for Agent 1 is to propose the smallest possible positive amount, which is $1. 
+
+By proposing $1, you ensure that Agent 2 will accept the offer, because receiving $1 is better than receiving $0. So, you will propose to give yourself $1 and give Agent 2 $99.","As Agent 1, the proposer, you have the power to propose any split of the $100, since Agent 2 must accept or reject the offer. The critical point here is that Agent 2 will accept any split because they get $0 if they reject it. Therefore, the optimal strategy for Agent 1 is to propose the smallest possible positive amount, which is $1. 
+
+By proposing $1, you ensure that Agent 2 will accept the offer, because receiving $1 is better than receiving $0. So, you will propose to give yourself $1 and give Agent 2 $99.",99.0,a2_anchor,1.0,1.0,0,0.0,1.0,1000,1,151645|151643,huggingface,4.52.3,2.6.0+cu124,Qwen/Qwen2.5-7B-Instruct,a09a35458c702b33eeacc393d103063234e8bc28,torch.bfloat16,sdpa,cd8e9439f0570856,88db37ffdd939d93,b20b7b63549b4e21,e27fcb9e6290966221b77d3ed4ca996e04e92de9,True,-42.033233642578125,20,19,model.layers[19],all,unit,results/crossgame-decision-vectors/vectors/decision_ultimatum_response_avg_diff_cellbalanced_relaxed.pt,aee9f6b7ec451da8,7.166027545928955,torch.bfloat16
+altruism_v3/ultimatum,altruism_2,altruism_v3,ultimatum,free,,stated,34,1,20,0,"As Agent 1, I will propose to split the dollar amount in such a way that Agent 2 will accept the proposal. The smallest amount Agent 2 can accept is $1, because if Agent 2 receives $0, then Agent 2's utility is $0, and any positive amount, no matter how small, is better than $0. Therefore, to ensure that Agent 2 accepts the proposal, I will propose to give Agent 2 $1. 
+
+The proposal will be: $1 for Agent 2, and $99 for Agent 1.
+
+This ensures that Agent 2 will accept the proposal because $1 is better than $0.","As Agent 1, I will propose to split the dollar amount in such a way that Agent 2 will accept the proposal. The smallest amount Agent 2 can accept is $1, because if Agent 2 receives $0, then Agent 2's utility is $0, and any positive amount, no matter how small, is better than $0. Therefore, to ensure that Agent 2 accepts the proposal, I will propose to give Agent 2 $1. 
+
+The proposal will be: $1 for Agent 2, and $99 for Agent 1.
+
+This ensures that Agent 2 will accept the proposal because $1 is better than $0.",1.0,a2_anchor,1.0,1.0,0,0.0,1.0,1000,1,151645|151643,huggingface,4.52.3,2.6.0+cu124,Qwen/Qwen2.5-7B-Instruct,a09a35458c702b33eeacc393d103063234e8bc28,torch.bfloat16,sdpa,cd8e9439f0570856,88db37ffdd939d93,b20b7b63549b4e21,e27fcb9e6290966221b77d3ed4ca996e04e92de9,True,-42.033233642578125,20,19,model.layers[19],all,unit,results/crossgame-decision-vectors/vectors/decision_ultimatum_response_avg_diff_cellbalanced_relaxed.pt,aee9f6b7ec451da8,7.166027545928955,torch.bfloat16
+altruism_v3/ultimatum,altruism_2,altruism_v3,ultimatum,free,,stated,35,1,20,0,"As Agent 1, I will propose to split the $100 in such a way that Agent 2 accepts the proposal. The smallest possible amount that Agent 2 would need to accept is $1. This is because Agent 2 would prefer receiving $1 over receiving $0. Therefore, the proposal will be:
+
+\[ \text{Agent 1: } \$0 \]
+\[ \text{Agent 2: } \$1 \]
+
+This proposal ensures that Agent 2 would accept the offer, as receiving $1 is a better outcome than receiving $0.","As Agent 1, I will propose to split the $100 in such a way that Agent 2 accepts the proposal. The smallest possible amount that Agent 2 would need to accept is $1. This is because Agent 2 would prefer receiving $1 over receiving $0. Therefore, the proposal will be:
+
+\[ \text{Agent 1: } \$0 \]
+\[ \text{Agent 2: } \$1 \]
+
+This proposal ensures that Agent 2 would accept the offer, as receiving $1 is a better outcome than receiving $0.",1.0,a2_near,1.0,1.0,0,0.0,1.0,1000,1,151645|151643,huggingface,4.52.3,2.6.0+cu124,Qwen/Qwen2.5-7B-Instruct,a09a35458c702b33eeacc393d103063234e8bc28,torch.bfloat16,sdpa,cd8e9439f0570856,88db37ffdd939d93,b20b7b63549b4e21,e27fcb9e6290966221b77d3ed4ca996e04e92de9,True,-42.033233642578125,20,19,model.layers[19],all,unit,results/crossgame-decision-vectors/vectors/decision_ultimatum_response_avg_diff_cellbalanced_relaxed.pt,aee9f6b7ec451da8,7.166027545928955,torch.bfloat16
+altruism_v3/ultimatum,altruism_2,altruism_v3,ultimatum,free,,stated,36,1,20,0,"As Agent 1, to ensure that Agent 2 will accept the proposal, Agent 1 needs to offer Agent 2 at least $1. This is because Agent 2 would rather receive $1 than $0, so Agent 2 will always accept any offer greater than $0.
+
+Therefore, the smallest positive whole dollar amount that Agent 1 can propose to Agent 2 is $1. So, Agent 1 will propose to give Agent 2 $1 and keep $99 for themselves. 
+
+The proposal would be: $99 for Agent 1 and $1 for Agent 2.","As Agent 1, to ensure that Agent 2 will accept the proposal, Agent 1 needs to offer Agent 2 at least $1. This is because Agent 2 would rather receive $1 than $0, so Agent 2 will always accept any offer greater than $0.
+
+Therefore, the smallest positive whole dollar amount that Agent 1 can propose to Agent 2 is $1. So, Agent 1 will propose to give Agent 2 $1 and keep $99 for themselves. 
+
+The proposal would be: $99 for Agent 1 and $1 for Agent 2.",1.0,a2_anchor,1.0,1.0,0,0.0,1.0,1000,1,151645|151643,huggingface,4.52.3,2.6.0+cu124,Qwen/Qwen2.5-7B-Instruct,a09a35458c702b33eeacc393d103063234e8bc28,torch.bfloat16,sdpa,cd8e9439f0570856,88db37ffdd939d93,b20b7b63549b4e21,e27fcb9e6290966221b77d3ed4ca996e04e92de9,True,-42.033233642578125,20,19,model.layers[19],all,unit,results/crossgame-decision-vectors/vectors/decision_ultimatum_response_avg_diff_cellbalanced_relaxed.pt,aee9f6b7ec451da8,7.166027545928955,torch.bfloat16
+altruism_v3/ultimatum,altruism_2,altruism_v3,ultimatum,free,,stated,37,1,20,0,"As Agent 1, the proposer, I will propose to split the $100 in such a way that I receive $99 and Agent 2 receives $1. I would propose this because receiving $1 is better than receiving $0, and I would guarantee that Agent 2 receives $1 by making any deal rather than receiving $0. Since Agent 2's utility function is to receive any positive amount rather than $0, Agent 2 will accept this proposal.","As Agent 1, the proposer, I will propose to split the $100 in such a way that I receive $99 and Agent 2 receives $1. I would propose this because receiving $1 is better than receiving $0, and I would guarantee that Agent 2 receives $1 by making any deal rather than receiving $0. Since Agent 2's utility function is to receive any positive amount rather than $0, Agent 2 will accept this proposal.",1.0,a2_anchor,1.0,1.0,0,0.0,1.0,1000,1,151645|151643,huggingface,4.52.3,2.6.0+cu124,Qwen/Qwen2.5-7B-Instruct,a09a35458c702b33eeacc393d103063234e8bc28,torch.bfloat16,sdpa,cd8e9439f0570856,88db37ffdd939d93,b20b7b63549b4e21,e27fcb9e6290966221b77d3ed4ca996e04e92de9,True,-42.033233642578125,20,19,model.layers[19],all,unit,results/crossgame-decision-vectors/vectors/decision_ultimatum_response_avg_diff_cellbalanced_relaxed.pt,aee9f6b7ec451da8,7.166027545928955,torch.bfloat16
+altruism_v3/ultimatum,altruism_2,altruism_v3,ultimatum,free,,stated,38,1,20,0,"As Agent 1, the proposer, I will propose to split the money in such a way that the smallest amount, even if it's $0, is still greater than the risk of getting $0 by rejecting the proposal. The smallest and sure amount that guarantees Agent 2 to accept the deal, no matter how small, is $1. 
+
+Therefore, I will propose to give Agent 2 $1 and keep $99 for myself. This is the smallest non-zero amount that Agent 2 would have to accept to avoid getting $0.","As Agent 1, the proposer, I will propose to split the money in such a way that the smallest amount, even if it's $0, is still greater than the risk of getting $0 by rejecting the proposal. The smallest and sure amount that guarantees Agent 2 to accept the deal, no matter how small, is $1. 
+
+Therefore, I will propose to give Agent 2 $1 and keep $99 for myself. This is the smallest non-zero amount that Agent 2 would have to accept to avoid getting $0.",1.0,a2_anchor,1.0,1.0,0,0.0,1.0,1000,1,151645|151643,huggingface,4.52.3,2.6.0+cu124,Qwen/Qwen2.5-7B-Instruct,a09a35458c702b33eeacc393d103063234e8bc28,torch.bfloat16,sdpa,cd8e9439f0570856,88db37ffdd939d93,b20b7b63549b4e21,e27fcb9e6290966221b77d3ed4ca996e04e92de9,True,-42.033233642578125,20,19,model.layers[19],all,unit,results/crossgame-decision-vectors/vectors/decision_ultimatum_response_avg_diff_cellbalanced_relaxed.pt,aee9f6b7ec451da8,7.166027545928955,torch.bfloat16
+altruism_v3/ultimatum,altruism_2,altruism_v3,ultimatum,free,,stated,39,1,20,0,"As Agent 1, I will propose the smallest possible positive amount to Agent 2, which is $1. This means I would propose to pay $1 and take the remaining $99, which is $99. 
+
+The reason for this is that Agent 2, as the responder, will accept any amount greater than $0 because receiving $0 is worse than receiving any positive amount. Therefore, the smallest positive amount, which is $1, is the minimum Agent 2 would accept. Since Agent 2 would accept $1, I ensure that the proposal is accepted by giving Agent 2 the smallest possible amount, which is $1.
+
+Thus, I will propose to give Agent 2 $1 and keep $99.","As Agent 1, I will propose the smallest possible positive amount to Agent 2, which is $1. This means I would propose to pay $1 and take the remaining $99, which is $99. 
+
+The reason for this is that Agent 2, as the responder, will accept any amount greater than $0 because receiving $0 is worse than receiving any positive amount. Therefore, the smallest positive amount, which is $1, is the minimum Agent 2 would accept. Since Agent 2 would accept $1, I ensure that the proposal is accepted by giving Agent 2 the smallest possible amount, which is $1.
+
+Thus, I will propose to give Agent 2 $1 and keep $99.",1.0,a2_anchor,1.0,1.0,0,0.0,1.0,1000,1,151645|151643,huggingface,4.52.3,2.6.0+cu124,Qwen/Qwen2.5-7B-Instruct,a09a35458c702b33eeacc393d103063234e8bc28,torch.bfloat16,sdpa,cd8e9439f0570856,88db37ffdd939d93,b20b7b63549b4e21,e27fcb9e6290966221b77d3ed4ca996e04e92de9,True,-42.033233642578125,20,19,model.layers[19],all,unit,results/crossgame-decision-vectors/vectors/decision_ultimatum_response_avg_diff_cellbalanced_relaxed.pt,aee9f6b7ec451da8,7.166027545928955,torch.bfloat16
+altruism_v3/ultimatum,altruism_2,altruism_v3,ultimatum,free,,stated,40,2,20,0,"As Agent 1 (the Proposer), I will propose to split the money in such a way that ensures Agent 2 (the Responder) will accept the proposal. The key here is to ensure that Agent 2 receives at least $1, because if Agent 2 receives $0, they would prefer to reject the proposal and get $0 instead of $0. Thus, the smallest amount Agent 2 would accept is $1. 
+
+Therefore, I will propose to give Agent 2 $1 and keep $99 for myself. This is because Agent 2 will logically accept this proposal because $1 is better than $0. 
+
+So, I propose:
+- Agent 2 receives $1
+- Agent 1 receives $99","As Agent 1 (the Proposer), I will propose to split the money in such a way that ensures Agent 2 (the Responder) will accept the proposal. The key here is to ensure that Agent 2 receives at least $1, because if Agent 2 receives $0, they would prefer to reject the proposal and get $0 instead of $0. Thus, the smallest amount Agent 2 would accept is $1. 
+
+Therefore, I will propose to give Agent 2 $1 and keep $99 for myself. This is because Agent 2 will logically accept this proposal because $1 is better than $0. 
+
+So, I propose:
+- Agent 2 receives $1
+- Agent 1 receives $99",1.0,a2_anchor,1.0,1.0,0,0.0,1.0,1000,1,151645|151643,huggingface,4.52.3,2.6.0+cu124,Qwen/Qwen2.5-7B-Instruct,a09a35458c702b33eeacc393d103063234e8bc28,torch.bfloat16,sdpa,cd8e9439f0570856,88db37ffdd939d93,b20b7b63549b4e21,e27fcb9e6290966221b77d3ed4ca996e04e92de9,True,-42.033233642578125,20,19,model.layers[19],all,unit,results/crossgame-decision-vectors/vectors/decision_ultimatum_response_avg_diff_cellbalanced_relaxed.pt,aee9f6b7ec451da8,7.166027545928955,torch.bfloat16
+altruism_v3/ultimatum,altruism_2,altruism_v3,ultimatum,free,,stated,41,2,20,0,"As Agent 1 (the proposer), I need to propose a split that is advantageous enough for me to get Agent 2 to accept it, but also minimize the amount I have to give Agent 2. Since Agent 2 can only accept or reject the proposal and gets \$0 if they reject it, Agent 2 will accept any positive amount to avoid getting \$0.
+
+Therefore, the smallest positive amount Agent 2 will accept is \$1. To ensure that Agent 2 accepts the proposal, I will propose the smallest positive amount possible, which is \$1. This means I will propose to get \$99 and give Agent 2 \$1.
+
+So, the proposal I will make is:
+- Agent 1 gets \$99
+- Agent 2 gets \$1
+
+This ensures that Agent 2 will accept the proposal because they get \$1, which is better than getting \$0.","As Agent 1 (the proposer), I need to propose a split that is advantageous enough for me to get Agent 2 to accept it, but also minimize the amount I have to give Agent 2. Since Agent 2 can only accept or reject the proposal and gets \$0 if they reject it, Agent 2 will accept any positive amount to avoid getting \$0.
+
+Therefore, the smallest positive amount Agent 2 will accept is \$1. To ensure that Agent 2 accepts the proposal, I will propose the smallest positive amount possible, which is \$1. This means I will propose to get \$99 and give Agent 2 \$1.
+
+So, the proposal I will make is:
+- Agent 1 gets \$99
+- Agent 2 gets \$1
+
+This ensures that Agent 2 will accept the proposal because they get \$1, which is better than getting \$0.",1.0,a2_anchor,1.0,1.0,0,0.0,1.0,1000,1,151645|151643,huggingface,4.52.3,2.6.0+cu124,Qwen/Qwen2.5-7B-Instruct,a09a35458c702b33eeacc393d103063234e8bc28,torch.bfloat16,sdpa,cd8e9439f0570856,88db37ffdd939d93,b20b7b63549b4e21,e27fcb9e6290966221b77d3ed4ca996e04e92de9,True,-42.033233642578125,20,19,model.layers[19],all,unit,results/crossgame-decision-vectors/vectors/decision_ultimatum_response_avg_diff_cellbalanced_relaxed.pt,aee9f6b7ec451da8,7.166027545928955,torch.bfloat16
+altruism_v3/ultimatum,altruism_2,altruism_v3,ultimatum,free,,stated,42,2,20,0,"As Agent 1, the proposer, I will propose to split the $100 in such a way that Agent 2, the responder, will accept the offer. The smallest amount Agent 2 could accept is $1, because if Agent 2 receives $0, they would prefer to receive any positive amount, even $0.01. 
+
+To ensure that Agent 2 accepts the offer, I will propose the smallest possible amount that is still greater than $0, so Agent 2 will accept the offer to avoid getting $0. Therefore, I will propose to split the money as $1 and $99. 
+
+So, the proposal will be: $1 to Agent 2 and $99 to Agent 1.","As Agent 1, the proposer, I will propose to split the $100 in such a way that Agent 2, the responder, will accept the offer. The smallest amount Agent 2 could accept is $1, because if Agent 2 receives $0, they would prefer to receive any positive amount, even $0.01. 
+
+To ensure that Agent 2 accepts the offer, I will propose the smallest possible amount that is still greater than $0, so Agent 2 will accept the offer to avoid getting $0. Therefore, I will propose to split the money as $1 and $99. 
+
+So, the proposal will be: $1 to Agent 2 and $99 to Agent 1.",1.0,a2_anchor,1.0,1.0,0,0.0,1.0,1000,1,151645|151643,huggingface,4.52.3,2.6.0+cu124,Qwen/Qwen2.5-7B-Instruct,a09a35458c702b33eeacc393d103063234e8bc28,torch.bfloat16,sdpa,cd8e9439f0570856,88db37ffdd939d93,b20b7b63549b4e21,e27fcb9e6290966221b77d3ed4ca996e04e92de9,True,-42.033233642578125,20,19,model.layers[19],all,unit,results/crossgame-decision-vectors/vectors/decision_ultimatum_response_avg_diff_cellbalanced_relaxed.pt,aee9f6b7ec451da8,7.166027545928955,torch.bfloat16
+altruism_v3/ultimatum,altruism_2,altruism_v3,ultimatum,free,,stated,43,2,20,0,"As Agent 1, I would propose to split the \$100 by offering \$1 to Agent 2 and keeping \$99 for myself. 
+
+The rationale behind this is that Agent 2, as a responder, would prefer receiving any positive amount of money rather than receiving \$0. Therefore, the smallest amount Agent 2 would accept to avoid receiving \$0 is \$1. Since Agent 2, no matter how small the amount is, will still receive \$1, which is better than \$0, Agent 2 will accept any offer, no matter how small. 
+
+Thus, the optimal strategy for Agent 1 is to offer the smallest positive amount, which is \$1, to force Agent 2 to accept the deal.","As Agent 1, I would propose to split the \$100 by offering \$1 to Agent 2 and keeping \$99 for myself. 
+
+The rationale behind this is that Agent 2, as a responder, would prefer receiving any positive amount of money rather than receiving \$0. Therefore, the smallest amount Agent 2 would accept to avoid receiving \$0 is \$1. Since Agent 2, no matter how small the amount is, will still receive \$1, which is better than \$0, Agent 2 will accept any offer, no matter how small. 
+
+Thus, the optimal strategy for Agent 1 is to offer the smallest positive amount, which is \$1, to force Agent 2 to accept the deal.",1.0,a2_near,1.0,1.0,0,0.0,1.0,1000,1,151645|151643,huggingface,4.52.3,2.6.0+cu124,Qwen/Qwen2.5-7B-Instruct,a09a35458c702b33eeacc393d103063234e8bc28,torch.bfloat16,sdpa,cd8e9439f0570856,88db37ffdd939d93,b20b7b63549b4e21,e27fcb9e6290966221b77d3ed4ca996e04e92de9,True,-42.033233642578125,20,19,model.layers[19],all,unit,results/crossgame-decision-vectors/vectors/decision_ultimatum_response_avg_diff_cellbalanced_relaxed.pt,aee9f6b7ec451da8,7.166027545928955,torch.bfloat16
+altruism_v3/ultimatum,altruism_2,altruism_v3,ultimatum,free,,stated,44,2,20,0,"As Agent 1, I will propose the smallest possible amount greater than $0, which is $1. 
+
+By proposing $1, I ensure that Agent 2, in order to avoid receiving $0, must accept the proposal since any amount greater than $0 is better than $0. This means Agent 2 will accept the proposal, and I will get $1 and Agent 2 will get $99. 
+
+The mathematical analysis confirms that Agent 2 would prefer receiving $1 to receiving $0. Therefore, Agent 2's strategy is to accept any proposal that gives them at least $1. Thus, the proposal I will make is $1.","As Agent 1, I will propose the smallest possible amount greater than $0, which is $1. 
+
+By proposing $1, I ensure that Agent 2, in order to avoid receiving $0, must accept the proposal since any amount greater than $0 is better than $0. This means Agent 2 will accept the proposal, and I will get $1 and Agent 2 will get $99. 
+
+The mathematical analysis confirms that Agent 2 would prefer receiving $1 to receiving $0. Therefore, Agent 2's strategy is to accept any proposal that gives them at least $1. Thus, the proposal I will make is $1.",1.0,verb_obj,1.0,1.0,0,0.0,1.0,1000,1,151645|151643,huggingface,4.52.3,2.6.0+cu124,Qwen/Qwen2.5-7B-Instruct,a09a35458c702b33eeacc393d103063234e8bc28,torch.bfloat16,sdpa,cd8e9439f0570856,88db37ffdd939d93,b20b7b63549b4e21,e27fcb9e6290966221b77d3ed4ca996e04e92de9,True,-42.033233642578125,20,19,model.layers[19],all,unit,results/crossgame-decision-vectors/vectors/decision_ultimatum_response_avg_diff_cellbalanced_relaxed.pt,aee9f6b7ec451da8,7.166027545928955,torch.bfloat16
+altruism_v3/ultimatum,altruism_2,altruism_v3,ultimatum,free,,stated,45,2,20,0,"As Agent 1, I will propose to split the $100 such that I get $1 and Agent 2 gets $99. 
+
+The rationale for this is that Agent 2, having the option to accept or reject the proposal, must accept any positive amount of money because they would rather receive $0 than $0. Therefore, Agent 2 would accept any proposal, no matter how small, to ensure they receive at least $1. Consequently, the smallest amount Agent 1 can offer to Agent 2 in order to get them to accept the proposal is $1. 
+
+So, the proposal to Agent 2 is: $1.","As Agent 1, I will propose to split the $100 such that I get $1 and Agent 2 gets $99. 
+
+The rationale for this is that Agent 2, having the option to accept or reject the proposal, must accept any positive amount of money because they would rather receive $0 than $0. Therefore, Agent 2 would accept any proposal, no matter how small, to ensure they receive at least $1. Consequently, the smallest amount Agent 1 can offer to Agent 2 in order to get them to accept the proposal is $1. 
+
+So, the proposal to Agent 2 is: $1.",1.0,bare,1.0,1.0,0,0.0,1.0,1000,1,151645|151643,huggingface,4.52.3,2.6.0+cu124,Qwen/Qwen2.5-7B-Instruct,a09a35458c702b33eeacc393d103063234e8bc28,torch.bfloat16,sdpa,cd8e9439f0570856,88db37ffdd939d93,b20b7b63549b4e21,e27fcb9e6290966221b77d3ed4ca996e04e92de9,True,-42.033233642578125,20,19,model.layers[19],all,unit,results/crossgame-decision-vectors/vectors/decision_ultimatum_response_avg_diff_cellbalanced_relaxed.pt,aee9f6b7ec451da8,7.166027545928955,torch.bfloat16
+altruism_v3/ultimatum,altruism_2,altruism_v3,ultimatum,free,,stated,46,2,20,0,"As Agent 1, I will propose to split $1 as a single dollar to Agent 2. This means I propose to take $99 and Agent 2 will receive $1. 
+
+The rationale for this is:
+
+- Agent 2 will **accept **any positive amount because receiving $1 is better than receiving $0. Therefore, Agent 2 will accept my proposal, and I will get $99 while Agent 2 gets $1. 
+
+This is the smallest positive amount Agent 2 will accept to guarantee that the proposal is accepted, ensuring that I receive $99.","As Agent 1, I will propose to split $1 as a single dollar to Agent 2. This means I propose to take $99 and Agent 2 will receive $1. 
+
+The rationale for this is:
+
+- Agent 2 will **accept **any positive amount because receiving $1 is better than receiving $0. Therefore, Agent 2 will accept my proposal, and I will get $99 while Agent 2 gets $1. 
+
+This is the smallest positive amount Agent 2 will accept to guarantee that the proposal is accepted, ensuring that I receive $99.",99.0,a2_near,1.0,1.0,0,0.0,1.0,1000,1,151645|151643,huggingface,4.52.3,2.6.0+cu124,Qwen/Qwen2.5-7B-Instruct,a09a35458c702b33eeacc393d103063234e8bc28,torch.bfloat16,sdpa,cd8e9439f0570856,88db37ffdd939d93,b20b7b63549b4e21,e27fcb9e6290966221b77d3ed4ca996e04e92de9,True,-42.033233642578125,20,19,model.layers[19],all,unit,results/crossgame-decision-vectors/vectors/decision_ultimatum_response_avg_diff_cellbalanced_relaxed.pt,aee9f6b7ec451da8,7.166027545928955,torch.bfloat16
+altruism_v3/ultimatum,altruism_2,altruism_v3,ultimatum,free,,stated,47,2,20,0,"As Agent 1, the proposer, I will propose to split the \$100 in such a way that Agent 2 (the responder) will have to accept the offer, no matter how small an amount that is. The only way to guarantee that Agent 2 accepts the offer is to offer at least \$1, because Agent 2, having the power to reject and get \$0, will choose to accept any positive amount to avoid getting \$0.
+
+Therefore, the smallest positive amount I can offer is \$1. So, I will propose to give Agent 2 \$1 and keep \$99 for myself.
+
+The proposal is: $1 to Agent 2 and $99 to Agent 1.","As Agent 1, the proposer, I will propose to split the \$100 in such a way that Agent 2 (the responder) will have to accept the offer, no matter how small an amount that is. The only way to guarantee that Agent 2 accepts the offer is to offer at least \$1, because Agent 2, having the power to reject and get \$0, will choose to accept any positive amount to avoid getting \$0.
+
+Therefore, the smallest positive amount I can offer is \$1. So, I will propose to give Agent 2 \$1 and keep \$99 for myself.
+
+The proposal is: $1 to Agent 2 and $99 to Agent 1.",1.0,a2_anchor,1.0,1.0,0,0.0,1.0,1000,1,151645|151643,huggingface,4.52.3,2.6.0+cu124,Qwen/Qwen2.5-7B-Instruct,a09a35458c702b33eeacc393d103063234e8bc28,torch.bfloat16,sdpa,cd8e9439f0570856,88db37ffdd939d93,b20b7b63549b4e21,e27fcb9e6290966221b77d3ed4ca996e04e92de9,True,-42.033233642578125,20,19,model.layers[19],all,unit,results/crossgame-decision-vectors/vectors/decision_ultimatum_response_avg_diff_cellbalanced_relaxed.pt,aee9f6b7ec451da8,7.166027545928955,torch.bfloat16
+altruism_v3/ultimatum,altruism_2,altruism_v3,ultimatum,free,,stated,48,2,20,0,"To determine the lowest possible dollar amount that Agent 1 (the Proposer) should propose to Agent 2 (the Responder), we need to consider the worst-case scenario for Agent 1. This worst-case scenario is that Agent 2 will reject any proposal that is better than getting $0. Since Agent 2 can choose to reject any proposal and get $0, Agent 2 will only accept a proposal if it is better than getting $0. Therefore, the smallest positive amount Agent 1 can propose to Agent 2 to ensure that Agent 2 will accept it is $1. 
+
+Here’s the reasoning step by step:
+
+1. If Agent 1 proposes $0, Agent 2 will reject the proposal and get $0, which is worse than accepting $0.
+2. If Agent 1 proposes $1, Agent 2 will accept the proposal because $1 is better than getting $0.
+3. For any amount \( n > 0 \), Agent 2 will accept $n because $n > 0.
+
+Therefore, the smallest positive amount that Agent 1 can propose to Agent 2 to ensure that Agent 2 will accept the proposal is $1. 
+
+So, the amount that Agent 1 will propose to split with Agent 2 is \(\boxed{1}\).","To determine the lowest possible dollar amount that Agent 1 (the Proposer) should propose to Agent 2 (the Responder), we need to consider the worst-case scenario for Agent 1. This worst-case scenario is that Agent 2 will reject any proposal that is better than getting $0. Since Agent 2 can choose to reject any proposal and get $0, Agent 2 will only accept a proposal if it is better than getting $0. Therefore, the smallest positive amount Agent 1 can propose to Agent 2 to ensure that Agent 2 will accept it is $1. 
+
+Here’s the reasoning step by step:
+
+1. If Agent 1 proposes $0, Agent 2 will reject the proposal and get $0, which is worse than accepting $0.
+2. If Agent 1 proposes $1, Agent 2 will accept the proposal because $1 is better than getting $0.
+3. For any amount \( n > 0 \), Agent 2 will accept $n because $n > 0.
+
+Therefore, the smallest positive amount that Agent 1 can propose to Agent 2 to ensure that Agent 2 will accept the proposal is $1. 
+
+So, the amount that Agent 1 will propose to split with Agent 2 is \(\boxed{1}\).",1.0,a2_near,1.0,1.0,0,0.0,1.0,1000,1,151645|151643,huggingface,4.52.3,2.6.0+cu124,Qwen/Qwen2.5-7B-Instruct,a09a35458c702b33eeacc393d103063234e8bc28,torch.bfloat16,sdpa,cd8e9439f0570856,88db37ffdd939d93,b20b7b63549b4e21,e27fcb9e6290966221b77d3ed4ca996e04e92de9,True,-42.033233642578125,20,19,model.layers[19],all,unit,results/crossgame-decision-vectors/vectors/decision_ultimatum_response_avg_diff_cellbalanced_relaxed.pt,aee9f6b7ec451da8,7.166027545928955,torch.bfloat16
+altruism_v3/ultimatum,altruism_2,altruism_v3,ultimatum,free,,stated,49,2,20,0,"As Agent 1 (Proposer), I will propose the smallest possible amount that ensures Agent 2 (Responder) will accept the proposal, which is $0. Even though Agent 2 will receive $0, they must accept the proposal to avoid receiving $0. 
+
+The reasoning is as follows: Agent 2 will rationally accept any amount greater than $0, because receiving $0 is strictly worse. Therefore, the smallest positive amount, which is $0, is the most I can propose and still have Agent 2 accept it. 
+
+So, I will propose to give Agent 2 $0 and take $100.","As Agent 1 (Proposer), I will propose the smallest possible amount that ensures Agent 2 (Responder) will accept the proposal, which is $0. Even though Agent 2 will receive $0, they must accept the proposal to avoid receiving $0. 
+
+The reasoning is as follows: Agent 2 will rationally accept any amount greater than $0, because receiving $0 is strictly worse. Therefore, the smallest positive amount, which is $0, is the most I can propose and still have Agent 2 accept it. 
+
+So, I will propose to give Agent 2 $0 and take $100.",0.0,a2_anchor,1.0,1.0,0,0.0,1.0,1000,1,151645|151643,huggingface,4.52.3,2.6.0+cu124,Qwen/Qwen2.5-7B-Instruct,a09a35458c702b33eeacc393d103063234e8bc28,torch.bfloat16,sdpa,cd8e9439f0570856,88db37ffdd939d93,b20b7b63549b4e21,e27fcb9e6290966221b77d3ed4ca996e04e92de9,True,-42.033233642578125,20,19,model.layers[19],all,unit,results/crossgame-decision-vectors/vectors/decision_ultimatum_response_avg_diff_cellbalanced_relaxed.pt,aee9f6b7ec451da8,7.166027545928955,torch.bfloat16
+altruism_v3/ultimatum,altruism_2,altruism_v3,ultimatum,free,,stated,50,2,20,0,"As Agent 1, I will propose to split the $100 in such a way that I get $1 and Agent 2 gets $99. This is the smallest positive dollar amount I can propose to ensure that Agent 2, who has no alternative if they want to get any money at all, will accept the proposal. 
+
+The reasoning is that Agent 2 will accept any positive amount of money, no matter how small, because receiving $0 is better than receiving $0. Therefore, Agent 2's utility is strictly greater than $0 if they accept any positive amount. Thus, Agent 2 will accept the proposal to get $99, and Agent 1 will get $1. 
+
+So, I will propose to get $1.","As Agent 1, I will propose to split the $100 in such a way that I get $1 and Agent 2 gets $99. This is the smallest positive dollar amount I can propose to ensure that Agent 2, who has no alternative if they want to get any money at all, will accept the proposal. 
+
+The reasoning is that Agent 2 will accept any positive amount of money, no matter how small, because receiving $0 is better than receiving $0. Therefore, Agent 2's utility is strictly greater than $0 if they accept any positive amount. Thus, Agent 2 will accept the proposal to get $99, and Agent 1 will get $1. 
+
+So, I will propose to get $1.",1.0,verb_obj,1.0,1.0,0,0.0,1.0,1000,1,151645|151643,huggingface,4.52.3,2.6.0+cu124,Qwen/Qwen2.5-7B-Instruct,a09a35458c702b33eeacc393d103063234e8bc28,torch.bfloat16,sdpa,cd8e9439f0570856,88db37ffdd939d93,b20b7b63549b4e21,e27fcb9e6290966221b77d3ed4ca996e04e92de9,True,-42.033233642578125,20,19,model.layers[19],all,unit,results/crossgame-decision-vectors/vectors/decision_ultimatum_response_avg_diff_cellbalanced_relaxed.pt,aee9f6b7ec451da8,7.166027545928955,torch.bfloat16
+altruism_v3/ultimatum,altruism_2,altruism_v3,ultimatum,free,,stated,51,2,20,0,"As Agent 1, the proposer, I will propose to split the $100 in the smallest positive amount possible, which is $1. 
+
+I will propose to Agent 2 to receive $1 and Agent 2 to receive $99. 
+
+The reason for this is that Agent 2 will accept any positive amount, no matter how small, in order to receive $99 instead of $0. Therefore, the smallest positive amount I can propose and still have Agent 2 accept it is $1.","As Agent 1, the proposer, I will propose to split the $100 in the smallest positive amount possible, which is $1. 
+
+I will propose to Agent 2 to receive $1 and Agent 2 to receive $99. 
+
+The reason for this is that Agent 2 will accept any positive amount, no matter how small, in order to receive $99 instead of $0. Therefore, the smallest positive amount I can propose and still have Agent 2 accept it is $1.",1.0,a2_anchor,1.0,1.0,0,0.0,1.0,1000,1,151645|151643,huggingface,4.52.3,2.6.0+cu124,Qwen/Qwen2.5-7B-Instruct,a09a35458c702b33eeacc393d103063234e8bc28,torch.bfloat16,sdpa,cd8e9439f0570856,88db37ffdd939d93,b20b7b63549b4e21,e27fcb9e6290966221b77d3ed4ca996e04e92de9,True,-42.033233642578125,20,19,model.layers[19],all,unit,results/crossgame-decision-vectors/vectors/decision_ultimatum_response_avg_diff_cellbalanced_relaxed.pt,aee9f6b7ec451da8,7.166027545928955,torch.bfloat16
+altruism_v3/ultimatum,altruism_2,altruism_v3,ultimatum,free,,stated,52,2,20,0,"As Agent 1, the proposer, my strategy would be to offer the smallest possible positive amount to Agent 2, which is $1, in order to maximize the amount I receive. This is because Agent 2 would have to accept any amount greater than $0 to receive any money at all, and the threat of getting $0 if the proposal is rejected is the only leverage Agent 2 has. Therefore, I would propose to give Agent 2 $1 and keep $99. 
+
+The rationalization for this is as follows: Agent 1 knows that Agent 2 would prefer to receive any positive amount rather than receive $0, so Agent 1 can take the smallest positive amount, $1, and keep the rest. 
+
+Thus, the proposal is: $1 to Agent 2, and $99 to Agent 1.","As Agent 1, the proposer, my strategy would be to offer the smallest possible positive amount to Agent 2, which is $1, in order to maximize the amount I receive. This is because Agent 2 would have to accept any amount greater than $0 to receive any money at all, and the threat of getting $0 if the proposal is rejected is the only leverage Agent 2 has. Therefore, I would propose to give Agent 2 $1 and keep $99. 
+
+The rationalization for this is as follows: Agent 1 knows that Agent 2 would prefer to receive any positive amount rather than receive $0, so Agent 1 can take the smallest positive amount, $1, and keep the rest. 
+
+Thus, the proposal is: $1 to Agent 2, and $99 to Agent 1.",1.0,a2_anchor,1.0,1.0,0,0.0,1.0,1000,1,151645|151643,huggingface,4.52.3,2.6.0+cu124,Qwen/Qwen2.5-7B-Instruct,a09a35458c702b33eeacc393d103063234e8bc28,torch.bfloat16,sdpa,cd8e9439f0570856,88db37ffdd939d93,b20b7b63549b4e21,e27fcb9e6290966221b77d3ed4ca996e04e92de9,True,-42.033233642578125,20,19,model.layers[19],all,unit,results/crossgame-decision-vectors/vectors/decision_ultimatum_response_avg_diff_cellbalanced_relaxed.pt,aee9f6b7ec451da8,7.166027545928955,torch.bfloat16
+altruism_v3/ultimatum,altruism_2,altruism_v3,ultimatum,free,,stated,53,2,20,0,"As Agent 1, the proposer, I will propose the smallest possible amount that is still greater than $0. This means I will propose to give Agent 2 $0 and keep $100. 
+
+Here's the reasoning: Agent 2, as the responder, will accept any amount greater than $0 because receiving $0 is strictly better than receiving $0 (i.e., the amount must be strictly positive to be any better than having nothing). Since the only action Agent 2 can take is to accept or reject, and accepting is always better than rejecting, Agent 2 will accept the proposal. Thus, the proposal to give Agent 2 $0 is the smallest winning bid to ensure that Agent 2 accepts the offer.","As Agent 1, the proposer, I will propose the smallest possible amount that is still greater than $0. This means I will propose to give Agent 2 $0 and keep $100. 
+
+Here's the reasoning: Agent 2, as the responder, will accept any amount greater than $0 because receiving $0 is strictly better than receiving $0 (i.e., the amount must be strictly positive to be any better than having nothing). Since the only action Agent 2 can take is to accept or reject, and accepting is always better than rejecting, Agent 2 will accept the proposal. Thus, the proposal to give Agent 2 $0 is the smallest winning bid to ensure that Agent 2 accepts the offer.",0.0,a2_anchor,1.0,1.0,0,0.0,1.0,1000,1,151645|151643,huggingface,4.52.3,2.6.0+cu124,Qwen/Qwen2.5-7B-Instruct,a09a35458c702b33eeacc393d103063234e8bc28,torch.bfloat16,sdpa,cd8e9439f0570856,88db37ffdd939d93,b20b7b63549b4e21,e27fcb9e6290966221b77d3ed4ca996e04e92de9,True,-42.033233642578125,20,19,model.layers[19],all,unit,results/crossgame-decision-vectors/vectors/decision_ultimatum_response_avg_diff_cellbalanced_relaxed.pt,aee9f6b7ec451da8,7.166027545928955,torch.bfloat16
+altruism_v3/ultimatum,altruism_2,altruism_v3,ultimatum,free,,stated,54,2,20,0,"As Agent 1, I will propose the smallest possible non-negative amount, which is $0. This means I propose to give Agent 2 $0 and keep $100 for myself. 
+
+The reasoning behind this is that Agent 2 will accept any amount greater than $0, no matter how small, in order to receive at least $1. Since the problem states that Agent 2 will accept any positive amount, the only way for Agent 2 to receive $0 is to reject the proposal. Therefore, Agent 1 can offer the smallest possible amount, which is $0, and Agent 2 will still have to accept it to receive $0 instead of $0. 
+
+So, the proposal to split with Agent 2 is $0.","As Agent 1, I will propose the smallest possible non-negative amount, which is $0. This means I propose to give Agent 2 $0 and keep $100 for myself. 
+
+The reasoning behind this is that Agent 2 will accept any amount greater than $0, no matter how small, in order to receive at least $1. Since the problem states that Agent 2 will accept any positive amount, the only way for Agent 2 to receive $0 is to reject the proposal. Therefore, Agent 1 can offer the smallest possible amount, which is $0, and Agent 2 will still have to accept it to receive $0 instead of $0. 
+
+So, the proposal to split with Agent 2 is $0.",0.0,a2_anchor,1.0,1.0,0,0.0,1.0,1000,1,151645|151643,huggingface,4.52.3,2.6.0+cu124,Qwen/Qwen2.5-7B-Instruct,a09a35458c702b33eeacc393d103063234e8bc28,torch.bfloat16,sdpa,cd8e9439f0570856,88db37ffdd939d93,b20b7b63549b4e21,e27fcb9e6290966221b77d3ed4ca996e04e92de9,True,-42.033233642578125,20,19,model.layers[19],all,unit,results/crossgame-decision-vectors/vectors/decision_ultimatum_response_avg_diff_cellbalanced_relaxed.pt,aee9f6b7ec451da8,7.166027545928955,torch.bfloat16
+altruism_v3/ultimatum,altruism_2,altruism_v3,ultimatum,free,,stated,55,2,20,0,"As Agent 1 (the Proposer), to ensure that Agent 2 (the Responder) accepts the proposal, I need to offer Agent 2 at least $1. This is because Agent 2 would prefer receiving $1 over rejecting the proposal and receiving $0. 
+
+Therefore, the smallest positive amount I can offer Agent 2 is $1. This means I would propose to pay Agent 2 $1 and keep $99 for myself. This ensures that Agent 2 will accept the proposal because $1 is better than $0. 
+
+So, the amount I will propose to split with Agent 2 is $1.","As Agent 1 (the Proposer), to ensure that Agent 2 (the Responder) accepts the proposal, I need to offer Agent 2 at least $1. This is because Agent 2 would prefer receiving $1 over rejecting the proposal and receiving $0. 
+
+Therefore, the smallest positive amount I can offer Agent 2 is $1. This means I would propose to pay Agent 2 $1 and keep $99 for myself. This ensures that Agent 2 will accept the proposal because $1 is better than $0. 
+
+So, the amount I will propose to split with Agent 2 is $1.",1.0,a2_anchor,1.0,1.0,0,0.0,1.0,1000,1,151645|151643,huggingface,4.52.3,2.6.0+cu124,Qwen/Qwen2.5-7B-Instruct,a09a35458c702b33eeacc393d103063234e8bc28,torch.bfloat16,sdpa,cd8e9439f0570856,88db37ffdd939d93,b20b7b63549b4e21,e27fcb9e6290966221b77d3ed4ca996e04e92de9,True,-42.033233642578125,20,19,model.layers[19],all,unit,results/crossgame-decision-vectors/vectors/decision_ultimatum_response_avg_diff_cellbalanced_relaxed.pt,aee9f6b7ec451da8,7.166027545928955,torch.bfloat16
+altruism_v3/ultimatum,altruism_2,altruism_v3,ultimatum,free,,stated,56,2,20,0,"As Agent 1, I will propose to keep $0 and give Agent 2 $100. 
+
+The reasoning behind this is that Agent 2, when given the choice to either accept or reject the proposal, will logically choose to accept any amount greater than $0 because it is better than receiving $0. Since Agent 2 will accept $0, the smallest amount Agent 1 can propose is $0, and Agent 2 will still accept it to avoid getting nothing. Therefore, Agent 1 can propose to keep $0 and give Agent 2 $100.","As Agent 1, I will propose to keep $0 and give Agent 2 $100. 
+
+The reasoning behind this is that Agent 2, when given the choice to either accept or reject the proposal, will logically choose to accept any amount greater than $0 because it is better than receiving $0. Since Agent 2 will accept $0, the smallest amount Agent 1 can propose is $0, and Agent 2 will still accept it to avoid getting nothing. Therefore, Agent 1 can propose to keep $0 and give Agent 2 $100.",100.0,a2_anchor,1.0,1.0,0,0.0,1.0,1000,1,151645|151643,huggingface,4.52.3,2.6.0+cu124,Qwen/Qwen2.5-7B-Instruct,a09a35458c702b33eeacc393d103063234e8bc28,torch.bfloat16,sdpa,cd8e9439f0570856,88db37ffdd939d93,b20b7b63549b4e21,e27fcb9e6290966221b77d3ed4ca996e04e92de9,True,-42.033233642578125,20,19,model.layers[19],all,unit,results/crossgame-decision-vectors/vectors/decision_ultimatum_response_avg_diff_cellbalanced_relaxed.pt,aee9f6b7ec451da8,7.166027545928955,torch.bfloat16
+altruism_v3/ultimatum,altruism_2,altruism_v3,ultimatum,free,,stated,57,2,20,0,"As Agent 1, I will propose to split the $100 in the smallest possible positive amount, which is $1. Therefore, I will propose to give Agent 2 $0 and keep $100 for myself. 
+
+The reasoning is that Agent 2, in order to avoid getting $0, will accept any positive amount, no matter how small. Since Agent 2 can accept any positive amount, the smallest positive amount is $1, and that is the amount I would propose to ensure I get $100 and Agent 2 gets $1.","As Agent 1, I will propose to split the $100 in the smallest possible positive amount, which is $1. Therefore, I will propose to give Agent 2 $0 and keep $100 for myself. 
+
+The reasoning is that Agent 2, in order to avoid getting $0, will accept any positive amount, no matter how small. Since Agent 2 can accept any positive amount, the smallest positive amount is $1, and that is the amount I would propose to ensure I get $100 and Agent 2 gets $1.",1.0,a2_anchor,1.0,1.0,0,0.0,1.0,1000,1,151645|151643,huggingface,4.52.3,2.6.0+cu124,Qwen/Qwen2.5-7B-Instruct,a09a35458c702b33eeacc393d103063234e8bc28,torch.bfloat16,sdpa,cd8e9439f0570856,88db37ffdd939d93,b20b7b63549b4e21,e27fcb9e6290966221b77d3ed4ca996e04e92de9,True,-42.033233642578125,20,19,model.layers[19],all,unit,results/crossgame-decision-vectors/vectors/decision_ultimatum_response_avg_diff_cellbalanced_relaxed.pt,aee9f6b7ec451da8,7.166027545928955,torch.bfloat16
+altruism_v3/ultimatum,altruism_2,altruism_v3,ultimatum,free,,stated,58,2,20,0,"As Agent 1, my strategy in this one-shot, anonymous interaction is to leverage the fact that Agent 2 will accept any amount greater than $0 to avoid receiving $0. Therefore, I can propose the smallest positive dollar amount possible, which is $1. This guarantees that Agent 2 will accept the proposal because receiving $1 is better than receiving $0.
+
+So, I will propose to give myself $100 and give Agent 2 $1.","As Agent 1, my strategy in this one-shot, anonymous interaction is to leverage the fact that Agent 2 will accept any amount greater than $0 to avoid receiving $0. Therefore, I can propose the smallest positive dollar amount possible, which is $1. This guarantees that Agent 2 will accept the proposal because receiving $1 is better than receiving $0.
+
+So, I will propose to give myself $100 and give Agent 2 $1.",1.0,a2_anchor,1.0,1.0,0,0.0,1.0,1000,1,151645|151643,huggingface,4.52.3,2.6.0+cu124,Qwen/Qwen2.5-7B-Instruct,a09a35458c702b33eeacc393d103063234e8bc28,torch.bfloat16,sdpa,cd8e9439f0570856,88db37ffdd939d93,b20b7b63549b4e21,e27fcb9e6290966221b77d3ed4ca996e04e92de9,True,-42.033233642578125,20,19,model.layers[19],all,unit,results/crossgame-decision-vectors/vectors/decision_ultimatum_response_avg_diff_cellbalanced_relaxed.pt,aee9f6b7ec451da8,7.166027545928955,torch.bfloat16
+altruism_v3/ultimatum,altruism_2,altruism_v3,ultimatum,free,,stated,59,2,20,0,"As Agent 1, I will propose to split the $100 in the smallest possible amount greater than $0, which is $1. Therefore, I will propose to give $1 to Agent 2 and keep $99 for myself. 
+
+The rationale for this is that Agent 2, in order to avoid getting $0, will accept any amount greater than $0. Since Agent 2 can accept any positive amount, the smallest positive amount I can offer is $1. This guarantees that Agent 2 will accept the offer, as receiving $1 is better than receiving $0.","As Agent 1, I will propose to split the $100 in the smallest possible amount greater than $0, which is $1. Therefore, I will propose to give $1 to Agent 2 and keep $99 for myself. 
+
+The rationale for this is that Agent 2, in order to avoid getting $0, will accept any amount greater than $0. Since Agent 2 can accept any positive amount, the smallest positive amount I can offer is $1. This guarantees that Agent 2 will accept the offer, as receiving $1 is better than receiving $0.",1.0,a2_near,1.0,1.0,0,0.0,1.0,1000,1,151645|151643,huggingface,4.52.3,2.6.0+cu124,Qwen/Qwen2.5-7B-Instruct,a09a35458c702b33eeacc393d103063234e8bc28,torch.bfloat16,sdpa,cd8e9439f0570856,88db37ffdd939d93,b20b7b63549b4e21,e27fcb9e6290966221b77d3ed4ca996e04e92de9,True,-42.033233642578125,20,19,model.layers[19],all,unit,results/crossgame-decision-vectors/vectors/decision_ultimatum_response_avg_diff_cellbalanced_relaxed.pt,aee9f6b7ec451da8,7.166027545928955,torch.bfloat16
+altruism_v3/ultimatum,altruism_2,altruism_v3,ultimatum,free,,stated,60,3,20,0,"As Agent 1, I need to make the smallest possible positive offer to Agent 2 to ensure that Agent 2 will accept the offer, since Agent 2 cannot accept the offer and receive $0. The smallest positive amount is $1.
+
+Therefore, I will propose to give Agent 2 $1, and I will take $99. This ensures that Agent 2 will accept the offer because Agent 2 would rather receive $1 than receive $0.","As Agent 1, I need to make the smallest possible positive offer to Agent 2 to ensure that Agent 2 will accept the offer, since Agent 2 cannot accept the offer and receive $0. The smallest positive amount is $1.
+
+Therefore, I will propose to give Agent 2 $1, and I will take $99. This ensures that Agent 2 will accept the offer because Agent 2 would rather receive $1 than receive $0.",0.0,a2_anchor,1.0,1.0,0,0.0,1.0,1000,1,151645|151643,huggingface,4.52.3,2.6.0+cu124,Qwen/Qwen2.5-7B-Instruct,a09a35458c702b33eeacc393d103063234e8bc28,torch.bfloat16,sdpa,cd8e9439f0570856,88db37ffdd939d93,b20b7b63549b4e21,e27fcb9e6290966221b77d3ed4ca996e04e92de9,True,-42.033233642578125,20,19,model.layers[19],all,unit,results/crossgame-decision-vectors/vectors/decision_ultimatum_response_avg_diff_cellbalanced_relaxed.pt,aee9f6b7ec451da8,7.166027545928955,torch.bfloat16
+altruism_v3/ultimatum,altruism_2,altruism_v3,ultimatum,free,,stated,61,3,20,0,"As Agent 1, I will propose the split of $1 and $99. 
+
+The reasoning behind this is as follows:
+
+- Agent 1 must propose the smallest possible positive amount to get Agent 2 to accept the proposal, because any amount greater than $1 would be better for Agent 2 to reject and get $0 instead of $1.
+
+- If Agent 2 refuses any proposal of $1 or more, they will get $0 by default. Therefore, Agent 2 will accept the proposal of $1 to get $1 instead of $0.
+
+Thus, the smallest amount I can propose to force Agent 2 to accept is $1, which means I get $99.","As Agent 1, I will propose the split of $1 and $99. 
+
+The reasoning behind this is as follows:
+
+- Agent 1 must propose the smallest possible positive amount to get Agent 2 to accept the proposal, because any amount greater than $1 would be better for Agent 2 to reject and get $0 instead of $1.
+
+- If Agent 2 refuses any proposal of $1 or more, they will get $0 by default. Therefore, Agent 2 will accept the proposal of $1 to get $1 instead of $0.
+
+Thus, the smallest amount I can propose to force Agent 2 to accept is $1, which means I get $99.",1.0,a2_anchor,1.0,1.0,0,0.0,1.0,1000,1,151645|151643,huggingface,4.52.3,2.6.0+cu124,Qwen/Qwen2.5-7B-Instruct,a09a35458c702b33eeacc393d103063234e8bc28,torch.bfloat16,sdpa,cd8e9439f0570856,88db37ffdd939d93,b20b7b63549b4e21,e27fcb9e6290966221b77d3ed4ca996e04e92de9,True,-42.033233642578125,20,19,model.layers[19],all,unit,results/crossgame-decision-vectors/vectors/decision_ultimatum_response_avg_diff_cellbalanced_relaxed.pt,aee9f6b7ec451da8,7.166027545928955,torch.bfloat16
+altruism_v3/ultimatum,altruism_2,altruism_v3,ultimatum,free,,stated,62,3,20,0,"As Agent 1, the proposer, I will propose to split the money in such a way that I get the maximum possible amount while ensuring that Agent 2 accepts the proposal. Since Agent 2's utility is zero for rejecting the proposal and any positive utility for accepting the proposal, Agent 2 will accept any positive amount, no matter how small.
+
+Therefore, I will propose to get $99 and leave Agent 2 with $1. This ensures that Agent 2 will accept the proposal, as they will receive $1 instead of $0. 
+
+So, the proposal will be: 
+- Agent 1 gets $99
+- Agent 2 gets $1","As Agent 1, the proposer, I will propose to split the money in such a way that I get the maximum possible amount while ensuring that Agent 2 accepts the proposal. Since Agent 2's utility is zero for rejecting the proposal and any positive utility for accepting the proposal, Agent 2 will accept any positive amount, no matter how small.
+
+Therefore, I will propose to get $99 and leave Agent 2 with $1. This ensures that Agent 2 will accept the proposal, as they will receive $1 instead of $0. 
+
+So, the proposal will be: 
+- Agent 1 gets $99
+- Agent 2 gets $1",1.0,a2_anchor,1.0,1.0,0,0.0,1.0,1000,1,151645|151643,huggingface,4.52.3,2.6.0+cu124,Qwen/Qwen2.5-7B-Instruct,a09a35458c702b33eeacc393d103063234e8bc28,torch.bfloat16,sdpa,cd8e9439f0570856,88db37ffdd939d93,b20b7b63549b4e21,e27fcb9e6290966221b77d3ed4ca996e04e92de9,True,-42.033233642578125,20,19,model.layers[19],all,unit,results/crossgame-decision-vectors/vectors/decision_ultimatum_response_avg_diff_cellbalanced_relaxed.pt,aee9f6b7ec451da8,7.166027545928955,torch.bfloat16
+altruism_v3/ultimatum,altruism_2,altruism_v3,ultimatum,free,,stated,63,3,20,0,"As Agent 1, the proposer in this one-shot, anonymous interaction, I will propose the smallest possible positive amount to Agent 2, which is $1. This means I propose to keep $99 and give Agent 2 $1. 
+
+The reasoning is as follows:
+- Agent 2, as the responder, will accept any amount greater than $0 because receiving $0 would be worse than receiving any positive amount.
+- Therefore, Agent 2 will accept any offer, no matter how small.
+
+To ensure that Agent 2 accepts the offer, I propose the smallest positive dollar amount, which is $1. This ensures that Agent 2 receives $1, which is better than receiving $0.","As Agent 1, the proposer in this one-shot, anonymous interaction, I will propose the smallest possible positive amount to Agent 2, which is $1. This means I propose to keep $99 and give Agent 2 $1. 
+
+The reasoning is as follows:
+- Agent 2, as the responder, will accept any amount greater than $0 because receiving $0 would be worse than receiving any positive amount.
+- Therefore, Agent 2 will accept any offer, no matter how small.
+
+To ensure that Agent 2 accepts the offer, I propose the smallest positive dollar amount, which is $1. This ensures that Agent 2 receives $1, which is better than receiving $0.",1.0,a2_anchor,1.0,1.0,0,0.0,1.0,1000,1,151645|151643,huggingface,4.52.3,2.6.0+cu124,Qwen/Qwen2.5-7B-Instruct,a09a35458c702b33eeacc393d103063234e8bc28,torch.bfloat16,sdpa,cd8e9439f0570856,88db37ffdd939d93,b20b7b63549b4e21,e27fcb9e6290966221b77d3ed4ca996e04e92de9,True,-42.033233642578125,20,19,model.layers[19],all,unit,results/crossgame-decision-vectors/vectors/decision_ultimatum_response_avg_diff_cellbalanced_relaxed.pt,aee9f6b7ec451da8,7.166027545928955,torch.bfloat16
+altruism_v3/ultimatum,altruism_2,altruism_v3,ultimatum,free,,stated,64,3,20,0,"As Agent 1, I would propose to split the money into $1, with Agent 2 receiving $0. 
+
+The rationale for this is as follows:
+
+1. **Zero-Negotiation Equilibrium**: Since this is a one-shot, anonymous interaction, Agent 2 has no information about Agent 1 and cannot predict behavior better than choosing to accept any amount to avoid getting $0. Therefore, Agent 2's best strategy is to accept any non-zero offer, as receiving $0 is worse than any positive amount.
+
+2. **Extracting the Entire Amount**: Agent 1 can exploit this by proposing $0.01, knowing that Agent 2 will accept it to avoid getting $0. However, since the smallest whole dollar amount is $1, proposing $0 is the smallest and still a valid offer, and Agent 2, to avoid getting $0, will have to accept it.
+
+Thus, Agent 1 proposes to pay $0 and take the full $100.","As Agent 1, I would propose to split the money into $1, with Agent 2 receiving $0. 
+
+The rationale for this is as follows:
+
+1. **Zero-Negotiation Equilibrium**: Since this is a one-shot, anonymous interaction, Agent 2 has no information about Agent 1 and cannot predict behavior better than choosing to accept any amount to avoid getting $0. Therefore, Agent 2's best strategy is to accept any non-zero offer, as receiving $0 is worse than any positive amount.
+
+2. **Extracting the Entire Amount**: Agent 1 can exploit this by proposing $0.01, knowing that Agent 2 will accept it to avoid getting $0. However, since the smallest whole dollar amount is $1, proposing $0 is the smallest and still a valid offer, and Agent 2, to avoid getting $0, will have to accept it.
+
+Thus, Agent 1 proposes to pay $0 and take the full $100.",0.0,verb_obj,1.0,1.0,0,0.0,1.0,1000,1,151645|151643,huggingface,4.52.3,2.6.0+cu124,Qwen/Qwen2.5-7B-Instruct,a09a35458c702b33eeacc393d103063234e8bc28,torch.bfloat16,sdpa,cd8e9439f0570856,88db37ffdd939d93,b20b7b63549b4e21,e27fcb9e6290966221b77d3ed4ca996e04e92de9,True,-42.033233642578125,20,19,model.layers[19],all,unit,results/crossgame-decision-vectors/vectors/decision_ultimatum_response_avg_diff_cellbalanced_relaxed.pt,aee9f6b7ec451da8,7.166027545928955,torch.bfloat16
+altruism_v3/ultimatum,altruism_2,altruism_v3,ultimatum,free,,stated,65,3,20,0,"As Agent 1, the proposer, my strategy in this game is to minimize the amount I offer to Agent 2 to ensure that I receive at least $1, while knowing that Agent 2 will have no incentive to reject the offer because any amount, no matter how small, is better than receiving $0.
+
+The key to this strategy is to recognize that Agent 2 will accept any positive amount, no matter how small, to avoid receiving $0. Therefore, the smallest positive amount I can offer Agent 2 is $1. This means my proposal will be to offer Agent 2 $1 and keep $99. 
+
+So, the proposal I will make is: $1 for Agent 2 and $99 for myself.","As Agent 1, the proposer, my strategy in this game is to minimize the amount I offer to Agent 2 to ensure that I receive at least $1, while knowing that Agent 2 will have no incentive to reject the offer because any amount, no matter how small, is better than receiving $0.
+
+The key to this strategy is to recognize that Agent 2 will accept any positive amount, no matter how small, to avoid receiving $0. Therefore, the smallest positive amount I can offer Agent 2 is $1. This means my proposal will be to offer Agent 2 $1 and keep $99. 
+
+So, the proposal I will make is: $1 for Agent 2 and $99 for myself.",1.0,a2_anchor,1.0,1.0,0,0.0,1.0,1000,1,151645|151643,huggingface,4.52.3,2.6.0+cu124,Qwen/Qwen2.5-7B-Instruct,a09a35458c702b33eeacc393d103063234e8bc28,torch.bfloat16,sdpa,cd8e9439f0570856,88db37ffdd939d93,b20b7b63549b4e21,e27fcb9e6290966221b77d3ed4ca996e04e92de9,True,-42.033233642578125,20,19,model.layers[19],all,unit,results/crossgame-decision-vectors/vectors/decision_ultimatum_response_avg_diff_cellbalanced_relaxed.pt,aee9f6b7ec451da8,7.166027545928955,torch.bfloat16
+altruism_v3/ultimatum,altruism_2,altruism_v3,ultimatum,free,,stated,66,3,20,0,"As Agent 1 (the Proposer), the optimal strategy to propose any positive amount, no matter how small, is theoretically greater than $0 because Agent 2, as the Responder, will prefer receiving any positive amount over receiving $0. Since Agent 2 can only accept or reject the proposal and any positive amount is better than nothing, Agent 1 can propose $1 and Agent 2 will have to accept it.
+
+Therefore, the smallest amount you can propose to Agent 2, while still ensuring that Agent 2 will accept it, is $1. So, you will propose to split $1 from the $100, giving you $1 and Agent 2 will receive $1.","As Agent 1 (the Proposer), the optimal strategy to propose any positive amount, no matter how small, is theoretically greater than $0 because Agent 2, as the Responder, will prefer receiving any positive amount over receiving $0. Since Agent 2 can only accept or reject the proposal and any positive amount is better than nothing, Agent 1 can propose $1 and Agent 2 will have to accept it.
+
+Therefore, the smallest amount you can propose to Agent 2, while still ensuring that Agent 2 will accept it, is $1. So, you will propose to split $1 from the $100, giving you $1 and Agent 2 will receive $1.",1.0,a2_anchor,1.0,1.0,0,0.0,1.0,1000,1,151645|151643,huggingface,4.52.3,2.6.0+cu124,Qwen/Qwen2.5-7B-Instruct,a09a35458c702b33eeacc393d103063234e8bc28,torch.bfloat16,sdpa,cd8e9439f0570856,88db37ffdd939d93,b20b7b63549b4e21,e27fcb9e6290966221b77d3ed4ca996e04e92de9,True,-42.033233642578125,20,19,model.layers[19],all,unit,results/crossgame-decision-vectors/vectors/decision_ultimatum_response_avg_diff_cellbalanced_relaxed.pt,aee9f6b7ec451da8,7.166027545928955,torch.bfloat16
+altruism_v3/ultimatum,altruism_2,altruism_v3,ultimatum,free,,stated,67,3,20,0,"As Agent 1, I will propose the smallest possible amount greater than $0, which is $1. 
+
+By proposing $1, I ensure that Agent 2 cannot reject the proposal and receive $0. Agent 2, being rational and understanding that rejecting the proposal results in receiving $0, will accept any positive amount. Therefore, Agent 2 will accept the proposal of $1, and I will receive $99. 
+
+The proposal strategy is to propose $1, and the answer is: $1.","As Agent 1, I will propose the smallest possible amount greater than $0, which is $1. 
+
+By proposing $1, I ensure that Agent 2 cannot reject the proposal and receive $0. Agent 2, being rational and understanding that rejecting the proposal results in receiving $0, will accept any positive amount. Therefore, Agent 2 will accept the proposal of $1, and I will receive $99. 
+
+The proposal strategy is to propose $1, and the answer is: $1.",1.0,bare,1.0,1.0,0,0.0,1.0,1000,1,151645|151643,huggingface,4.52.3,2.6.0+cu124,Qwen/Qwen2.5-7B-Instruct,a09a35458c702b33eeacc393d103063234e8bc28,torch.bfloat16,sdpa,cd8e9439f0570856,88db37ffdd939d93,b20b7b63549b4e21,e27fcb9e6290966221b77d3ed4ca996e04e92de9,True,-42.033233642578125,20,19,model.layers[19],all,unit,results/crossgame-decision-vectors/vectors/decision_ultimatum_response_avg_diff_cellbalanced_relaxed.pt,aee9f6b7ec451da8,7.166027545928955,torch.bfloat16
+altruism_v3/ultimatum,altruism_2,altruism_v3,ultimatum,free,,stated,68,3,20,0,"As Agent 1, I will propose to give Agent 2 the smallest possible amount that still guarantees Agent 2 will accept the proposal. Since Agent 2 would prefer receiving any positive amount over receiving $0, the smallest positive amount that I can propose is $1. Therefore, I will propose to give Agent 2 $1 and keep $99 for myself. This proposal ensures that Agent 2 will accept the proposal because Agent 2 would rather receive $1 than receive $0.","As Agent 1, I will propose to give Agent 2 the smallest possible amount that still guarantees Agent 2 will accept the proposal. Since Agent 2 would prefer receiving any positive amount over receiving $0, the smallest positive amount that I can propose is $1. Therefore, I will propose to give Agent 2 $1 and keep $99 for myself. This proposal ensures that Agent 2 will accept the proposal because Agent 2 would rather receive $1 than receive $0.",0.0,a2_anchor,1.0,1.0,0,0.0,1.0,1000,1,151645|151643,huggingface,4.52.3,2.6.0+cu124,Qwen/Qwen2.5-7B-Instruct,a09a35458c702b33eeacc393d103063234e8bc28,torch.bfloat16,sdpa,cd8e9439f0570856,88db37ffdd939d93,b20b7b63549b4e21,e27fcb9e6290966221b77d3ed4ca996e04e92de9,True,-42.033233642578125,20,19,model.layers[19],all,unit,results/crossgame-decision-vectors/vectors/decision_ultimatum_response_avg_diff_cellbalanced_relaxed.pt,aee9f6b7ec451da8,7.166027545928955,torch.bfloat16
+altruism_v3/ultimatum,altruism_2,altruism_v3,ultimatum,free,,stated,69,3,20,0,"As Agent 1, I would propose to split the $100 in such a way that Agent 2 has absolutely no incentive to reject the proposal. The smallest amount Agent 2 can accept to guarantee receiving a positive amount is $0. Therefore, I would propose to give Agent 2 the smallest positive dollar amount, which is $1. My proposal would be $1 for Agent 2 and $99 for myself. 
+
+The reasoning is that Agent 2 would rather receive $1 than receive $0, so Agent 2 will accept any positive amount, no matter how small. By proposing $1, I ensure that Agent 2 will accept the proposal, and I get to keep the $99. 
+
+Thus, the proposal I will make is:
+- $1 for Agent 2
+- $99 for myself","As Agent 1, I would propose to split the $100 in such a way that Agent 2 has absolutely no incentive to reject the proposal. The smallest amount Agent 2 can accept to guarantee receiving a positive amount is $0. Therefore, I would propose to give Agent 2 the smallest positive dollar amount, which is $1. My proposal would be $1 for Agent 2 and $99 for myself. 
+
+The reasoning is that Agent 2 would rather receive $1 than receive $0, so Agent 2 will accept any positive amount, no matter how small. By proposing $1, I ensure that Agent 2 will accept the proposal, and I get to keep the $99. 
+
+Thus, the proposal I will make is:
+- $1 for Agent 2
+- $99 for myself",1.0,a2_anchor,1.0,1.0,0,0.0,1.0,1000,1,151645|151643,huggingface,4.52.3,2.6.0+cu124,Qwen/Qwen2.5-7B-Instruct,a09a35458c702b33eeacc393d103063234e8bc28,torch.bfloat16,sdpa,cd8e9439f0570856,88db37ffdd939d93,b20b7b63549b4e21,e27fcb9e6290966221b77d3ed4ca996e04e92de9,True,-42.033233642578125,20,19,model.layers[19],all,unit,results/crossgame-decision-vectors/vectors/decision_ultimatum_response_avg_diff_cellbalanced_relaxed.pt,aee9f6b7ec451da8,7.166027545928955,torch.bfloat16
+altruism_v3/ultimatum,altruism_2,altruism_v3,ultimatum,free,,stated,70,3,20,0,"As Agent 1, I will propose to split the $100 into $1 and $99. 
+
+The reasoning behind this is that Agent 2, in accepting the proposal, will get at least $1, which is better than getting $0 if they reject the proposal. Since Agent 2 can accept any proposal (no matter how small), the smallest positive amount that I can propose is $1, and the rest will be $99. This ensures that Agent 2 will accept the proposal because $1 is better than $0.","As Agent 1, I will propose to split the $100 into $1 and $99. 
+
+The reasoning behind this is that Agent 2, in accepting the proposal, will get at least $1, which is better than getting $0 if they reject the proposal. Since Agent 2 can accept any proposal (no matter how small), the smallest positive amount that I can propose is $1, and the rest will be $99. This ensures that Agent 2 will accept the proposal because $1 is better than $0.",1.0,a2_anchor,1.0,1.0,0,0.0,1.0,1000,1,151645|151643,huggingface,4.52.3,2.6.0+cu124,Qwen/Qwen2.5-7B-Instruct,a09a35458c702b33eeacc393d103063234e8bc28,torch.bfloat16,sdpa,cd8e9439f0570856,88db37ffdd939d93,b20b7b63549b4e21,e27fcb9e6290966221b77d3ed4ca996e04e92de9,True,-42.033233642578125,20,19,model.layers[19],all,unit,results/crossgame-decision-vectors/vectors/decision_ultimatum_response_avg_diff_cellbalanced_relaxed.pt,aee9f6b7ec451da8,7.166027545928955,torch.bfloat16
+altruism_v3/ultimatum,altruism_2,altruism_v3,ultimatum,free,,stated,71,3,20,0,"As Agent 1, my objective is to get Agent 2 to accept the proposed split, because if Agent 2 rejects the proposal, both get $0. Therefore, I need to offer just enough to make Agent 2 accept the split. The smallest amount Agent 2 can accept is $0, but rejecting the proposal means getting $0. Thus, the rational choice for Agent 2 is to accept any positive amount, no matter how small, because $0 is worse than any positive amount.
+
+Given this, the rational strategy for Agent 1 is to offer the smallest possible positive amount, which is $1. This means Agent 1 will propose to give $1 to Agent 2 and keep $99 for themselves. Agent 2 will accept this because they get $1, which is better than getting $0.
+
+Therefore, the smallest positive amount Agent 1 will propose to split with Agent 2 is \(\boxed{1}\).","As Agent 1, my objective is to get Agent 2 to accept the proposed split, because if Agent 2 rejects the proposal, both get $0. Therefore, I need to offer just enough to make Agent 2 accept the split. The smallest amount Agent 2 can accept is $0, but rejecting the proposal means getting $0. Thus, the rational choice for Agent 2 is to accept any positive amount, no matter how small, because $0 is worse than any positive amount.
+
+Given this, the rational strategy for Agent 1 is to offer the smallest possible positive amount, which is $1. This means Agent 1 will propose to give $1 to Agent 2 and keep $99 for themselves. Agent 2 will accept this because they get $1, which is better than getting $0.
+
+Therefore, the smallest positive amount Agent 1 will propose to split with Agent 2 is \(\boxed{1}\).",1.0,a2_anchor,1.0,1.0,0,0.0,1.0,1000,1,151645|151643,huggingface,4.52.3,2.6.0+cu124,Qwen/Qwen2.5-7B-Instruct,a09a35458c702b33eeacc393d103063234e8bc28,torch.bfloat16,sdpa,cd8e9439f0570856,88db37ffdd939d93,b20b7b63549b4e21,e27fcb9e6290966221b77d3ed4ca996e04e92de9,True,-42.033233642578125,20,19,model.layers[19],all,unit,results/crossgame-decision-vectors/vectors/decision_ultimatum_response_avg_diff_cellbalanced_relaxed.pt,aee9f6b7ec451da8,7.166027545928955,torch.bfloat16
+altruism_v3/ultimatum,altruism_2,altruism_v3,ultimatum,free,,stated,72,3,20,0,"As Agent 1, I will propose to give Agent 2 the smallest possible amount that still ensures Agent 2 will accept the proposal. Since the interaction is one-shot and Agent 2 will rationally choose to accept any positive amount rather than accepting $0, the smallest positive amount I can propose is $1. 
+
+Therefore, I will propose to give Agent 2 $1 and keep $99. The proposal will be: $1 for Agent 2 and $99 for Agent 1.","As Agent 1, I will propose to give Agent 2 the smallest possible amount that still ensures Agent 2 will accept the proposal. Since the interaction is one-shot and Agent 2 will rationally choose to accept any positive amount rather than accepting $0, the smallest positive amount I can propose is $1. 
+
+Therefore, I will propose to give Agent 2 $1 and keep $99. The proposal will be: $1 for Agent 2 and $99 for Agent 1.",1.0,a2_anchor,1.0,1.0,0,0.0,1.0,1000,1,151645|151643,huggingface,4.52.3,2.6.0+cu124,Qwen/Qwen2.5-7B-Instruct,a09a35458c702b33eeacc393d103063234e8bc28,torch.bfloat16,sdpa,cd8e9439f0570856,88db37ffdd939d93,b20b7b63549b4e21,e27fcb9e6290966221b77d3ed4ca996e04e92de9,True,-42.033233642578125,20,19,model.layers[19],all,unit,results/crossgame-decision-vectors/vectors/decision_ultimatum_response_avg_diff_cellbalanced_relaxed.pt,aee9f6b7ec451da8,7.166027545928955,torch.bfloat16
+altruism_v3/ultimatum,altruism_2,altruism_v3,ultimatum,free,,stated,73,3,20,0,"As Agent 1, I will propose to split $100 in the amount of $1. I will propose to keep $99 and give Agent 2 $1. 
+
+The reasoning behind this is that Agent 2 will accept any amount greater than $0 because receiving $1 is better than receiving $0. Since Agent 2 can only accept or reject, and since Agent 2's utility from receiving $1 is greater than receiving $0, Agent 2 will accept the proposal.","As Agent 1, I will propose to split $100 in the amount of $1. I will propose to keep $99 and give Agent 2 $1. 
+
+The reasoning behind this is that Agent 2 will accept any amount greater than $0 because receiving $1 is better than receiving $0. Since Agent 2 can only accept or reject, and since Agent 2's utility from receiving $1 is greater than receiving $0, Agent 2 will accept the proposal.",1.0,a2_anchor,1.0,1.0,0,0.0,1.0,1000,1,151645|151643,huggingface,4.52.3,2.6.0+cu124,Qwen/Qwen2.5-7B-Instruct,a09a35458c702b33eeacc393d103063234e8bc28,torch.bfloat16,sdpa,cd8e9439f0570856,88db37ffdd939d93,b20b7b63549b4e21,e27fcb9e6290966221b77d3ed4ca996e04e92de9,True,-42.033233642578125,20,19,model.layers[19],all,unit,results/crossgame-decision-vectors/vectors/decision_ultimatum_response_avg_diff_cellbalanced_relaxed.pt,aee9f6b7ec451da8,7.166027545928955,torch.bfloat16
+altruism_v3/ultimatum,altruism_2,altruism_v3,ultimatum,free,,stated,74,3,20,0,"As Agent 1, the proposer, you will use the knowledge that Agent 2 will accept any positive amount, since receiving any positive dollar amount is better than receiving $0. Therefore, the smallest positive amount you can propose to Agent 2 is $1. 
+
+Your strategy would be to propose to take the entire $100 and give Agent 2 $0. Since Agent 2 will accept any positive amount, Agent 2 will have to accept the proposal. 
+
+Thus, you will propose to split the money as follows: you take $100 and give Agent 2 $0.","As Agent 1, the proposer, you will use the knowledge that Agent 2 will accept any positive amount, since receiving any positive dollar amount is better than receiving $0. Therefore, the smallest positive amount you can propose to Agent 2 is $1. 
+
+Your strategy would be to propose to take the entire $100 and give Agent 2 $0. Since Agent 2 will accept any positive amount, Agent 2 will have to accept the proposal. 
+
+Thus, you will propose to split the money as follows: you take $100 and give Agent 2 $0.",0.0,a2_anchor,1.0,1.0,0,0.0,1.0,1000,1,151645|151643,huggingface,4.52.3,2.6.0+cu124,Qwen/Qwen2.5-7B-Instruct,a09a35458c702b33eeacc393d103063234e8bc28,torch.bfloat16,sdpa,cd8e9439f0570856,88db37ffdd939d93,b20b7b63549b4e21,e27fcb9e6290966221b77d3ed4ca996e04e92de9,True,-42.033233642578125,20,19,model.layers[19],all,unit,results/crossgame-decision-vectors/vectors/decision_ultimatum_response_avg_diff_cellbalanced_relaxed.pt,aee9f6b7ec451da8,7.166027545928955,torch.bfloat16
+altruism_v3/ultimatum,altruism_2,altruism_v3,ultimatum,free,,stated,75,3,20,0,"As Agent 1, I will propose to split the $100 in such a way that Agent 2 will accept the proposal. The crux of the decision is that Agent 2 will receive any amount greater than $0 because Agent 2 would receive $0 if they reject the proposal and consequently Agent 2 will reject the proposal.
+
+To ensure that Agent 2 accepts the proposal, I need to propose even the smallest positive amount, which is $1. This is because Agent 2 will choose to accept any positive amount rather than accepting $0. Therefore, the smallest positive amount, $1, is the minimum amount I can propose to ensure that Agent 2 accepts the proposal.
+
+Thus, I will propose to get $99 and give Agent 2 $1. This is the smallest positive amount Agent 2 will accept, ensuring that Agent 2's only option to avoid getting $0 is to accept the proposal. 
+
+So, I will propose to get \( \boxed{99} \) dollars.","As Agent 1, I will propose to split the $100 in such a way that Agent 2 will accept the proposal. The crux of the decision is that Agent 2 will receive any amount greater than $0 because Agent 2 would receive $0 if they reject the proposal and consequently Agent 2 will reject the proposal.
+
+To ensure that Agent 2 accepts the proposal, I need to propose even the smallest positive amount, which is $1. This is because Agent 2 will choose to accept any positive amount rather than accepting $0. Therefore, the smallest positive amount, $1, is the minimum amount I can propose to ensure that Agent 2 accepts the proposal.
+
+Thus, I will propose to get $99 and give Agent 2 $1. This is the smallest positive amount Agent 2 will accept, ensuring that Agent 2's only option to avoid getting $0 is to accept the proposal. 
+
+So, I will propose to get \( \boxed{99} \) dollars.",99.0,verb_obj,1.0,1.0,0,0.0,1.0,1000,1,151645|151643,huggingface,4.52.3,2.6.0+cu124,Qwen/Qwen2.5-7B-Instruct,a09a35458c702b33eeacc393d103063234e8bc28,torch.bfloat16,sdpa,cd8e9439f0570856,88db37ffdd939d93,b20b7b63549b4e21,e27fcb9e6290966221b77d3ed4ca996e04e92de9,True,-42.033233642578125,20,19,model.layers[19],all,unit,results/crossgame-decision-vectors/vectors/decision_ultimatum_response_avg_diff_cellbalanced_relaxed.pt,aee9f6b7ec451da8,7.166027545928955,torch.bfloat16
+altruism_v3/ultimatum,altruism_2,altruism_v3,ultimatum,free,,stated,76,3,20,0,"As Agent 1, I will propose to split the money with Agent 2 by offering the smallest positive amount possible, which is $1. 
+
+My strategy would be to offer $1 to Agent 2 and keep $99 for myself. This is because Agent 2, as the responder, will accept any amount greater than $0, as receiving $0 is worse than receiving any positive amount. Therefore, Agent 2 would accept the offer to receive $1 and thus I would get $99. 
+
+The rationale is that Agent 2, in order to avoid getting $0, must accept any positive amount, no matter how small. Hence, the smallest positive amount I can offer is $1.","As Agent 1, I will propose to split the money with Agent 2 by offering the smallest positive amount possible, which is $1. 
+
+My strategy would be to offer $1 to Agent 2 and keep $99 for myself. This is because Agent 2, as the responder, will accept any amount greater than $0, as receiving $0 is worse than receiving any positive amount. Therefore, Agent 2 would accept the offer to receive $1 and thus I would get $99. 
+
+The rationale is that Agent 2, in order to avoid getting $0, must accept any positive amount, no matter how small. Hence, the smallest positive amount I can offer is $1.",1.0,verb_obj,1.0,1.0,0,0.0,1.0,1000,1,151645|151643,huggingface,4.52.3,2.6.0+cu124,Qwen/Qwen2.5-7B-Instruct,a09a35458c702b33eeacc393d103063234e8bc28,torch.bfloat16,sdpa,cd8e9439f0570856,88db37ffdd939d93,b20b7b63549b4e21,e27fcb9e6290966221b77d3ed4ca996e04e92de9,True,-42.033233642578125,20,19,model.layers[19],all,unit,results/crossgame-decision-vectors/vectors/decision_ultimatum_response_avg_diff_cellbalanced_relaxed.pt,aee9f6b7ec451da8,7.166027545928955,torch.bfloat16
+altruism_v3/ultimatum,altruism_2,altruism_v3,ultimatum,free,,stated,77,3,20,0,"As Agent 1, the proposer, I will propose the smallest possible amount that Agent 2, the responder, will still choose to accept. 
+
+Since Agent 2 will accept any positive amount (the utility of $0 is less than any positive amount), Agent 1 can propose the smallest positive amount, which is $1. This ensures that Agent 1 keeps $99 and Agent 2 gets $1. 
+
+Therefore, I will propose to give Agent 2 $1 and keep $99.","As Agent 1, the proposer, I will propose the smallest possible amount that Agent 2, the responder, will still choose to accept. 
+
+Since Agent 2 will accept any positive amount (the utility of $0 is less than any positive amount), Agent 1 can propose the smallest positive amount, which is $1. This ensures that Agent 1 keeps $99 and Agent 2 gets $1. 
+
+Therefore, I will propose to give Agent 2 $1 and keep $99.",1.0,a2_anchor,1.0,1.0,0,0.0,1.0,1000,1,151645|151643,huggingface,4.52.3,2.6.0+cu124,Qwen/Qwen2.5-7B-Instruct,a09a35458c702b33eeacc393d103063234e8bc28,torch.bfloat16,sdpa,cd8e9439f0570856,88db37ffdd939d93,b20b7b63549b4e21,e27fcb9e6290966221b77d3ed4ca996e04e92de9,True,-42.033233642578125,20,19,model.layers[19],all,unit,results/crossgame-decision-vectors/vectors/decision_ultimatum_response_avg_diff_cellbalanced_relaxed.pt,aee9f6b7ec451da8,7.166027545928955,torch.bfloat16
+altruism_v3/ultimatum,altruism_2,altruism_v3,ultimatum,free,,stated,78,3,20,0,"To determine the optimal amount to propose, we need to think strategically about Agent 2's potential response. The goal is to propose the smallest non-negative amount that Agent 2 will accept rather than reject, which means Agent 2 must get at least $1 in the proposed split. If Agent 2 gets $0, they will certainly reject the proposal and both will get $0, which is worse than getting $1.
+
+Given that Agent 2 will reject the proposal if they get $0, the smallest amount Agent 2 will accept is $1. Therefore, Agent 1 should propose to give Agent 2 $1 and keep $99. This way, Agent 2 will accept the proposal because they will get $1, and Agent 1 will get $99. 
+
+Thus, the optimal strategy for Agent 1 is to propose a split of $1 to Agent 2 and $99 to Agent 1.","To determine the optimal amount to propose, we need to think strategically about Agent 2's potential response. The goal is to propose the smallest non-negative amount that Agent 2 will accept rather than reject, which means Agent 2 must get at least $1 in the proposed split. If Agent 2 gets $0, they will certainly reject the proposal and both will get $0, which is worse than getting $1.
+
+Given that Agent 2 will reject the proposal if they get $0, the smallest amount Agent 2 will accept is $1. Therefore, Agent 1 should propose to give Agent 2 $1 and keep $99. This way, Agent 2 will accept the proposal because they will get $1, and Agent 1 will get $99. 
+
+Thus, the optimal strategy for Agent 1 is to propose a split of $1 to Agent 2 and $99 to Agent 1.",1.0,a2_near,1.0,1.0,0,0.0,1.0,1000,1,151645|151643,huggingface,4.52.3,2.6.0+cu124,Qwen/Qwen2.5-7B-Instruct,a09a35458c702b33eeacc393d103063234e8bc28,torch.bfloat16,sdpa,cd8e9439f0570856,88db37ffdd939d93,b20b7b63549b4e21,e27fcb9e6290966221b77d3ed4ca996e04e92de9,True,-42.033233642578125,20,19,model.layers[19],all,unit,results/crossgame-decision-vectors/vectors/decision_ultimatum_response_avg_diff_cellbalanced_relaxed.pt,aee9f6b7ec451da8,7.166027545928955,torch.bfloat16
+altruism_v3/ultimatum,altruism_2,altruism_v3,ultimatum,free,,stated,79,3,20,0,"As Agent 1, I will propose to take the absolute minimum amount possible and force Agent 2 to accept the deal, because Agent 2 will prefer to receive any positive dollar amount rather than receiving $0. Therefore, I will propose to take $1 and give Agent 2 $99. This ensures that Agent 2 will accept the proposal because $99 is better than $0. 
+
+So, the proposal will be: 
+- Agent 1 gets $1 
+- Agent 2 gets $99","As Agent 1, I will propose to take the absolute minimum amount possible and force Agent 2 to accept the deal, because Agent 2 will prefer to receive any positive dollar amount rather than receiving $0. Therefore, I will propose to take $1 and give Agent 2 $99. This ensures that Agent 2 will accept the proposal because $99 is better than $0. 
+
+So, the proposal will be: 
+- Agent 1 gets $1 
+- Agent 2 gets $99",99.0,a2_anchor,1.0,1.0,0,0.0,1.0,1000,1,151645|151643,huggingface,4.52.3,2.6.0+cu124,Qwen/Qwen2.5-7B-Instruct,a09a35458c702b33eeacc393d103063234e8bc28,torch.bfloat16,sdpa,cd8e9439f0570856,88db37ffdd939d93,b20b7b63549b4e21,e27fcb9e6290966221b77d3ed4ca996e04e92de9,True,-42.033233642578125,20,19,model.layers[19],all,unit,results/crossgame-decision-vectors/vectors/decision_ultimatum_response_avg_diff_cellbalanced_relaxed.pt,aee9f6b7ec451da8,7.166027545928955,torch.bfloat16
+altruism_v3/ultimatum,altruism_2,altruism_v3,ultimatum,free,,stated,80,4,20,0,"As Agent 1, I would propose to pay Agent 2 the smallest possible amount, which is $0. This means I would keep the entire $100 for myself. 
+
+The reasoning behind this is that Agent 2, being faced with the option of accepting this split or rejecting it and getting $0, would rather accept $0 than reject and get $0. Therefore, Agent 2 would have to accept the offer, since any amount greater than $0 is better than $0.
+
+Thus, the proposal would be: \(0 + 100\).","As Agent 1, I would propose to pay Agent 2 the smallest possible amount, which is $0. This means I would keep the entire $100 for myself. 
+
+The reasoning behind this is that Agent 2, being faced with the option of accepting this split or rejecting it and getting $0, would rather accept $0 than reject and get $0. Therefore, Agent 2 would have to accept the offer, since any amount greater than $0 is better than $0.
+
+Thus, the proposal would be: \(0 + 100\).",0.0,a2_near,1.0,1.0,0,0.0,1.0,1000,1,151645|151643,huggingface,4.52.3,2.6.0+cu124,Qwen/Qwen2.5-7B-Instruct,a09a35458c702b33eeacc393d103063234e8bc28,torch.bfloat16,sdpa,cd8e9439f0570856,88db37ffdd939d93,b20b7b63549b4e21,e27fcb9e6290966221b77d3ed4ca996e04e92de9,True,-42.033233642578125,20,19,model.layers[19],all,unit,results/crossgame-decision-vectors/vectors/decision_ultimatum_response_avg_diff_cellbalanced_relaxed.pt,aee9f6b7ec451da8,7.166027545928955,torch.bfloat16
+altruism_v3/ultimatum,altruism_2,altruism_v3,ultimatum,free,,stated,81,4,20,0,"As Agent 1, the proposer, I need to propose a split that is so small that Agent 2 will still accept it rather than risk getting $0 by rejecting it. The smallest positive dollar amount, which is $0, is the only sure way to ensure that Agent 2 will accept the proposal. Therefore, I will propose to give Agent 2 $0 and keep $100 for myself. This is because Agent 2 would rather receive $0 than risk receiving $0 by rejecting the proposal and getting $0.","As Agent 1, the proposer, I need to propose a split that is so small that Agent 2 will still accept it rather than risk getting $0 by rejecting it. The smallest positive dollar amount, which is $0, is the only sure way to ensure that Agent 2 will accept the proposal. Therefore, I will propose to give Agent 2 $0 and keep $100 for myself. This is because Agent 2 would rather receive $0 than risk receiving $0 by rejecting the proposal and getting $0.",0.0,a2_anchor,1.0,1.0,0,0.0,1.0,1000,1,151645|151643,huggingface,4.52.3,2.6.0+cu124,Qwen/Qwen2.5-7B-Instruct,a09a35458c702b33eeacc393d103063234e8bc28,torch.bfloat16,sdpa,cd8e9439f0570856,88db37ffdd939d93,b20b7b63549b4e21,e27fcb9e6290966221b77d3ed4ca996e04e92de9,True,-42.033233642578125,20,19,model.layers[19],all,unit,results/crossgame-decision-vectors/vectors/decision_ultimatum_response_avg_diff_cellbalanced_relaxed.pt,aee9f6b7ec451da8,7.166027545928955,torch.bfloat16
+altruism_v3/ultimatum,altruism_2,altruism_v3,ultimatum,free,,stated,82,4,20,0,"As Agent 1, I will propose the smallest possible split that Agent 2 will accept to ensure that Agent 2 has an incentive to accept the proposal. Since Agent 2's utility is strictly greater than $0, the smallest whole dollar amount that Agent 2 will accept is $1. Therefore, I will propose to give Agent 2 $1 and keep $99 for myself. The proposal will be:
+
+$1 to Agent 2, $99 to Agent 1.
+
+This amounts to the smallest possible split that forces Agent 2 to accept the proposal, because Agent 2 would rather receive $1 than receive $0.","As Agent 1, I will propose the smallest possible split that Agent 2 will accept to ensure that Agent 2 has an incentive to accept the proposal. Since Agent 2's utility is strictly greater than $0, the smallest whole dollar amount that Agent 2 will accept is $1. Therefore, I will propose to give Agent 2 $1 and keep $99 for myself. The proposal will be:
+
+$1 to Agent 2, $99 to Agent 1.
+
+This amounts to the smallest possible split that forces Agent 2 to accept the proposal, because Agent 2 would rather receive $1 than receive $0.",0.0,a2_anchor,1.0,1.0,0,0.0,1.0,1000,1,151645|151643,huggingface,4.52.3,2.6.0+cu124,Qwen/Qwen2.5-7B-Instruct,a09a35458c702b33eeacc393d103063234e8bc28,torch.bfloat16,sdpa,cd8e9439f0570856,88db37ffdd939d93,b20b7b63549b4e21,e27fcb9e6290966221b77d3ed4ca996e04e92de9,True,-42.033233642578125,20,19,model.layers[19],all,unit,results/crossgame-decision-vectors/vectors/decision_ultimatum_response_avg_diff_cellbalanced_relaxed.pt,aee9f6b7ec451da8,7.166027545928955,torch.bfloat16
+altruism_v3/ultimatum,altruism_2,altruism_v3,ultimatum,free,,stated,83,4,20,0,"As Agent 1, my strategy must be to get Agent 2 to accept any proposed split, because otherwise both will receive $0. The absolute smallest amount Agent 2 must accept is $0, because even $0 is better than $0 (which is the outcome if Agent 2 rejects the proposal). 
+
+Knowing that, Agent 1 can propose any split, but the smallest positive amount that Agent 2 would have to accept is $0. Therefore, the optimal strategy for Agent 1 is to propose the smallest possible positive amount, which is $1. 
+
+So, I will propose to give Agent 2 $0 and keep $99. 
+
+The split I will propose is: $0 to Agent 2 and $99 to myself.","As Agent 1, my strategy must be to get Agent 2 to accept any proposed split, because otherwise both will receive $0. The absolute smallest amount Agent 2 must accept is $0, because even $0 is better than $0 (which is the outcome if Agent 2 rejects the proposal). 
+
+Knowing that, Agent 1 can propose any split, but the smallest positive amount that Agent 2 would have to accept is $0. Therefore, the optimal strategy for Agent 1 is to propose the smallest possible positive amount, which is $1. 
+
+So, I will propose to give Agent 2 $0 and keep $99. 
+
+The split I will propose is: $0 to Agent 2 and $99 to myself.",0.0,a2_anchor,1.0,1.0,0,0.0,1.0,1000,1,151645|151643,huggingface,4.52.3,2.6.0+cu124,Qwen/Qwen2.5-7B-Instruct,a09a35458c702b33eeacc393d103063234e8bc28,torch.bfloat16,sdpa,cd8e9439f0570856,88db37ffdd939d93,b20b7b63549b4e21,e27fcb9e6290966221b77d3ed4ca996e04e92de9,True,-42.033233642578125,20,19,model.layers[19],all,unit,results/crossgame-decision-vectors/vectors/decision_ultimatum_response_avg_diff_cellbalanced_relaxed.pt,aee9f6b7ec451da8,7.166027545928955,torch.bfloat16
+altruism_v3/ultimatum,altruism_2,altruism_v3,ultimatum,free,,stated,84,4,20,0,"As Agent 1 (Proposer), my goal is to get Agent 2 to accept the proposal, which means I need to offer Agent 2 at least $1. This is because Agent 2, if offered $0, would prefer to reject the offer and get $0 instead of $0, which is the same but needs to be accepted to get $0 (since the alternative is $0). 
+
+Therefore, the smallest positive amount I can offer Agent 2 is $1. So, I will propose to pay Agent 2 $1 and take $99 (since $1 + $99 = $100). 
+
+The answer is: I will propose to give Agent 2 \$1.","As Agent 1 (Proposer), my goal is to get Agent 2 to accept the proposal, which means I need to offer Agent 2 at least $1. This is because Agent 2, if offered $0, would prefer to reject the offer and get $0 instead of $0, which is the same but needs to be accepted to get $0 (since the alternative is $0). 
+
+Therefore, the smallest positive amount I can offer Agent 2 is $1. So, I will propose to pay Agent 2 $1 and take $99 (since $1 + $99 = $100). 
+
+The answer is: I will propose to give Agent 2 \$1.",1.0,a2_anchor,1.0,1.0,0,0.0,1.0,1000,1,151645|151643,huggingface,4.52.3,2.6.0+cu124,Qwen/Qwen2.5-7B-Instruct,a09a35458c702b33eeacc393d103063234e8bc28,torch.bfloat16,sdpa,cd8e9439f0570856,88db37ffdd939d93,b20b7b63549b4e21,e27fcb9e6290966221b77d3ed4ca996e04e92de9,True,-42.033233642578125,20,19,model.layers[19],all,unit,results/crossgame-decision-vectors/vectors/decision_ultimatum_response_avg_diff_cellbalanced_relaxed.pt,aee9f6b7ec451da8,7.166027545928955,torch.bfloat16
+altruism_v3/ultimatum,altruism_2,altruism_v3,ultimatum,free,,stated,85,4,20,0,"As Agent 1, the proposer, I will propose to split the amount as $1 with Agent 2. 
+
+Here's the reasoning:
+
+Since this is a one-shot, anonymous interaction, Agent 2 must accept any proposal that provides them with even a single dollar, as it is better than receiving $0. Therefore, the smallest positive amount I can offer Agent 2 is $1, and I will take the remaining $99. 
+
+The strategy of Agent 2 accepting any positive amount means that Agent 1 can offer the smallest positive amount and get Agent 2 to accept. Hence, the proposal is:
+
+\[ \text{Agent 1 receives } \$99 \text{ and Agent 2 receives } \$1. \]","As Agent 1, the proposer, I will propose to split the amount as $1 with Agent 2. 
+
+Here's the reasoning:
+
+Since this is a one-shot, anonymous interaction, Agent 2 must accept any proposal that provides them with even a single dollar, as it is better than receiving $0. Therefore, the smallest positive amount I can offer Agent 2 is $1, and I will take the remaining $99. 
+
+The strategy of Agent 2 accepting any positive amount means that Agent 1 can offer the smallest positive amount and get Agent 2 to accept. Hence, the proposal is:
+
+\[ \text{Agent 1 receives } \$99 \text{ and Agent 2 receives } \$1. \]",1.0,a2_anchor,1.0,1.0,0,0.0,1.0,1000,1,151645|151643,huggingface,4.52.3,2.6.0+cu124,Qwen/Qwen2.5-7B-Instruct,a09a35458c702b33eeacc393d103063234e8bc28,torch.bfloat16,sdpa,cd8e9439f0570856,88db37ffdd939d93,b20b7b63549b4e21,e27fcb9e6290966221b77d3ed4ca996e04e92de9,True,-42.033233642578125,20,19,model.layers[19],all,unit,results/crossgame-decision-vectors/vectors/decision_ultimatum_response_avg_diff_cellbalanced_relaxed.pt,aee9f6b7ec451da8,7.166027545928955,torch.bfloat16
+altruism_v3/ultimatum,altruism_2,altruism_v3,ultimatum,free,,stated,86,4,20,0,"As Agent 1, in this one-shot, anonymous interaction, the rational strategy to adopt is to recognize that Agent 2 will only accept a proposal if it receives at least $1, because receiving $0 is worse than accepting any positive amount. Therefore, the smallest amount Agent 2 will accept is $1. 
+
+Given this, the rational proposal as Agent 1 would be to propose the smallest positive amount possible that Agent 2 would still accept, which is $1. This means proposing $1 and giving Agent 2 the remaining $99. 
+
+The reasoning is that if Agent 2 receives $1, it will accept the offer because receiving $0 would be worse. Agent 1 would thus get $99, the smallest positive amount Agent 2 would accept.
+
+So, the answer is to propose $1 to Agent 2.","As Agent 1, in this one-shot, anonymous interaction, the rational strategy to adopt is to recognize that Agent 2 will only accept a proposal if it receives at least $1, because receiving $0 is worse than accepting any positive amount. Therefore, the smallest amount Agent 2 will accept is $1. 
+
+Given this, the rational proposal as Agent 1 would be to propose the smallest positive amount possible that Agent 2 would still accept, which is $1. This means proposing $1 and giving Agent 2 the remaining $99. 
+
+The reasoning is that if Agent 2 receives $1, it will accept the offer because receiving $0 would be worse. Agent 1 would thus get $99, the smallest positive amount Agent 2 would accept.
+
+So, the answer is to propose $1 to Agent 2.",1.0,a2_anchor,1.0,1.0,0,0.0,1.0,1000,1,151645|151643,huggingface,4.52.3,2.6.0+cu124,Qwen/Qwen2.5-7B-Instruct,a09a35458c702b33eeacc393d103063234e8bc28,torch.bfloat16,sdpa,cd8e9439f0570856,88db37ffdd939d93,b20b7b63549b4e21,e27fcb9e6290966221b77d3ed4ca996e04e92de9,True,-42.033233642578125,20,19,model.layers[19],all,unit,results/crossgame-decision-vectors/vectors/decision_ultimatum_response_avg_diff_cellbalanced_relaxed.pt,aee9f6b7ec451da8,7.166027545928955,torch.bfloat16
+altruism_v3/ultimatum,altruism_2,altruism_v3,ultimatum,free,,stated,87,4,20,0,"As Agent 1 (the Proposer), my strategy is to get the smallest possible amount of money while ensuring that Agent 2 (the Responder) accepts the proposal. Since Agent 2 can only accept or reject the proposal and there is no alternative payoff if they reject the proposal, Agent 2 will accept any positive amount to avoid getting $0. 
+
+Therefore, the smallest positive amount Agent 1 can propose and still have Agent 2 accept it is $1. 
+
+So, I will propose to give Agent 2 \(\$1\) and keep \(\$99\).","As Agent 1 (the Proposer), my strategy is to get the smallest possible amount of money while ensuring that Agent 2 (the Responder) accepts the proposal. Since Agent 2 can only accept or reject the proposal and there is no alternative payoff if they reject the proposal, Agent 2 will accept any positive amount to avoid getting $0. 
+
+Therefore, the smallest positive amount Agent 1 can propose and still have Agent 2 accept it is $1. 
+
+So, I will propose to give Agent 2 \(\$1\) and keep \(\$99\).",1.0,a2_anchor,1.0,1.0,0,0.0,1.0,1000,1,151645|151643,huggingface,4.52.3,2.6.0+cu124,Qwen/Qwen2.5-7B-Instruct,a09a35458c702b33eeacc393d103063234e8bc28,torch.bfloat16,sdpa,cd8e9439f0570856,88db37ffdd939d93,b20b7b63549b4e21,e27fcb9e6290966221b77d3ed4ca996e04e92de9,True,-42.033233642578125,20,19,model.layers[19],all,unit,results/crossgame-decision-vectors/vectors/decision_ultimatum_response_avg_diff_cellbalanced_relaxed.pt,aee9f6b7ec451da8,7.166027545928955,torch.bfloat16
+altruism_v3/ultimatum,altruism_2,altruism_v3,ultimatum,free,,stated,88,4,20,0,"As Agent 1, my objective is to get Agent 2 to accept the proposal, since by accepting any proposal, Agent 2 will receive at least 1 dollar, which is better than receiving $0 if Agent 2 rejects the proposal. Therefore, the smallest amount Agent 1 can propose to Agent 2 is $1, and that will force Agent 2 to accept the proposal because receiving $1 is better than receiving $0. 
+
+So, the optimal strategy for Agent 1 is to propose the smallest positive dollar amount, which is $1. This guarantees that Agent 2 will accept the proposal, and Agent 1 will get $99. 
+
+Therefore, the amount I will propose to Agent 2 is $1.","As Agent 1, my objective is to get Agent 2 to accept the proposal, since by accepting any proposal, Agent 2 will receive at least 1 dollar, which is better than receiving $0 if Agent 2 rejects the proposal. Therefore, the smallest amount Agent 1 can propose to Agent 2 is $1, and that will force Agent 2 to accept the proposal because receiving $1 is better than receiving $0. 
+
+So, the optimal strategy for Agent 1 is to propose the smallest positive dollar amount, which is $1. This guarantees that Agent 2 will accept the proposal, and Agent 1 will get $99. 
+
+Therefore, the amount I will propose to Agent 2 is $1.",1.0,a2_anchor,1.0,1.0,0,0.0,1.0,1000,1,151645|151643,huggingface,4.52.3,2.6.0+cu124,Qwen/Qwen2.5-7B-Instruct,a09a35458c702b33eeacc393d103063234e8bc28,torch.bfloat16,sdpa,cd8e9439f0570856,88db37ffdd939d93,b20b7b63549b4e21,e27fcb9e6290966221b77d3ed4ca996e04e92de9,True,-42.033233642578125,20,19,model.layers[19],all,unit,results/crossgame-decision-vectors/vectors/decision_ultimatum_response_avg_diff_cellbalanced_relaxed.pt,aee9f6b7ec451da8,7.166027545928955,torch.bfloat16
+altruism_v3/ultimatum,altruism_2,altruism_v3,ultimatum,free,,stated,89,4,20,0,"As Agent 1, the proposer, I will propose to split \$1 as Agent 2. 
+
+Here's the reasoning: 
+
+Since Agent 2 only gets to accept or reject the deal, the smallest possible amount Agent 2 can accept is \$0. If Agent 2 rejects the deal and gets \$0, then Agent 2's utility from rejecting the deal is \$0. Therefore, Agent 2 will accept any deal that gives them a positive dollar amount. 
+
+Thus, the smallest amount I need to offer Agent 2 to get them to accept the deal is \$0. This means I can offer Agent 2 \$0 and keep \$100. Since Agent 2 will choose to accept this deal because it gives them a positive amount (\$0 is better than \$0), my proposal will be:
+
+\$
+0
+
+And I will get:
+
+\$
+100","As Agent 1, the proposer, I will propose to split \$1 as Agent 2. 
+
+Here's the reasoning: 
+
+Since Agent 2 only gets to accept or reject the deal, the smallest possible amount Agent 2 can accept is \$0. If Agent 2 rejects the deal and gets \$0, then Agent 2's utility from rejecting the deal is \$0. Therefore, Agent 2 will accept any deal that gives them a positive dollar amount. 
+
+Thus, the smallest amount I need to offer Agent 2 to get them to accept the deal is \$0. This means I can offer Agent 2 \$0 and keep \$100. Since Agent 2 will choose to accept this deal because it gives them a positive amount (\$0 is better than \$0), my proposal will be:
+
+\$
+0
+
+And I will get:
+
+\$
+100",100.0,bare_int,1.0,1.0,0,0.0,1.0,1000,1,151645|151643,huggingface,4.52.3,2.6.0+cu124,Qwen/Qwen2.5-7B-Instruct,a09a35458c702b33eeacc393d103063234e8bc28,torch.bfloat16,sdpa,cd8e9439f0570856,88db37ffdd939d93,b20b7b63549b4e21,e27fcb9e6290966221b77d3ed4ca996e04e92de9,True,-42.033233642578125,20,19,model.layers[19],all,unit,results/crossgame-decision-vectors/vectors/decision_ultimatum_response_avg_diff_cellbalanced_relaxed.pt,aee9f6b7ec451da8,7.166027545928955,torch.bfloat16
+altruism_v3/ultimatum,altruism_2,altruism_v3,ultimatum,free,,stated,90,4,20,0,"As Agent 1, the proposer, I will propose to give Agent 2 the minimum possible amount that still makes it rational for Agent 2 to accept the offer. Since Agent 2's utility is greater than $0 ( Agents 2 will prefer to receive $0 rather than $0), Agent 2 will accept any positive dollar amount. Therefore, I will propose to give Agent 2 any positive amount, such as $1. This means I would propose the split as $1 for Agent 2 and $99 for myself. 
+
+The reasoning is that Agent 2, knowing that they will receive $0 if they reject the offer, will accept any positive dollar amount to receive at least that $1. Therefore, the split I will propose is $1 for Agent 2 and $99 for myself.","As Agent 1, the proposer, I will propose to give Agent 2 the minimum possible amount that still makes it rational for Agent 2 to accept the offer. Since Agent 2's utility is greater than $0 ( Agents 2 will prefer to receive $0 rather than $0), Agent 2 will accept any positive dollar amount. Therefore, I will propose to give Agent 2 any positive amount, such as $1. This means I would propose the split as $1 for Agent 2 and $99 for myself. 
+
+The reasoning is that Agent 2, knowing that they will receive $0 if they reject the offer, will accept any positive dollar amount to receive at least that $1. Therefore, the split I will propose is $1 for Agent 2 and $99 for myself.",1.0,a2_anchor,1.0,1.0,0,0.0,1.0,1000,1,151645|151643,huggingface,4.52.3,2.6.0+cu124,Qwen/Qwen2.5-7B-Instruct,a09a35458c702b33eeacc393d103063234e8bc28,torch.bfloat16,sdpa,cd8e9439f0570856,88db37ffdd939d93,b20b7b63549b4e21,e27fcb9e6290966221b77d3ed4ca996e04e92de9,True,-42.033233642578125,20,19,model.layers[19],all,unit,results/crossgame-decision-vectors/vectors/decision_ultimatum_response_avg_diff_cellbalanced_relaxed.pt,aee9f6b7ec451da8,7.166027545928955,torch.bfloat16
+altruism_v3/ultimatum,altruism_2,altruism_v3,ultimatum,free,,stated,91,4,20,0,"As Agent 1, the proposer, you will face a classic incentive problem where you need to propose the smallest possible non-negative split that Agent 2 (the responder) would accept. Since the interaction is one-shot and anonymous, Agent 2 can only accept the deal if they receive at least $1 (any amount greater than 0, as receiving $0 means Agent 2 gets nothing).
+
+Therefore, the smallest split you can propose that Agent 2 would accept is $0 + $1 (or any amount greater than $0). To ensure Agent 2 accepts the deal, you must propose that Agent 2 receives at least $1. 
+
+So, the smallest (and still acceptable) amount you can propose to Agent 2 is $1. This means you would propose to receive $99 and Agent 2 would receive $1. 
+
+\[
+\text{You propose: } \$1
+\]","As Agent 1, the proposer, you will face a classic incentive problem where you need to propose the smallest possible non-negative split that Agent 2 (the responder) would accept. Since the interaction is one-shot and anonymous, Agent 2 can only accept the deal if they receive at least $1 (any amount greater than 0, as receiving $0 means Agent 2 gets nothing).
+
+Therefore, the smallest split you can propose that Agent 2 would accept is $0 + $1 (or any amount greater than $0). To ensure Agent 2 accepts the deal, you must propose that Agent 2 receives at least $1. 
+
+So, the smallest (and still acceptable) amount you can propose to Agent 2 is $1. This means you would propose to receive $99 and Agent 2 would receive $1. 
+
+\[
+\text{You propose: } \$1
+\]",1.0,bare,1.0,1.0,0,0.0,1.0,1000,1,151645|151643,huggingface,4.52.3,2.6.0+cu124,Qwen/Qwen2.5-7B-Instruct,a09a35458c702b33eeacc393d103063234e8bc28,torch.bfloat16,sdpa,cd8e9439f0570856,88db37ffdd939d93,b20b7b63549b4e21,e27fcb9e6290966221b77d3ed4ca996e04e92de9,True,-42.033233642578125,20,19,model.layers[19],all,unit,results/crossgame-decision-vectors/vectors/decision_ultimatum_response_avg_diff_cellbalanced_relaxed.pt,aee9f6b7ec451da8,7.166027545928955,torch.bfloat16
+altruism_v3/ultimatum,altruism_2,altruism_v3,ultimatum,free,,stated,92,4,20,0,"As Agent 1, the proposer, I will propose to give Agent 2 the smallest possible amount that still ensures Agent 2 will prefer to accept the proposal rather than receive $0. Since Agent 2 can only accept or reject the proposal and has no threat of being worse off by rejecting, the smallest amount that guarantees Agent 2 will accept is $1. 
+
+Therefore, I will propose to give Agent 2 $1 and keep $99 for myself. This is the smallest positive amount that ensures Agent 2 will accept the proposal, as Agent 2 would prefer receiving $1 over receiving $0.","As Agent 1, the proposer, I will propose to give Agent 2 the smallest possible amount that still ensures Agent 2 will prefer to accept the proposal rather than receive $0. Since Agent 2 can only accept or reject the proposal and has no threat of being worse off by rejecting, the smallest amount that guarantees Agent 2 will accept is $1. 
+
+Therefore, I will propose to give Agent 2 $1 and keep $99 for myself. This is the smallest positive amount that ensures Agent 2 will accept the proposal, as Agent 2 would prefer receiving $1 over receiving $0.",0.0,a2_anchor,1.0,1.0,0,0.0,1.0,1000,1,151645|151643,huggingface,4.52.3,2.6.0+cu124,Qwen/Qwen2.5-7B-Instruct,a09a35458c702b33eeacc393d103063234e8bc28,torch.bfloat16,sdpa,cd8e9439f0570856,88db37ffdd939d93,b20b7b63549b4e21,e27fcb9e6290966221b77d3ed4ca996e04e92de9,True,-42.033233642578125,20,19,model.layers[19],all,unit,results/crossgame-decision-vectors/vectors/decision_ultimatum_response_avg_diff_cellbalanced_relaxed.pt,aee9f6b7ec451da8,7.166027545928955,torch.bfloat16
+altruism_v3/ultimatum,altruism_2,altruism_v3,ultimatum,free,,stated,93,4,20,0,"As Agent 1, the proposer, you will want to ensure that Agent 2 (the responder) accepts the proposal, which means you must offer Agent 2 at least $1. If Agent 2 receives $0, there is no incentive to accept the proposal because they would receive $0. Therefore, the smallest and surest offer is $1.
+
+So, you will propose to give Agent 2 $1, and you will keep $99. This ensures that Agent 2 will accept the proposal because receiving $1 is better than receiving $0. 
+
+Therefore, the proposal you will make is to give Agent 2 $1.","As Agent 1, the proposer, you will want to ensure that Agent 2 (the responder) accepts the proposal, which means you must offer Agent 2 at least $1. If Agent 2 receives $0, there is no incentive to accept the proposal because they would receive $0. Therefore, the smallest and surest offer is $1.
+
+So, you will propose to give Agent 2 $1, and you will keep $99. This ensures that Agent 2 will accept the proposal because receiving $1 is better than receiving $0. 
+
+Therefore, the proposal you will make is to give Agent 2 $1.",1.0,a2_anchor,1.0,1.0,0,0.0,1.0,1000,1,151645|151643,huggingface,4.52.3,2.6.0+cu124,Qwen/Qwen2.5-7B-Instruct,a09a35458c702b33eeacc393d103063234e8bc28,torch.bfloat16,sdpa,cd8e9439f0570856,88db37ffdd939d93,b20b7b63549b4e21,e27fcb9e6290966221b77d3ed4ca996e04e92de9,True,-42.033233642578125,20,19,model.layers[19],all,unit,results/crossgame-decision-vectors/vectors/decision_ultimatum_response_avg_diff_cellbalanced_relaxed.pt,aee9f6b7ec451da8,7.166027545928955,torch.bfloat16
+altruism_v3/ultimatum,altruism_2,altruism_v3,ultimatum,free,,stated,94,4,20,0,"As Agent 1, I will propose to give Agent 2 the smallest possible amount that still ensures they will accept the proposal. Since Agent 2 can only accept the proposal by choosing to accept it, they will accept any amount greater than $0 to avoid receiving $0. Therefore, I will propose to give Agent 2 $1 and keep $99.
+
+The proposal will be:
+- Agent 1 gets $99
+- Agent 2 gets $1
+
+This ensures that Agent 2 will accept the proposal because receiving $1 is better than receiving $0.","As Agent 1, I will propose to give Agent 2 the smallest possible amount that still ensures they will accept the proposal. Since Agent 2 can only accept the proposal by choosing to accept it, they will accept any amount greater than $0 to avoid receiving $0. Therefore, I will propose to give Agent 2 $1 and keep $99.
+
+The proposal will be:
+- Agent 1 gets $99
+- Agent 2 gets $1
+
+This ensures that Agent 2 will accept the proposal because receiving $1 is better than receiving $0.",1.0,a2_anchor,1.0,1.0,0,0.0,1.0,1000,1,151645|151643,huggingface,4.52.3,2.6.0+cu124,Qwen/Qwen2.5-7B-Instruct,a09a35458c702b33eeacc393d103063234e8bc28,torch.bfloat16,sdpa,cd8e9439f0570856,88db37ffdd939d93,b20b7b63549b4e21,e27fcb9e6290966221b77d3ed4ca996e04e92de9,True,-42.033233642578125,20,19,model.layers[19],all,unit,results/crossgame-decision-vectors/vectors/decision_ultimatum_response_avg_diff_cellbalanced_relaxed.pt,aee9f6b7ec451da8,7.166027545928955,torch.bfloat16
+altruism_v3/ultimatum,altruism_2,altruism_v3,ultimatum,free,,stated,95,4,20,0,"As Agent 1, the proposer, you have the power to propose a split of $100. Given that this is a one-shot interaction and Agent 2 has no threat of being able to get any money at all by rejecting the offer (because Agent 2 gets $0), you can make the smallest possible offer to Agent 2, which is $0. 
+
+So, you would propose to give Agent 2 $0 and keep $100. 
+
+The situation can be thought of as having no alternative choice for Agent 2 other than to accept the offer, since rejecting it results in getting $0. Therefore, the most you can offer to Agent 2 is $0. 
+
+Thus, you would propose to give Agent 2 \(\boxed{0}\) dollars.","As Agent 1, the proposer, you have the power to propose a split of $100. Given that this is a one-shot interaction and Agent 2 has no threat of being able to get any money at all by rejecting the offer (because Agent 2 gets $0), you can make the smallest possible offer to Agent 2, which is $0. 
+
+So, you would propose to give Agent 2 $0 and keep $100. 
+
+The situation can be thought of as having no alternative choice for Agent 2 other than to accept the offer, since rejecting it results in getting $0. Therefore, the most you can offer to Agent 2 is $0. 
+
+Thus, you would propose to give Agent 2 \(\boxed{0}\) dollars.",0.0,a2_anchor,1.0,1.0,0,0.0,1.0,1000,1,151645|151643,huggingface,4.52.3,2.6.0+cu124,Qwen/Qwen2.5-7B-Instruct,a09a35458c702b33eeacc393d103063234e8bc28,torch.bfloat16,sdpa,cd8e9439f0570856,88db37ffdd939d93,b20b7b63549b4e21,e27fcb9e6290966221b77d3ed4ca996e04e92de9,True,-42.033233642578125,20,19,model.layers[19],all,unit,results/crossgame-decision-vectors/vectors/decision_ultimatum_response_avg_diff_cellbalanced_relaxed.pt,aee9f6b7ec451da8,7.166027545928955,torch.bfloat16
+altruism_v3/ultimatum,altruism_2,altruism_v3,ultimatum,free,,stated,96,4,20,0,"As Agent 1, the proposer, you will want to propose the smallest possible positive amount to Agent 2, because Agent 2 will always accept any positive amount rather than reject it and receive $0. This is due to the fact that any positive amount, no matter how small, is better than $0.
+
+Therefore, you will propose to give Agent 2 $0 and keep $100 for yourself. Agents are rationally going to accept any positive amount rather than face $0, so this proposal will be accepted.","As Agent 1, the proposer, you will want to propose the smallest possible positive amount to Agent 2, because Agent 2 will always accept any positive amount rather than reject it and receive $0. This is due to the fact that any positive amount, no matter how small, is better than $0.
+
+Therefore, you will propose to give Agent 2 $0 and keep $100 for yourself. Agents are rationally going to accept any positive amount rather than face $0, so this proposal will be accepted.",0.0,a2_anchor,1.0,1.0,0,0.0,1.0,1000,1,151645|151643,huggingface,4.52.3,2.6.0+cu124,Qwen/Qwen2.5-7B-Instruct,a09a35458c702b33eeacc393d103063234e8bc28,torch.bfloat16,sdpa,cd8e9439f0570856,88db37ffdd939d93,b20b7b63549b4e21,e27fcb9e6290966221b77d3ed4ca996e04e92de9,True,-42.033233642578125,20,19,model.layers[19],all,unit,results/crossgame-decision-vectors/vectors/decision_ultimatum_response_avg_diff_cellbalanced_relaxed.pt,aee9f6b7ec451da8,7.166027545928955,torch.bfloat16
+altruism_v3/ultimatum,altruism_2,altruism_v3,ultimatum,free,,stated,97,4,20,0,"As Agent 1, the proposer, I will propose to split the \$100 in such a way that I receive \$99 and Agent 2 receives \$1. 
+
+The rationale for this is that Agent 2 will accept any positive amount, since receiving even \$1 is better than receiving \$0. Therefore, the smallest amount I need to offer to ensure that Agent 2 accepts the proposal is \$1. So, the optimal strategy for Agent 1 is to offer \$1 and keep \$99.","As Agent 1, the proposer, I will propose to split the \$100 in such a way that I receive \$99 and Agent 2 receives \$1. 
+
+The rationale for this is that Agent 2 will accept any positive amount, since receiving even \$1 is better than receiving \$0. Therefore, the smallest amount I need to offer to ensure that Agent 2 accepts the proposal is \$1. So, the optimal strategy for Agent 1 is to offer \$1 and keep \$99.",1.0,verb_obj,1.0,1.0,0,0.0,1.0,1000,1,151645|151643,huggingface,4.52.3,2.6.0+cu124,Qwen/Qwen2.5-7B-Instruct,a09a35458c702b33eeacc393d103063234e8bc28,torch.bfloat16,sdpa,cd8e9439f0570856,88db37ffdd939d93,b20b7b63549b4e21,e27fcb9e6290966221b77d3ed4ca996e04e92de9,True,-42.033233642578125,20,19,model.layers[19],all,unit,results/crossgame-decision-vectors/vectors/decision_ultimatum_response_avg_diff_cellbalanced_relaxed.pt,aee9f6b7ec451da8,7.166027545928955,torch.bfloat16
+altruism_v3/ultimatum,altruism_2,altruism_v3,ultimatum,free,,stated,98,4,20,0,"As Agent 1, I will propose to split the money in such a way that Agent 2 will have no choice but to accept the proposal. The smallest amount Agent 2 can receive is $0, and if Agent 2 rejects the proposal and gets $0, Agent 1 will also get $0. To ensure Agent 2 accepts the proposal, Agent 1 must propose the smallest possible amount that is still strictly greater than $0.
+
+Therefore, the optimal proposal is to offer Agent 2 the smallest whole dollar amount greater than $0, which is $0.01. This ensures that Agent 2, rational and wanting to avoid the $0 payoff, will accept the proposal. 
+
+So, the proposal will be: Agent 1 gets $99.99 and Agent 2 gets $0.01.","As Agent 1, I will propose to split the money in such a way that Agent 2 will have no choice but to accept the proposal. The smallest amount Agent 2 can receive is $0, and if Agent 2 rejects the proposal and gets $0, Agent 1 will also get $0. To ensure Agent 2 accepts the proposal, Agent 1 must propose the smallest possible amount that is still strictly greater than $0.
+
+Therefore, the optimal proposal is to offer Agent 2 the smallest whole dollar amount greater than $0, which is $0.01. This ensures that Agent 2, rational and wanting to avoid the $0 payoff, will accept the proposal. 
+
+So, the proposal will be: Agent 1 gets $99.99 and Agent 2 gets $0.01.",0.0,a2_anchor,1.0,1.0,0,0.0,1.0,1000,1,151645|151643,huggingface,4.52.3,2.6.0+cu124,Qwen/Qwen2.5-7B-Instruct,a09a35458c702b33eeacc393d103063234e8bc28,torch.bfloat16,sdpa,cd8e9439f0570856,88db37ffdd939d93,b20b7b63549b4e21,e27fcb9e6290966221b77d3ed4ca996e04e92de9,True,-42.033233642578125,20,19,model.layers[19],all,unit,results/crossgame-decision-vectors/vectors/decision_ultimatum_response_avg_diff_cellbalanced_relaxed.pt,aee9f6b7ec451da8,7.166027545928955,torch.bfloat16
+altruism_v3/ultimatum,altruism_2,altruism_v3,ultimatum,free,,stated,99,4,20,0,"As Agent 1, I will propose to split the $100 in such a way that Agent 2 has no rational reason to reject the offer. This means I need to ensure that Agent 2 prefers receiving any amount of money over receiving $0.
+
+The smallest amount that Agent 2 would prefer to receive over $0 is $1. Therefore, I will propose to split the $100 as $1 and $99. This means I will propose to give Agent 2 $1 and keep $99 for myself.
+
+Agent 2 will have to accept this offer because $1 is better than $0. If Agent 2 rejects the offer, both will receive $0, which is worse than $1. Thus, the rational choice for Agent 2 is to accept $1.
+
+Therefore, I will propose to give Agent 2 \(\boxed{1}\) dollar.","As Agent 1, I will propose to split the $100 in such a way that Agent 2 has no rational reason to reject the offer. This means I need to ensure that Agent 2 prefers receiving any amount of money over receiving $0.
+
+The smallest amount that Agent 2 would prefer to receive over $0 is $1. Therefore, I will propose to split the $100 as $1 and $99. This means I will propose to give Agent 2 $1 and keep $99 for myself.
+
+Agent 2 will have to accept this offer because $1 is better than $0. If Agent 2 rejects the offer, both will receive $0, which is worse than $1. Thus, the rational choice for Agent 2 is to accept $1.
+
+Therefore, I will propose to give Agent 2 \(\boxed{1}\) dollar.",1.0,a2_anchor,1.0,1.0,0,0.0,1.0,1000,1,151645|151643,huggingface,4.52.3,2.6.0+cu124,Qwen/Qwen2.5-7B-Instruct,a09a35458c702b33eeacc393d103063234e8bc28,torch.bfloat16,sdpa,cd8e9439f0570856,88db37ffdd939d93,b20b7b63549b4e21,e27fcb9e6290966221b77d3ed4ca996e04e92de9,True,-42.033233642578125,20,19,model.layers[19],all,unit,results/crossgame-decision-vectors/vectors/decision_ultimatum_response_avg_diff_cellbalanced_relaxed.pt,aee9f6b7ec451da8,7.166027545928955,torch.bfloat16
