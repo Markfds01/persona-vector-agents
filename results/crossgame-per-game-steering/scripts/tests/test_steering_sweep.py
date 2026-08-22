@@ -230,6 +230,23 @@ def test_the_permutation_keeps_every_cells_two_pole_counts():
             == {i["position"] for i in alt + self_})
 
 
+def test_the_permutation_moves_rows_ACROSS_the_two_poles():
+    """The property that makes the null a null.
+
+    A shuffle WITHIN each pole keeps every count, leaves single-pole cells alone
+    and is a function of its seed - it passes the other three tests here - while
+    reproducing the treatment arm exactly. Only a row changing pole separates the
+    two, so that is what is asserted. Twenty-five against twenty-five: a uniform
+    permutation that happened to keep the poles apart has probability 1/C(50,25).
+    """
+    alt, self_ = _labels("a", 25, 0), _labels("a", 25, 100)
+    altruistic_before = {item["position"] for item in alt}
+    for seed in (1, 2, 3):
+        generator = torch.Generator().manual_seed(seed)
+        new_alt, new_self = build_nulls.permute_within_cells(alt, self_, generator)
+        assert any(item["position"] in altruistic_before for item in new_self), seed
+
+
 def test_a_single_pole_cell_is_carried_through_untouched():
     alt = _labels("a", 2, 0) + _labels("only", 3, 50)
     self_ = _labels("a", 2, 20)
@@ -268,6 +285,32 @@ def test_newcombe_brackets_the_difference_and_reports_whether_it_clears_zero():
     assert apart["diff"] == pytest.approx(0.89)
     assert apart["excludes_zero"] is True
     assert apart["lo"] < apart["diff"] < apart["hi"]
+
+
+def test_the_newcombe_interval_and_the_score_test_are_two_procedures():
+    """They can disagree, so no verdict may be read off the p.
+
+    Newcombe's hybrid-score interval is not the inversion of the pooled score
+    test. The Prisoner's Dilemma's k=+1 move is one of the sixteen (k1, k2) pairs
+    at n=100 where they part, and every one of the sixteen has the interval as the
+    more conservative side - which is the side this package reads.
+    """
+    interval = stats.newcombe(4, 100, 0, 100)
+    assert interval["excludes_zero"] is False
+    assert interval["lo"] == pytest.approx(-0.0042808, abs=1e-6)
+    assert stats.score_test(4, 100, 0, 100) == pytest.approx(0.0434, abs=1e-4)
+
+    disagreeing = []
+    for k1 in range(101):
+        for k2 in range(101):
+            p_value = stats.score_test(k1, 100, k2, 100)
+            if p_value is None:
+                continue
+            clears = stats.newcombe(k1, 100, k2, 100)["excludes_zero"]
+            if clears != (p_value < 0.05):
+                disagreeing.append((k1, k2, clears))
+    assert len(disagreeing) == 16
+    assert all(clears is False for _k1, _k2, clears in disagreeing)
 
 
 def test_welch_reports_no_difference_between_two_identical_samples():

@@ -187,9 +187,13 @@ def welch(a, b):
 def newcombe_of(a, b):
     """The Welch-shaped contrast of two `describe_binary` summaries.
 
-    Same keys a reader of the JSON already knows - diff, ci_low, ci_high, p -
-    but the interval is Newcombe's and the p is the score test those same Wilson
-    bounds are built from, so the interval and the test cannot disagree.
+    Same keys a reader of the JSON already knows - diff, ci_low, ci_high, p - but
+    they are TWO procedures and not one. Newcombe's hybrid-score interval is not
+    the inversion of the pooled two-proportion score test, so they can disagree:
+    at n1 = n2 = 100 sixteen (k1, k2) pairs do, 0 against 4 among them (p = 0.043
+    with an interval reaching -0.0043), and every one of them has the interval as
+    the more conservative of the two. Every verdict in this package is read off
+    `excludes_zero`, i.e. off the interval; the p is reported beside it.
     """
     if a.get("n", 0) == 0 or b.get("n", 0) == 0:
         return {"diff": None, "estimator": "newcombe"}
