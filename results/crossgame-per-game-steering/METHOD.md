@@ -204,8 +204,13 @@ relaxed. Trust, at 14.7 degrees, is a borderline case.
 The honest statement is therefore: the strict result here is a result about the
 strict directions, and for Ultimatum and Overfishing it does **not** transfer to
 the relaxed ones. Running the relaxed arm is one more invocation of the same
-pipeline (`POLICY=relaxed`), costs another full sweep, and was the obvious next
-thing to spend a card on. **It has since been run** — same ladder, same reference
+pipeline (`POLICY=relaxed`, and `GAMES` restricted to the five that are not a
+reuse), costs another full sweep, and was the obvious next thing to spend a card
+on. `POLICY` owns every output path in `run_steering.sh` — rows, analysis, tables,
+logs and the null-build report are all suffixed by it — because a row's filename
+carries its game, arm and coefficient but not its pole policy, so a shared output
+root would have the second round land on the first. `README.md` § 8 gives both
+invocations. **It has since been run** — same ladder, same reference
 norm, same n, same null construction, same seeds, only the vectors different —
 and `README.md` § 11 reports it. It did not simply confirm the strict arm: the
 Ultimatum's verdict changes, and so does the Dictator's, whose two vectors are

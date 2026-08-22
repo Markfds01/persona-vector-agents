@@ -51,9 +51,11 @@ one**, and nothing here transfers to it — which matters, because those are exa
 the two games whose result below is qualified. Under relaxed both are
 better-estimated directions (the vector study puts the Ultimatum's effective n at
 15.1 → 92.3 and Overfishing's at 28.9 → 73.6). Running it is one more
-`POLICY=relaxed` invocation of the same pipeline and another full sweep of card
-time. **It has since been run — § 11.** It did not leave the strict result
-standing: the Ultimatum's verdict changes, and so does the Dictator's.
+`POLICY=relaxed` invocation of the same pipeline — which owns every output path,
+so the two rounds sit side by side rather than one landing on the other — and
+another full sweep of card time. **It has since been run — § 11**, on five games
+of the six; § 8 has the invocation. It did not leave the strict result standing:
+the Ultimatum's verdict changes, and so does the Dictator's.
 
 **The reference norm for the ladder: the altruism trait vector's layer-20 norm,
 10.5083.** The six vectors' own norms span **3.7×** (Overfishing 2.2738 to PD
@@ -377,9 +379,24 @@ $PY results/crossgame-per-game-steering/scripts/pooling/crossgame_tables.py \
 
 Rebuilding the null vectors needs the activation shards (~7 GB, not committed);
 `build_nulls.py` refuses to write one unless it can first rebuild the committed
-real vector it is a null of. Regenerating the rows needs a GPU and about four
-hours: `SAMPLES=100 ACTS=<shards> PY=<python> bash
-results/crossgame-per-game-steering/scripts/run_steering.sh`.
+real vector it is a null of.
+
+Regenerating the rows needs a GPU and about four hours. **`POLICY` owns every
+output path**, so each arm reproduces into its own, and running one cannot land on
+the other's committed artifacts:
+
+```sh
+# the strict round: rows/, analysis/steering.json, analysis/points.csv, provenance/
+SAMPLES=100 ACTS=<shards> PY=<python> \
+    bash results/crossgame-per-game-steering/scripts/run_steering.sh
+
+# the relaxed round exactly as it was run — five games, not six (§ 11):
+# rows_relaxed/, analysis/steering_relaxed.json, analysis/points_relaxed.csv,
+# provenance/relaxed/ and provenance/null_vectors_relaxed.json
+POLICY=relaxed GAMES=ultimatum,overfishing,dictator,trust,apology \
+    SAMPLES=100 DEVICE=1 ACTS=<shards> PY=<python> \
+    bash results/crossgame-per-game-steering/scripts/run_steering.sh
+```
 
 ## 9. Provenance
 

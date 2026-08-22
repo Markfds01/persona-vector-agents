@@ -33,6 +33,15 @@ had the second run overwrite the first. `--provenance` points inside
 `provenance/relaxed/` for the same reason: `run_sweep.py` writes
 `coefficients.csv` beside whatever provenance file it is given.
 
+**Those paths were passed by hand here, and `run_steering.sh` did not derive
+them.** At the time every output path in that script was policy-independent, so
+following its own documented `POLICY=relaxed` instruction would have overwritten
+the committed strict round instead of producing this one. That is fixed: the
+script now derives rows, analysis, tables, logs and the null-build report from
+`POLICY`, `scripts/tests/test_run_steering.py` pins both layouts and pins that a
+relaxed run leaves every file a strict run wrote untouched, and `README.md` § 8
+gives the invocation that reproduces this round.
+
 Fixed and identical to round 1: `SEED=0`, `BATCH=20`, `SAMPLES=100`, reference
 norm 10.5083084106, the same 11-rung real ladder and 3-rung null ladder, null
 seed 20260821. Only the vectors changed.
