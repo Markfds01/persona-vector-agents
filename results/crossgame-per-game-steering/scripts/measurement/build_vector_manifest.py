@@ -125,7 +125,7 @@ def load_reports(package: Path, seed: int, layer: int) -> dict:
 def describe(path: Path, family: str, policy: str, role: str, strict_decision,
              report: dict, seed, layer: int = LAYER) -> dict:
     """One manifest entry. `strict_decision` is the game's strict real vector."""
-    tensor = torch.load(path, weights_only=False)
+    tensor = torch.load(path)
     cosine, degrees = angle_between(tensor, strict_decision, layer)
     entry = {
         "file": path.name,
@@ -175,8 +175,7 @@ def main():
 
     entries = []
     for family in FAMILIES:
-        strict_decision = torch.load(vectors_dir / decision_name(family, "strict"),
-                                     weights_only=False)
+        strict_decision = torch.load(vectors_dir / decision_name(family, "strict"))
         for policy in POLICIES:
             report = reports[(family, policy)]
             entries.append(describe(vectors_dir / decision_name(family, policy),
@@ -196,8 +195,8 @@ def main():
         for role in ("decision", "shuffled-null"):
             strict = by_key[(family, "strict", role)]
             relaxed = by_key[(family, "relaxed", role)]
-            a = torch.load(vectors_dir / strict["file"], weights_only=False)
-            b = torch.load(vectors_dir / relaxed["file"], weights_only=False)
+            a = torch.load(vectors_dir / strict["file"])
+            b = torch.load(vectors_dir / relaxed["file"])
             relaxed["identical_to_strict_counterpart"] = bool(torch.equal(a, b))
             relaxed["max_abs_diff_to_strict_counterpart_all_layers"] = float(
                 (a.double() - b.double()).abs().max())

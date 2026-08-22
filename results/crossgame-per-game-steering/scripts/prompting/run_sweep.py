@@ -78,10 +78,14 @@ DEFAULT_MIN_FREE_MIB = 16600
 
 
 def reference_norm(path, layer: int) -> float:
-    """The layer's norm of a stored (L, H) vector, measured in float32 as shipped."""
+    """The layer's norm of a stored (L, H) vector, measured in float32 as shipped.
+
+    Loaded under torch's own `weights_only` default: every vector this reads is a
+    bare tensor, so opting out would only give up the unpickling defense.
+    """
     import torch
 
-    stored = torch.load(path, weights_only=False)
+    stored = torch.load(path)
     return float(stored[layer].detach().float().norm())
 
 
