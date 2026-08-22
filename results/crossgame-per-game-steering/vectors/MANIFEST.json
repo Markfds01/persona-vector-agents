@@ -2,7 +2,7 @@
   "layer": 20,
   "null_seed": 20260821,
   "source_of_real_vectors": "results/crossgame-decision-vectors/vectors",
-  "note": "Every vector this package steered with, and every matched shuffled-label null, under both pole policies. Angles are to the SAME GAME's strict decision vector at layer 20. A real vector is a byte copy of the vector study's artifact; the sweep loaded that file, not a rebuild.",
+  "note": "Every vector this package steered with, and every matched shuffled-label null, under both pole policies. Angles are to the SAME GAME's strict decision vector at layer 20. A real vector is a byte copy of the vector study's artifact; the sweep loaded that file, not a rebuild. identical_to_strict_counterpart compares a relaxed entry with the strict entry of the same game and the same role, so only the relaxed entries carry it.",
   "vectors": [
     {
       "file": "decision_dictator_response_avg_diff_cellbalanced_strict.pt",
@@ -20,9 +20,7 @@
       "n_cells_usable": 30,
       "n_cells_seen": 30,
       "built_from_rows_csv": "results/crossgame-decision-vectors/extraction/dictator.csv",
-      "built_from_rows_csv_sha256": "4dd50b14200754f2b396fb6974039e4ec81671a0053a545e5c3dd5b0f48e9ce4",
-      "identical_to_strict": true,
-      "max_abs_diff_to_strict_all_layers": 0.0
+      "built_from_rows_csv_sha256": "4dd50b14200754f2b396fb6974039e4ec81671a0053a545e5c3dd5b0f48e9ce4"
     },
     {
       "file": "null_dictator_response_avg_diff_cellbalanced_strict_seed20260821.pt",
@@ -44,9 +42,7 @@
       "seed": 20260821,
       "null_of": "results/crossgame-decision-vectors/vectors/decision_dictator_response_avg_diff_cellbalanced_strict.pt",
       "null_of_sha256_16": "4f9038dd1ff94d3c",
-      "rebuild_max_relative_layer_deviation": 2.7360866639710992e-08,
-      "identical_to_strict": true,
-      "max_abs_diff_to_strict_all_layers": 0.0
+      "rebuild_max_relative_layer_deviation": 2.7360866639710992e-08
     },
     {
       "file": "decision_dictator_response_avg_diff_cellbalanced_relaxed.pt",
@@ -65,8 +61,8 @@
       "n_cells_seen": 30,
       "built_from_rows_csv": "results/crossgame-decision-vectors/extraction/dictator.csv",
       "built_from_rows_csv_sha256": "4dd50b14200754f2b396fb6974039e4ec81671a0053a545e5c3dd5b0f48e9ce4",
-      "identical_to_strict": false,
-      "max_abs_diff_to_strict_all_layers": 0.9090783596038818
+      "identical_to_strict_counterpart": false,
+      "max_abs_diff_to_strict_counterpart_all_layers": 0.9090783596038818
     },
     {
       "file": "null_dictator_response_avg_diff_cellbalanced_relaxed_seed20260821.pt",
@@ -89,8 +85,8 @@
       "null_of": "results/crossgame-decision-vectors/vectors/decision_dictator_response_avg_diff_cellbalanced_relaxed.pt",
       "null_of_sha256_16": "ecebff3b54f03b46",
       "rebuild_max_relative_layer_deviation": 2.7409868177954475e-08,
-      "identical_to_strict": false,
-      "max_abs_diff_to_strict_all_layers": 0.7189745306968689
+      "identical_to_strict_counterpart": false,
+      "max_abs_diff_to_strict_counterpart_all_layers": 0.7189745306968689
     },
     {
       "file": "decision_trust_response_avg_diff_cellbalanced_strict.pt",
@@ -108,9 +104,7 @@
       "n_cells_usable": 20,
       "n_cells_seen": 30,
       "built_from_rows_csv": "results/crossgame-decision-vectors/extraction/trust.csv",
-      "built_from_rows_csv_sha256": "af567764dd3a19f180ab530b17d6ec7285a4b592994240042c9ea4d4e1ae36fe",
-      "identical_to_strict": true,
-      "max_abs_diff_to_strict_all_layers": 0.0
+      "built_from_rows_csv_sha256": "af567764dd3a19f180ab530b17d6ec7285a4b592994240042c9ea4d4e1ae36fe"
     },
     {
       "file": "null_trust_response_avg_diff_cellbalanced_strict_seed20260821.pt",
@@ -132,9 +126,7 @@
       "seed": 20260821,
       "null_of": "results/crossgame-decision-vectors/vectors/decision_trust_response_avg_diff_cellbalanced_strict.pt",
       "null_of_sha256_16": "69501e25e573e028",
-      "rebuild_max_relative_layer_deviation": 2.686575792473768e-08,
-      "identical_to_strict": true,
-      "max_abs_diff_to_strict_all_layers": 0.0
+      "rebuild_max_relative_layer_deviation": 2.686575792473768e-08
     },
     {
       "file": "decision_trust_response_avg_diff_cellbalanced_relaxed.pt",
@@ -153,8 +145,8 @@
       "n_cells_seen": 30,
       "built_from_rows_csv": "results/crossgame-decision-vectors/extraction/trust.csv",
       "built_from_rows_csv_sha256": "af567764dd3a19f180ab530b17d6ec7285a4b592994240042c9ea4d4e1ae36fe",
-      "identical_to_strict": false,
-      "max_abs_diff_to_strict_all_layers": 1.2005717754364014
+      "identical_to_strict_counterpart": false,
+      "max_abs_diff_to_strict_counterpart_all_layers": 1.2005717754364014
     },
     {
       "file": "null_trust_response_avg_diff_cellbalanced_relaxed_seed20260821.pt",
@@ -177,8 +169,8 @@
       "null_of": "results/crossgame-decision-vectors/vectors/decision_trust_response_avg_diff_cellbalanced_relaxed.pt",
       "null_of_sha256_16": "3c6bc8d94be1d585",
       "rebuild_max_relative_layer_deviation": 2.683465052117118e-08,
-      "identical_to_strict": false,
-      "max_abs_diff_to_strict_all_layers": 1.4288269877433777
+      "identical_to_strict_counterpart": false,
+      "max_abs_diff_to_strict_counterpart_all_layers": 1.4288269877433777
     },
     {
       "file": "decision_ultimatum_response_avg_diff_cellbalanced_strict.pt",
@@ -196,9 +188,7 @@
       "n_cells_usable": 10,
       "n_cells_seen": 30,
       "built_from_rows_csv": "results/crossgame-decision-vectors/extraction/ultimatum.csv",
-      "built_from_rows_csv_sha256": "9a440232993fc5bb1bca3629c12770ecb72c33a491c23c029031d0b45d304253",
-      "identical_to_strict": true,
-      "max_abs_diff_to_strict_all_layers": 0.0
+      "built_from_rows_csv_sha256": "9a440232993fc5bb1bca3629c12770ecb72c33a491c23c029031d0b45d304253"
     },
     {
       "file": "null_ultimatum_response_avg_diff_cellbalanced_strict_seed20260821.pt",
@@ -220,9 +210,7 @@
       "seed": 20260821,
       "null_of": "results/crossgame-decision-vectors/vectors/decision_ultimatum_response_avg_diff_cellbalanced_strict.pt",
       "null_of_sha256_16": "6b5a28aa4ee6756b",
-      "rebuild_max_relative_layer_deviation": 2.6640087718147534e-08,
-      "identical_to_strict": true,
-      "max_abs_diff_to_strict_all_layers": 0.0
+      "rebuild_max_relative_layer_deviation": 2.6640087718147534e-08
     },
     {
       "file": "decision_ultimatum_response_avg_diff_cellbalanced_relaxed.pt",
@@ -241,8 +229,8 @@
       "n_cells_seen": 30,
       "built_from_rows_csv": "results/crossgame-decision-vectors/extraction/ultimatum.csv",
       "built_from_rows_csv_sha256": "9a440232993fc5bb1bca3629c12770ecb72c33a491c23c029031d0b45d304253",
-      "identical_to_strict": false,
-      "max_abs_diff_to_strict_all_layers": 3.4738175868988037
+      "identical_to_strict_counterpart": false,
+      "max_abs_diff_to_strict_counterpart_all_layers": 3.4738175868988037
     },
     {
       "file": "null_ultimatum_response_avg_diff_cellbalanced_relaxed_seed20260821.pt",
@@ -265,8 +253,8 @@
       "null_of": "results/crossgame-decision-vectors/vectors/decision_ultimatum_response_avg_diff_cellbalanced_relaxed.pt",
       "null_of_sha256_16": "aee9f6b7ec451da8",
       "rebuild_max_relative_layer_deviation": 2.6146506911172466e-08,
-      "identical_to_strict": false,
-      "max_abs_diff_to_strict_all_layers": 6.146747708320618
+      "identical_to_strict_counterpart": false,
+      "max_abs_diff_to_strict_counterpart_all_layers": 6.146747708320618
     },
     {
       "file": "decision_apology_response_avg_diff_cellbalanced_strict.pt",
@@ -284,9 +272,7 @@
       "n_cells_usable": 25,
       "n_cells_seen": 30,
       "built_from_rows_csv": "results/crossgame-decision-vectors/extraction/apology.csv",
-      "built_from_rows_csv_sha256": "197c269a10d6c9e0a8dd3082c0867692373a96a3eec3b14ff5bf01f7c02091e7",
-      "identical_to_strict": true,
-      "max_abs_diff_to_strict_all_layers": 0.0
+      "built_from_rows_csv_sha256": "197c269a10d6c9e0a8dd3082c0867692373a96a3eec3b14ff5bf01f7c02091e7"
     },
     {
       "file": "null_apology_response_avg_diff_cellbalanced_strict_seed20260821.pt",
@@ -308,9 +294,7 @@
       "seed": 20260821,
       "null_of": "results/crossgame-decision-vectors/vectors/decision_apology_response_avg_diff_cellbalanced_strict.pt",
       "null_of_sha256_16": "dcfdee45d1828992",
-      "rebuild_max_relative_layer_deviation": 2.6873500871073293e-08,
-      "identical_to_strict": true,
-      "max_abs_diff_to_strict_all_layers": 0.0
+      "rebuild_max_relative_layer_deviation": 2.6873500871073293e-08
     },
     {
       "file": "decision_apology_response_avg_diff_cellbalanced_relaxed.pt",
@@ -329,8 +313,8 @@
       "n_cells_seen": 30,
       "built_from_rows_csv": "results/crossgame-decision-vectors/extraction/apology.csv",
       "built_from_rows_csv_sha256": "197c269a10d6c9e0a8dd3082c0867692373a96a3eec3b14ff5bf01f7c02091e7",
-      "identical_to_strict": false,
-      "max_abs_diff_to_strict_all_layers": 0.2999632954597473
+      "identical_to_strict_counterpart": false,
+      "max_abs_diff_to_strict_counterpart_all_layers": 0.2999632954597473
     },
     {
       "file": "null_apology_response_avg_diff_cellbalanced_relaxed_seed20260821.pt",
@@ -353,8 +337,8 @@
       "null_of": "results/crossgame-decision-vectors/vectors/decision_apology_response_avg_diff_cellbalanced_relaxed.pt",
       "null_of_sha256_16": "c1a3bbc00581a389",
       "rebuild_max_relative_layer_deviation": 2.6432500858377285e-08,
-      "identical_to_strict": false,
-      "max_abs_diff_to_strict_all_layers": 1.200206458568573
+      "identical_to_strict_counterpart": false,
+      "max_abs_diff_to_strict_counterpart_all_layers": 1.200206458568573
     },
     {
       "file": "decision_overfishing_response_avg_diff_cellbalanced_strict.pt",
@@ -372,9 +356,7 @@
       "n_cells_usable": 17,
       "n_cells_seen": 30,
       "built_from_rows_csv": "results/crossgame-decision-vectors/extraction/overfishing.csv",
-      "built_from_rows_csv_sha256": "7ba0357b38c15a16746a12e999a4cbb6c681d8cd3e03d493a06b73871112bace",
-      "identical_to_strict": true,
-      "max_abs_diff_to_strict_all_layers": 0.0
+      "built_from_rows_csv_sha256": "7ba0357b38c15a16746a12e999a4cbb6c681d8cd3e03d493a06b73871112bace"
     },
     {
       "file": "null_overfishing_response_avg_diff_cellbalanced_strict_seed20260821.pt",
@@ -396,9 +378,7 @@
       "seed": 20260821,
       "null_of": "results/crossgame-decision-vectors/vectors/decision_overfishing_response_avg_diff_cellbalanced_strict.pt",
       "null_of_sha256_16": "6fc1fc3ada23fef6",
-      "rebuild_max_relative_layer_deviation": 2.739140711864988e-08,
-      "identical_to_strict": true,
-      "max_abs_diff_to_strict_all_layers": 0.0
+      "rebuild_max_relative_layer_deviation": 2.739140711864988e-08
     },
     {
       "file": "decision_overfishing_response_avg_diff_cellbalanced_relaxed.pt",
@@ -417,8 +397,8 @@
       "n_cells_seen": 30,
       "built_from_rows_csv": "results/crossgame-decision-vectors/extraction/overfishing.csv",
       "built_from_rows_csv_sha256": "7ba0357b38c15a16746a12e999a4cbb6c681d8cd3e03d493a06b73871112bace",
-      "identical_to_strict": false,
-      "max_abs_diff_to_strict_all_layers": 2.168556571006775
+      "identical_to_strict_counterpart": false,
+      "max_abs_diff_to_strict_counterpart_all_layers": 2.168556571006775
     },
     {
       "file": "null_overfishing_response_avg_diff_cellbalanced_relaxed_seed20260821.pt",
@@ -441,8 +421,8 @@
       "null_of": "results/crossgame-decision-vectors/vectors/decision_overfishing_response_avg_diff_cellbalanced_relaxed.pt",
       "null_of_sha256_16": "5f1a184168581fba",
       "rebuild_max_relative_layer_deviation": 2.9216532023099163e-08,
-      "identical_to_strict": false,
-      "max_abs_diff_to_strict_all_layers": 1.146419107913971
+      "identical_to_strict_counterpart": false,
+      "max_abs_diff_to_strict_counterpart_all_layers": 1.146419107913971
     },
     {
       "file": "decision_prisoners_dilemma_response_avg_diff_cellbalanced_strict.pt",
@@ -460,9 +440,7 @@
       "n_cells_usable": 9,
       "n_cells_seen": 30,
       "built_from_rows_csv": "results/crossgame-decision-vectors/extraction/prisoners_dilemma.csv",
-      "built_from_rows_csv_sha256": "957e433b597631ce989657b56c59dc75793c2240719d281dd68115dac32ceb15",
-      "identical_to_strict": true,
-      "max_abs_diff_to_strict_all_layers": 0.0
+      "built_from_rows_csv_sha256": "957e433b597631ce989657b56c59dc75793c2240719d281dd68115dac32ceb15"
     },
     {
       "file": "null_prisoners_dilemma_response_avg_diff_cellbalanced_strict_seed20260821.pt",
@@ -484,9 +462,7 @@
       "seed": 20260821,
       "null_of": "results/crossgame-decision-vectors/vectors/decision_prisoners_dilemma_response_avg_diff_cellbalanced_strict.pt",
       "null_of_sha256_16": "716251c82d41031e",
-      "rebuild_max_relative_layer_deviation": 2.767014742414437e-08,
-      "identical_to_strict": true,
-      "max_abs_diff_to_strict_all_layers": 0.0
+      "rebuild_max_relative_layer_deviation": 2.767014742414437e-08
     },
     {
       "file": "decision_prisoners_dilemma_response_avg_diff_cellbalanced_relaxed.pt",
@@ -505,8 +481,8 @@
       "n_cells_seen": 30,
       "built_from_rows_csv": "results/crossgame-decision-vectors/extraction/prisoners_dilemma.csv",
       "built_from_rows_csv_sha256": "957e433b597631ce989657b56c59dc75793c2240719d281dd68115dac32ceb15",
-      "identical_to_strict": true,
-      "max_abs_diff_to_strict_all_layers": 0.0
+      "identical_to_strict_counterpart": true,
+      "max_abs_diff_to_strict_counterpart_all_layers": 0.0
     },
     {
       "file": "null_prisoners_dilemma_response_avg_diff_cellbalanced_relaxed_seed20260821.pt",
@@ -529,8 +505,8 @@
       "null_of": "results/crossgame-decision-vectors/vectors/decision_prisoners_dilemma_response_avg_diff_cellbalanced_relaxed.pt",
       "null_of_sha256_16": "3bacfd187e6f0791",
       "rebuild_max_relative_layer_deviation": 2.767014742414437e-08,
-      "identical_to_strict": true,
-      "max_abs_diff_to_strict_all_layers": 0.0
+      "identical_to_strict_counterpart": true,
+      "max_abs_diff_to_strict_counterpart_all_layers": 0.0
     }
   ]
 }

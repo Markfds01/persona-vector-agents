@@ -123,6 +123,50 @@ def test_a_present_file_that_is_a_different_vector_is_never_overwritten(tmp_path
     assert (vectors / name).read_bytes() == before
 
 
+# --- the reports this manifest copies its bookkeeping out of ------------------
+
+def _report(package, name, entries):
+    path = package / "provenance" / name
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(entries))
+
+
+def _entry(family, policy, seed=1, layer=20):
+    return {"family": family, "policy": policy, "seed": seed, "layer": layer,
+            "n_altruistic": 1, "n_self_interested": 1, "n_cells_usable": 1,
+            "n_cells_seen": 1, "rows_csv": "x.csv", "rows_csv_sha256": "ab",
+            "committed_vector": "v.pt", "committed_vector_sha256_16": "cd",
+            "rebuild_max_relative_layer_deviation": 0.0}
+
+
+def test_the_relaxed_report_holding_strict_entries_is_refused(tmp_path):
+    """This module never rebuilds a vector: an entry read under the wrong name
+    puts that policy's row counts and provenance on every entry silently."""
+    _report(tmp_path, "null_vectors.json", [_entry("dictator", "strict")])
+    _report(tmp_path, "null_vectors_relaxed.json", [_entry("dictator", "strict")])
+    with pytest.raises(SystemExit) as excinfo:
+        manifest.load_reports(tmp_path, 1, 20)
+    assert "relaxed report by name" in str(excinfo.value)
+
+
+def test_a_null_built_at_another_layer_is_refused(tmp_path):
+    """`build_nulls.py` takes --layer; an angle measured at one and described as
+    another is wrong in a way no number in the file shows."""
+    _report(tmp_path, "null_vectors.json", [_entry("dictator", "strict", layer=16)])
+    _report(tmp_path, "null_vectors_relaxed.json",
+            [_entry("dictator", "relaxed", layer=16)])
+    with pytest.raises(SystemExit) as excinfo:
+        manifest.load_reports(tmp_path, 1, 20)
+    assert "layer 16" in str(excinfo.value)
+
+
+def test_a_matching_pair_of_reports_loads(tmp_path):
+    _report(tmp_path, "null_vectors.json", [_entry("dictator", "strict")])
+    _report(tmp_path, "null_vectors_relaxed.json", [_entry("dictator", "relaxed")])
+    reports = manifest.load_reports(tmp_path, 1, 20)
+    assert sorted(reports) == [("dictator", "relaxed"), ("dictator", "strict")]
+
+
 # --- the committed manifest ---------------------------------------------------
 
 @pytest.fixture(scope="module")
@@ -155,8 +199,21 @@ def test_a_strict_decision_vector_is_zero_degrees_from_itself(committed):
 
 def test_the_prisoners_dilemma_is_the_only_identical_relaxed_pair(committed):
     identical = sorted({e["family"] for e in committed["vectors"]
-                        if e["policy"] == "relaxed" and e["identical_to_strict"]})
+                        if e["policy"] == "relaxed"
+                        and e["identical_to_strict_counterpart"]})
     assert identical == ["prisoners_dilemma"]
+
+
+def test_no_strict_entry_claims_to_be_identical_to_a_strict_counterpart(committed):
+    """A strict entry's counterpart is itself, and a strict NULL carrying the flag
+    beside its 67-degree angle reads as the control being the treatment."""
+    for entry in committed["vectors"]:
+        if entry["policy"] == "strict":
+            assert "identical_to_strict_counterpart" not in entry, entry["file"]
+            assert "max_abs_diff_to_strict_counterpart_all_layers" not in entry
+    assert not any(key.startswith("identical_to_strict")
+                   and key != "identical_to_strict_counterpart"
+                   for entry in committed["vectors"] for key in entry)
 
 
 def test_a_null_is_fit_on_exactly_the_rows_its_real_vector_was(committed):

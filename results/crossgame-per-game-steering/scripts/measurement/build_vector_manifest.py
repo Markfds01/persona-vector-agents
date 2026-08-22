@@ -14,8 +14,8 @@ described.
 
 The one case worth naming: the Prisoner's Dilemma's strict and relaxed vectors are
 the same tensor, and so are its two nulls. Its answer space is two points with no
-middle, so widening the poles has nothing to widen. The manifest marks both pairs
-`identical_to` their strict counterpart, which is what licenses the relaxed sweep
+middle, so widening the poles has nothing to widen. The relaxed entry of each pair
+carries `identical_to_strict_counterpart`, which is what licenses the relaxed sweep
 reusing its strict rows instead of regenerating them.
 
 CPU only. It reads the two null-build reports for the row counts rather than
@@ -90,8 +90,15 @@ def place_real_vectors(source_dir: Path, vectors_dir: Path) -> list:
     return placed
 
 
-def load_reports(package: Path, seed: int) -> dict:
-    """`(family, policy) -> the null build report entry`, keyed for lookup."""
+def load_reports(package: Path, seed: int, layer: int) -> dict:
+    """`(family, policy) -> the null build report entry`, keyed for lookup.
+
+    The report a file is READ as has to be the report it IS: this manifest
+    describes vectors it never rebuilds, so a strict report under the relaxed name
+    would put strict row counts and strict provenance on every relaxed entry and
+    nothing downstream would see it. Same for the layer - `build_nulls.py` takes
+    `--layer`, and angles measured at one layer described as another are wrong.
+    """
     reports = {}
     for policy, name in (("strict", "null_vectors.json"),
                          ("relaxed", "null_vectors_relaxed.json")):
@@ -103,23 +110,31 @@ def load_reports(package: Path, seed: int) -> dict:
             if entry["seed"] != seed:
                 raise SystemExit("%s carries seed %d, not %d"
                                  % (path, entry["seed"], seed))
+            if entry["policy"] != policy:
+                raise SystemExit("%s is the %s report by name but holds a %s entry "
+                                 "for %s" % (path, policy, entry["policy"],
+                                             entry["family"]))
+            if entry["layer"] != layer:
+                raise SystemExit("%s: %s's null was built at layer %d, and this "
+                                 "manifest describes layer %d"
+                                 % (path, entry["family"], entry["layer"], layer))
             reports[(entry["family"], entry["policy"])] = entry
     return reports
 
 
 def describe(path: Path, family: str, policy: str, role: str, strict_decision,
-             report: dict, seed) -> dict:
+             report: dict, seed, layer: int = LAYER) -> dict:
     """One manifest entry. `strict_decision` is the game's strict real vector."""
     tensor = torch.load(path, weights_only=False)
-    cosine, degrees = angle_between(tensor, strict_decision, LAYER)
+    cosine, degrees = angle_between(tensor, strict_decision, layer)
     entry = {
         "file": path.name,
         "role": role,
         "family": family,
         "policy": policy,
-        "layer": LAYER,
+        "layer": layer,
         "sha256": sha256(path),
-        "norm_at_layer": float(tensor[LAYER].double().norm()),
+        "norm_at_layer": float(tensor[layer].double().norm()),
         "cos_to_strict_decision_at_layer": cosine,
         "angle_to_strict_decision_deg": degrees,
         # both poles of the cell-balanced fit; a null permutes these labels
@@ -148,13 +163,15 @@ def main():
     ap.add_argument("--vectors", default=str(PACKAGE / "vectors"))
     ap.add_argument("--package", default=str(PACKAGE))
     ap.add_argument("--seed", type=int, default=20260821)
+    ap.add_argument("--layer", type=int, default=LAYER,
+                    help="the layer the nulls were built at; the reports pin it")
     ap.add_argument("--out", default=str(PACKAGE / "vectors" / "MANIFEST.json"))
     args = ap.parse_args()
 
     vectors_dir = Path(args.vectors)
     vectors_dir.mkdir(parents=True, exist_ok=True)
     placed = place_real_vectors(Path(args.source), vectors_dir)
-    reports = load_reports(Path(args.package), args.seed)
+    reports = load_reports(Path(args.package), args.seed, args.layer)
 
     entries = []
     for family in FAMILIES:
@@ -164,13 +181,16 @@ def main():
             report = reports[(family, policy)]
             entries.append(describe(vectors_dir / decision_name(family, policy),
                                     family, policy, "decision", strict_decision,
-                                    report, None))
+                                    report, None, args.layer))
             entries.append(describe(vectors_dir / null_name(family, policy, args.seed),
                                     family, policy, "shuffled-null", strict_decision,
-                                    report, args.seed))
+                                    report, args.seed, args.layer))
 
     # a relaxed artifact that IS its strict counterpart is the licence to reuse
-    # that game's strict rows; it has to be stated, not inferred from an angle
+    # that game's strict rows; it has to be stated, not inferred from an angle.
+    # Carried by the relaxed entries ONLY: on a strict one the comparison is with
+    # itself, and a strict NULL saying "identical to strict" beside a 67 degree
+    # angle to the strict decision vector reads as the control being the treatment
     by_key = {(e["family"], e["policy"], e["role"]): e for e in entries}
     for family in FAMILIES:
         for role in ("decision", "shuffled-null"):
@@ -178,22 +198,21 @@ def main():
             relaxed = by_key[(family, "relaxed", role)]
             a = torch.load(vectors_dir / strict["file"], weights_only=False)
             b = torch.load(vectors_dir / relaxed["file"], weights_only=False)
-            same = bool(torch.equal(a, b))
-            relaxed["identical_to_strict"] = same
-            relaxed["max_abs_diff_to_strict_all_layers"] = float(
+            relaxed["identical_to_strict_counterpart"] = bool(torch.equal(a, b))
+            relaxed["max_abs_diff_to_strict_counterpart_all_layers"] = float(
                 (a.double() - b.double()).abs().max())
-            strict["identical_to_strict"] = True
-            strict["max_abs_diff_to_strict_all_layers"] = 0.0
 
     payload = {
-        "layer": LAYER,
+        "layer": args.layer,
         "null_seed": args.seed,
         "source_of_real_vectors": repo_relative(Path(args.source)),
         "note": ("Every vector this package steered with, and every matched "
                  "shuffled-label null, under both pole policies. Angles are to the "
                  "SAME GAME's strict decision vector at layer %d. A real vector is "
                  "a byte copy of the vector study's artifact; the sweep loaded that "
-                 "file, not a rebuild." % LAYER),
+                 "file, not a rebuild. identical_to_strict_counterpart compares a "
+                 "relaxed entry with the strict entry of the same game and the same "
+                 "role, so only the relaxed entries carry it." % args.layer),
         "vectors": entries,
     }
     Path(args.out).write_text(json.dumps(payload, indent=2) + "\n")
@@ -205,8 +224,9 @@ def main():
               % (entry["family"], entry["policy"], entry["role"][:7],
                  entry["norm_at_layer"], entry["angle_to_strict_decision_deg"],
                  entry["n_rows_fit"],
-                 "  IDENTICAL to strict" if (entry["policy"] == "relaxed"
-                                             and entry["identical_to_strict"]) else ""))
+                 "  IDENTICAL to its strict counterpart"
+                 if (entry["policy"] == "relaxed"
+                     and entry["identical_to_strict_counterpart"]) else ""))
     print("wrote", args.out)
 
 
