@@ -381,7 +381,7 @@ scripts/measurement/      build_nulls.py, analyze_game.py, stats.py,
                           by the figures and the pooled tables so they agree
 scripts/pooling/          crossgame_tables.py — the six games side by side
 scripts/figures/          make_figures.py — the figures, from the analysis alone
-scripts/tests/            142 offline tests, in `python -m pytest -q`
+scripts/tests/            144 offline tests, in `python -m pytest -q`
 scripts/run_steering.sh   the whole pipeline, parameterised by environment
 ```
 
@@ -416,11 +416,11 @@ by, from the same module, so the log and the picture cannot disagree.
 
 **The repo-wide test count depends on the interpreter, and neither one runs the
 whole suite.** Under a python with torch and transformers but no matplotlib:
-**532 passed, 3 skipped** — the 44 figure tests are not collected at all, because
+**534 passed, 3 skipped** — the 44 figure tests are not collected at all, because
 `test_figures.py` skips at import. Under a plain python3 with matplotlib but no
-transformers: **572 passed, 6 skipped**. Nothing fails under either, and the two
+transformers: **574 passed, 6 skipped**. Nothing fails under either, and the two
 sets are not nested: the union is what the suite covers and a single number is
-not. This package's own 142 tests are 98 of them under the first interpreter.
+not. This package's own 144 tests are 100 of them under the first interpreter.
 
 Rebuilding the null vectors needs the activation shards (~7 GB, not committed);
 `build_nulls.py` refuses to write one unless it can first rebuild the committed

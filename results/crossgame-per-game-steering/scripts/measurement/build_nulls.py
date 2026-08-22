@@ -69,6 +69,18 @@ def committed_vector_path(family: str, policy: str) -> Path:
                                 % (family, policy))
 
 
+def acts_label(acts_root, family: str) -> str:
+    """The corpus named by its own leaf directory, never by where it sat.
+
+    The shards are ~7 GB, are not committed and live outside the checkout, so the
+    absolute path is machine-specific and this repo is public. Both the report and
+    every message this module raises carry this form: the driver tees stdout into
+    the committed `provenance/null_vectors*.log`, so a raise is a write too. The
+    pin a reader can actually check is `rows_csv_sha256`.
+    """
+    return "%s/%s" % (Path(acts_root).resolve().name or ".", family)
+
+
 def permute_within_cells(alt, self_, generator):
     """Reassign the two poles inside each cell at random, keeping both counts.
 
@@ -109,7 +121,7 @@ def rebuild_deviation(committed, rebuilt) -> float:
                   / committed.norm(dim=1).clamp_min(1e-12)).max())
 
 
-def check_rebuild(family: str, acts_dir, committed, rebuilt) -> float:
+def check_rebuild(family: str, corpus: str, committed, rebuilt) -> float:
     """The gate: refuse to write a null unless the committed vector rebuilds here.
 
     If this activation corpus does not reproduce the artifact, a null built from
@@ -125,7 +137,7 @@ def check_rebuild(family: str, acts_dir, committed, rebuilt) -> float:
         raise SystemExit(
             "%s: rebuilding the committed vector from %s gives a max relative "
             "per-layer deviation of %.3g; a null built here would not be a null of "
-            "the committed vector" % (family, acts_dir, deviation))
+            "the committed vector" % (family, corpus, deviation))
     return deviation
 
 
@@ -133,6 +145,7 @@ def build_one(family: str, acts_root: Path, out_dir: Path, seed: int, policy: st
               layer: int) -> dict:
     rows_csv = EXTRACTION / ("%s.csv" % family)
     acts_dir = acts_root / family
+    corpus = acts_label(acts_root, family)
     labels, acts, metas, _tags = A.load_all(
         {"families": [{"family": family, "rows_csv": str(rows_csv),
                        "acts_dir": str(acts_dir)}]})
@@ -141,7 +154,7 @@ def build_one(family: str, acts_root: Path, out_dir: Path, seed: int, policy: st
         raise SystemExit(
             "%s: the activations under %s were captured from a different rows CSV "
             "(%s) than the committed one; they are not this vector's activations"
-            % (family, acts_dir, meta["rows_csv_sha256"]))
+            % (family, corpus, meta["rows_csv_sha256"]))
 
     response_avg = acts["response_avg"]
     alt, self_, middle, excluded = A.split_poles(labels, False, policy)
@@ -151,8 +164,8 @@ def build_one(family: str, acts_root: Path, out_dir: Path, seed: int, policy: st
                          % (family, policy))
 
     committed = committed_vector_path(family, policy)
-    reference = torch.load(committed, weights_only=False).double()
-    deviation = check_rebuild(family, acts_dir, reference, real)
+    reference = torch.load(committed).double()
+    deviation = check_rebuild(family, corpus, reference, real)
 
     generator = torch.Generator().manual_seed(seed)
     null_alt, null_self = permute_within_cells(alt, self_, generator)
@@ -172,11 +185,7 @@ def build_one(family: str, acts_root: Path, out_dir: Path, seed: int, policy: st
         "layer": layer,
         "rows_csv": _repo_relative(rows_csv),
         "rows_csv_sha256": meta["rows_csv_sha256"],
-        # the shards are ~7 GB, are not committed and sit outside the checkout, so
-        # this is the corpus's own directory and never an absolute path off the
-        # machine that ran it - a committed artifact in a public repo. The pin a
-        # reader can actually check is rows_csv_sha256 above.
-        "acts_dir": "%s/%s" % (Path(acts_root).resolve().name or ".", family),
+        "acts_dir": corpus,
         "n_altruistic": len(alt),
         "n_self_interested": len(self_),
         "n_middle_discarded": len(middle),

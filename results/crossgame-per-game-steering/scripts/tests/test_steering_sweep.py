@@ -230,6 +230,28 @@ def test_the_permutation_keeps_every_cells_two_pole_counts():
             == {i["position"] for i in alt + self_})
 
 
+def test_the_corpus_is_named_by_its_leaf_and_never_by_where_it_sat():
+    assert build_nulls.acts_label("/home/someone/private/acts_v3", "dictator") == \
+        "acts_v3/dictator"
+    assert build_nulls.acts_label("/", "dictator") == "./dictator"
+
+
+def test_no_message_this_module_raises_carries_an_absolute_path():
+    """The driver tees stdout into the committed provenance log, so a raise is a
+    write into a public repo."""
+    root = "/home/someone/private/acts_v3"
+    committed = torch.zeros(29, 8)
+    committed[20, 0] = 1.0
+    rebuilt = committed.clone()
+    rebuilt[20, 0] = 5.0
+    with pytest.raises(SystemExit) as excinfo:
+        build_nulls.check_rebuild("dictator", build_nulls.acts_label(root, "dictator"),
+                                  committed, rebuilt)
+    message = str(excinfo.value)
+    assert "acts_v3/dictator" in message
+    assert root not in message and "/home/" not in message
+
+
 def test_the_permutation_moves_rows_ACROSS_the_two_poles():
     """The property that makes the null a null.
 
