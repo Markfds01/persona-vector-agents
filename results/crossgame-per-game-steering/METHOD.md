@@ -221,8 +221,9 @@ because reclassifying a finished row costs nothing; `analysis/steering.json`
 carries `poles.relaxed` beside `poles.strict` throughout. Measured since, over
 all 154 points of both arms: **`P(altruistic)` is identical under both policies**
 — relaxed widens only the SELF pole — so the two arms are read on the same
-measure and the only difference between them is the vector. What is not available
-without another run is the relaxed *vectors'* steering.
+measure and the only difference between them is the vector. Steering with the
+relaxed *vectors* needed another run; it was made, on five of the six games, and
+`README.md` § 11 reports it.
 
 ### One recorded artifact in the relaxed policy
 
@@ -259,8 +260,10 @@ activations and refuses to continue unless it reproduces it: if it cannot
 reproduce the artifact, its null is not a null *of* that artifact. The rebuild
 runs through `analyze_crossgame.balanced_vector` — the function that produced the
 committed vectors — rather than a transcription of it. Measured max relative
-per-layer deviation, all six games: **2.7e-08** (float32 storage round-trip),
-against a refusal threshold of 1e-6. `provenance/null_vectors.json` records it.
+per-layer deviation: **2.77e-08** over the six strict games and **2.92e-08** over
+the six relaxed ones (float32 storage round-trip), against a refusal threshold of
+1e-6. `provenance/null_vectors.json` and `null_vectors_relaxed.json` record it per
+game; the run log prints the same numbers rounded to `2.7e-08`.
 
 The nulls are much shorter than the real vectors (1.30 to 2.69 against 2.27 to
 8.47) — which is the expected consequence of destroying the systematic
@@ -376,9 +379,15 @@ signalled, at any point, for any reason.
   several times the baseline's SD, so a pooled-variance test would be wrong in the
   direction that matters) and **Newcombe's** hybrid-score interval on each pole
   share. A 0/1 own measure takes the second path instead — Newcombe, with the
-  two-proportion score test the same Wilson bounds are built from, so the interval
-  and the p cannot disagree. `stats.difference` routes on the summary rather than
-  on the caller, and `stats.welch` refuses a share outright.
+  pooled two-proportion score test reported beside it. **The interval and the p are
+  two procedures, not one**: Newcombe's hybrid-score interval is not the inversion
+  of that score test and the two can disagree. At n = 100 per arm sixteen (k1, k2)
+  pairs do, always with the interval as the more conservative of the two, and one
+  of them is in this directory — the Prisoner's Dilemma's decision arm at k = +1
+  moves 0/100 to 4/100, `p = 0.0434` against an interval reaching −0.0043. Nothing
+  here reads the p for a verdict: every one is `excludes_zero`, i.e. the interval.
+  `stats.difference` routes on the summary rather than on the caller, and
+  `stats.welch` refuses a share outright.
 * the real arm against its own null at every matched unit beta, the same two ways.
 
 **Monotonicity** is reported three ways, because a bare yes/no over 11 noisy points

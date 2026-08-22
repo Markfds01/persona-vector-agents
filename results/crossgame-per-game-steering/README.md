@@ -162,7 +162,9 @@ direction (§4).
 
 ### Ultimatum — it moves, but not more than its own null. **This is the null result.**
 
-‖v‖@20 = 5.3665. Parse coverage 0.96–1.00.
+‖v‖@20 = 5.3665. Parse coverage 0.96–1.00 on the **decision** arm. Its null's is
+not: at k=−5 that arm stated an offer in 8 answers of 100, and that is what
+separates the two rows of the second table below.
 
 | | k=−5 | k=−1 | **k=0** | k=+1 | k=+4 | k=+5 |
 |---|---|---|---|---|---|---|
@@ -171,18 +173,27 @@ direction (§4).
 
 Against its own baseline this looks like every other game: significant in both
 directions from the first step, monotone up to noise, +0.329 at the top.
-**Against its own shuffled-label null it is nothing.**
+**Against its own shuffled-label null, on the end where both arms answered, it is
+nothing.**
 
-| | decision − null, P(altruistic) | decision − null, mean |
-|---|---|---|
-| k=−5 | −0.179 [−0.522, +0.012] — contains 0 | −9.15, p = 0.32 |
-| k=+5 | +0.021 [−0.117, +0.157] — contains 0 | −2.07, p = 0.68 |
+| | decision − null, P(altruistic) | decision − null, mean | both arms readable? |
+|---|---|---|---|
+| k=−5 | −0.179 [−0.522, +0.012] — contains 0 | −9.15, p = 0.32 | **no** — the null parsed 8 of 100 |
+| k=+5 | +0.021 [−0.117, +0.157] — contains 0 | −2.07, p = 0.68 | yes — 0.97 and 0.99 |
 
-A same-sized edit along a randomly relabelled version of the same activations does
-what the Ultimatum's decision direction does. **On this evidence the Ultimatum's
-movement is not attributable to its decision direction**; it is what an edit of
-that size at layer 20 does to this prompt. That is the plainest null in the run
-and it should not be softened.
+**The `k = +5` row is the measurement.** Both arms answered, and a same-sized edit
+along a randomly relabelled version of the same activations does what the
+Ultimatum's decision direction does. **On that evidence the Ultimatum's movement is
+not attributable to its decision direction**; it is what an edit of that size at
+layer 20 does to this prompt.
+
+The `k = −5` row is **not** a second null. Its interval contains zero, but it is
+computed against an arm that stated an offer in only 8 of its 100 answers, and
+that is missing evidence rather than evidence of absence (§ 10). Every figure here
+labels that end `undetermined`, not `null`. **The Ultimatum beats its null at
+neither end — at one because it did not, at the other because there was nothing to
+compare** — and the negative result, which rests on the end that was measured,
+should not be softened.
 
 Two things bound it rather than explain it away, and neither is a rescue: the
 Ultimatum has the **thinnest strict poles of the six** (self pole 29 rows across 10
@@ -319,9 +330,10 @@ the Ultimatum is not, and it is a real negative.
 **Where nothing can be said:** two ends, and they are marked as such rather than
 folded in either direction. The Ultimatum's `k = -5`, whose null resolved 8
 answers of 100. The Prisoner's Dilemma's `k = +5`, whose decision arm answered
-entirely in non-Latin script. **Three of six games clear the bar at both ends,
-none clears it at neither, and two carry an end that could not be compared** —
-which is what the figures' own heading says, computed from the same rule.
+entirely in non-Latin script. **Three of six games clear the bar at both ends, one
+at one end, and two at neither; both of those two carry an end that could not be
+compared** — which is what the figures' own heading says, computed from the same
+rule.
 
 ## 6. What this does not establish
 
@@ -364,10 +376,12 @@ figures/                  the three figures of § 10, regenerated from steering.
 figures/relaxed/          the same three for the relaxed arm
 provenance/               the sweep manifest, the null-vector report, and the run logs
 scripts/prompting/        eval_games.py (the games and their pole scales), run_sweep.py
-scripts/measurement/      build_nulls.py, analyze_game.py, stats.py
+scripts/measurement/      build_nulls.py, analyze_game.py, stats.py,
+                          degradation.py — which points are not results, shared
+                          by the figures and the pooled tables so they agree
 scripts/pooling/          crossgame_tables.py — the six games side by side
 scripts/figures/          make_figures.py — the figures, from the analysis alone
-scripts/tests/            117 offline tests, in `python -m pytest -q`
+scripts/tests/            142 offline tests, in `python -m pytest -q`
 scripts/run_steering.sh   the whole pipeline, parameterised by environment
 ```
 
@@ -394,13 +408,19 @@ $PY results/crossgame-per-game-steering/scripts/pooling/crossgame_tables.py \
     --analysis /tmp/steering.json --out-csv /tmp/points.csv
 ```
 
+The null table that second command prints (and `provenance/tables.log` holds)
+carries a **both arms readable?** column, marking the two contrasts computed
+across an arm that produced no distribution — the Ultimatum's `k = -5` and the
+Prisoner's Dilemma's `k = +5`. It is the same rule the figures strike a point out
+by, from the same module, so the log and the picture cannot disagree.
+
 **The repo-wide test count depends on the interpreter, and neither one runs the
 whole suite.** Under a python with torch and transformers but no matplotlib:
-**513 passed, 3 skipped** — the 38 figure tests are not collected at all, because
+**532 passed, 3 skipped** — the 44 figure tests are not collected at all, because
 `test_figures.py` skips at import. Under a plain python3 with matplotlib but no
-transformers: **547 passed, 6 skipped**. Nothing fails under either, and the two
+transformers: **572 passed, 6 skipped**. Nothing fails under either, and the two
 sets are not nested: the union is what the suite covers and a single number is
-not. This package's own 117 tests are 79 of them under the first interpreter.
+not. This package's own 142 tests are 98 of them under the first interpreter.
 
 Rebuilding the null vectors needs the activation shards (~7 GB, not committed);
 `build_nulls.py` refuses to write one unless it can first rebuild the committed
@@ -409,7 +429,12 @@ gate fire rather than only reading the deviations it wrote.
 
 Regenerating the rows needs a GPU and about four hours. **`POLICY` owns every
 output path**, so each arm reproduces into its own, and running one cannot land on
-the other's committed artifacts:
+the other's committed artifacts. Nothing in the environment can move those paths;
+`scripts/tests/test_run_steering.py` runs the script under both policies and
+compares the whole set. A row's file name carries its coefficient but neither its
+vector nor its policy, so `RESUME=1` additionally checks each finished CSV's
+`steer_vector_sha256` against the vector the run is steering with, and refuses a
+rows directory that holds another arm's answers rather than reporting it complete:
 
 ```sh
 # the strict round: rows/, analysis/steering.json, analysis/points.csv, provenance/
@@ -449,9 +474,10 @@ six games of both rounds. The row files themselves are not identical and cannot
 be: three columns name which vector file was loaded, which is the one thing the
 two arms differ in by design. Each null vector was written only after its
 committed real vector was rebuilt from the archived activations through the same
-function that produced it; max relative per-layer deviation across all six games
-was **2.7e−08**, against a 1e−06 refusal threshold
-(`provenance/null_vectors.json`).
+function that produced it; max relative per-layer deviation was **2.77e−08**
+across the six strict games and **2.92e−08** across the six relaxed ones, against
+a 1e−06 refusal threshold (`provenance/null_vectors.json`, and `_relaxed.json`;
+the run log rounds both to `2.7e-08`).
 
 `provenance/steering_run_notes.md` records the machine and the schedule and is not
 part of the pipeline.
@@ -464,6 +490,11 @@ figure cannot disagree with the table it came from.
 
 ```sh
 python results/crossgame-per-game-steering/scripts/figures/make_figures.py
+
+# the three in figures/relaxed/, from the relaxed analysis (§ 11)
+python results/crossgame-per-game-steering/scripts/figures/make_figures.py \
+    --analysis results/crossgame-per-game-steering/analysis/steering_relaxed.json \
+    --out-dir results/crossgame-per-game-steering/figures/relaxed
 ```
 
 | file | what it is |
@@ -551,9 +582,10 @@ Five games were run. **The Prisoner's Dilemma was not**, and that is a reuse, no
 a result: its relaxed decision vector and its relaxed null are element-wise
 identical to the strict ones — max absolute difference exactly **0.0** across all
 29 layers, its answer space being two points with no middle — so every row would
-have been a bit-identical regeneration. `vectors/MANIFEST.json` marks both pairs
-`identical_to_strict`. **Its § 3 numbers are its relaxed numbers. They are not an
-independent run.**
+have been a bit-identical regeneration. `vectors/MANIFEST.json` marks both relaxed
+entries `identical_to_strict_counterpart` — a flag only the relaxed entries carry,
+because on a strict one it would compare an entry with itself. **Its § 3 numbers
+are its relaxed numbers. They are not an independent run.**
 
 ### 11.1 What changed
 
