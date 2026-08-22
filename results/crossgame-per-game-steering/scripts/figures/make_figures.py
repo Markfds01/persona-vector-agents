@@ -16,8 +16,9 @@ picture:
 * `no_room` — a game whose baseline already sits against a bound cannot move that
   way, and a flat arm there is a ceiling, not a failed intervention. Overfishing
   starts at 0.959 and the Prisoner's Dilemma at 0.000. The bound is called out of
-  reach when the distance to it is inside the baseline's own Wilson half-width,
-  which selects exactly those two arms and nothing else.
+  reach when the distance to it is inside the baseline's own Wilson HALF-width.
+  That selects those two arms and nothing else, but Overfishing's ceiling clears
+  by 0.0013 — read `no_room` before quoting it, the margin is stated there.
 * `point_flags` — two DIFFERENT kinds of degraded point, kept apart because they
   mean different things. `degenerate` is "the model stopped answering in English"
   (non-Latin share >= 0.5); it is true only at the Prisoner's Dilemma's k=+4 and
@@ -27,9 +28,11 @@ picture:
   0.90); it is a caveat drawn on the marker, not a disqualification.
 * `null_verdict` — beating the null needs the real arm to move FURTHER than the
   null in the steered direction, so the sign is checked, not just the interval.
-  A comparison that fails to exclude zero on a degraded point is reported
-  `undetermined`, not `null`: the Ultimatum's k=-5 null parsed 8 answers of 100,
-  and a wide interval there is missing evidence rather than evidence of absence.
+  An end where either arm stopped producing a distribution is `undetermined`
+  whichever way its interval fell, because a contrast computed across a point
+  this figure strikes out cannot be the evidence for a win either: the
+  Ultimatum's k=-5 null parsed 8 answers of 100 and the Prisoner's Dilemma's
+  k=+5 decision arm answered entirely in Chinese, and both ends say nothing.
 
 Reads `analysis/steering.json` only. No torch, no GPU, no re-analysis — every
 number drawn here is one `analyze_game.py` wrote.
@@ -101,6 +104,15 @@ def no_room(baseline_pole, side):
     `side` is +1 for the altruistic bound at 1.0, -1 for the self-interested one
     at 0.0. An arm with no room cannot be read as a failed intervention, so the
     figure marks the ceiling or the floor instead of letting a flat line lie.
+
+    HOW CLOSE THIS IS. Overfishing's strict ceiling is 94 of 98: the distance to
+    1.0 is 0.040816 against a half-width of 0.042151, so it clears by 0.001335 —
+    less than one observation, and it flips at 93/98. The published figures are
+    drawn on this rule. The equally natural reading, "is the bound inside the
+    baseline's own Wilson INTERVAL", would drop it: that interval is
+    [0.8997, 0.9840] and 1.0 is outside it. The Prisoner's Dilemma's floor is not
+    close under either reading. Which rule to keep is an open question and not
+    one this module has settled; what it must not do is claim a clean selection.
     """
     bound = 1.0 if side > 0 else 0.0
     return abs(bound - baseline_pole["p"]) <= wilson_half_width(baseline_pole)
@@ -131,41 +143,34 @@ def supported_range(arm, side):
     return (min(keep, key=abs), max(keep, key=abs))
 
 
-def null_verdict(game):
-    """Per end: does the real arm beat its own null, fail to, or say nothing?
+def ladder_ends(game):
+    """`{-1: key, +1: key}` - the outermost rung each side that BOTH arms ran.
 
-    `beats` needs the difference to exclude zero AND to point the way the arm is
-    being steered - a significant difference the wrong way is not a win. A
-    comparison that fails to exclude zero on a degraded point is `undetermined`,
-    because a collapsed arm widens the interval and proves nothing either way.
+    `run_sweep.py` takes `--ks` and `--null-ks`, so the ladder a run covers is
+    not a constant and the extremes are read off the analysis rather than
+    written in. A full run gives the -5 and +5 this package reports.
     """
-    out = {}
-    for key, side in (("-5", -1), ("5", +1)):
-        contrast = game["decision_vs_null"][key]["altruistic_decision_minus_null"]
-        excludes = contrast["excludes_zero"]
-        right_way = (contrast["diff"] > 0) if side > 0 else (contrast["diff"] < 0)
-        if excludes and right_way:
-            out[side] = "beats"
-            continue
-        degraded = False
-        for arm in ("decision", "shuffled-null"):
-            point = game["arms"][arm]["points"].get(key)
-            if point and any(point_flags(point)):
-                degraded = True
-        out[side] = "undetermined" if (not excludes and degraded) else "null"
-    return out
+    keys = [int(key) for key in game.get("decision_vs_null", {})]
+    negative = [k for k in keys if k < 0]
+    positive = [k for k in keys if k > 0]
+    if not negative or not positive:
+        raise SystemExit(
+            "%s: the two arms share rungs %s, which do not reach both sides of "
+            "zero; there is no end-to-end verdict to draw"
+            % (game.get("family", "?"), sorted(keys)))
+    return {-1: str(min(negative)), +1: str(max(positive))}
 
 
 def comparison_degraded(game, side):
     """Did either arm fail to produce readable decisions at this end?
 
-    Separate from `null_verdict` on purpose. The verdict asks what the interval
-    says; this asks whether there was anything to compare. An arm that answered
-    in Chinese, or that stated an offer in 7 answers of 100, has not produced a
-    distribution, and an interval computed across it - whether or not it clears
-    zero - is not evidence about the direction.
+    An arm that answered in Chinese, or that stated an offer in 7 answers of
+    100, has not produced a distribution, and an interval computed across it -
+    whether or not it clears zero - is not evidence about the direction. This is
+    the gate `null_verdict` uses, and the threshold is COLLAPSED_COVERAGE
+    deliberately: a merely thin arm is a caveat, not a disqualification.
     """
-    key = "5" if side > 0 else "-5"
+    key = ladder_ends(game)[side]
     for arm in ("decision", "shuffled-null"):
         point = game["arms"][arm]["points"].get(key)
         if point is None:
@@ -178,6 +183,30 @@ def comparison_degraded(game, side):
 def degraded_ends(game):
     """The ends whose comparison rests on an arm that did not answer."""
     return [side for side in (-1, +1) if comparison_degraded(game, side)]
+
+
+def null_verdict(game):
+    """Per end: does the real arm beat its own null, fail to, or say nothing?
+
+    Degradation is checked FIRST, and it settles the end on its own. An end
+    where an arm did not produce a distribution is `undetermined` whichever way
+    its interval fell: a contrast computed across a point the figure strikes out
+    as "not a result" cannot be the evidence for a win any more than for a loss.
+    Otherwise `beats` needs the difference to exclude zero AND to point the way
+    the arm is being steered - a significant difference the wrong way is not a
+    win.
+    """
+    out = {}
+    ends = ladder_ends(game)
+    for side in (-1, +1):
+        if comparison_degraded(game, side):
+            out[side] = "undetermined"
+            continue
+        contrast = game["decision_vs_null"][ends[side]][
+            "altruistic_decision_minus_null"]
+        right_way = ((contrast["diff"] > 0) if side > 0 else (contrast["diff"] < 0))
+        out[side] = "beats" if (contrast["excludes_zero"] and right_way) else "null"
+    return out
 
 
 def verdict_line(verdict):
@@ -400,7 +429,7 @@ def footer(policy):
     return (
         "Qwen2.5-7B-Instruct rev a09a3545, bfloat16, sdpa, altruism_v3, mode free, layer 20, positions=all, norm=unit, neutral preset, seed 0, n = 100 per point, %s poles.\n"
         "Error bars are 95%% intervals - Wilson on a share, Student's t on a mean. One k is the SAME sized activation edit in every game (unit beta = k x %.4f), which is what makes the panels\n"
-        "comparable; the per-game equivalent raw beta is unit beta / ||v||@20. k=0 is one shared no-op run, verified byte-identical across the two arms. The null is the same construction on the same\n"
+        "comparable; the per-game equivalent raw beta is unit beta / ||v||@20. k=0 is one shared no-op run: both arms generated identical text, verified per row. The null is the same construction on the same\n"
         "activations over the same cells with the pole labels permuted within each cell - it is not inert, and where it moves further than the real arm the real arm has shown nothing."
     ) % (policy, REFERENCE_NORM)
 
@@ -413,12 +442,24 @@ def _grid(count):
 
 
 def _headline(analysis, games):
-    """The count of games clearing the bar, said rather than asserted."""
+    """The count of games clearing the bar, said rather than asserted.
+
+    Only ends where both arms produced a distribution are counted, either way:
+    an end that was not comparable is neither a clearance nor a failure. A game
+    carrying one therefore falls into neither total, so how many do is said here
+    rather than left to be inferred from a sum that does not add up.
+    """
     verdicts = [null_verdict(analysis["games"][g]) for g in games]
     both = sum(1 for v in verdicts if v[-1] == v[+1] == "beats")
-    neither = sum(1 for v in verdicts if "beats" not in (v[-1], v[+1]))
-    return ("%d of %d clear that bar at both ends, %d at neither"
+    neither = sum(1 for v in verdicts
+                  if "beats" not in (v[-1], v[+1])
+                  and "undetermined" not in (v[-1], v[+1]))
+    unusable = sum(1 for v in verdicts if "undetermined" in (v[-1], v[+1]))
+    line = ("%d of %d clear that bar at both ends, %d at neither"
             % (both, len(games), neither))
+    if unusable:
+        line += ", %d with an end that could not be compared" % unusable
+    return line
 
 
 def _annotate_a_clean_null(axes, analysis, games, policy):
@@ -435,13 +476,14 @@ def _annotate_a_clean_null(axes, analysis, games, policy):
         baseline = decision["points"]["0"]["poles"][policy]["altruistic"]
         if no_room(baseline, +1):
             continue
-        real = decision["points"]["5"]["poles"][policy]["altruistic"]["p"]
-        null = (game["arms"]["shuffled-null"]["points"]["5"]["poles"][policy]
+        key = ladder_ends(game)[+1]
+        real = decision["points"][key]["poles"][policy]["altruistic"]["p"]
+        null = (game["arms"]["shuffled-null"]["points"][key]["poles"][policy]
                 ["altruistic"]["p"])
         ax.annotate("the null gets to %.3f where the real arm gets to %.3f"
                     % (null, real),
-                    xy=(5 * REFERENCE_NORM, null), xytext=(2, 0.80), fontsize=8.2,
-                    color=BAD, ha="left",
+                    xy=(int(key) * REFERENCE_NORM, null), xytext=(2, 0.80),
+                    fontsize=8.2, color=BAD, ha="left",
                     arrowprops=dict(arrowstyle="->", color=BAD, lw=1.1))
 
 
@@ -457,7 +499,7 @@ def _comparison_notes(analysis, games):
         for side in (-1, +1):
             if not comparison_degraded(game, side):
                 continue
-            key = "5" if side > 0 else "-5"
+            key = ladder_ends(game)[side]
             arm, worst = min(
                 (("decision", game["arms"]["decision"]["points"][key]),
                  ("null", game["arms"]["shuffled-null"]["points"][key])),
@@ -465,7 +507,7 @@ def _comparison_notes(analysis, games):
             lines.append(
                 "%s at k=%+d: its %s arm parsed %d answers of %d (%.0f%% non-Latin), "
                 "so that comparison is not evidence either way."
-                % (LABELS[name], 5 * side, arm, worst["n_parsed"], worst["n_rows"],
+                % (LABELS[name], int(key), arm, worst["n_parsed"], worst["n_rows"],
                    100 * worst["degeneracy"]["share_with_non_latin_script"]))
     return "\n".join(lines)
 
@@ -530,14 +572,17 @@ def figure_vs_null(analysis, games, policy, label, out_path):
     for name in games:
         game = analysis["games"][name]
         verdict = null_verdict(game)
-        for key, side in (("5", +1), ("-5", -1)):
+        ends = ladder_ends(game)
+        for side in (+1, -1):
+            key = ends[side]
             contrast = game["decision_vs_null"][key]["altruistic_decision_minus_null"]
-            rows.append((y, side, contrast, verdict[side],
+            rows.append((y, int(key), contrast, verdict[side],
                          comparison_degraded(game, side)))
             y -= 1.0
         y -= 0.6
 
-    for pos, side, contrast, state, degraded in rows:
+    for pos, k, contrast, state, degraded in rows:
+        side = 1 if k > 0 else -1
         colour = colours[state]
         ax.errorbar([contrast["diff"]], [pos],
                     xerr=[[contrast["diff"] - contrast["lo"]],
@@ -546,7 +591,7 @@ def figure_vs_null(analysis, games, policy, label, out_path):
                     markersize=7, linewidth=2.0, linestyle="none",
                     markerfacecolor="white" if degraded else colour, zorder=4)
         ax.text(contrast["hi"] + 0.02, pos,
-                "k=%+d%s" % (5 * side, "  (an arm here did not answer)"
+                "k=%+d%s" % (k, "  (an arm here did not answer)"
                              if degraded else ""),
                 va="center", fontsize=8.2, color=colour)
 
@@ -586,6 +631,24 @@ def figure_vs_null(analysis, games, policy, label, out_path):
     return out_path
 
 
+def _require_drawable(name, game):
+    """Refuse an analysis this cannot draw, by name, rather than deep in a panel.
+
+    `run_sweep.py` takes `--ks` and `--null-ks`, so a legitimate subset run can
+    land here missing a rung this needs. Every panel measures its baseline and
+    its bands against the shared k=0 no-op, and the whole figure is each arm
+    against its own null, so neither is optional.
+    """
+    for arm in ("decision", "shuffled-null"):
+        if arm not in game.get("arms", {}):
+            raise SystemExit("%s: the analysis has no %s arm; this figure draws "
+                             "each real arm against its own null" % (name, arm))
+        if "0" not in game["arms"][arm]["points"]:
+            raise SystemExit("%s: the %s arm has no k=0 point; every baseline and "
+                             "every band here is measured against it" % (name, arm))
+    ladder_ends(game)
+
+
 def main():
     here = Path(__file__).resolve()
     package = here.parents[2]
@@ -611,6 +674,8 @@ def main():
                          % (args.analysis, unknown))
     if not games:
         raise SystemExit("%s holds no games" % args.analysis)
+    for name in games:
+        _require_drawable(name, analysis["games"][name])
     label = args.label or policy
 
     out_dir = Path(args.out_dir)

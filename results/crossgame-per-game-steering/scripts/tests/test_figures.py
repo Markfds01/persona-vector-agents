@@ -174,6 +174,38 @@ def test_an_interval_containing_zero_where_an_arm_collapsed_is_undetermined():
     assert verdict[+1] == "null"
 
 
+def test_a_significant_contrast_on_a_struck_out_point_is_not_a_win():
+    """The Prisoner's Dilemma at k=+5: +0.697, and every answer non-Latin.
+
+    The interval clears zero by a distance and points the steered way. It is
+    still not a win: the figure strikes that point out as "not a result", and a
+    contrast computed across it cannot be the evidence for a win any more than
+    for a loss.
+    """
+    game = _game((-0.02, False), (+0.697, True),
+                 decision={"-5": _point(), "5": _point(coverage=0.86, non_latin=1.0)})
+    assert make_figures.null_verdict(game)[+1] == "undetermined"
+
+
+def test_a_significant_contrast_against_an_arm_that_barely_parsed_is_not_a_win():
+    """The relaxed Ultimatum at k=+5: its null stated an offer in 7 answers of 100."""
+    game = _game((-0.324, True), (+0.697, True),
+                 null={"-5": _point(), "5": _point(coverage=0.07, non_latin=1.0)})
+    assert make_figures.null_verdict(game)[+1] == "undetermined"
+    assert make_figures.null_verdict(game)[-1] == "beats"
+
+
+def test_a_thin_arm_does_not_turn_a_measured_null_into_undetermined():
+    """Low coverage is a caveat; only a COLLAPSED arm makes a comparison say nothing.
+
+    0.87 is under LOW_COVERAGE and well over COLLAPSED_COVERAGE, so an interval
+    containing zero there is a real "does not beat", not missing evidence.
+    """
+    game = _game((-0.02, False), (+0.02, False),
+                 null={"-5": _point(coverage=0.87), "5": _point()})
+    assert make_figures.null_verdict(game)[-1] == "null"
+
+
 def test_a_significant_result_on_a_thin_point_still_counts():
     # Trust's null at k=-5 resolved 87 of 100 and the difference is overwhelming
     game = _game((-0.691, True), (+0.498, True),
@@ -220,6 +252,64 @@ def test_an_undetermined_end_is_not_reported_as_a_null():
     assert "undetermined" in line and "does not beat its null" in line
 
 
+# --- the headline count -------------------------------------------------------
+
+def _analysis(**games):
+    return {"games": games}
+
+
+def test_the_headline_does_not_count_an_end_that_could_not_be_compared():
+    analysis = _analysis(
+        trust=_game((-0.7, True), (+0.5, True)),
+        prisoners_dilemma=_game(
+            (-0.02, False), (+0.697, True),
+            decision={"-5": _point(), "5": _point(coverage=0.86, non_latin=1.0)}))
+    line = make_figures._headline(analysis, ["trust", "prisoners_dilemma"])
+    assert line.startswith("1 of 2 clear that bar at both ends")
+    assert "1 with an end that could not be compared" in line
+
+
+def test_a_game_measured_at_both_ends_and_beating_at_neither_is_counted_as_neither():
+    analysis = _analysis(ultimatum=_game((-0.02, False), (+0.02, False)))
+    assert make_figures._headline(analysis, ["ultimatum"]) == (
+        "0 of 1 clear that bar at both ends, 1 at neither")
+
+
+# --- a run that did not cover the whole ladder --------------------------------
+
+def test_the_ends_are_the_outermost_rungs_the_run_actually_shares():
+    game = _game((-0.5, True), (+0.5, True))
+    game["decision_vs_null"]["3"] = game["decision_vs_null"]["5"]
+    assert make_figures.ladder_ends(game) == {-1: "-5", +1: "5"}
+    del game["decision_vs_null"]["5"]
+    assert make_figures.ladder_ends(game) == {-1: "-5", +1: "3"}
+
+
+def test_a_run_that_never_left_one_side_of_zero_is_refused_by_name():
+    game = _game((-0.5, True), (+0.5, True))
+    del game["decision_vs_null"]["5"]
+    game["family"] = "dictator"
+    with pytest.raises(SystemExit) as excinfo:
+        make_figures.ladder_ends(game)
+    assert "dictator" in str(excinfo.value)
+
+
+def test_an_analysis_without_a_null_arm_is_refused_rather_than_half_drawn():
+    game = _game((-0.5, True), (+0.5, True))
+    game["arms"]["decision"]["points"]["0"] = _point()
+    del game["arms"]["shuffled-null"]
+    with pytest.raises(SystemExit) as excinfo:
+        make_figures._require_drawable("trust", game)
+    assert "shuffled-null" in str(excinfo.value)
+
+
+def test_a_ladder_without_its_shared_no_op_is_refused_rather_than_half_drawn():
+    game = _game((-0.5, True), (+0.5, True))
+    with pytest.raises(SystemExit) as excinfo:
+        make_figures._require_drawable("trust", game)
+    assert "k=0" in str(excinfo.value)
+
+
 # --- against the committed analysis -------------------------------------------
 
 @pytest.fixture(scope="module")
@@ -238,7 +328,9 @@ def test_the_rules_reproduce_the_published_per_game_verdicts(analysis):
         "apology": {-1: "beats", +1: "beats"},
         "ultimatum": {-1: "undetermined", +1: "null"},
         "overfishing": {-1: "beats", +1: "null"},
-        "prisoners_dilemma": {-1: "null", +1: "beats"},
+        # +5 is where every answer is non-Latin: struck out on the figure,
+        # so the +0.697 contrast computed across it is not a verdict either way
+        "prisoners_dilemma": {-1: "null", +1: "undetermined"},
     }
     for game, want in expected.items():
         assert make_figures.null_verdict(analysis["games"][game]) == want, game

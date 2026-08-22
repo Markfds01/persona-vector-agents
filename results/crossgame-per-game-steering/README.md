@@ -251,9 +251,12 @@ and a design imbalance it documents at length. Every figure below carries that.
 
 **The negative arm has no room**: the baseline is 0.000, and no negative point is
 significantly different from it. **The positive arm moves further than anything
-else in this run** — 0.000 to 0.907, beating its null by **+0.697 [+0.577,
-+0.779]** — but the last two rungs of that climb happen while the model is not
-answering in English. At k=+4 and k=+5 **every** answer contains non-Latin script:
+else in this run** — 0.000 to 0.907 — but the last two rungs of that climb happen
+while the model is not answering in English, and **that is where the comparison
+against its null sits**. The `k = +5` contrast is `+0.697 [+0.577, +0.779]`, and
+it is computed on a point every figure here strikes out as not a result, so it is
+**not** reported as a win: the positive end is `undetermined`, not `beats`. At
+k=+4 and k=+5 **every** answer contains non-Latin script:
 the model switches wholesale to Chinese, reasons about the payoff matrix there,
 and concludes `选择 合作（C）`. The scorer reads those correctly, but coverage
 falls to 0.86 and 14% of k=+5 answers are unparsed.
@@ -263,6 +266,8 @@ significantly and with the surface intact at k=+2 (+0.100, p = 1.2e−03) and k=
 (+0.240, p = 1.8e−07)**, where non-Latin script is at 3%. The 0.622 and 0.907 at
 k=+4 and +5 are past the point where this game separates the direction from the
 size of the edit, and they are reported for completeness, not as the headline.
+**And no positive-end comparison against its null is reported at all**: the only
+rung the null ran on that side is k=+5, which is one of those two.
 
 P(Cooperate) is a 0/1 outcome, so it is the one own measure in this package read
 with Wilson and Newcombe rather than a t interval and Welch — `METHOD.md` § 8. It
@@ -301,15 +306,22 @@ are much shorter than the real ones (1.30–2.69 against 2.27–8.47), so at mat
 |---|---|---|---|---|
 | dictator | real, saturated from k=−1 | real, peaks at k=+2 then declines | **yes**, both ends | no (2 reversals) |
 | trust | real and large | real on the mean, weak on the pole until k=+5 | **yes**, both ends | yes |
-| ultimatum | moves from baseline | moves from baseline | **no — null at both ends** | yes |
+| ultimatum | moves from baseline | moves from baseline | **no** — positive end null, negative end **undetermined** | yes |
 | apology | real, saturates to 0.000 | real, saturates to 1.000 | **yes**, both ends | yes |
 | overfishing | real and graded | **no room** (baseline 0.959) | **yes** on the negative end only | yes |
-| prisoners_dilemma | **no room** (baseline 0.000) | real from k=+2; text collapses by k=+4 | **yes** on the positive end only | yes |
+| prisoners_dilemma | **no room** (baseline 0.000) | real from k=+2; text collapses by k=+4 | **no** — negative end null, positive end **undetermined** | yes |
 
-**Where it is null, plainly:** the Ultimatum against its own null, at both
-extremes. Overfishing's entire positive arm. The Prisoner's Dilemma's entire
+**Where it is null, plainly:** the Ultimatum's `k = +5`, measured on healthy arms
+at both ends. Overfishing's entire positive arm. The Prisoner's Dilemma's entire
 negative arm. The last two are floor and ceiling effects with an obvious reading;
 the Ultimatum is not, and it is a real negative.
+
+**Where nothing can be said:** two ends, and they are marked as such rather than
+folded in either direction. The Ultimatum's `k = -5`, whose null resolved 8
+answers of 100. The Prisoner's Dilemma's `k = +5`, whose decision arm answered
+entirely in non-Latin script. **Three of six games clear the bar at both ends,
+none clears it at neither, and two carry an end that could not be compared** —
+which is what the figures' own heading says, computed from the same rule.
 
 ## 6. What this does not establish
 
@@ -440,7 +452,7 @@ python results/crossgame-per-game-steering/scripts/figures/make_figures.py
 | `steering_own_measure.png` | the same six arms on each game's own measure (dollars, fish, `P(Cooperate)`) |
 | `steering_vs_null.png` | decision minus its own null at both extremes, six games on one axis — the bar itself |
 
-Four things are decided by a function rather than written into a caption, so the
+Five things are decided by a function rather than written into a caption, so the
 rule can be checked instead of the picture trusted. `scripts/tests/test_figures.py`
 pins each one, and pins that together they reproduce § 5 exactly.
 
@@ -453,15 +465,32 @@ pins each one, and pins that together they reproduce § 5 exactly.
   side, so an arm that works one way only draws one-sided rather than being
   smoothed into a symmetric band. The Ultimatum's bands are red and amber, never
   blue, which is the point: it moves and it still shows nothing.
+* **An end where either arm stopped answering is `undetermined`, whichever way its
+  interval fell.** Not only a wide interval that fails to clear zero: a narrow one
+  that clears it decides nothing either, if it was computed across a point this
+  same figure strikes out. Two ends in the strict round are marked this way — the
+  Ultimatum's `k = -5` and the Prisoner's Dilemma's `k = +5` — and one in the
+  relaxed round, the Ultimatum's `k = +5`.
 * **A ceiling and a floor are marked as such.** An arm has no room when the
   distance from its baseline to the bound is inside the baseline's own Wilson
-  half-width. That selects Overfishing's positive arm (baseline 0.959) and the
-  Prisoner's Dilemma's negative arm (baseline 0.000), and nothing else.
+  **half**-width. That selects Overfishing's positive arm (baseline 0.959) and the
+  Prisoner's Dilemma's negative arm (baseline 0.000), and nothing else — **but
+  Overfishing clears by 0.0013 and the selection is not a clean one.** Its
+  baseline is 94 of 98: the distance to 1.0 is 0.040816 against a half-width of
+  0.042151, less than one observation, and it flips at 93/98. Read the rule
+  the other equally natural way — *is the bound inside the baseline's own Wilson
+  **interval***, which is `[0.8997, 0.9840]` — and 1.0 is outside it, so
+  Overfishing would **not** be a ceiling. **The figures here are drawn on the
+  half-width rule.** The Prisoner's Dilemma's floor is not close under either
+  reading. Which rule to keep is open; what the numbers do not support is calling
+  the selection clean.
 * **`k = +4` and `k = +5` of the Prisoner's Dilemma are struck out on the figure.**
   Every answer there is non-Latin. They are excluded from its supported band, which
   therefore covers exactly `k = +2` and `k = +3` — the claim § 3 makes. A point is
   struck out when its non-Latin share reaches 0.5; those two are the only points in
-  the run that qualify, and both sit at 1.00.
+  the run that qualify, and both sit at 1.00. `k = +5` is also the only rung the
+  null ran on that side, which is why that game's positive verdict is
+  `undetermined` and its band is amber rather than blue.
 
 Separately, a point whose parse coverage is under 0.90 is drawn hollow with the
 number of answers the scorer actually resolved. That is a caveat, not a
@@ -509,10 +538,10 @@ independent run.**
 |---|---|---|---|
 | dictator | 3.4° | beats its null at **both** ends | **negative end only** |
 | trust | 14.7° | beats at both ends | beats at both ends, far harder |
-| **ultimatum** | **37.0°** | **beats at neither end** | **beats at both** (positive end unusable — 11.3) |
+| **ultimatum** | **37.0°** | **beats at neither end that could be compared** | **negative end only** (positive end unusable — 11.2) |
 | apology | 1.7° | beats at both ends | beats at both ends |
 | overfishing | 49.0° | negative end only | negative end only |
-| prisoners_dilemma | 0.0° | positive end only | *reused, identical vector* |
+| prisoners_dilemma | 0.0° | neither: negative end null, positive end undetermined | *reused, identical vector* |
 
 `P(altruistic)`, decision arm, relaxed vectors:
 
@@ -541,7 +570,9 @@ relabelling of the same data. The strict direction did not.
 The positive end is **not** reported as a second win. Its interval clears zero by
 a distance, but the null arm there stopped answering in English and stated an
 offer in 7 answers of 100; that is a missing distribution, not a weak one, and an
-interval computed across it is not evidence about the direction either way.
+interval computed across it is not evidence about the direction either way. The
+figures say the same thing: that end is `undetermined`, and the suptitle counts
+**2 of 5** clearing the bar at both ends, not 3.
 
 Symmetrically, § 3's strict `−0.179 [−0.522, +0.012]` was never a null: **its**
 null arm parsed 8 of 100 (§ 10). Each policy has exactly one usable extreme for
