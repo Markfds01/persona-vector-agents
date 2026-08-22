@@ -8,6 +8,10 @@ game at a time without rendering anything.
 What can honestly be put in one table is the POLE SHARE: same orientation and
 same definition in every game. The own-measure column is printed beside it with
 its unit, and never summed, averaged or compared across rows.
+
+The one judgement this stage does make is which contrasts are not evidence at all,
+and it makes it with `degradation.py` — the rule `make_figures.py` strikes a point
+out by — so the log a reproducer reads and the figure they look at agree.
 """
 
 import argparse
@@ -18,9 +22,13 @@ from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE.parent / "prompting"))
+sys.path.insert(0, str(HERE.parent / "measurement"))
 sys.path.insert(0, str(HERE.parents[3]))
 
 import eval_games  # noqa: E402
+#: The same rule `make_figures.py` strikes a point out by. Shared rather than
+#: restated: this log and that figure must not call different points unreadable.
+from degradation import produced_no_distribution  # noqa: E402
 
 SHORT = {"dictator": "dictator", "trust": "trust", "ultimatum": "ultimatum",
          "apology": "apology", "overfishing": "overfishing",
@@ -135,24 +143,45 @@ def print_monotonicity(analysis):
     print()
 
 
+def unreadable_arms(game, k):
+    """The arms that produced no distribution at this k, in the report's order.
+
+    An interval computed across one of them is not evidence about the direction,
+    whether it clears zero or contains it, so the row it sits on is marked and
+    neither the bare number nor a bare `ns` is left to be read as a measurement.
+    """
+    out = []
+    for arm, short in (("decision", "decision"), ("shuffled-null", "null")):
+        point = game["arms"].get(arm, {}).get("points", {}).get(k)
+        if point is not None and produced_no_distribution(point):
+            out.append(short)
+    return out
+
+
 def print_null(analysis):
     policy = analysis["policy"]
     print("### the real arm against its own shuffled-label null, at matched unit beta")
-    print("  %-14s %5s %26s %26s" % ("game", "k", "P(alt) decision - null",
-                                     "mean decision - null"))
+    print("  %-14s %5s %26s %26s  %s" % ("game", "k", "P(alt) decision - null",
+                                         "mean decision - null",
+                                         "both arms readable?"))
     for family, game in analysis["games"].items():
         contrast = game.get("decision_vs_null", {})
         for k in sorted(contrast, key=int):
             entry = contrast[k]
             share = entry["altruistic_decision_minus_null"]
             mean = entry["mean_decision_minus_null"]
-            print("  %-14s %5s %26s %26s" % (
+            unreadable = unreadable_arms(game, k)
+            print("  %-14s %5s %26s %26s  %s" % (
                 SHORT[family], k,
                 "n/a" if share.get("diff") is None
                 else "%+.3f [%+.3f,%+.3f]%s" % (share["diff"], share["lo"], share["hi"],
                                                 "" if share["excludes_zero"] else " ns"),
                 "n/a" if mean.get("diff") is None
-                else "%+7.2f p=%s" % (mean["diff"], _p(mean.get("p")))))
+                else "%+7.2f p=%s" % (mean["diff"], _p(mean.get("p"))),
+                "yes" if not unreadable
+                else "NO - the %s arm produced no distribution, so this "
+                     "interval is not evidence either way"
+                     % " and ".join(unreadable)))
     print()
 
 

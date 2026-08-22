@@ -33,20 +33,20 @@ pole policy: relaxed   games: 5   points: 70
   apology          +0.929 increasing        False none
 
 ### the real arm against its own shuffled-label null, at matched unit beta
-  game               k     P(alt) decision - null       mean decision - null
-  ultimatum         -5     -0.324 [-0.432,-0.205]           -23.25 p=1.1e-05
-  ultimatum          0  +0.000 [-0.114,+0.114] ns            +0.00 p=1.0e+00
-  ultimatum          5     +0.697 [+0.326,+0.789]           +46.51 p=5.1e-64
-  overfishing       -5     -0.394 [-0.497,-0.279]           +17.58 p=1.4e-06
-  overfishing        0  +0.000 [-0.064,+0.064] ns            +0.00 p=1.0e+00
-  overfishing        5  -0.010 [-0.054,+0.030] ns            +7.37 p=6.8e-03
-  dictator          -5     -0.230 [-0.324,-0.143]           -17.22 p=3.6e-06
-  dictator           0  +0.000 [-0.098,+0.098] ns            +0.00 p=1.0e+00
-  dictator           5  -0.116 [-0.240,+0.013] ns            +0.20 p=8.7e-01
-  trust             -5     -0.857 [-0.910,-0.756]           -85.75 p=3.1e-53
-  trust              0  +0.000 [-0.130,+0.130] ns            +0.00 p=1.0e+00
-  trust              5     +0.839 [+0.740,+0.895]           +32.17 p=1.5e-42
-  apology           -5     -0.815 [-0.881,-0.710]           -45.13 p=2.5e-55
-  apology            0  +0.000 [-0.133,+0.133] ns            +0.00 p=1.0e+00
-  apology            5     +0.802 [+0.703,+0.868]           +31.65 p=5.5e-12
+  game               k     P(alt) decision - null       mean decision - null  both arms readable?
+  ultimatum         -5     -0.324 [-0.432,-0.205]           -23.25 p=1.1e-05  yes
+  ultimatum          0  +0.000 [-0.114,+0.114] ns            +0.00 p=1.0e+00  yes
+  ultimatum          5     +0.697 [+0.326,+0.789]           +46.51 p=5.1e-64  NO - the null arm produced no distribution, so this interval is not evidence either way
+  overfishing       -5     -0.394 [-0.497,-0.279]           +17.58 p=1.4e-06  yes
+  overfishing        0  +0.000 [-0.064,+0.064] ns            +0.00 p=1.0e+00  yes
+  overfishing        5  -0.010 [-0.054,+0.030] ns            +7.37 p=6.8e-03  yes
+  dictator          -5     -0.230 [-0.324,-0.143]           -17.22 p=3.6e-06  yes
+  dictator           0  +0.000 [-0.098,+0.098] ns            +0.00 p=1.0e+00  yes
+  dictator           5  -0.116 [-0.240,+0.013] ns            +0.20 p=8.7e-01  yes
+  trust             -5     -0.857 [-0.910,-0.756]           -85.75 p=3.1e-53  yes
+  trust              0  +0.000 [-0.130,+0.130] ns            +0.00 p=1.0e+00  yes
+  trust              5     +0.839 [+0.740,+0.895]           +32.17 p=1.5e-42  yes
+  apology           -5     -0.815 [-0.881,-0.710]           -45.13 p=2.5e-55  yes
+  apology            0  +0.000 [-0.133,+0.133] ns            +0.00 p=1.0e+00  yes
+  apology            5     +0.802 [+0.703,+0.868]           +31.65 p=5.5e-12  yes
 

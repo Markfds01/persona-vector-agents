@@ -272,7 +272,81 @@ def test_the_headline_does_not_count_an_end_that_could_not_be_compared():
 def test_a_game_measured_at_both_ends_and_beating_at_neither_is_counted_as_neither():
     analysis = _analysis(ultimatum=_game((-0.02, False), (+0.02, False)))
     assert make_figures._headline(analysis, ["ultimatum"]) == (
-        "0 of 1 clear that bar at both ends, 1 at neither")
+        "0 of 1 clear that bar at both ends, 0 at one end, 1 at neither")
+
+
+def test_a_game_beating_at_one_end_is_counted_and_not_dropped():
+    analysis = _analysis(overfishing=_game((-0.94, True), (-0.04, False)))
+    assert make_figures._headline(analysis, ["overfishing"]) == (
+        "0 of 1 clear that bar at both ends, 1 at one end, 0 at neither")
+
+
+def test_an_end_that_could_not_be_compared_still_leaves_the_game_in_a_total():
+    """The counts partition the games: no game falls out of all three."""
+    analysis = _analysis(
+        trust=_game((-0.7, True), (+0.5, True)),
+        overfishing=_game((-0.94, True), (-0.04, False)),
+        ultimatum=_game(
+            (-0.179, False), (+0.021, False),
+            null={"-5": _point(coverage=0.08), "5": _point()}),
+        prisoners_dilemma=_game(
+            (-0.02, False), (+0.697, True),
+            decision={"-5": _point(), "5": _point(coverage=0.86, non_latin=1.0)}))
+    games = ["trust", "overfishing", "ultimatum", "prisoners_dilemma"]
+    line = make_figures._headline(analysis, games)
+    assert line == ("1 of 4 clear that bar at both ends, 1 at one end, 2 at "
+                    "neither; 2 with an end that could not be compared")
+
+
+# --- a point nothing could be read off ----------------------------------------
+
+def _pole_point(p, lo, hi, coverage=1.0, non_latin=0.0):
+    point = _point(coverage=coverage, non_latin=non_latin)
+    point["poles"] = {"strict": {"altruistic": _pole(p, lo, hi)}}
+    point["n_parsed"] = int(round(100 * coverage))
+    return point
+
+
+def test_a_point_that_parsed_nothing_is_dropped_from_the_line_not_crashed_on():
+    getter = make_figures._pole_getter("strict")
+    assert getter(_pole_point(None, None, None, coverage=0.0)) is None
+    assert getter(_pole_point(0.5, 0.4, 0.6)) == (0.4, 0.6, 0.5)
+
+
+def test_a_series_skips_the_unreadable_point_and_keeps_the_rest():
+    arm = {"points": {"0": _pole_point(0.5, 0.4, 0.6),
+                      "5": _pole_point(None, None, None, coverage=0.0)}}
+    series = make_figures._series(arm, make_figures._pole_getter("strict"))
+    assert [entry["k"] for entry in series] == [0]
+
+
+def test_a_baseline_that_parsed_nothing_is_refused_by_name():
+    """Every band and every dashed line on the panel is measured against k=0."""
+    game = _game((-0.5, True), (+0.5, True))
+    game["arms"]["decision"]["points"]["0"] = _pole_point(None, None, None,
+                                                          coverage=0.0)
+    with pytest.raises(SystemExit) as excinfo:
+        make_figures._panel(None, "trust", game, "strict",
+                            make_figures._pole_getter("strict"), "y", (0, 1), True)
+    assert "trust" in str(excinfo.value) and "k=0" in str(excinfo.value)
+
+
+def test_the_note_names_the_arm_that_tripped_the_gate_not_the_thinner_one():
+    """The Prisoner's Dilemma's k=+5: the decision arm left English at 86 parsed,
+    while its null parsed all 100. Blaming the smaller count would still name the
+    decision arm there; blaming it when the healthy arm is the thinner one would
+    name the wrong one."""
+    game = _game((-0.02, False), (+0.697, True),
+                 decision={"-5": _point(), "5": _point(coverage=0.95,
+                                                       non_latin=1.0)},
+                 null={"-5": _point(), "5": _point(coverage=0.60)})
+    for arm, points in game["arms"].items():
+        for key, point in points["points"].items():
+            point["n_parsed"] = int(round(100 * point["parse_coverage"]))
+            point["n_rows"] = 100
+    note = make_figures._comparison_notes(_analysis(prisoners_dilemma=game),
+                                          ["prisoners_dilemma"])
+    assert "its decision arm parsed 95" in note
 
 
 # --- a run that did not cover the whole ladder --------------------------------

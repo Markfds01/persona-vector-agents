@@ -40,6 +40,7 @@ number drawn here is one `analyze_game.py` wrote.
 
 import argparse
 import json
+import sys
 from pathlib import Path
 
 import matplotlib
@@ -48,19 +49,17 @@ import matplotlib.pyplot as plt
 from matplotlib.lines import Line2D
 from matplotlib.patches import Patch
 
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "measurement"))
+
+#: The two kinds of degraded point and the thresholds that separate them are
+#: shared with `crossgame_tables.py`: the figure and the table must call the same
+#: point unreadable. Re-exported so this module reads as its own vocabulary.
+from degradation import (COLLAPSED_COVERAGE, DEGENERATE_NON_LATIN,  # noqa: E402
+                         LOW_COVERAGE, point_flags, produced_no_distribution)
+
 #: The ladder's axis: the layer-20 norm of the repo's shipped altruism trait
 #: vector. METHOD.md section 3 says why it is this constant and not another.
 REFERENCE_NORM = 10.508308410644531
-
-#: Every answer non-Latin means the measurement is no longer about the game. Half
-#: is far past any rate the healthy points show (they sit at 0.00-0.13).
-DEGENERATE_NON_LATIN = 0.5
-#: Below this the point is drawn hollow with its parsed count: still measured,
-#: measured on less.
-LOW_COVERAGE = 0.90
-#: Below this the point did not produce a distribution at all - most answers never
-#: state a decision - so a comparison against it is not a comparison.
-COLLAPSED_COVERAGE = 0.50
 
 #: Canonical order. A run that covered fewer games draws fewer panels, in this
 #: order; nothing here assumes all six are present.
@@ -82,17 +81,6 @@ BAND_COLOUR = {"beats": DECISION, "null": BAD, "undetermined": UNDET}
 
 
 # --- the rules, as functions rather than as caption text ----------------------
-
-def point_flags(point):
-    """`(degenerate, low_coverage)` for one beta point.
-
-    Degenerate is the hard one - the answers are not in English any more and the
-    point is not a result. Low coverage is a caveat: fewer rows resolved.
-    """
-    degeneracy = point["degeneracy"]
-    return (degeneracy["share_with_non_latin_script"] >= DEGENERATE_NON_LATIN,
-            point["parse_coverage"] < LOW_COVERAGE)
-
 
 def wilson_half_width(pole):
     return (pole["hi"] - pole["lo"]) / 2.0
@@ -175,7 +163,7 @@ def comparison_degraded(game, side):
         point = game["arms"][arm]["points"].get(key)
         if point is None:
             continue
-        if point_flags(point)[0] or point["parse_coverage"] < COLLAPSED_COVERAGE:
+        if produced_no_distribution(point):
             return True
     return False
 
@@ -221,6 +209,8 @@ def verdict_line(verdict):
     if "beats" not in (negative, positive):
         return ("negative end %s; positive end %s"
                 % (words[negative], words[positive]), BAD)
+    # only a WIN is softened by an undetermined other end. A failure on the end
+    # that was measured is a finding, and README section 5 reports it as one
     end = "negative" if negative == "beats" else "positive"
     other = positive if negative == "beats" else negative
     colour = GOOD if other == "null" else UNDET
@@ -272,6 +262,10 @@ def _pole_getter(policy):
     """
     def getter(point):
         pole = point["poles"][policy]["altruistic"]
+        # nothing parsed is no share and no Wilson bounds; the point is dropped
+        # from the line the way an own measure with no mean already is
+        if pole["p"] is None:
+            return None
         return (pole["lo"], pole["hi"], pole["p"])
     return getter
 
@@ -375,7 +369,12 @@ def _panel(ax, game_name, game, policy, getter, ylabel, ylim, on_pole_axis):
     decision = game["arms"]["decision"]
     null = game["arms"]["shuffled-null"]
     baseline_point = decision["points"]["0"]
-    baseline = getter(baseline_point)[2]
+    baseline_value = getter(baseline_point)
+    if baseline_value is None:
+        raise SystemExit("%s: the k=0 no-op point resolved no answers, and every "
+                         "baseline and band on this panel is measured against it"
+                         % game_name)
+    baseline = baseline_value[2]
 
     ymin, ymax = ylim
     _mark_bands(ax, game, decision, policy, ymin, ymax, on_pole_axis)
@@ -444,21 +443,20 @@ def _grid(count):
 def _headline(analysis, games):
     """The count of games clearing the bar, said rather than asserted.
 
-    Only ends where both arms produced a distribution are counted, either way:
-    an end that was not comparable is neither a clearance nor a failure. A game
-    carrying one therefore falls into neither total, so how many do is said here
-    rather than left to be inferred from a sum that does not add up.
+    Every game is counted by how many of its two ends the real arm beat its own
+    null on, so the three totals partition the games drawn and a reader can add
+    them up. An end that could not be compared is not a clearance - a game
+    carrying one can still clear at neither end, which is the negative result and
+    not a gap - so how many carry one is said separately rather than folded in.
     """
     verdicts = [null_verdict(analysis["games"][g]) for g in games]
-    both = sum(1 for v in verdicts if v[-1] == v[+1] == "beats")
-    neither = sum(1 for v in verdicts
-                  if "beats" not in (v[-1], v[+1])
-                  and "undetermined" not in (v[-1], v[+1]))
+    beaten = [sum(1 for side in (-1, +1) if verdict[side] == "beats")
+              for verdict in verdicts]
     unusable = sum(1 for v in verdicts if "undetermined" in (v[-1], v[+1]))
-    line = ("%d of %d clear that bar at both ends, %d at neither"
-            % (both, len(games), neither))
+    line = ("%d of %d clear that bar at both ends, %d at one end, %d at neither"
+            % (beaten.count(2), len(games), beaten.count(1), beaten.count(0)))
     if unusable:
-        line += ", %d with an end that could not be compared" % unusable
+        line += "; %d with an end that could not be compared" % unusable
     return line
 
 
@@ -500,10 +498,13 @@ def _comparison_notes(analysis, games):
             if not comparison_degraded(game, side):
                 continue
             key = ladder_ends(game)[side]
-            arm, worst = min(
-                (("decision", game["arms"]["decision"]["points"][key]),
-                 ("null", game["arms"]["shuffled-null"]["points"][key])),
-                key=lambda pair: pair[1]["n_parsed"])
+            # the arm that TRIPPED the gate, not whichever parsed fewer: a healthy
+            # arm can be the thinner one and would then be named for the other's fault
+            failed = [(name, game["arms"][arm]["points"][key])
+                      for name, arm in (("decision", "decision"),
+                                        ("null", "shuffled-null"))
+                      if produced_no_distribution(game["arms"][arm]["points"][key])]
+            arm, worst = min(failed, key=lambda pair: pair[1]["n_parsed"])
             lines.append(
                 "%s at k=%+d: its %s arm parsed %d answers of %d (%.0f%% non-Latin), "
                 "so that comparison is not evidence either way."
@@ -602,21 +603,25 @@ def figure_vs_null(analysis, games, policy, label, out_path):
                   "   (95% Newcombe interval)", fontsize=9.5)
     ax.set_xlim(-1.12, 1.28)
     ax.grid(True, axis="x", alpha=0.22, linewidth=0.6)
+    # the pad clears the two-line strapline below it, which is anchored va=bottom
     ax.set_title("Beating the null is the bar (%s vectors). An interval touching "
                  "the line is not a result." % label, fontsize=12.5, loc="left",
-                 pad=22)
+                 pad=40)
     ax.text(0.0, 1.012,
             "A point LEFT of the line at k=-5 and RIGHT of it at k=+5 is the real "
-            "arm moving further than the null in the steered direction.",
-            transform=ax.transAxes, fontsize=8.6, color=GREY)
+            "arm moving further than the null in the steered direction.\n"
+            "An end where an arm did not answer is undetermined wherever its "
+            "interval fell: it is not the evidence for a win any more than for a "
+            "loss.",
+            transform=ax.transAxes, va="bottom", fontsize=8.6, color=GREY)
     fig.legend(handles=[
         Line2D([], [], color=GOOD, marker="o", linewidth=2,
                label="beats its null at that end"),
         Line2D([], [], color=BAD, marker="o", linewidth=2,
                label="does not: the interval contains zero on healthy points"),
         Line2D([], [], color=UNDET, marker="o", linewidth=2,
-               label="undetermined: the interval contains zero, but a point there "
-                     "is degraded"),
+               label="undetermined: an arm at that end did not produce a "
+                     "distribution, wherever its interval fell"),
         Line2D([], [], color=GREY, marker="o", markerfacecolor="white",
                linestyle="none", markeredgewidth=1.6,
                label="hollow: an arm at that end did not produce readable answers"),

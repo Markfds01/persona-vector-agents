@@ -37,23 +37,23 @@ pole policy: strict   games: 6   points: 84
   prisoners_dil    +0.703 increasing        False none
 
 ### the real arm against its own shuffled-label null, at matched unit beta
-  game               k     P(alt) decision - null       mean decision - null
-  dictator          -5     -0.155 [-0.244,-0.074]           -15.51 p=2.7e-04
-  dictator           0  +0.000 [-0.098,+0.098] ns            +0.00 p=1.0e+00
-  dictator           5     +0.116 [+0.052,+0.196]           +14.31 p=2.8e-28
-  trust             -5     -0.691 [-0.777,-0.578]           -52.50 p=1.2e-40
-  trust              0  +0.000 [-0.130,+0.130] ns            +0.00 p=1.0e+00
-  trust              5     +0.498 [+0.386,+0.596]           +46.17 p=7.3e-58
-  ultimatum         -5  -0.179 [-0.522,+0.012] ns            -9.15 p=3.2e-01
-  ultimatum          0  +0.000 [-0.114,+0.114] ns            +0.00 p=1.0e+00
-  ultimatum          5  +0.021 [-0.117,+0.157] ns            -2.07 p=6.8e-01
-  apology           -5     -0.570 [-0.663,-0.465]           -57.00 p=7.6e-20
-  apology            0  +0.000 [-0.133,+0.133] ns            +0.00 p=1.0e+00
-  apology            5     +0.978 [+0.913,+0.994]           +23.17 p=5.4e-61
-  overfishing       -5     -0.944 [-0.972,-0.862]           +49.27 p=3.7e-51
-  overfishing        0  +0.000 [-0.064,+0.064] ns            +0.00 p=1.0e+00
-  overfishing        5  -0.039 [-0.102,+0.015] ns           +24.46 p=3.8e-32
-  prisoners_dil     -5  -0.020 [-0.085,+0.041] ns            -0.02 p=4.7e-01
-  prisoners_dil      0  +0.000 [-0.037,+0.037] ns                +0.00 p=n/a
-  prisoners_dil      5     +0.697 [+0.577,+0.779]            +0.70 p=2.1e-21
+  game               k     P(alt) decision - null       mean decision - null  both arms readable?
+  dictator          -5     -0.155 [-0.244,-0.074]           -15.51 p=2.7e-04  yes
+  dictator           0  +0.000 [-0.098,+0.098] ns            +0.00 p=1.0e+00  yes
+  dictator           5     +0.116 [+0.052,+0.196]           +14.31 p=2.8e-28  yes
+  trust             -5     -0.691 [-0.777,-0.578]           -52.50 p=1.2e-40  yes
+  trust              0  +0.000 [-0.130,+0.130] ns            +0.00 p=1.0e+00  yes
+  trust              5     +0.498 [+0.386,+0.596]           +46.17 p=7.3e-58  yes
+  ultimatum         -5  -0.179 [-0.522,+0.012] ns            -9.15 p=3.2e-01  NO - the null arm produced no distribution, so this interval is not evidence either way
+  ultimatum          0  +0.000 [-0.114,+0.114] ns            +0.00 p=1.0e+00  yes
+  ultimatum          5  +0.021 [-0.117,+0.157] ns            -2.07 p=6.8e-01  yes
+  apology           -5     -0.570 [-0.663,-0.465]           -57.00 p=7.6e-20  yes
+  apology            0  +0.000 [-0.133,+0.133] ns            +0.00 p=1.0e+00  yes
+  apology            5     +0.978 [+0.913,+0.994]           +23.17 p=5.4e-61  yes
+  overfishing       -5     -0.944 [-0.972,-0.862]           +49.27 p=3.7e-51  yes
+  overfishing        0  +0.000 [-0.064,+0.064] ns            +0.00 p=1.0e+00  yes
+  overfishing        5  -0.039 [-0.102,+0.015] ns           +24.46 p=3.8e-32  yes
+  prisoners_dil     -5  -0.020 [-0.085,+0.041] ns            -0.02 p=4.7e-01  yes
+  prisoners_dil      0  +0.000 [-0.037,+0.037] ns                +0.00 p=n/a  yes
+  prisoners_dil      5     +0.697 [+0.577,+0.779]            +0.70 p=2.1e-21  NO - the decision arm produced no distribution, so this interval is not evidence either way
 
