@@ -348,7 +348,7 @@ scripts/prompting/        eval_games.py (the games and their pole scales), run_s
 scripts/measurement/      build_nulls.py, analyze_game.py, stats.py
 scripts/pooling/          crossgame_tables.py — the six games side by side
 scripts/figures/          make_figures.py — the figures, from the analysis alone
-scripts/tests/            63 offline tests, in `python -m pytest -q`
+scripts/tests/            83 offline tests, in `python -m pytest -q`
 scripts/run_steering.sh   the whole pipeline, parameterised by environment
 ```
 
@@ -364,7 +364,7 @@ nothing to read; the test suite and the figures (§ 10) run either way, and ever
 number below was produced from the rows named in `provenance/sweep_provenance.json`.
 
 ```sh
-python -m pytest -q                       # 473 pass, 2 skipped, repo-wide
+python -m pytest -q                       # 513 pass, 6 skipped, repo-wide
 
 PY=<python with torch>
 $PY results/crossgame-per-game-steering/scripts/measurement/analyze_game.py \
