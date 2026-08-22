@@ -334,8 +334,10 @@ README.md                 this file
 METHOD.md                 the construction and the two justified choices
 vectors/                  every vector steered with, both policies, plus their
                           matched nulls and MANIFEST.json (§ 11)
-rows/<game>/<arm>/         one CSV per beta point, 100 rows each, full provenance per row
-rows_relaxed/<game>/<arm>/ the same, for the relaxed arm (§ 11); five games, not six
+rows/<game>/<arm>/         one CSV per beta point, 100 rows each, full provenance per
+                           row. 47 MB; lands in the follow-up PR, not this one
+rows_relaxed/<game>/<arm>/ the same, for the relaxed arm (§ 11); five games, not six.
+                           Same follow-up PR
 analysis/steering.json    every number in this file, per game / arm / point
 analysis/points.csv       one flat row per (game, arm, k)
 analysis/steering_relaxed.json, analysis/points_relaxed.csv   the same, relaxed (§ 11)
@@ -356,7 +358,10 @@ path and the SHA-256 of the file that was actually used.
 
 ## 8. How to check these numbers
 
-Everything downstream of the rows is CPU-only and runs from the checkout:
+Everything downstream of the rows is CPU-only and runs from the checkout. The row
+CSVs land in the follow-up PR (§ 7), so until that lands `analyze_game.py` has
+nothing to read; the test suite and the figures (§ 10) run either way, and every
+number below was produced from the rows named in `provenance/sweep_provenance.json`.
 
 ```sh
 python -m pytest -q                       # 473 pass, 2 skipped, repo-wide
