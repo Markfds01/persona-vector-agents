@@ -23,6 +23,7 @@ Everything below is `Qwen/Qwen2.5-7B-Instruct` at revision
 **n = 100 per point**, strict pole policy. 84 points, 8,400 generations, one
 uninterrupted run. `METHOD.md` is the construction and carries the justification
 for the two open choices; this file is the result.
+§ 10 is the figures, and they carry every verdict below.
 
 ---
 
@@ -332,11 +333,13 @@ vectors/                  the six matched shuffled-label null vectors (strict, s
 rows/<game>/<arm>/         one CSV per beta point, 100 rows each, full provenance per row
 analysis/steering.json    every number in this file, per game / arm / point
 analysis/points.csv       one flat row per (game, arm, k)
+figures/                  the three figures of § 10, regenerated from steering.json
 provenance/               the sweep manifest, the null-vector report, and the run logs
 scripts/prompting/        eval_games.py (the games and their pole scales), run_sweep.py
 scripts/measurement/      build_nulls.py, analyze_game.py, stats.py
 scripts/pooling/          crossgame_tables.py — the six games side by side
-scripts/tests/            39 offline tests, in `python -m pytest -q`
+scripts/figures/          make_figures.py — the figures, from the analysis alone
+scripts/tests/            63 offline tests, in `python -m pytest -q`
 scripts/run_steering.sh   the whole pipeline, parameterised by environment
 ```
 
@@ -383,3 +386,62 @@ was **2.7e−08**, against a 1e−06 refusal threshold
 
 `provenance/steering_run_notes.md` records the machine and the schedule and is not
 part of the pipeline.
+
+## 10. The figures
+
+Three, in `figures/`, all written by `scripts/figures/make_figures.py` from
+`analysis/steering.json` alone — no torch, no GPU, no second analysis path, so a
+figure cannot disagree with the table it came from.
+
+```sh
+python results/crossgame-per-game-steering/scripts/figures/make_figures.py
+```
+
+| file | what it is |
+|---|---|
+| `steering_pole_shares.png` | the headline: `P(altruistic)` for all six games, each real arm with **its own null on the same axes** |
+| `steering_own_measure.png` | the same six arms on each game's own measure (dollars, fish, `P(Cooperate)`) |
+| `steering_vs_null.png` | decision minus its own null at both extremes, six games on one axis — the bar itself |
+
+Four things are decided by a function rather than written into a caption, so the
+rule can be checked instead of the picture trusted. `scripts/tests/test_figures.py`
+pins each one, and pins that together they reproduce § 5 exactly.
+
+* **The null is drawn for every game.** § 4 is the reason: four of six nulls move
+  significantly and two move the wrong way, so a figure of real arms alone would
+  misread as six successes.
+* **A supported band is coloured by whether that end beat its null** — blue where
+  it did, red where it did not, amber where the comparison settles nothing. The
+  band marks significance against the arm's own `k = 0`, and it is computed per
+  side, so an arm that works one way only draws one-sided rather than being
+  smoothed into a symmetric band. The Ultimatum's bands are red and amber, never
+  blue, which is the point: it moves and it still shows nothing.
+* **A ceiling and a floor are marked as such.** An arm has no room when the
+  distance from its baseline to the bound is inside the baseline's own Wilson
+  half-width. That selects Overfishing's positive arm (baseline 0.959) and the
+  Prisoner's Dilemma's negative arm (baseline 0.000), and nothing else.
+* **`k = +4` and `k = +5` of the Prisoner's Dilemma are struck out on the figure.**
+  Every answer there is non-Latin. They are excluded from its supported band, which
+  therefore covers exactly `k = +2` and `k = +3` — the claim § 3 makes. A point is
+  struck out when its non-Latin share reaches 0.5; those two are the only points in
+  the run that qualify, and both sit at 1.00.
+
+Separately, a point whose parse coverage is under 0.90 is drawn hollow with the
+number of answers the scorer actually resolved. That is a caveat, not a
+disqualification — Overfishing's `k = -4` and `k = -5` (89 and 86 rows) carry a
+large, graded, real effect.
+
+### What drawing it surfaced
+
+**The Ultimatum's null at `k = -5` resolved 8 answers of 100.** Its 92 unparsed
+rows are not gibberish — they are long, fluent English that discusses the
+bargaining problem and never names an offer, so the scorer has nothing to read.
+It is the worst-covered point in the run by a wide margin, and it is one half of
+the comparison § 3 quotes as `-0.179 [-0.522, +0.012]`.
+
+That interval is therefore **missing evidence, not evidence of absence**, and the
+figures label it `undetermined` rather than folding it in with the null. It does
+not rescue the Ultimatum and it is not meant to: the `k = +5` comparison is
+measured on healthy arms at both ends (coverage 0.97 and 0.99) and is a clean
+`+0.021 [-0.117, +0.157]`. **The Ultimatum still beats its null at no end, and
+that verdict now rests on the end that was actually measured.**
