@@ -56,6 +56,8 @@ DEGENERATE_NON_LATIN = 0.5
 #: measured on less.
 LOW_COVERAGE = 0.90
 
+#: Canonical order. A run that covered fewer games draws fewer panels, in this
+#: order; nothing here assumes all six are present.
 GAMES = ("dictator", "trust", "ultimatum", "apology", "overfishing",
          "prisoners_dilemma")
 LABELS = {"dictator": "Dictator", "trust": "Trust", "ultimatum": "Ultimatum",
@@ -205,9 +207,17 @@ def _series(arm, getter):
     return out
 
 
-def _pole(point):
-    pole = point["poles"]["strict"]["altruistic"]
-    return (pole["lo"], pole["hi"], pole["p"])
+def _pole_getter(policy):
+    """Read `P(altruistic)` under the policy the ANALYSIS was computed under.
+
+    The contrasts in that file - move-from-zero, decision-versus-null - are all
+    under one policy, so a panel that read a different one would draw a curve its
+    own verdict did not describe.
+    """
+    def getter(point):
+        pole = point["poles"][policy]["altruistic"]
+        return (pole["lo"], pole["hi"], pole["p"])
+    return getter
 
 
 def _measure(point):
@@ -257,7 +267,7 @@ def _axis_furniture(ax, xlabel=True):
                       % REFERENCE_NORM, fontsize=8.5)
 
 
-def _mark_bands(ax, game, arm, ymin, ymax, on_pole_axis):
+def _mark_bands(ax, game, arm, policy, ymin, ymax, on_pole_axis):
     """Supported range, ceiling/floor, and the struck-out degenerate points.
 
     The supported band is coloured by whether that END beat its null, because
@@ -278,7 +288,7 @@ def _mark_bands(ax, game, arm, ymin, ymax, on_pole_axis):
             ax.axvline(edge, color=colour, linewidth=1.0, alpha=0.7,
                        linestyle=(0, (4, 3)), zorder=1)
 
-    baseline = arm["points"]["0"]["poles"]["strict"]["altruistic"]
+    baseline = arm["points"]["0"]["poles"][policy]["altruistic"]
     for side, name, bound in ((+1, "ceiling", 1.0), (-1, "floor", 0.0)):
         if not no_room(baseline, side):
             continue
@@ -306,14 +316,14 @@ def _mark_bands(ax, game, arm, ymin, ymax, on_pole_axis):
                 color=BAD, weight="bold")
 
 
-def _panel(ax, game_name, game, getter, ylabel, ylim, on_pole_axis):
+def _panel(ax, game_name, game, policy, getter, ylabel, ylim, on_pole_axis):
     decision = game["arms"]["decision"]
     null = game["arms"]["shuffled-null"]
     baseline_point = decision["points"]["0"]
     baseline = getter(baseline_point)[2]
 
     ymin, ymax = ylim
-    _mark_bands(ax, game, decision, ymin, ymax, on_pole_axis)
+    _mark_bands(ax, game, decision, policy, ymin, ymax, on_pole_axis)
     ax.axhline(baseline, color="#999999", linewidth=0.9, linestyle=(0, (2, 3)),
                zorder=1)
     _draw_arm(ax, _series(null, getter), NULL, "^", "--", 1.6,
@@ -363,31 +373,101 @@ FOOTER = (
 ) % REFERENCE_NORM
 
 
-def figure_pole_shares(analysis, out_path):
-    fig, axes = plt.subplots(2, 3, figsize=(19.5, 12.0))
-    for ax, name in zip(axes.ravel(), GAMES):
-        _panel(ax, name, analysis["games"][name], _pole,
-               "P(altruistic pole)", (-0.05, 1.08), True)
-    axes.ravel()[2].annotate(
-        "the null gets to 0.495 where the real arm gets to 0.515",
-        xy=(5 * REFERENCE_NORM, 0.495), xytext=(2, 0.80), fontsize=8.2,
-        color=BAD, ha="left",
-        arrowprops=dict(arrowstyle="->", color=BAD, lw=1.1))
-    fig.suptitle("Each game steered with its OWN decision vector, against its OWN null:"
-                 " three of six clear that bar at both ends, one clears it at neither",
-                 fontsize=14.5, y=0.988)
+def _grid(count):
+    """Panels laid out two rows deep, which is what six games want."""
+    columns = max(1, (count + 1) // 2)
+    rows = 1 if count <= 3 else 2
+    return rows, columns
+
+
+def _headline(analysis, games):
+    """The count of games clearing the bar, said rather than asserted."""
+    verdicts = [null_verdict(analysis["games"][g]) for g in games]
+    both = sum(1 for v in verdicts if v[-1] == v[+1] == "beats")
+    neither = sum(1 for v in verdicts if "beats" not in (v[-1], v[+1]))
+    return ("%d of %d clear that bar at both ends, %d at neither"
+            % (both, len(games), neither))
+
+
+def _annotate_a_clean_null(axes, analysis, games, policy):
+    """Name the game whose null simply arrives where its real arm arrives.
+
+    Only where the arm had room to move: a flat arm against a ceiling is already
+    marked as a ceiling, and pointing at it here would say something else.
+    """
+    for ax, name in zip(axes, games):
+        game = analysis["games"][name]
+        if null_verdict(game)[+1] != "null":
+            continue
+        decision = game["arms"]["decision"]
+        baseline = decision["points"]["0"]["poles"][policy]["altruistic"]
+        if no_room(baseline, +1):
+            continue
+        real = decision["points"]["5"]["poles"][policy]["altruistic"]["p"]
+        null = (game["arms"]["shuffled-null"]["points"]["5"]["poles"][policy]
+                ["altruistic"]["p"])
+        ax.annotate("the null gets to %.3f where the real arm gets to %.3f"
+                    % (null, real),
+                    xy=(5 * REFERENCE_NORM, null), xytext=(2, 0.80), fontsize=8.2,
+                    color=BAD, ha="left",
+                    arrowprops=dict(arrowstyle="->", color=BAD, lw=1.1))
+
+
+def _undetermined_note(analysis, games):
+    """Name every undetermined comparison and the count that made it one.
+
+    An interval that fails to clear zero is not a null when the arm under it
+    barely parsed, and a reader needs the number to tell the two apart.
+    """
+    lines = []
+    for name in games:
+        game = analysis["games"][name]
+        for side, key in ((-1, "-5"), (+1, "5")):
+            if null_verdict(game)[side] != "undetermined":
+                continue
+            worst = min((game["arms"][arm]["points"][key]
+                         for arm in ("decision", "shuffled-null")),
+                        key=lambda point: point["n_parsed"])
+            arm = ("decision" if worst is game["arms"]["decision"]["points"][key]
+                   else "null")
+            lines.append("%s at k=%+d settles nothing: its %s arm parsed %d "
+                         "answers of %d." % (LABELS[name], 5 * side, arm,
+                                             worst["n_parsed"], worst["n_rows"]))
+    return "\n".join(lines)
+
+
+def _finish(fig, suptitle):
+    fig.suptitle(suptitle, fontsize=14.5, y=0.988)
     fig.legend(handles=_legend_handles(), loc="lower center", ncol=3, fontsize=8.8,
                frameon=False, bbox_to_anchor=(0.5, 0.098))
     fig.text(0.5, 0.006, FOOTER, ha="center", fontsize=7.7, color="#444444")
     fig.tight_layout(rect=(0, 0.170, 1, 0.955), h_pad=4.2)
+
+
+def figure_pole_shares(analysis, games, policy, label, out_path):
+    rows, columns = _grid(len(games))
+    fig, axes = plt.subplots(rows, columns, figsize=(6.5 * columns, 6.0 * rows),
+                             squeeze=False)
+    flat = axes.ravel()
+    for ax, name in zip(flat, games):
+        _panel(ax, name, analysis["games"][name], policy, _pole_getter(policy),
+               "P(altruistic pole)", (-0.05, 1.08), True)
+    for ax in flat[len(games):]:
+        ax.axis("off")
+    _annotate_a_clean_null(flat, analysis, games, policy)
+    _finish(fig, "Each game steered with its OWN %s decision vector, against its "
+                 "OWN null: %s" % (label, _headline(analysis, games)))
     fig.savefig(out_path, dpi=190)
     plt.close(fig)
     return out_path
 
 
-def figure_own_measure(analysis, out_path):
-    fig, axes = plt.subplots(2, 3, figsize=(19.5, 12.0))
-    for ax, name in zip(axes.ravel(), GAMES):
+def figure_own_measure(analysis, games, policy, label, out_path):
+    rows, columns = _grid(len(games))
+    fig, axes = plt.subplots(rows, columns, figsize=(6.5 * columns, 6.0 * rows),
+                             squeeze=False)
+    flat = axes.ravel()
+    for ax, name in zip(flat, games):
         game = analysis["games"][name]
         values = [point["measure"]["ci_high"]
                   for arm in game["arms"].values()
@@ -397,34 +477,32 @@ def figure_own_measure(analysis, out_path):
         units = game["measure_units"]
         if not game["altruistic_is_high_on_own_measure"]:
             units += "   (HIGHER = LESS altruistic)"
-        _panel(ax, name, game, _measure, units, (-0.04 * top, top), False)
-    fig.suptitle("The same six arms on each game's own measure - not comparable across "
-                 "games, which is why every shared claim is made on the pole share",
-                 fontsize=14.5, y=0.988)
-    fig.legend(handles=_legend_handles(), loc="lower center", ncol=3, fontsize=8.8,
-               frameon=False, bbox_to_anchor=(0.5, 0.098))
-    fig.text(0.5, 0.006, FOOTER, ha="center", fontsize=7.7, color="#444444")
-    fig.tight_layout(rect=(0, 0.170, 1, 0.955), h_pad=4.2)
+        _panel(ax, name, game, policy, _measure, units, (-0.04 * top, top), False)
+    for ax in flat[len(games):]:
+        ax.axis("off")
+    _finish(fig, "The same %s arms on each game's own measure - not comparable "
+                 "across games, which is why every shared claim is made on the "
+                 "pole share" % label)
     fig.savefig(out_path, dpi=190)
     plt.close(fig)
     return out_path
 
 
-def figure_vs_null(analysis, out_path):
-    """The bar itself: decision minus null at each extreme, for all six games."""
-    fig, ax = plt.subplots(figsize=(11.6, 7.4))
+def figure_vs_null(analysis, games, policy, label, out_path):
+    """The bar itself: decision minus its own null at each extreme, per game."""
+    fig, ax = plt.subplots(figsize=(11.6, 1.24 * len(games) + 0.9))
     colours = {"beats": GOOD, "null": BAD, "undetermined": UNDET}
     rows, y = [], 0.0
-    for name in GAMES:
+    for name in games:
         game = analysis["games"][name]
         verdict = null_verdict(game)
         for key, side in (("5", +1), ("-5", -1)):
             contrast = game["decision_vs_null"][key]["altruistic_decision_minus_null"]
-            rows.append((y, side, contrast, verdict[side], name))
+            rows.append((y, side, contrast, verdict[side]))
             y -= 1.0
         y -= 0.6
 
-    for pos, side, contrast, state, _name in rows:
+    for pos, side, contrast, state in rows:
         colour = colours[state]
         ax.errorbar([contrast["diff"]], [pos],
                     xerr=[[contrast["diff"] - contrast["lo"]],
@@ -435,14 +513,15 @@ def figure_vs_null(analysis, out_path):
                 fontsize=8.2, color=colour)
 
     ax.axvline(0, color="#333333", linewidth=1.2, zorder=2)
-    ax.set_yticks([rows[2 * i][0] - 0.5 for i in range(len(GAMES))])
-    ax.set_yticklabels([LABELS[g] for g in GAMES], fontsize=10.5)
+    ax.set_yticks([rows[2 * i][0] - 0.5 for i in range(len(games))])
+    ax.set_yticklabels([LABELS[g] for g in games], fontsize=10.5)
     ax.set_xlabel("P(altruistic), decision arm minus its own shuffled-label null "
                   "   (95% Newcombe interval)", fontsize=9.5)
     ax.set_xlim(-1.12, 1.28)
     ax.grid(True, axis="x", alpha=0.22, linewidth=0.6)
-    ax.set_title("Beating the null is the bar. An interval touching the line is not "
-                 "a result.", fontsize=12.5, loc="left", pad=22)
+    ax.set_title("Beating the null is the bar (%s vectors). An interval touching "
+                 "the line is not a result." % label, fontsize=12.5, loc="left",
+                 pad=22)
     ax.text(0.0, 1.012,
             "A point LEFT of the line at k=-5 and RIGHT of it at k=+5 is the real "
             "arm moving further than the null in the steered direction.",
@@ -456,15 +535,11 @@ def figure_vs_null(analysis, out_path):
                label="undetermined: the interval contains zero, but a point there "
                      "is degraded"),
     ], loc="lower center", ncol=3, fontsize=8.6, frameon=False,
-        bbox_to_anchor=(0.5, 0.088))
-    fig.text(0.5, 0.012,
-             "Ultimatum is the negative of the run: its k=+5 comparison is a clean "
-             "null on healthy arms (+0.021 [-0.117, +0.157]), and its k=-5 "
-             "comparison settles nothing because the NULL arm there\nparsed 8 "
-             "answers of 100. Overfishing's k=+5 and the Prisoner's Dilemma's k=-5 "
-             "are a ceiling and a floor - those arms had nowhere to go.",
-             ha="center", fontsize=8.2, color="#444444")
-    fig.tight_layout(rect=(0, 0.135, 1, 1))
+        bbox_to_anchor=(0.5, 0.055))
+    note = _undetermined_note(analysis, games)
+    if note:
+        fig.text(0.5, 0.012, note, ha="center", fontsize=8.2, color="#444444")
+    fig.tight_layout(rect=(0, 0.075 + (0.03 if note else 0.0), 1, 1))
     fig.savefig(out_path, dpi=190)
     plt.close(fig)
     return out_path
@@ -475,23 +550,34 @@ def main():
     package = here.parents[2]
     ap = argparse.ArgumentParser()
     ap.add_argument("--analysis", default=str(package / "analysis" / "steering.json"))
-    ap.add_argument("--out-dir", default=str(package / "figures"))
+    ap.add_argument("--out-dir", default=str(package / "figures"),
+                    help="one directory per set of figures; a second set of the "
+                         "same three names belongs in a different one")
+    ap.add_argument("--label", default=None,
+                    help="which vectors these are, for the headings; defaults to "
+                         "the analysis's own pole policy")
     args = ap.parse_args()
 
     analysis = json.loads(Path(args.analysis).read_text())
-    if analysis.get("policy") != "strict":
-        raise SystemExit("these figures report the strict poles; %s carries policy %r"
-                         % (args.analysis, analysis.get("policy")))
-    missing = sorted(set(GAMES) - set(analysis["games"]))
-    if missing:
-        raise SystemExit("%s has no rows for %s" % (args.analysis, missing))
+    policy = analysis.get("policy")
+    if policy not in ("strict", "relaxed"):
+        raise SystemExit("%s carries pole policy %r, which is not one this draws"
+                         % (args.analysis, policy))
+    games = [game for game in GAMES if game in analysis["games"]]
+    unknown = sorted(set(analysis["games"]) - set(GAMES))
+    if unknown:
+        raise SystemExit("%s holds games this does not know how to label: %s"
+                         % (args.analysis, unknown))
+    if not games:
+        raise SystemExit("%s holds no games" % args.analysis)
+    label = args.label or policy
 
     out_dir = Path(args.out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
     for build, name in ((figure_pole_shares, "steering_pole_shares.png"),
                         (figure_own_measure, "steering_own_measure.png"),
                         (figure_vs_null, "steering_vs_null.png")):
-        print("wrote", build(analysis, out_dir / name))
+        print("wrote", build(analysis, games, policy, label, out_dir / name))
 
 
 if __name__ == "__main__":
