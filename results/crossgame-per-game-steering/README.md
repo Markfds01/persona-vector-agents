@@ -23,7 +23,8 @@ Everything below is `Qwen/Qwen2.5-7B-Instruct` at revision
 **n = 100 per point**, strict pole policy. 84 points, 8,400 generations, one
 uninterrupted run. `METHOD.md` is the construction and carries the justification
 for the two open choices; this file is the result.
-§ 10 is the figures, and they carry every verdict below.
+§ 10 is the figures, and they carry every verdict below. § 11 is the relaxed
+arm, run afterwards, which changes two of the six verdicts.
 
 ---
 
@@ -51,7 +52,8 @@ the two games whose result below is qualified. Under relaxed both are
 better-estimated directions (the vector study puts the Ultimatum's effective n at
 15.1 → 92.3 and Overfishing's at 28.9 → 73.6). Running it is one more
 `POLICY=relaxed` invocation of the same pipeline and another full sweep of card
-time; it was not run.
+time. **It has since been run — § 11.** It did not leave the strict result
+standing: the Ultimatum's verdict changes, and so does the Dictator's.
 
 **The reference norm for the ladder: the altruism trait vector's layer-20 norm,
 10.5083.** The six vectors' own norms span **3.7×** (Overfishing 2.2738 to PD
@@ -185,8 +187,8 @@ Ultimatum has the **thinnest strict poles of the six** (self pole 29 rows across
 of 30 cells, effective n 15.1 — the vector study's own number), and it is one of
 the two games whose relaxed vector is a **different direction** (37.0°) fit on a
 self pole of 235 rows. Whether the relaxed Ultimatum vector beats its null is
-**not established here and is the single most worthwhile follow-up in this
-directory.**
+**not established here.** It was the single most worthwhile follow-up in this
+directory, it has been run, and the answer is **yes** — § 11.
 
 ### Apology — the cleanest effect in the run
 
@@ -313,7 +315,8 @@ the Ultimatum is not, and it is a real negative.
 * **Nothing about cross-game transfer.** No game is steered with another game's
   vector or with a pooled vector.
 * **Nothing about the relaxed directions** for Ultimatum and Overfishing, which are
-  37° and 49° away from what was steered.
+  37° and 49° away from what was steered. Those were steered separately and are
+  reported in § 11; nothing in §§ 1–5 is a claim about them.
 * **Nothing beyond mode `free`.** One elicitation mode; the vector study measured
   the same Dictator question answering very differently under another.
 * **Nothing at n = 200.** n = 100 was chosen before the run and its cost is stated
@@ -329,11 +332,15 @@ the Ultimatum is not, and it is a real negative.
 ```
 README.md                 this file
 METHOD.md                 the construction and the two justified choices
-vectors/                  the six matched shuffled-label null vectors (strict, seed 20260821)
+vectors/                  every vector steered with, both policies, plus their
+                          matched nulls and MANIFEST.json (§ 11)
 rows/<game>/<arm>/         one CSV per beta point, 100 rows each, full provenance per row
+rows_relaxed/<game>/<arm>/ the same, for the relaxed arm (§ 11); five games, not six
 analysis/steering.json    every number in this file, per game / arm / point
 analysis/points.csv       one flat row per (game, arm, k)
+analysis/steering_relaxed.json, analysis/points_relaxed.csv   the same, relaxed (§ 11)
 figures/                  the three figures of § 10, regenerated from steering.json
+figures/relaxed/          the same three for the relaxed arm
 provenance/               the sweep manifest, the null-vector report, and the run logs
 scripts/prompting/        eval_games.py (the games and their pole scales), run_sweep.py
 scripts/measurement/      build_nulls.py, analyze_game.py, stats.py
@@ -445,3 +452,144 @@ not rescue the Ultimatum and it is not meant to: the `k = +5` comparison is
 measured on healthy arms at both ends (coverage 0.97 and 0.99) and is a clean
 `+0.021 [-0.117, +0.157]`. **The Ultimatum still beats its null at no end, and
 that verdict now rests on the end that was actually measured.**
+
+## 11. The relaxed arm
+
+The same design, the same ladder, the same reference norm, the same n, the same
+null construction and the same seeds. **The only thing that changes is the
+vector.** Nothing in §§ 1–9 moves; this is a second arm beside it.
+
+That the comparison really is like-for-like is checked rather than asserted:
+**`P(altruistic)` is identical under both pole policies at all 154 points of both
+rounds** — relaxed widens only the *self-interested* pole. So the two halves are
+read on the same measure, and the difference between them is the direction that
+was added, not the way the answer was scored.
+
+Five games were run. **The Prisoner's Dilemma was not**, and that is a reuse, not
+a result: its relaxed decision vector and its relaxed null are element-wise
+identical to the strict ones — max absolute difference exactly **0.0** across all
+29 layers, its answer space being two points with no middle — so every row would
+have been a bit-identical regeneration. `vectors/MANIFEST.json` marks both pairs
+`identical_to_strict`. **Its § 3 numbers are its relaxed numbers. They are not an
+independent run.**
+
+### 11.1 What changed
+
+| game | angle to strict | strict verdict | relaxed verdict |
+|---|---|---|---|
+| dictator | 3.4° | beats its null at **both** ends | **negative end only** |
+| trust | 14.7° | beats at both ends | beats at both ends, far harder |
+| **ultimatum** | **37.0°** | **beats at neither end** | **beats at both** (positive end unusable — 11.3) |
+| apology | 1.7° | beats at both ends | beats at both ends |
+| overfishing | 49.0° | negative end only | negative end only |
+| prisoners_dilemma | 0.0° | positive end only | *reused, identical vector* |
+
+`P(altruistic)`, decision arm, relaxed vectors:
+
+| game | k=−5 | −4 | −3 | −2 | −1 | **0** | +1 | +2 | +3 | +4 | +5 |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| dictator | 0.010 | 0.031 | 0.040 | 0.010 | 0.030 | **0.140** | 0.612 | 0.612 | 0.438 | 0.351 | 0.234 |
+| trust | 0.056 | 0.075 | 0.054 | 0.065 | 0.075 | **0.337** | 0.490 | 0.690 | 0.776 | 0.879 | **0.939** |
+| ultimatum | 0.100 | 0.090 | 0.130 | 0.080 | 0.040 | **0.212** | 0.398 | 0.415 | 0.511 | 0.571 | 0.697 |
+| apology | 0.011 | 0.011 | 0.021 | 0.010 | 0.071 | **0.400** | 0.910 | 0.980 | 0.990 | 1.000 | 0.990 |
+| overfishing | 0.056 | 0.143 | 0.374 | 0.553 | 0.918 | **0.959** | 0.959 | 0.970 | 0.980 | 0.960 | 0.990 |
+
+### 11.2 The Ultimatum: the answer is yes, on the end that was measured
+
+This was the question the round existed to settle, and it settles it.
+
+| | decision − null, `P(altruistic)` | both arms healthy? |
+|---|---|---|
+| k=−5 | **−0.324 [−0.432, −0.205]** | **yes** — 100 and 99 answers parsed, 0% non-Latin |
+| k=+5 | +0.697 [+0.326, +0.789] | **no** — the null parsed 7 of 100, all non-Latin |
+
+**The negative end is a clean, unqualified win, and it is the finding.** The
+relaxed direction — 37.0° away from the strict one, fit on 487 rows against 281 —
+moves the Ultimatum's decisions further than a same-sized push along a random
+relabelling of the same data. The strict direction did not.
+
+The positive end is **not** reported as a second win. Its interval clears zero by
+a distance, but the null arm there stopped answering in English and stated an
+offer in 7 answers of 100; that is a missing distribution, not a weak one, and an
+interval computed across it is not evidence about the direction either way.
+
+Symmetrically, § 3's strict `−0.179 [−0.522, +0.012]` was never a null: **its**
+null arm parsed 8 of 100 (§ 10). Each policy has exactly one usable extreme for
+this game, and they are opposite ends. On the usable end, strict shows nothing
+(`+0.021 [−0.117, +0.157]`, both arms healthy) and relaxed shows a real effect.
+
+The relaxed vector also degrades the text faster on the positive arm: coverage
+0.90, 0.84, 0.76 at k=+3, +4, +5, against 0.98, 0.98, 0.97 for the strict one.
+
+### 11.3 The null is not a fixed reference, and the Dictator shows it
+
+**The Dictator's two real vectors are 3.4° apart — the same direction for any
+practical purpose — and its verdict still changes.**
+
+| dictator, k=+5 | decision arm | its null | contrast |
+|---|---|---|---|
+| strict | 0.116 | **0.000** | **+0.116 [+0.052, +0.196]** — beats |
+| relaxed | 0.234 | **0.351** | −0.116 [−0.240, +0.013] — does not |
+
+Both arms are healthy at both ends, so this is a real disagreement and not a
+degraded comparison. **The mover is the null.** The decision arm shifts 0.116 →
+0.234; the null shifts 0.000 → 0.351. The relaxed null is a different artifact —
+a different within-cell permutation over the wider relaxed self pole, 612 rows
+against 562 — and re-drawing it is enough to overturn a `+0.116` margin.
+
+This does not touch the large margins: Apology's `+0.802`, Trust's `+0.839`,
+Overfishing's `−0.394` and the Ultimatum's `−0.324` all survive a re-drawn null
+comfortably. What it does say is that **"beats its own null" rests on one null
+draw at n = 100**, and a verdict whose margin is of order 0.1 is not robust to
+that draw. The Dictator's positive arm was such a verdict. Both rounds use one
+null seed (20260821); neither can separate the direction from the draw.
+
+Round 1's § 4 said four of six nulls move significantly. Under relaxed the nulls
+move at least as much, and **Overfishing's — the one § 4 singles out as inert —
+is no longer inert**: 0.959 → 0.450 at k=−5, against 0.968 under strict. That is
+why the same qualitative win shrinks from −0.944 to −0.394.
+
+### 11.4 Per game, plainly
+
+* **Ultimatum** (‖v‖ 7.1660, 37.0° from strict, 487 rows). **Beats its null on
+  the negative end, −0.324 [−0.432, −0.205], both arms healthy.** Monotone up to
+  noise, ρ = +0.845. The positive end's +0.697 is not usable (null parsed 7/100,
+  all non-Latin). **A change from strict, and the round's result.**
+* **Trust** (‖v‖ 4.7255, 14.7°, 406 rows). Beats its null at both ends and much
+  harder than strict: **−0.857 [−0.910, −0.756]** and **+0.839 [+0.740, +0.895]**.
+  The positive arm that strict could barely move off baseline until k=+5 (0.520)
+  reaches **0.939**. Monotone up to noise, ρ = +0.943. The clearest gain of the
+  round after the Ultimatum.
+* **Apology** (‖v‖ 7.7990, 1.7°, 651 rows). Beats its null at both ends,
+  −0.815 [−0.881, −0.710] and +0.802 [+0.703, +0.868]. Reproduces strict, as a
+  1.7° change should. Its null at k=−5 parses 86 of 100 with 30% non-Latin — a
+  caveat on that point, not a collapse.
+* **Overfishing** (‖v‖ 2.1486, 49.0°, 1425 rows). Same verdict as strict:
+  **−0.394 [−0.497, −0.279]** on the negative end, nothing on the positive one,
+  where the baseline is still 0.959 and there is still no room. Monotone up to
+  noise, ρ = +0.970. Cleanest coverage of any Overfishing arm so far (0.90 at
+  k=−5 against 0.86). One difference worth naming: on the game's **own measure**
+  the relaxed positive arm does move — mean catch 50.04 → 35.20, −14.84 fish
+  (p = 3.2e−13), where strict did nothing (+0.52, p = 0.75). The ceiling on the
+  pole share was hiding real movement. It is still not a win: its null pushes
+  catch further down (27.83), so decision − null on the mean is **+7.37 the wrong
+  way** (p = 6.8e−03). Unhiding the movement made the positive-arm null more
+  decisive, not less.
+* **Dictator** (‖v‖ 6.9216, 3.4°, 612 rows). **Beats its null on the negative end
+  only**, −0.230 [−0.324, −0.143]. The positive end does not (11.3). Still not
+  monotone up to noise (ρ = +0.752), still peaking early — at k=+1/+2 (0.612)
+  rather than strict's k=+2 — and still declining after.
+* **Prisoner's Dilemma.** Not run. Identical vector and identical null; § 3
+  stands unchanged as its relaxed result too.
+
+### 11.5 What the relaxed arm does not establish
+
+Everything in § 6 still applies, and two things are specific to this arm:
+
+* **It is not a replication of the strict arm.** Where the two disagree — the
+  Ultimatum and the Dictator — the vector, the null, and the rows all differ.
+  Only for the Prisoner's Dilemma is the vector held fixed, and there nothing was
+  re-run at all.
+* **Nothing about null stability.** One null seed per policy. 11.3 shows a
+  verdict turning on the draw; measuring how often that happens needs several
+  seeds, and that was not run.

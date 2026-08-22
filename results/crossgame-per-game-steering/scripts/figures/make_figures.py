@@ -396,12 +396,13 @@ def _legend_handles():
     ]
 
 
-FOOTER = (
-    "Qwen2.5-7B-Instruct rev a09a3545, bfloat16, sdpa, altruism_v3, mode free, layer 20, positions=all, norm=unit, neutral preset, seed 0, n = 100 per point, strict poles.\n"
-    "Error bars are 95%% intervals - Wilson on a share, Student's t on a mean. One k is the SAME sized activation edit in every game (unit beta = k x %.4f), which is what makes the six panels\n"
-    "comparable; the per-game equivalent raw beta is unit beta / ||v||@20. k=0 is one shared no-op run, verified byte-identical across the two arms. The null is the same construction on the same\n"
-    "activations over the same cells with the pole labels permuted within each cell - it is not inert, and where it moves further than the real arm the real arm has shown nothing."
-) % REFERENCE_NORM
+def footer(policy):
+    return (
+        "Qwen2.5-7B-Instruct rev a09a3545, bfloat16, sdpa, altruism_v3, mode free, layer 20, positions=all, norm=unit, neutral preset, seed 0, n = 100 per point, %s poles.\n"
+        "Error bars are 95%% intervals - Wilson on a share, Student's t on a mean. One k is the SAME sized activation edit in every game (unit beta = k x %.4f), which is what makes the panels\n"
+        "comparable; the per-game equivalent raw beta is unit beta / ||v||@20. k=0 is one shared no-op run, verified byte-identical across the two arms. The null is the same construction on the same\n"
+        "activations over the same cells with the pole labels permuted within each cell - it is not inert, and where it moves further than the real arm the real arm has shown nothing."
+    ) % (policy, REFERENCE_NORM)
 
 
 def _grid(count):
@@ -469,11 +470,11 @@ def _comparison_notes(analysis, games):
     return "\n".join(lines)
 
 
-def _finish(fig, suptitle):
+def _finish(fig, suptitle, policy):
     fig.suptitle(suptitle, fontsize=14.5, y=0.988)
     fig.legend(handles=_legend_handles(), loc="lower center", ncol=3, fontsize=8.8,
                frameon=False, bbox_to_anchor=(0.5, 0.098))
-    fig.text(0.5, 0.006, FOOTER, ha="center", fontsize=7.7, color="#444444")
+    fig.text(0.5, 0.006, footer(policy), ha="center", fontsize=7.7, color="#444444")
     fig.tight_layout(rect=(0, 0.170, 1, 0.955), h_pad=4.2)
 
 
@@ -489,7 +490,7 @@ def figure_pole_shares(analysis, games, policy, label, out_path):
         ax.axis("off")
     _annotate_a_clean_null(flat, analysis, games, policy)
     _finish(fig, "Each game steered with its OWN %s decision vector, against its "
-                 "OWN null: %s" % (label, _headline(analysis, games)))
+                 "OWN null: %s" % (label, _headline(analysis, games)), policy)
     fig.savefig(out_path, dpi=190)
     plt.close(fig)
     return out_path
@@ -515,7 +516,7 @@ def figure_own_measure(analysis, games, policy, label, out_path):
         ax.axis("off")
     _finish(fig, "The same %s arms on each game's own measure - not comparable "
                  "across games, which is why every shared claim is made on the "
-                 "pole share" % label)
+                 "pole share" % label, policy)
     fig.savefig(out_path, dpi=190)
     plt.close(fig)
     return out_path

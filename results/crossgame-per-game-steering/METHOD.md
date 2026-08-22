@@ -204,12 +204,19 @@ relaxed. Trust, at 14.7 degrees, is a borderline case.
 The honest statement is therefore: the strict result here is a result about the
 strict directions, and for Ultimatum and Overfishing it does **not** transfer to
 the relaxed ones. Running the relaxed arm is one more invocation of the same
-pipeline (`POLICY=relaxed`), costs another full sweep, and is the obvious next
-thing to spend a card on. It was not run here.
+pipeline (`POLICY=relaxed`), costs another full sweep, and was the obvious next
+thing to spend a card on. **It has since been run** — same ladder, same reference
+norm, same n, same null construction, same seeds, only the vectors different —
+and `README.md` § 11 reports it. It did not simply confirm the strict arm: the
+Ultimatum's verdict changes, and so does the Dictator's, whose two vectors are
+3.4 degrees apart.
 
 Both policies are nonetheless *scored* on every point, from the same values,
 because reclassifying a finished row costs nothing; `analysis/steering.json`
-carries `poles.relaxed` beside `poles.strict` throughout. What is not available
+carries `poles.relaxed` beside `poles.strict` throughout. Measured since, over
+all 154 points of both arms: **`P(altruistic)` is identical under both policies**
+— relaxed widens only the SELF pole — so the two arms are read on the same
+measure and the only difference between them is the vector. What is not available
 without another run is the relaxed *vectors'* steering.
 
 ### One recorded artifact in the relaxed policy
@@ -382,7 +389,13 @@ per (game, arm, k).
   vector, or with the pooled vector. Whether the six directions agree was measured
   in `results/crossgame-decision-vectors`, and the answer there was no.
 * **Nothing about the relaxed directions for Ultimatum and Overfishing**, which are
-  37 and 49 degrees away from the ones steered here (§4).
+  37 and 49 degrees away from the ones steered here (§4). Those were steered as a
+  separate arm and are reported in `README.md` § 11; no claim in this file is a
+  claim about them.
+* **Nothing about how stable a shuffled-label null is.** One null seed per policy,
+  20260821. `README.md` § 11.3 shows a verdict — the Dictator's positive arm,
+  margin +0.116 — turning on which null was drawn rather than on the direction.
+  Separating the two needs several seeds, and that is not run here.
 * **Nothing about mechanism.** The Dictator-only study answered "is the decision
   separation what is doing the work" with an orthogonal null — the shuffled null
   with the decision direction projected out. That arm is **not run here**: it is
