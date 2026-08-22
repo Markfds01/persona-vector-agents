@@ -483,6 +483,11 @@ do here.
 python -m pytest audit/tests -q
 ```
 
+This package alone. `lab/extract.py` imports `elicit`, `games` and three names
+from `generate`, and `lab/tests` subclasses the fakes below, so a change in here
+can break `lab/` with this command green — run `python -m pytest -q` from the
+repository root for every suite.
+
 Runs in about nine seconds. No keys, no network, no GPU — verified by running it
 with the keys unset and outbound connections blocked. `elicit.py` and
 `generate.py` are covered without a model at all: the elicitation tests render

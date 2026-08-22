@@ -1,0 +1,8 @@
+loaded dictator: 712 rows
+loaded trust: 699 rows
+loaded ultimatum: 713 rows
+loaded apology: 714 rows
+loaded overfishing: 1425 rows
+loaded prisoners_dilemma: 240 rows
+wrote results/crossgame-decision-vectors/analysis/verification_relaxed.json
+gate: 15 committed vectors reproduce; worst layer cosine 0.999999999999998 (floor 0.999999999000000), worst per-layer norm drift 8.781e-09 (allowed 1.0e-06)

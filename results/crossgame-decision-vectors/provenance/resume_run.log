@@ -1,0 +1,171 @@
+=== trust: generate attempt 1/4 (2026-08-20T13:53:53+00:00) ===
+device 0 has 23854 MiB free; starting
+cells=30 samples=24 total=720
+Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s]Loading checkpoint shards:  25%|██▌       | 1/4 [00:01<00:04,  1.42s/it]Loading checkpoint shards:  50%|█████     | 2/4 [00:02<00:02,  1.02s/it]Loading checkpoint shards:  75%|███████▌  | 3/4 [00:02<00:00,  1.14it/s]Loading checkpoint shards: 100%|██████████| 4/4 [00:03<00:00,  1.27it/s]Loading checkpoint shards: 100%|██████████| 4/4 [00:03<00:00,  1.14it/s]
+loaded; 30.0 GiB free of 44.4 on cuda:0
+engine: EngineDescription(engine='huggingface', engine_version='4.52.3', torch_version='2.6.0+cu124', model_id='Qwen/Qwen2.5-7B-Instruct', model_revision='a09a35458c702b33eeacc393d103063234e8bc28', dtype='torch.bfloat16', attn_implementation='sdpa', stop_token_ids=(151645, 151643))
+device: cuda:0
+Traceback (most recent call last):
+  File "/home/marco/dockmaster/state/worktrees/crossgame-vector/scratch/gen_crossgame.py", line 111, in <module>
+    main()
+  File "/home/marco/dockmaster/state/worktrees/crossgame-vector/scratch/gen_crossgame.py", line 102, in main
+    rows = generate.run(pairs, engine, sampling, engine.tokenizer,
+  File "/home/marco/dockmaster/state/worktrees/crossgame-vector/audit/generate.py", line 429, in run
+    continuations = engine.generate([task.prompt.text for task in batch], sampling,
+  File "/home/marco/dockmaster/state/worktrees/crossgame-vector/audit/generate.py", line 582, in generate
+    output = self._model.generate(**batch, **call)
+  File "/home/marco/dockmaster/state/worktrees/crossgame-vector/.venv/lib/python3.10/site-packages/torch/utils/_contextlib.py", line 116, in decorate_context
+    return func(*args, **kwargs)
+  File "/home/marco/dockmaster/state/worktrees/crossgame-vector/.venv/lib/python3.10/site-packages/transformers/generation/utils.py", line 2597, in generate
+    result = self._sample(
+  File "/home/marco/dockmaster/state/worktrees/crossgame-vector/.venv/lib/python3.10/site-packages/transformers/generation/utils.py", line 3560, in _sample
+    outputs = model_forward(**model_inputs, return_dict=True)
+  File "/home/marco/dockmaster/state/worktrees/crossgame-vector/.venv/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+  File "/home/marco/dockmaster/state/worktrees/crossgame-vector/.venv/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/home/marco/dockmaster/state/worktrees/crossgame-vector/.venv/lib/python3.10/site-packages/transformers/utils/generic.py", line 969, in wrapper
+    output = func(self, *args, **kwargs)
+  File "/home/marco/dockmaster/state/worktrees/crossgame-vector/.venv/lib/python3.10/site-packages/transformers/models/qwen2/modeling_qwen2.py", line 703, in forward
+    outputs: BaseModelOutputWithPast = self.model(
+  File "/home/marco/dockmaster/state/worktrees/crossgame-vector/.venv/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+  File "/home/marco/dockmaster/state/worktrees/crossgame-vector/.venv/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/home/marco/dockmaster/state/worktrees/crossgame-vector/.venv/lib/python3.10/site-packages/transformers/utils/generic.py", line 969, in wrapper
+    output = func(self, *args, **kwargs)
+  File "/home/marco/dockmaster/state/worktrees/crossgame-vector/.venv/lib/python3.10/site-packages/transformers/models/qwen2/modeling_qwen2.py", line 436, in forward
+    layer_outputs = decoder_layer(
+  File "/home/marco/dockmaster/state/worktrees/crossgame-vector/.venv/lib/python3.10/site-packages/transformers/modeling_layers.py", line 48, in __call__
+    return super().__call__(*args, **kwargs)
+  File "/home/marco/dockmaster/state/worktrees/crossgame-vector/.venv/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+  File "/home/marco/dockmaster/state/worktrees/crossgame-vector/.venv/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/home/marco/dockmaster/state/worktrees/crossgame-vector/.venv/lib/python3.10/site-packages/transformers/models/qwen2/modeling_qwen2.py", line 257, in forward
+    hidden_states, self_attn_weights = self.self_attn(
+  File "/home/marco/dockmaster/state/worktrees/crossgame-vector/.venv/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+  File "/home/marco/dockmaster/state/worktrees/crossgame-vector/.venv/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/home/marco/dockmaster/state/worktrees/crossgame-vector/.venv/lib/python3.10/site-packages/transformers/models/qwen2/modeling_qwen2.py", line 189, in forward
+    attn_output, attn_weights = attention_interface(
+  File "/home/marco/dockmaster/state/worktrees/crossgame-vector/.venv/lib/python3.10/site-packages/transformers/integrations/sdpa_attention.py", line 31, in sdpa_attention_forward
+    value = repeat_kv(value, module.num_key_value_groups)
+  File "/home/marco/dockmaster/state/worktrees/crossgame-vector/.venv/lib/python3.10/site-packages/transformers/integrations/sdpa_attention.py", line 15, in repeat_kv
+    return hidden_states.reshape(batch, num_key_value_heads * n_rep, slen, head_dim)
+torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 220.00 MiB. GPU 0 has a total capacity of 44.42 GiB of which 206.50 MiB is free. Including non-PyTorch memory, this process has 16.80 GiB memory in use. Process 1002503 has 27.40 GiB memory in use. Of the allocated memory 16.17 GiB is allocated by PyTorch, and 325.14 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)
+generate trust attempt 1 failed; the partial CSV is discarded on retry
+=== trust: generate attempt 2/4 (2026-08-20T13:55:03+00:00) ===
+waiting for device 0: 17420 MiB free, need 20000 (0s)
+device 0 has 23904 MiB free; starting
+cells=30 samples=24 total=720
+Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s]Loading checkpoint shards:  25%|██▌       | 1/4 [00:01<00:03,  1.26s/it]Loading checkpoint shards:  50%|█████     | 2/4 [00:02<00:01,  1.02it/s]Loading checkpoint shards:  75%|███████▌  | 3/4 [00:02<00:00,  1.13it/s]Loading checkpoint shards: 100%|██████████| 4/4 [00:03<00:00,  1.22it/s]Loading checkpoint shards: 100%|██████████| 4/4 [00:03<00:00,  1.13it/s]
+loaded; 8.8 GiB free of 44.4 on cuda:0
+engine: EngineDescription(engine='huggingface', engine_version='4.52.3', torch_version='2.6.0+cu124', model_id='Qwen/Qwen2.5-7B-Instruct', model_revision='a09a35458c702b33eeacc393d103063234e8bc28', dtype='torch.bfloat16', attn_implementation='sdpa', stop_token_ids=(151645, 151643))
+device: cuda:0
+    32 rows    142.6s   13.5 rows/min
+    64 rows    202.6s   19.0 rows/min
+    96 rows    283.4s   20.3 rows/min
+   128 rows    389.7s   19.7 rows/min
+   160 rows    500.9s   19.2 rows/min
+   192 rows    553.8s   20.8 rows/min
+   224 rows    694.9s   19.3 rows/min
+   256 rows    782.9s   19.6 rows/min
+   288 rows    840.6s   20.6 rows/min
+   320 rows    946.1s   20.3 rows/min
+   352 rows   1060.1s   19.9 rows/min
+   384 rows   1128.4s   20.4 rows/min
+   416 rows   1220.3s   20.5 rows/min
+   448 rows   1341.9s   20.0 rows/min
+   480 rows   1418.6s   20.3 rows/min
+   512 rows   1492.1s   20.6 rows/min
+   544 rows   1590.2s   20.5 rows/min
+   576 rows   1681.3s   20.6 rows/min
+   608 rows   1740.2s   21.0 rows/min
+   640 rows   1877.0s   20.5 rows/min
+   672 rows   1976.6s   20.4 rows/min
+   704 rows   2042.9s   20.7 rows/min
+   720 rows   2107.9s   20.5 rows/min
+wrote 720 rows to /home/marco/dockmaster/state/worktrees/crossgame-vector/scratch/rows/trust.csv in 35.1 min
+=== trust: extract (2026-08-20T14:30:39+00:00) ===
+device 0 has 24060 MiB free; starting
+rows=720 scored=699 unscored=21
+Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s]Loading checkpoint shards:  25%|██▌       | 1/4 [00:01<00:03,  1.26s/it]Loading checkpoint shards:  50%|█████     | 2/4 [00:02<00:01,  1.03it/s]Loading checkpoint shards:  75%|███████▌  | 3/4 [00:02<00:00,  1.13it/s]Loading checkpoint shards: 100%|██████████| 4/4 [00:03<00:00,  1.24it/s]Loading checkpoint shards: 100%|██████████| 4/4 [00:03<00:00,  1.14it/s]
+  250/  699    99.2s
+  500/  699   173.9s
+captured 699 of 699 scored rows, dropped 0, 4.3 min
+=== trust: land (2026-08-20T14:35:05+00:00) ===
+landed trust (720 rows): {"strict": {"alt": 300, "self": 79, "middle": 309, "usable_cells": 20, "layer_0_auc": 0.8296666666666667, "layer_20_auc": 0.9363333333333334, "best_layer": 19, "best_layer_auc": 0.9386666666666666, "norm_layer_20_unbalanced": 9.065927529109842, "norm_layer_20_balanced": 5.373255190772857}, "relaxed": {"alt": 300, "self": 106, "middle": 282, "usable_cells": 25, "layer_0_auc": 0.7846540880503144, "layer_20_auc": 0.9013836477987421, "best_layer": 20, "best_layer_auc": 0.9013836477987421, "norm_layer_20_unbalanced": 8.02042364285802, "norm_layer_20_balanced": 4.725528397596609}}
+=== trust: landed (2026-08-20T14:35:11+00:00) ===
+=== ultimatum: generate attempt 1/4 (2026-08-20T14:35:11+00:00) ===
+waiting for device 0: 16701 MiB free, need 20000 (0s)
+device 0 has 28925 MiB free; starting
+cells=30 samples=24 total=720
+Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s]Loading checkpoint shards:  25%|██▌       | 1/4 [00:01<00:03,  1.32s/it]Loading checkpoint shards:  50%|█████     | 2/4 [00:02<00:02,  1.00s/it]Loading checkpoint shards:  75%|███████▌  | 3/4 [00:02<00:00,  1.10it/s]Loading checkpoint shards: 100%|██████████| 4/4 [00:03<00:00,  1.20it/s]Loading checkpoint shards: 100%|██████████| 4/4 [00:03<00:00,  1.11it/s]
+loaded; 13.8 GiB free of 44.4 on cuda:0
+engine: EngineDescription(engine='huggingface', engine_version='4.52.3', torch_version='2.6.0+cu124', model_id='Qwen/Qwen2.5-7B-Instruct', model_revision='a09a35458c702b33eeacc393d103063234e8bc28', dtype='torch.bfloat16', attn_implementation='sdpa', stop_token_ids=(151645, 151643))
+device: cuda:0
+    32 rows     43.3s   44.3 rows/min
+    64 rows     82.5s   46.6 rows/min
+    96 rows    128.8s   44.7 rows/min
+   128 rows    175.8s   43.7 rows/min
+   160 rows    223.5s   43.0 rows/min
+   192 rows    273.5s   42.1 rows/min
+   224 rows    337.0s   39.9 rows/min
+   256 rows    395.0s   38.9 rows/min
+   288 rows    434.6s   39.8 rows/min
+   320 rows    482.3s   39.8 rows/min
+   352 rows    543.5s   38.9 rows/min
+   384 rows    595.8s   38.7 rows/min
+   416 rows    645.3s   38.7 rows/min
+   448 rows    691.9s   38.9 rows/min
+   480 rows    751.4s   38.3 rows/min
+   512 rows    797.1s   38.5 rows/min
+   544 rows    840.3s   38.8 rows/min
+   576 rows    900.3s   38.4 rows/min
+   608 rows    951.6s   38.3 rows/min
+   640 rows    982.8s   39.1 rows/min
+   672 rows   1012.7s   39.8 rows/min
+   704 rows   1057.8s   39.9 rows/min
+   720 rows   1090.6s   39.6 rows/min
+wrote 720 rows to /home/marco/dockmaster/state/worktrees/crossgame-vector/scratch/rows/ultimatum.csv in 18.2 min
+=== ultimatum: extract (2026-08-20T14:56:30+00:00) ===
+waiting for device 0: 17689 MiB free, need 20000 (0s)
+device 0 has 32894 MiB free; starting
+rows=720 scored=713 unscored=7
+Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s]Loading checkpoint shards:  25%|██▌       | 1/4 [00:01<00:03,  1.13s/it]Loading checkpoint shards:  50%|█████     | 2/4 [00:01<00:01,  1.07it/s]Loading checkpoint shards:  75%|███████▌  | 3/4 [00:02<00:00,  1.12it/s]Loading checkpoint shards: 100%|██████████| 4/4 [00:03<00:00,  1.19it/s]Loading checkpoint shards: 100%|██████████| 4/4 [00:03<00:00,  1.13it/s]
+  250/  713    90.6s
+  500/  713   175.4s
+captured 713 of 713 scored rows, dropped 0, 4.1 min
+=== ultimatum: land (2026-08-20T15:01:26+00:00) ===
+landed ultimatum (720 rows): {"strict": {"alt": 252, "self": 29, "middle": 396, "usable_cells": 10, "layer_0_auc": 0.8608465608465609, "layer_20_auc": 0.8714285714285714, "best_layer": 26, "best_layer_auc": 0.8777777777777778, "norm_layer_20_unbalanced": 8.724833177576988, "norm_layer_20_balanced": 5.366469371540662}, "relaxed": {"alt": 252, "self": 235, "middle": 190, "usable_cells": 24, "layer_0_auc": 0.8727468388485338, "layer_20_auc": 0.9027441485068604, "best_layer": 27, "best_layer_auc": 0.9072504708097928, "norm_layer_20_unbalanced": 7.754628587239897, "norm_layer_20_balanced": 7.166027366591859}}
+=== ultimatum: landed (2026-08-20T15:01:31+00:00) ===
+=== prisoners_dilemma: generate attempt 1/4 (2026-08-20T15:01:31+00:00) ===
+waiting for device 0: 16193 MiB free, need 20000 (0s)
+device 0 has 28183 MiB free; starting
+cells=30 samples=8 total=240
+Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s]Loading checkpoint shards:  25%|██▌       | 1/4 [00:01<00:04,  1.34s/it]Loading checkpoint shards:  50%|█████     | 2/4 [00:02<00:02,  1.11s/it]Loading checkpoint shards:  75%|███████▌  | 3/4 [00:03<00:01,  1.02s/it]Loading checkpoint shards: 100%|██████████| 4/4 [00:04<00:00,  1.07it/s]Loading checkpoint shards: 100%|██████████| 4/4 [00:04<00:00,  1.00s/it]
+loaded; 13.1 GiB free of 44.4 on cuda:0
+engine: EngineDescription(engine='huggingface', engine_version='4.52.3', torch_version='2.6.0+cu124', model_id='Qwen/Qwen2.5-7B-Instruct', model_revision='a09a35458c702b33eeacc393d103063234e8bc28', dtype='torch.bfloat16', attn_implementation='sdpa', stop_token_ids=(151645, 151643))
+device: cuda:0
+    32 rows     32.6s   58.8 rows/min
+    64 rows     74.3s   51.7 rows/min
+    96 rows    154.9s   37.2 rows/min
+   128 rows    260.7s   29.5 rows/min
+   160 rows    345.7s   27.8 rows/min
+   192 rows    412.9s   27.9 rows/min
+   224 rows    503.4s   26.7 rows/min
+   240 rows    558.7s   25.8 rows/min
+wrote 240 rows to /home/marco/dockmaster/state/worktrees/crossgame-vector/scratch/rows/prisoners_dilemma.csv in 9.3 min
+=== prisoners_dilemma: extract (2026-08-20T15:12:39+00:00) ===
+waiting for device 0: 18063 MiB free, need 20000 (0s)
+device 0 has 45489 MiB free; starting
+rows=240 scored=240 unscored=0
+Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s]Loading checkpoint shards:  25%|██▌       | 1/4 [00:01<00:03,  1.05s/it]Loading checkpoint shards:  50%|█████     | 2/4 [00:01<00:01,  1.18it/s]Loading checkpoint shards:  75%|███████▌  | 3/4 [00:02<00:00,  1.27it/s]Loading checkpoint shards: 100%|██████████| 4/4 [00:03<00:00,  1.36it/s]Loading checkpoint shards: 100%|██████████| 4/4 [00:03<00:00,  1.28it/s]
+captured 240 of 240 scored rows, dropped 0, 0.4 min
+=== prisoners_dilemma: land (2026-08-20T15:15:13+00:00) ===
+landed prisoners_dilemma (240 rows): {"strict": {"alt": 18, "self": 213, "middle": 0, "usable_cells": 9, "layer_0_auc": 0.9314641744548287, "layer_20_auc": 0.9335410176531672, "best_layer": 2, "best_layer_auc": 0.9501557632398754, "norm_layer_20_unbalanced": 12.851426105793712, "norm_layer_20_balanced": 8.466909389557397}, "relaxed": {"alt": 18, "self": 213, "middle": 0, "usable_cells": 9, "layer_0_auc": 0.9314641744548287, "layer_20_auc": 0.9335410176531672, "best_layer": 2, "best_layer_auc": 0.9501557632398754, "norm_layer_20_unbalanced": 12.851426105793712, "norm_layer_20_balanced": 8.466909389557397}}
+=== prisoners_dilemma: landed (2026-08-20T15:15:15+00:00) ===
+scratch/resume_run.sh: line 66: syntax error near unexpected token `fi'
+scratch/resume_run.sh: line 66: `   fi'

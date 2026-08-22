@@ -1,0 +1,87 @@
+=== trust: extract (2026-08-20T14:30:58+00:00) ===
+rows=720 scored=699 unscored=21
+Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s]Loading checkpoint shards:  25%|██▌       | 1/4 [00:01<00:03,  1.28s/it]Loading checkpoint shards:  50%|█████     | 2/4 [00:02<00:02,  1.03s/it]Loading checkpoint shards:  50%|█████     | 2/4 [00:02<00:02,  1.15s/it]
+load attempt 1/60 OOMed (0.1 GiB free of 44.4): CUDA out of memory. Tried to allocate 130.00 MiB. GPU 0 has a total capacity of 44.42 GiB of which 65.19 MiB is free. Process 62284 has 20.92 GiB memory in use. Process 63016 has 15.20 GiB memory in use. Including non-PyTorch memory, this process has 8.23 GiB memory in use. Of the allocated memory 7.96 GiB is allocated by PyTorch, and 10.13 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)
+Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s]Loading checkpoint shards:  25%|██▌       | 1/4 [00:00<00:02,  1.18it/s]Loading checkpoint shards:  50%|█████     | 2/4 [00:01<00:01,  1.20it/s]Loading checkpoint shards:  50%|█████     | 2/4 [00:01<00:01,  1.10it/s]
+load attempt 2/60 OOMed (0.0 GiB free of 44.4): CUDA out of memory. Tried to allocate 130.00 MiB. GPU 0 has a total capacity of 44.42 GiB of which 41.19 MiB is free. Process 62284 has 20.92 GiB memory in use. Process 63016 has 15.22 GiB memory in use. Including non-PyTorch memory, this process has 8.23 GiB memory in use. Of the allocated memory 7.96 GiB is allocated by PyTorch, and 10.13 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)
+Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s]Loading checkpoint shards:  25%|██▌       | 1/4 [00:00<00:02,  1.17it/s]Loading checkpoint shards:  50%|█████     | 2/4 [00:01<00:01,  1.18it/s]Loading checkpoint shards:  50%|█████     | 2/4 [00:01<00:01,  1.09it/s]
+load attempt 3/60 OOMed (0.0 GiB free of 44.4): CUDA out of memory. Tried to allocate 130.00 MiB. GPU 0 has a total capacity of 44.42 GiB of which 41.19 MiB is free. Process 62284 has 20.92 GiB memory in use. Process 63016 has 15.22 GiB memory in use. Including non-PyTorch memory, this process has 8.23 GiB memory in use. Of the allocated memory 7.96 GiB is allocated by PyTorch, and 10.13 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)
+Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s]Loading checkpoint shards:  25%|██▌       | 1/4 [00:00<00:02,  1.22it/s]Loading checkpoint shards:  50%|█████     | 2/4 [00:01<00:01,  1.19it/s]Loading checkpoint shards:  50%|█████     | 2/4 [00:01<00:01,  1.10it/s]
+load attempt 4/60 OOMed (0.0 GiB free of 44.4): CUDA out of memory. Tried to allocate 130.00 MiB. GPU 0 has a total capacity of 44.42 GiB of which 41.19 MiB is free. Process 62284 has 20.92 GiB memory in use. Process 63016 has 15.22 GiB memory in use. Including non-PyTorch memory, this process has 8.23 GiB memory in use. Of the allocated memory 7.96 GiB is allocated by PyTorch, and 10.13 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)
+Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s]Loading checkpoint shards:  25%|██▌       | 1/4 [00:00<00:02,  1.14it/s]Loading checkpoint shards:  50%|█████     | 2/4 [00:01<00:01,  1.18it/s]Loading checkpoint shards:  75%|███████▌  | 3/4 [00:02<00:00,  1.10it/s]Loading checkpoint shards: 100%|██████████| 4/4 [00:03<00:00,  1.17it/s]Loading checkpoint shards: 100%|██████████| 4/4 [00:03<00:00,  1.15it/s]
+  250/  699    92.5s
+  500/  699   147.0s
+captured 699 of 699 scored rows, dropped 0, 3.0 min
+=== trust: land (2026-08-20T14:36:13+00:00) ===
+landed trust (720 rows): {"strict": {"alt": 300, "self": 79, "middle": 309, "usable_cells": 20, "layer_0_auc": 0.8296666666666667, "layer_20_auc": 0.9363333333333334, "best_layer": 19, "best_layer_auc": 0.9386666666666666, "norm_layer_20_unbalanced": 9.065927529109842, "norm_layer_20_balanced": 5.373255190772857}, "relaxed": {"alt": 300, "self": 106, "middle": 282, "usable_cells": 25, "layer_0_auc": 0.7846540880503144, "layer_20_auc": 0.9013836477987421, "best_layer": 20, "best_layer_auc": 0.9013836477987421, "norm_layer_20_unbalanced": 8.02042364285802, "norm_layer_20_balanced": 4.725528397596609}}
+=== trust: landed (2026-08-20T14:36:18+00:00) ===
+=== ultimatum: generate at batch 32 (2026-08-20T14:36:18+00:00) ===
+device 0 has 32290 MiB free; starting
+cells=30 samples=24 total=720
+Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s]Loading checkpoint shards:  25%|██▌       | 1/4 [00:00<00:02,  1.10it/s]Loading checkpoint shards:  50%|█████     | 2/4 [00:01<00:01,  1.36it/s]Loading checkpoint shards:  75%|███████▌  | 3/4 [00:02<00:00,  1.48it/s]Loading checkpoint shards: 100%|██████████| 4/4 [00:02<00:00,  1.60it/s]Loading checkpoint shards: 100%|██████████| 4/4 [00:02<00:00,  1.50it/s]
+loaded; 17.1 GiB free of 44.4 on cuda:0
+engine: EngineDescription(engine='huggingface', engine_version='4.52.3', torch_version='2.6.0+cu124', model_id='Qwen/Qwen2.5-7B-Instruct', model_revision='a09a35458c702b33eeacc393d103063234e8bc28', dtype='torch.bfloat16', attn_implementation='sdpa', stop_token_ids=(151645, 151643))
+device: cuda:0
+    32 rows     20.5s   93.7 rows/min
+    64 rows     39.3s   97.8 rows/min
+    96 rows     60.9s   94.6 rows/min
+   128 rows     82.9s   92.7 rows/min
+   160 rows    104.8s   91.6 rows/min
+   192 rows    144.0s   80.0 rows/min
+   224 rows    209.3s   64.2 rows/min
+   256 rows    268.3s   57.2 rows/min
+   288 rows    310.0s   55.7 rows/min
+   320 rows    358.8s   53.5 rows/min
+   352 rows    420.9s   50.2 rows/min
+   384 rows    475.8s   48.4 rows/min
+   416 rows    527.2s   47.3 rows/min
+   448 rows    575.5s   46.7 rows/min
+   480 rows    636.3s   45.3 rows/min
+   512 rows    683.4s   45.0 rows/min
+   544 rows    728.3s   44.8 rows/min
+   576 rows    790.3s   43.7 rows/min
+   608 rows    846.2s   43.1 rows/min
+   640 rows    899.7s   42.7 rows/min
+   672 rows    944.8s   42.7 rows/min
+   704 rows   1013.3s   41.7 rows/min
+   720 rows   1063.6s   40.6 rows/min
+wrote 720 rows to /home/marco/dockmaster/state/worktrees/crossgame-vector/scratch/rows/ultimatum.csv in 17.7 min
+ultimatum generated at batch 32
+=== ultimatum: extract (2026-08-20T14:54:09+00:00) ===
+device 0 has 17675 MiB free; starting
+rows=720 scored=713 unscored=7
+Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s]Loading checkpoint shards:  25%|██▌       | 1/4 [00:01<00:03,  1.11s/it]Loading checkpoint shards:  50%|█████     | 2/4 [00:01<00:01,  1.19it/s]Loading checkpoint shards:  75%|███████▌  | 3/4 [00:02<00:00,  1.32it/s]Loading checkpoint shards: 100%|██████████| 4/4 [00:03<00:00,  1.44it/s]Loading checkpoint shards: 100%|██████████| 4/4 [00:03<00:00,  1.33it/s]
+  250/  713    88.7s
+  500/  713   145.6s
+captured 713 of 713 scored rows, dropped 0, 2.8 min
+=== ultimatum: land (2026-08-20T14:57:05+00:00) ===
+landed ultimatum (720 rows): {"strict": {"alt": 252, "self": 29, "middle": 396, "usable_cells": 10, "layer_0_auc": 0.8608465608465609, "layer_20_auc": 0.8714285714285714, "best_layer": 26, "best_layer_auc": 0.8777777777777778, "norm_layer_20_unbalanced": 8.724833177576988, "norm_layer_20_balanced": 5.366469371540662}, "relaxed": {"alt": 252, "self": 235, "middle": 190, "usable_cells": 24, "layer_0_auc": 0.8727468388485338, "layer_20_auc": 0.9027441485068604, "best_layer": 27, "best_layer_auc": 0.9072504708097928, "norm_layer_20_unbalanced": 7.754628587239897, "norm_layer_20_balanced": 7.166027366591859}}
+=== ultimatum: landed (2026-08-20T14:57:08+00:00) ===
+=== prisoners_dilemma: generate at batch 32 (2026-08-20T14:57:08+00:00) ===
+device 0 has 32894 MiB free; starting
+cells=30 samples=8 total=240
+Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s]Loading checkpoint shards:  25%|██▌       | 1/4 [00:01<00:03,  1.04s/it]Loading checkpoint shards:  50%|█████     | 2/4 [00:01<00:01,  1.18it/s]Loading checkpoint shards:  75%|███████▌  | 3/4 [00:02<00:00,  1.26it/s]Loading checkpoint shards: 100%|██████████| 4/4 [00:03<00:00,  1.35it/s]Loading checkpoint shards: 100%|██████████| 4/4 [00:03<00:00,  1.27it/s]
+loaded; 3.2 GiB free of 44.4 on cuda:0
+engine: EngineDescription(engine='huggingface', engine_version='4.52.3', torch_version='2.6.0+cu124', model_id='Qwen/Qwen2.5-7B-Instruct', model_revision='a09a35458c702b33eeacc393d103063234e8bc28', dtype='torch.bfloat16', attn_implementation='sdpa', stop_token_ids=(151645, 151643))
+device: cuda:0
+    32 rows     39.5s   48.6 rows/min
+    64 rows     98.3s   39.1 rows/min
+    96 rows    155.6s   37.0 rows/min
+   128 rows    224.4s   34.2 rows/min
+   160 rows    271.0s   35.4 rows/min
+   192 rows    301.6s   38.2 rows/min
+   224 rows    343.6s   39.1 rows/min
+   240 rows    371.3s   38.8 rows/min
+wrote 240 rows to /home/marco/dockmaster/state/worktrees/crossgame-vector/scratch/rows/prisoners_dilemma.csv in 6.2 min
+prisoners_dilemma generated at batch 32
+=== prisoners_dilemma: extract (2026-08-20T15:03:27+00:00) ===
+device 0 has 29205 MiB free; starting
+Traceback (most recent call last):
+  File "/home/marco/dockmaster/state/worktrees/crossgame-vector/scratch/extract_crossgame.py", line 209, in <module>
+    main()
+  File "/home/marco/dockmaster/state/worktrees/crossgame-vector/scratch/extract_crossgame.py", line 67, in main
+    rows = list(csv.DictReader(handle))
+  File "/usr/lib/python3.10/csv.py", line 111, in __next__
+    row = next(self.reader)
+_csv.Error: line contains NUL
+FAILED extract prisoners_dilemma

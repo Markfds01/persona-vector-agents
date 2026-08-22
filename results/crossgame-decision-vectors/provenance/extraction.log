@@ -1,0 +1,50 @@
+=== dictator 2026-08-21T12:26:34Z ===
+rows=720 scored=712 unscored=8
+load attempt 1/60 OOMed (1.0 GiB free of 44.4): CUDA out of memory. Tried to allocate 1.02 GiB. GPU 0 has a total capacity of 44.42 GiB of which 984.50 MiB is free. Process 1971326 has 43.19 GiB memory in use. Including non-PyTorch memory, this process has 262.00 MiB memory in use. Of the allocated memory 0 bytes is allocated by PyTorch, and 0 bytes is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)
+loaded Qwen/Qwen2.5-7B-Instruct @ a09a35458c70 torch.bfloat16/sdpa on cuda:0
+  250/  712    85.7s  shard 0
+  500/  712   153.5s  shard 1
+captured 712 of 712 scored rows, dropped 0, 2.9 min
+=== trust 2026-08-21T12:30:07Z ===
+rows=720 scored=699 unscored=21
+loaded Qwen/Qwen2.5-7B-Instruct @ a09a35458c70 torch.bfloat16/sdpa on cuda:0
+  250/  699    39.6s  shard 0
+  500/  699    79.6s  shard 1
+captured 699 of 699 scored rows, dropped 0, 2.3 min
+=== ultimatum 2026-08-21T12:32:31Z ===
+rows=720 scored=713 unscored=7
+loaded Qwen/Qwen2.5-7B-Instruct @ a09a35458c70 torch.bfloat16/sdpa on cuda:0
+  250/  713    72.5s  shard 0
+  500/  713   100.6s  shard 1
+captured 713 of 713 scored rows, dropped 0, 2.0 min
+=== apology 2026-08-21T12:34:39Z ===
+rows=720 scored=714 unscored=6
+loaded Qwen/Qwen2.5-7B-Instruct @ a09a35458c70 torch.bfloat16/sdpa on cuda:0
+  250/  714    24.4s  shard 0
+  500/  714    48.7s  shard 1
+captured 714 of 714 scored rows, dropped 0, 1.2 min
+=== overfishing 2026-08-21T12:36:01Z ===
+rows=1440 scored=1425 unscored=15
+loaded Qwen/Qwen2.5-7B-Instruct @ a09a35458c70 torch.bfloat16/sdpa on cuda:0
+  250/ 1425    96.3s  shard 0
+  500/ 1425   175.0s  shard 1
+  750/ 1425   209.0s  shard 2
+ 1000/ 1425   242.3s  shard 3
+ 1250/ 1425   294.6s  shard 4
+captured 1425 of 1425 scored rows, dropped 0, 6.0 min
+=== prisoners_dilemma 2026-08-21T12:42:10Z ===
+rows=240 scored=240 unscored=0
+loaded Qwen/Qwen2.5-7B-Instruct @ a09a35458c70 torch.bfloat16/sdpa on cuda:0
+captured 240 of 240 scored rows, dropped 0, 0.5 min
+=== dictator_only 2026-08-21T12:42:48Z ===
+rows=1800 scored=1785 unscored=15
+loaded Qwen/Qwen2.5-7B-Instruct @ a09a35458c70 torch.bfloat16/sdpa on cuda:0
+  250/ 1785    24.8s  shard 0
+  500/ 1785    48.9s  shard 1
+  750/ 1785    76.6s  shard 2
+ 1000/ 1785   155.7s  shard 3
+ 1250/ 1785   226.9s  shard 4
+ 1500/ 1785   252.1s  shard 5
+ 1750/ 1785   277.6s  shard 6
+captured 1785 of 1785 scored rows, dropped 0, 4.7 min
+=== EXTRACTION COMPLETE 2026-08-21T12:47:36Z ===

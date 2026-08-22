@@ -136,6 +136,27 @@ space, and a regression suite measured against the judge labels already in this
 repo. It imports with no API keys, no network and no GPU, and does not import
 `eval/`. See [audit/README.md](audit/README.md).
 
+## Experiments (`lab/`)
+
+`lab/` is this repository's own experimental pipeline. It borrows `audit/`'s
+prompt rendering and game declarations; nothing in `audit/` depends on it.
+`lab/extract.py` is the one teacher-forced activation capture every prompt grid
+uses, and it too needs no keys and no network — only a GPU when it is actually
+capturing.
+
+Both suites run offline, and both are needed: `lab/tests` is where the extractor
+is covered, so `audit/tests` alone leaves it untested. A third suite,
+`results/crossgame-decision-vectors/scripts/tests`, covers that directory's
+reproduction gate and rebuild comparator. `pytest.ini` names all three, so one
+command is the whole thing:
+
 ```bash
-python -m pytest audit/tests -q
+python -m pytest -q
 ```
+
+Needs `pytest` and `torch`, both in `requirements.txt`. `audit/tests` alone runs
+without torch; the other two do not, and they fail loudly rather than skipping.
+One check is deliberately left out of that command because it takes about forty
+seconds: `results/crossgame-decision-vectors/scripts/measurement/selftest_analysis.py`
+runs the six-game battery twice on synthetic activations with a known answer. Run
+it by hand.

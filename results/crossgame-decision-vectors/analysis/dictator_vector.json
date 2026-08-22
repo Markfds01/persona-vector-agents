@@ -1,0 +1,17 @@
+{
+  "acts_dir": "/home/marco/dockmaster/data/pr-crossgame/acts_v3/dictator_only",
+  "committed_vector": "/home/marco/dockmaster/state/worktrees/pr-crossgame/results/dictator-decision-vector/vectors/decision_response_avg_diff_cellbalanced.pt",
+  "n_rows_captured": 1785,
+  "n_rows_in_the_vector": 1391,
+  "n_tag_excluded": 32,
+  "n_middle_discarded": 362,
+  "n_cells_seen": 30,
+  "usable_cells": 30,
+  "n_altruistic": 452,
+  "n_self_interested": 939,
+  "bit_identical_to_committed": true,
+  "cos_vs_committed_layer0": 1.0000000000000002,
+  "cos_vs_committed_layer20": 0.9999999999999999,
+  "cos_vs_committed_min_over_layers": 0.9999999999999988,
+  "max_abs_elementwise_diff": 0.0
+}
