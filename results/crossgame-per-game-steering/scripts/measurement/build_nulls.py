@@ -101,6 +101,34 @@ def cosine_at(a, b, layer: int) -> float:
     return float((x * y).sum() / (x.norm() * y.norm()))
 
 
+def rebuild_deviation(committed, rebuilt) -> float:
+    """Worst per-layer distance between two (L, H) vectors, relative to that
+    layer's own norm. Per layer and not just at layer 20: a cosine is
+    scale-invariant and a whole-tensor norm hides one layer moving."""
+    return float(((committed - rebuilt).norm(dim=1)
+                  / committed.norm(dim=1).clamp_min(1e-12)).max())
+
+
+def check_rebuild(family: str, acts_dir, committed, rebuilt) -> float:
+    """The gate: refuse to write a null unless the committed vector rebuilds here.
+
+    If this activation corpus does not reproduce the artifact, a null built from
+    it is not a null OF that artifact and nothing may be written. Returns the
+    deviation it accepted, so the report records the number the gate passed
+    rather than one recomputed beside it.
+    """
+    if committed.shape != rebuilt.shape:
+        raise SystemExit("%s: committed vector is %s, rebuild is %s"
+                         % (family, tuple(committed.shape), tuple(rebuilt.shape)))
+    deviation = rebuild_deviation(committed, rebuilt)
+    if deviation > REBUILD_TOLERANCE:
+        raise SystemExit(
+            "%s: rebuilding the committed vector from %s gives a max relative "
+            "per-layer deviation of %.3g; a null built here would not be a null of "
+            "the committed vector" % (family, acts_dir, deviation))
+    return deviation
+
+
 def build_one(family: str, acts_root: Path, out_dir: Path, seed: int, policy: str,
               layer: int) -> dict:
     rows_csv = EXTRACTION / ("%s.csv" % family)
@@ -124,16 +152,7 @@ def build_one(family: str, acts_root: Path, out_dir: Path, seed: int, policy: st
 
     committed = committed_vector_path(family, policy)
     reference = torch.load(committed, weights_only=False).double()
-    if reference.shape != real.shape:
-        raise SystemExit("%s: committed vector is %s, rebuild is %s"
-                         % (family, tuple(reference.shape), tuple(real.shape)))
-    deviation = ((reference - real).norm(dim=1)
-                 / reference.norm(dim=1).clamp_min(1e-12)).max().item()
-    if deviation > REBUILD_TOLERANCE:
-        raise SystemExit(
-            "%s: rebuilding the committed vector from %s gives a max relative "
-            "per-layer deviation of %.3g; a null built here would not be a null of "
-            "the committed vector" % (family, acts_dir, deviation))
+    deviation = check_rebuild(family, acts_dir, reference, real)
 
     generator = torch.Generator().manual_seed(seed)
     null_alt, null_self = permute_within_cells(alt, self_, generator)
@@ -153,9 +172,11 @@ def build_one(family: str, acts_root: Path, out_dir: Path, seed: int, policy: st
         "layer": layer,
         "rows_csv": _repo_relative(rows_csv),
         "rows_csv_sha256": meta["rows_csv_sha256"],
-        # the shards are ~7 GB and are not committed, so this names a machine-local
-        # input rather than something a reader can open; the sha256 above is the pin
-        "acts_dir": str(acts_dir),
+        # the shards are ~7 GB, are not committed and sit outside the checkout, so
+        # this is the corpus's own directory and never an absolute path off the
+        # machine that ran it - a committed artifact in a public repo. The pin a
+        # reader can actually check is rows_csv_sha256 above.
+        "acts_dir": "%s/%s" % (Path(acts_root).resolve().name, family),
         "n_altruistic": len(alt),
         "n_self_interested": len(self_),
         "n_middle_discarded": len(middle),

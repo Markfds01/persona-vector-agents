@@ -367,7 +367,7 @@ scripts/prompting/        eval_games.py (the games and their pole scales), run_s
 scripts/measurement/      build_nulls.py, analyze_game.py, stats.py
 scripts/pooling/          crossgame_tables.py — the six games side by side
 scripts/figures/          make_figures.py — the figures, from the analysis alone
-scripts/tests/            83 offline tests, in `python -m pytest -q`
+scripts/tests/            117 offline tests, in `python -m pytest -q`
 scripts/run_steering.sh   the whole pipeline, parameterised by environment
 ```
 
@@ -383,7 +383,7 @@ nothing to read; the test suite and the figures (§ 10) run either way, and ever
 number below was produced from the rows named in `provenance/sweep_provenance.json`.
 
 ```sh
-python -m pytest -q                       # 513 pass, 6 skipped, repo-wide
+python -m pytest -q                       # repo-wide; see the note below
 
 PY=<python with torch>
 $PY results/crossgame-per-game-steering/scripts/measurement/analyze_game.py \
@@ -394,9 +394,18 @@ $PY results/crossgame-per-game-steering/scripts/pooling/crossgame_tables.py \
     --analysis /tmp/steering.json --out-csv /tmp/points.csv
 ```
 
+**The repo-wide test count depends on the interpreter, and neither one runs the
+whole suite.** Under a python with torch and transformers but no matplotlib:
+**513 passed, 3 skipped** — the 38 figure tests are not collected at all, because
+`test_figures.py` skips at import. Under a plain python3 with matplotlib but no
+transformers: **547 passed, 6 skipped**. Nothing fails under either, and the two
+sets are not nested: the union is what the suite covers and a single number is
+not. This package's own 117 tests are 79 of them under the first interpreter.
+
 Rebuilding the null vectors needs the activation shards (~7 GB, not committed);
 `build_nulls.py` refuses to write one unless it can first rebuild the committed
-real vector it is a null of.
+real vector it is a null of, and `scripts/tests/test_steering_sweep.py` makes that
+gate fire rather than only reading the deviations it wrote.
 
 Regenerating the rows needs a GPU and about four hours. **`POLICY` owns every
 output path**, so each arm reproduces into its own, and running one cannot land on
@@ -421,6 +430,17 @@ One uninterrupted run, 2026-08-22 08:01–12:18 UTC, on one NVIDIA A40 shared wi
 another tenant, first attempt, no OOM, no resume. Per game: dictator 30.0 min,
 trust 63.6, ultimatum 32.7, apology 29.7, overfishing 56.0, prisoners_dilemma
 44.7. transformers 4.52.3, torch 2.6.0+cu124.
+
+**The recorded commit does not pin the code that ran.** Both rounds record
+`repo_dirty = true` on every row and in `provenance/sweep_provenance.json` —
+`7898d6f2…` for the strict round, `e049cc79…` for the relaxed one. The working
+tree had uncommitted changes at both moments, so the commit identifies the
+baseline each run started from, not the code it executed. The practical
+consequence: "the scripts here are the scripts that ran" is a statement about the
+copy they were taken from, and there is no committed tree from either moment to
+diff against. It is the weakest link in this directory's provenance and it cannot
+be repaired after the fact. `results/dictator-decision-vector` discloses the same
+thing about its own run for the same reason.
 
 Checked rather than assumed: at `k = 0` the delta is exactly zero for both
 vectors, so the decision and null arms must have generated the **same text**, and
@@ -518,10 +538,13 @@ The same design, the same ladder, the same reference norm, the same n, the same
 null construction and the same seeds. **The only thing that changes is the
 vector.** Nothing in §§ 1–9 moves; this is a second arm beside it.
 
-That the comparison really is like-for-like is checked rather than asserted:
 **`P(altruistic)` is identical under both pole policies at all 154 points of both
-rounds** — relaxed widens only the *self-interested* pole. So the two halves are
-read on the same measure, and the difference between them is the direction that
+rounds.** That is a property of the classifier and not a measurement: all three
+pole functions in `poles.py` return the altruistic pole on a condition the policy
+never touches — at least half the endowment, at most the sustainable catch,
+Cooperate — and relaxed widens only the *self-interested* side. It could not have
+come out otherwise, and it is stated here because it is what licenses reading the
+two halves on the same measure: the difference between them is the direction that
 was added, not the way the answer was scored.
 
 Five games were run. **The Prisoner's Dilemma was not**, and that is a reuse, not

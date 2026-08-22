@@ -85,9 +85,12 @@ no retry, no resume.
   artifact was loaded: `steer_vector`, `steer_vector_norm`, `steer_vector_sha256`
   and `repo_commit`.
 * **`P(altruistic)` is identical under both pole policies**, at all 154 points of
-  both rounds. Relaxed widens only the SELF pole. So the strict and relaxed halves
-  are compared on exactly the same measure and the only thing that differs between
-  them is the vector.
+  both rounds — but that is a **property of the classifier, not a measurement**.
+  All three pole functions return the altruistic pole on a policy-independent
+  condition and relaxed widens only the SELF pole, so it could not have come out
+  otherwise. It is worth stating because it is what lets the strict and relaxed
+  halves be compared on exactly the same measure, with only the vector differing;
+  it is not worth counting as a check that could have failed.
 * Every relaxed null was written only after `build_nulls.py` rebuilt the committed
   real vector it is a null of from the archived activations. Max relative
   per-layer deviation across the six relaxed builds: **2.9e-08**, against a 1e-06

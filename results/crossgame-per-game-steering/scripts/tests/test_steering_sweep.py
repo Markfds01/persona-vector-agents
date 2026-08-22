@@ -437,3 +437,41 @@ def test_one_arm_missing_beta_zero_reports_nothing_rather_than_a_pass(tmp_path):
     assert analyze_game._beta0_generations_identical(tmp_path, coefficients,
                                                      "dictator") is None
 
+
+# --- the null-vector rebuild gate, made to fire --------------------------------
+
+def test_the_rebuild_gate_passes_a_vector_that_reproduces():
+    committed = torch.randn(29, 8, dtype=torch.float64)
+    assert build_nulls.check_rebuild("dictator", "acts", committed,
+                                     committed.clone()) == 0.0
+
+
+def test_the_rebuild_gate_refuses_a_vector_that_does_not_reproduce():
+    committed = torch.randn(29, 8, dtype=torch.float64)
+    drifted = committed.clone()
+    drifted[20] *= 1.001                      # one layer, a thousand times the floor
+    with pytest.raises(SystemExit) as excinfo:
+        build_nulls.check_rebuild("dictator", "acts", committed, drifted)
+    assert "would not be a null of" in str(excinfo.value)
+
+
+def test_the_rebuild_gate_is_per_layer_and_not_over_the_whole_tensor():
+    """A cosine is scale-invariant and a whole-tensor norm drowns one layer."""
+    committed = torch.ones(29, 64, dtype=torch.float64)
+    drifted = committed.clone()
+    drifted[3] *= 2.0
+    assert build_nulls.rebuild_deviation(committed, drifted) == pytest.approx(1.0)
+    with pytest.raises(SystemExit):
+        build_nulls.check_rebuild("dictator", "acts", committed, drifted)
+
+
+def test_a_rebuild_of_a_different_shape_stops_the_run_before_the_deviation():
+    with pytest.raises(SystemExit) as excinfo:
+        build_nulls.check_rebuild("dictator", "acts",
+                                  torch.ones(29, 8, dtype=torch.float64),
+                                  torch.ones(29, 16, dtype=torch.float64))
+    assert "committed vector is" in str(excinfo.value)
+
+
+def test_the_gate_tolerance_is_the_one_the_reports_were_accepted_under():
+    assert build_nulls.REBUILD_TOLERANCE == 1e-6
