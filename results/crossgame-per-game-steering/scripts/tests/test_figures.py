@@ -181,6 +181,34 @@ def test_a_significant_result_on_a_thin_point_still_counts():
     assert make_figures.null_verdict(game)[-1] == "beats"
 
 
+# --- a comparison with nothing behind it --------------------------------------
+
+def test_a_comparison_against_an_arm_that_answered_in_another_language_is_degraded():
+    # true even when the interval clears zero: the PD's own k=+5 decision arm
+    game = _game((-0.02, False), (+0.697, True),
+                 decision={"-5": _point(), "5": _point(coverage=0.86, non_latin=1.0)})
+    assert make_figures.comparison_degraded(game, +1)
+    assert not make_figures.comparison_degraded(game, -1)
+    assert make_figures.degraded_ends(game) == [+1]
+
+
+def test_a_comparison_against_an_arm_that_barely_parsed_is_degraded():
+    game = _game((-0.179, False), (+0.021, False),
+                 null={"-5": _point(coverage=0.08), "5": _point()})
+    assert make_figures.degraded_ends(game) == [-1]
+
+
+def test_a_merely_thin_arm_does_not_degrade_the_comparison():
+    # Trust's null resolved 87 of 100 and the difference is overwhelming
+    game = _game((-0.691, True), (+0.498, True),
+                 null={"-5": _point(coverage=0.87), "5": _point()})
+    assert make_figures.degraded_ends(game) == []
+
+
+def test_two_healthy_arms_leave_the_comparison_alone():
+    assert make_figures.degraded_ends(_game((-0.5, True), (+0.5, True))) == []
+
+
 def test_a_game_that_clears_the_bar_nowhere_says_so_in_its_own_headline():
     line, colour = make_figures.verdict_line({-1: "null", +1: "null"})
     assert "does NOT beat its own null at either end" == line
@@ -244,3 +272,12 @@ def test_the_prisoners_dilemmas_defensible_band_is_the_one_the_report_claims(ana
     arm = analysis["games"]["prisoners_dilemma"]["arms"]["decision"]
     assert make_figures.supported_range(arm, +1) == (2, 3)
     assert make_figures.supported_range(arm, -1) is None
+
+
+def test_only_the_two_ends_the_report_qualifies_are_degraded_comparisons(analysis):
+    """README section 3 qualifies exactly these two, for exactly this reason."""
+    found = []
+    for game in make_figures.GAMES:
+        for side in make_figures.degraded_ends(analysis["games"][game]):
+            found.append((game, side))
+    assert sorted(found) == [("prisoners_dilemma", +1), ("ultimatum", -1)]

@@ -55,6 +55,9 @@ DEGENERATE_NON_LATIN = 0.5
 #: Below this the point is drawn hollow with its parsed count: still measured,
 #: measured on less.
 LOW_COVERAGE = 0.90
+#: Below this the point did not produce a distribution at all - most answers never
+#: state a decision - so a comparison against it is not a comparison.
+COLLAPSED_COVERAGE = 0.50
 
 #: Canonical order. A run that covered fewer games draws fewer panels, in this
 #: order; nothing here assumes all six are present.
@@ -151,6 +154,30 @@ def null_verdict(game):
                 degraded = True
         out[side] = "undetermined" if (not excludes and degraded) else "null"
     return out
+
+
+def comparison_degraded(game, side):
+    """Did either arm fail to produce readable decisions at this end?
+
+    Separate from `null_verdict` on purpose. The verdict asks what the interval
+    says; this asks whether there was anything to compare. An arm that answered
+    in Chinese, or that stated an offer in 7 answers of 100, has not produced a
+    distribution, and an interval computed across it - whether or not it clears
+    zero - is not evidence about the direction.
+    """
+    key = "5" if side > 0 else "-5"
+    for arm in ("decision", "shuffled-null"):
+        point = game["arms"][arm]["points"].get(key)
+        if point is None:
+            continue
+        if point_flags(point)[0] or point["parse_coverage"] < COLLAPSED_COVERAGE:
+            return True
+    return False
+
+
+def degraded_ends(game):
+    """The ends whose comparison rests on an arm that did not answer."""
+    return [side for side in (-1, +1) if comparison_degraded(game, side)]
 
 
 def verdict_line(verdict):
@@ -256,15 +283,14 @@ def _draw_arm(ax, series, colour, marker, linestyle, linewidth, label, zorder):
                         fontsize=6.8, color=colour)
 
 
-def _axis_furniture(ax, xlabel=True):
+def _axis_furniture(ax):
     ax.grid(True, alpha=0.22, linewidth=0.6)
     ax.set_xlim(-59, 59)
     ticks = [k * REFERENCE_NORM for k in range(-5, 6)]
     ax.set_xticks(ticks)
     ax.set_xticklabels(["%+d" % k if k else "0" for k in range(-5, 6)], fontsize=8)
-    if xlabel:
-        ax.set_xlabel("k   (unit beta = k x %.4f, the length of the layer-20 edit)"
-                      % REFERENCE_NORM, fontsize=8.5)
+    ax.set_xlabel("k   (unit beta = k x %.4f, the length of the layer-20 edit)"
+                  % REFERENCE_NORM, fontsize=8.5)
 
 
 def _mark_bands(ax, game, arm, policy, ymin, ymax, on_pole_axis):
@@ -337,6 +363,11 @@ def _panel(ax, game_name, game, policy, getter, ylabel, ylim, on_pole_axis):
     ax.text(0.0, 1.085, "%s      ||v||@20 = %.4f" % (LABELS[game_name], norm),
             transform=ax.transAxes, ha="left", va="bottom", fontsize=12.5)
     line, colour = verdict_line(null_verdict(game))
+    ends = degraded_ends(game)
+    if ends:
+        line += "   [%s end: an arm there did not answer]" % (
+            " and ".join("negative" if side < 0 else "positive" for side in ends))
+        colour = UNDET if colour == GOOD else colour
     ax.text(0.0, 1.015, line, transform=ax.transAxes, ha="left", va="bottom",
             fontsize=9.0, color=colour, weight="bold")
     _axis_furniture(ax)
@@ -413,26 +444,28 @@ def _annotate_a_clean_null(axes, analysis, games, policy):
                     arrowprops=dict(arrowstyle="->", color=BAD, lw=1.1))
 
 
-def _undetermined_note(analysis, games):
-    """Name every undetermined comparison and the count that made it one.
+def _comparison_notes(analysis, games):
+    """Name every end whose comparison rests on an arm that did not answer.
 
-    An interval that fails to clear zero is not a null when the arm under it
-    barely parsed, and a reader needs the number to tell the two apart.
+    Both the interval that fails to clear zero and the one that clears it wide
+    belong here: what disqualifies them is the same missing distribution.
     """
     lines = []
     for name in games:
         game = analysis["games"][name]
-        for side, key in ((-1, "-5"), (+1, "5")):
-            if null_verdict(game)[side] != "undetermined":
+        for side in (-1, +1):
+            if not comparison_degraded(game, side):
                 continue
-            worst = min((game["arms"][arm]["points"][key]
-                         for arm in ("decision", "shuffled-null")),
-                        key=lambda point: point["n_parsed"])
-            arm = ("decision" if worst is game["arms"]["decision"]["points"][key]
-                   else "null")
-            lines.append("%s at k=%+d settles nothing: its %s arm parsed %d "
-                         "answers of %d." % (LABELS[name], 5 * side, arm,
-                                             worst["n_parsed"], worst["n_rows"]))
+            key = "5" if side > 0 else "-5"
+            arm, worst = min(
+                (("decision", game["arms"]["decision"]["points"][key]),
+                 ("null", game["arms"]["shuffled-null"]["points"][key])),
+                key=lambda pair: pair[1]["n_parsed"])
+            lines.append(
+                "%s at k=%+d: its %s arm parsed %d answers of %d (%.0f%% non-Latin), "
+                "so that comparison is not evidence either way."
+                % (LABELS[name], 5 * side, arm, worst["n_parsed"], worst["n_rows"],
+                   100 * worst["degeneracy"]["share_with_non_latin_script"]))
     return "\n".join(lines)
 
 
@@ -498,19 +531,23 @@ def figure_vs_null(analysis, games, policy, label, out_path):
         verdict = null_verdict(game)
         for key, side in (("5", +1), ("-5", -1)):
             contrast = game["decision_vs_null"][key]["altruistic_decision_minus_null"]
-            rows.append((y, side, contrast, verdict[side]))
+            rows.append((y, side, contrast, verdict[side],
+                         comparison_degraded(game, side)))
             y -= 1.0
         y -= 0.6
 
-    for pos, side, contrast, state in rows:
+    for pos, side, contrast, state, degraded in rows:
         colour = colours[state]
         ax.errorbar([contrast["diff"]], [pos],
                     xerr=[[contrast["diff"] - contrast["lo"]],
                           [contrast["hi"] - contrast["diff"]]],
                     color=colour, marker="o" if side > 0 else "s", capsize=3.5,
-                    markersize=7, linewidth=2.0, zorder=4)
-        ax.text(contrast["hi"] + 0.02, pos, "k=%+d" % (5 * side), va="center",
-                fontsize=8.2, color=colour)
+                    markersize=7, linewidth=2.0, linestyle="none",
+                    markerfacecolor="white" if degraded else colour, zorder=4)
+        ax.text(contrast["hi"] + 0.02, pos,
+                "k=%+d%s" % (5 * side, "  (an arm here did not answer)"
+                             if degraded else ""),
+                va="center", fontsize=8.2, color=colour)
 
     ax.axvline(0, color="#333333", linewidth=1.2, zorder=2)
     ax.set_yticks([rows[2 * i][0] - 0.5 for i in range(len(games))])
@@ -534,9 +571,12 @@ def figure_vs_null(analysis, games, policy, label, out_path):
         Line2D([], [], color=UNDET, marker="o", linewidth=2,
                label="undetermined: the interval contains zero, but a point there "
                      "is degraded"),
-    ], loc="lower center", ncol=3, fontsize=8.6, frameon=False,
+        Line2D([], [], color=GREY, marker="o", markerfacecolor="white",
+               linestyle="none", markeredgewidth=1.6,
+               label="hollow: an arm at that end did not produce readable answers"),
+    ], loc="lower center", ncol=2, fontsize=8.6, frameon=False,
         bbox_to_anchor=(0.5, 0.055))
-    note = _undetermined_note(analysis, games)
+    note = _comparison_notes(analysis, games)
     if note:
         fig.text(0.5, 0.012, note, ha="center", fontsize=8.2, color="#444444")
     fig.tight_layout(rect=(0, 0.075 + (0.03 if note else 0.0), 1, 1))
