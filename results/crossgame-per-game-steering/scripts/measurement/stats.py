@@ -11,6 +11,13 @@ whose variances differ by an order of magnitude across the beta ladder.
 * shares -> Wilson, and Newcombe's hybrid-score interval for a difference. A Wald
   interval on P(gives exactly $0) = 0.985 is nonsense; both of these are not.
 
+A 0/1 measure is a share, whatever the column is called. `describe_binary` exists
+so it goes down the second path rather than the first: the Prisoner's Dilemma's
+own measure IS P(Cooperate), and a t interval on it runs below zero at one end of
+the ladder and collapses to a width of exactly nothing at the other. Every summary
+records the `estimator` it was built on, and `difference` routes on that rather
+than on the caller remembering; `welch` refuses a share outright.
+
 No p-value here is corrected for multiplicity, and the report says so where it
 quotes one.
 """
@@ -90,40 +97,124 @@ def t_ppf975(df):
     return 0.5 * (low + high)
 
 
+def _median(values):
+    ordered = sorted(values)
+    n = len(ordered)
+    return (ordered[n // 2] if n % 2
+            else 0.5 * (ordered[n // 2 - 1] + ordered[n // 2]))
+
+
 def describe(values):
-    """n, mean, sd, se, a 95% t interval and the median. `n < 2` gets no interval."""
+    """n, mean, sd, se, a 95% t interval and the median. `n < 2` gets no interval.
+
+    For an amount. A 0/1 measure goes to `describe_binary` instead.
+    """
     n = len(values)
     if n == 0:
-        return {"n": 0}
+        return {"n": 0, "estimator": "t"}
     mean = sum(values) / n
     if n == 1:
         return {"n": 1, "mean": mean, "sd": None, "se": None, "ci_low": None,
-                "ci_high": None, "median": mean}
+                "ci_high": None, "median": mean, "estimator": "t"}
     sd = math.sqrt(sum((v - mean) ** 2 for v in values) / (n - 1))
     se = sd / math.sqrt(n)
-    ordered = sorted(values)
-    median = (ordered[n // 2] if n % 2 else 0.5 * (ordered[n // 2 - 1] + ordered[n // 2]))
     crit = t_ppf975(n - 1)
     return {"n": n, "mean": mean, "sd": sd, "se": se, "ci_low": mean - crit * se,
-            "ci_high": mean + crit * se, "median": median}
+            "ci_high": mean + crit * se, "median": _median(values),
+            "estimator": "t"}
+
+
+def describe_binary(values):
+    """The same summary for a 0/1 measure, on the binomial estimators.
+
+    Its mean IS a share, so the interval is Wilson and the difference is
+    Newcombe. `sd` stays the sample SD - it describes the spread and is not what
+    the interval is built from - and there is deliberately no `se`, because a
+    Wald standard error is the thing that must not be used here.
+    """
+    n = len(values)
+    successes = sum(1 for v in values if v == 1.0)
+    zeros = sum(1 for v in values if v == 0.0)
+    if successes + zeros != n:
+        raise ValueError("a binary measure holds a value that is neither 0 nor 1")
+    if n == 0:
+        return {"n": 0, "estimator": "wilson"}
+    interval = wilson(successes, n)
+    mean = interval["p"]
+    # the same expression describe uses, so the two summaries agree to the bit
+    sd = (math.sqrt(sum((v - mean) ** 2 for v in values) / (n - 1)) if n > 1 else None)
+    return {"n": n, "successes": successes, "mean": mean, "sd": sd, "se": None,
+            "ci_low": interval["lo"], "ci_high": interval["hi"],
+            "median": _median(values), "estimator": "wilson"}
+
+
+def difference(a, b):
+    """`a["mean"] - b["mean"]`, through the estimator the two summaries were built on.
+
+    The one entry point for a contrast between two points. Routing on the
+    summaries rather than on the caller is what stops a 0/1 measure reaching
+    Welch; differencing a share against an amount is a bug, not a fallback.
+    """
+    left, right = a.get("estimator"), b.get("estimator")
+    if left != right:
+        raise ValueError("cannot difference a %r summary against a %r one"
+                         % (left, right))
+    return newcombe_of(a, b) if left == "wilson" else welch(a, b)
 
 
 def welch(a, b):
     """`a["mean"] - b["mean"]` with a Welch 95% interval and a two-sided p."""
+    if "wilson" in (a.get("estimator"), b.get("estimator")):
+        raise ValueError("Welch on a 0/1 measure: its mean is a share, so the "
+                         "difference belongs to newcombe_of")
     if a.get("n", 0) < 2 or b.get("n", 0) < 2:
-        return {"diff": None}
+        return {"diff": None, "estimator": "welch"}
     diff = a["mean"] - b["mean"]
     se = math.sqrt(a["se"] ** 2 + b["se"] ** 2)
     if se == 0.0:
         return {"diff": diff, "se": 0.0, "df": None, "ci_low": diff, "ci_high": diff,
-                "p": None}
+                "p": None, "estimator": "welch"}
     numerator = (a["se"] ** 2 + b["se"] ** 2) ** 2
     denominator = a["se"] ** 4 / (a["n"] - 1) + b["se"] ** 4 / (b["n"] - 1)
     df = numerator / denominator
     crit = t_ppf975(df)
     t = diff / se
     return {"diff": diff, "se": se, "df": df, "ci_low": diff - crit * se,
-            "ci_high": diff + crit * se, "t": t, "p": 2.0 * t_sf(abs(t), df)}
+            "ci_high": diff + crit * se, "t": t, "p": 2.0 * t_sf(abs(t), df),
+            "estimator": "welch"}
+
+
+def newcombe_of(a, b):
+    """The Welch-shaped contrast of two `describe_binary` summaries.
+
+    Same keys a reader of the JSON already knows - diff, ci_low, ci_high, p -
+    but the interval is Newcombe's and the p is the score test those same Wilson
+    bounds are built from, so the interval and the test cannot disagree.
+    """
+    if a.get("n", 0) == 0 or b.get("n", 0) == 0:
+        return {"diff": None, "estimator": "newcombe"}
+    interval = newcombe(a["successes"], a["n"], b["successes"], b["n"])
+    return {"diff": interval["diff"], "ci_low": interval["lo"],
+            "ci_high": interval["hi"], "excludes_zero": interval["excludes_zero"],
+            "p": score_test(a["successes"], a["n"], b["successes"], b["n"]),
+            "estimator": "newcombe"}
+
+
+def score_test(k1, n1, k2, n2):
+    """Two-sided p for `p1 == p2`, on the pooled score statistic. `None` when flat.
+
+    Every answer on one side of the boundary in both samples leaves nothing to
+    standardise by; that is no evidence rather than a p of 1, so it is reported
+    as absent.
+    """
+    if n1 == 0 or n2 == 0:
+        return None
+    pooled = (k1 + k2) / float(n1 + n2)
+    if pooled <= 0.0 or pooled >= 1.0:
+        return None
+    se = math.sqrt(pooled * (1.0 - pooled) * (1.0 / n1 + 1.0 / n2))
+    z = (k1 / float(n1) - k2 / float(n2)) / se
+    return math.erfc(abs(z) / math.sqrt(2.0))
 
 
 def wilson(successes, n, z=Z975):

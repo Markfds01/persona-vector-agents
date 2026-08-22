@@ -268,8 +268,11 @@ difference, and exactly why the comparison has to be at matched **unit** beta. A
 matched raw beta the null would be a far smaller push and would prove nothing.
 
 `k = 0` is a shared no-op: the delta is exactly zero for both vectors, so the two
-arms' `k = 0` runs must be byte-identical. That is checked, not assumed, and
-reported as `beta0_identical_across_arms` per game.
+arms must have generated the same text there. That is checked, not assumed —
+every row's continuation, scored answer, value and tag — and reported as
+`beta0_generations_identical_across_arms` per game. The row files are **not**
+byte-identical and cannot be: three columns name which vector file was loaded,
+and that is the one thing the two arms differ in at `k = 0` by design.
 
 ---
 
@@ -344,7 +347,14 @@ signalled, at any point, for any reason.
 * parse coverage and the full tag census. **An answer the scorer cannot resolve
   keeps its row and its tag and is never counted as a zero**; every mean and share
   is over parsed rows and carries its own n.
-* the game's own measure: mean, SD, SE, median and a 95% Student's t interval.
+* the game's own measure: mean, SD, median and a 95% interval — **Student's t for
+  an amount, Wilson for a 0/1 outcome.** The estimator follows the units, not the
+  column name, and `eval_games.measure_is_binary` reads it off the game's scorer.
+  Only the Prisoner's Dilemma is the second kind: its own measure IS P(Cooperate),
+  the same quantity as its altruistic pole share, and a t interval on it runs below
+  zero at the negative end of the ladder and has width exactly zero at `k = 0`.
+  Every summary in `analysis/steering.json` records the `estimator` it was built
+  on, so the file says which path each number came down.
 * P(altruistic), P(self-interested) and P(middle) with **Wilson** intervals, under
   both pole policies. Wilson because three of the six games park a pole on a single
   value, and a Wald interval at p = 0.985 is not an interval.
@@ -365,7 +375,10 @@ signalled, at any point, for any reason.
 * the move from that arm's own `k = 0`: **Welch** on the mean (the extremes have
   several times the baseline's SD, so a pooled-variance test would be wrong in the
   direction that matters) and **Newcombe's** hybrid-score interval on each pole
-  share.
+  share. A 0/1 own measure takes the second path instead — Newcombe, with the
+  two-proportion score test the same Wilson bounds are built from, so the interval
+  and the p cannot disagree. `stats.difference` routes on the summary rather than
+  on the caller, and `stats.welch` refuses a share outright.
 * the real arm against its own null at every matched unit beta, the same two ways.
 
 **Monotonicity** is reported three ways, because a bare yes/no over 11 noisy points

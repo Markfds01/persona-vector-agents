@@ -15,6 +15,11 @@ Both pole policies are scored, from the same values, because reclassifying costs
 nothing and the policy moved two of the six games' vectors a long way (Ultimatum
 37 degrees, Overfishing 49). Strict is primary throughout, matching the vectors.
 
+The own measure's estimator follows its units, not its column name: an amount
+gets a t interval and Welch, a 0/1 outcome gets Wilson and Newcombe. Only the
+Prisoner's Dilemma is the second kind - its own measure IS P(Cooperate) - and
+`eval_games.measure_is_binary` reads that off the game's scorer.
+
 Unparsed answers keep their row and their tag and are never scored as zero; every
 share is over parsed rows and carries its own n.
 """
@@ -26,14 +31,20 @@ import sys
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
+#: poles.py belongs to the vector study that fit these vectors. Named here rather
+#: than relied on: importing eval_games also puts it on the path, and a module
+#: that resolves only as a side effect of another import is one reordering away
+#: from an ImportError.
+_VECTOR_STUDY_PROMPTING = (HERE.parents[2] / "crossgame-decision-vectors"
+                           / "scripts" / "prompting")
 sys.path.insert(0, str(HERE))
 sys.path.insert(0, str(HERE.parent / "prompting"))
+sys.path.insert(0, str(_VECTOR_STUDY_PROMPTING))
 sys.path.insert(0, str(HERE.parents[3]))
 
 import eval_games  # noqa: E402
-import stats  # noqa: E402
-
 import poles  # noqa: E402
+import stats  # noqa: E402
 
 UNRESOLVED_TAGS = poles.UNRESOLVED_TAGS
 
@@ -62,7 +73,9 @@ def summarize_point(path, family, policy_names=poles.POLICIES):
         "n_unresolved": sum(count for tag, count in tags.items()
                             if tag in UNRESOLVED_TAGS),
         "tags": dict(sorted(tags.items())),
-        "measure": stats.describe(values),
+        "measure": (stats.describe_binary(values)
+                    if eval_games.measure_is_binary(family)
+                    else stats.describe(values)),
         "degeneracy": stats.degeneracy([row["continuation"] for row in rows]),
         "poles": {},
     }
@@ -102,7 +115,7 @@ def move_from_zero(points, policy):
     out = {}
     for k in sorted(points):
         point = points[k]
-        entry = {"mean": stats.welch(point["measure"], zero["measure"])}
+        entry = {"mean": stats.difference(point["measure"], zero["measure"])}
         for which in ("altruistic", "self_interested"):
             k1, n1 = pole_counts(point, policy, which)
             k0, n0 = pole_counts(zero, policy, which)
@@ -168,8 +181,8 @@ def decision_vs_null(decision, null, policy):
     """The real arm against its matched null, at every beta both arms ran."""
     out = {}
     for k in sorted(set(decision) & set(null)):
-        entry = {"mean_decision_minus_null": stats.welch(decision[k]["measure"],
-                                                         null[k]["measure"])}
+        entry = {"mean_decision_minus_null": stats.difference(decision[k]["measure"],
+                                                              null[k]["measure"])}
         for which in ("altruistic", "self_interested"):
             k1, n1 = pole_counts(decision[k], policy, which)
             k2, n2 = pole_counts(null[k], policy, which)
@@ -217,8 +230,8 @@ def analyze(family, rows_root, coefficients, policy):
     result["monotonicity"] = {p: monotonicity(arms["decision"], p)
                               for p in poles.POLICIES}
     if "shuffled-null" in arms:
-        result["beta0_identical_across_arms"] = _beta0_identical(rows_root, coefficients,
-                                                                 family)
+        result["beta0_generations_identical_across_arms"] = _beta0_generations_identical(
+            rows_root, coefficients, family)
         result["decision_vs_null"] = {
             str(k): v for k, v in decision_vs_null(arms["decision"],
                                                    arms["shuffled-null"], policy).items()}
@@ -227,11 +240,18 @@ def analyze(family, rows_root, coefficients, policy):
     return result
 
 
-def _beta0_identical(rows_root, coefficients, family):
+#: What the two arms must share at beta=0: the generated text and the value read
+#: off it. The rows themselves cannot be identical - three columns name which
+#: vector file was loaded, and that is the one thing the arms differ in by design.
+BETA0_SHARED_COLUMNS = ("continuation", "answer", "value", "tag")
+
+
+def _beta0_generations_identical(rows_root, coefficients, family):
     """At beta=0 the delta is exactly zero for both vectors, so the two arms must
-    have generated the same answers. Anything else means the arms are not sharing
-    an origin and every "move from zero" in the report is measured against the
-    wrong baseline. Returns None when one arm did not run beta=0."""
+    have generated the same text and scored it the same way. Anything else means
+    the arms are not sharing an origin and every "move from zero" in the report is
+    measured against the wrong baseline. Returns None when one arm did not run
+    beta=0."""
     paths = {}
     for entry in coefficients:
         if entry["family"] == family and entry["k"] == 0:
@@ -241,7 +261,9 @@ def _beta0_identical(rows_root, coefficients, family):
     left = read_rows(paths["decision"])
     right = read_rows(paths["shuffled-null"])
     return (len(left) == len(right)
-            and all(a["answer"] == b["answer"] for a, b in zip(left, right)))
+            and all(a[column] == b[column]
+                    for a, b in zip(left, right)
+                    for column in BETA0_SHARED_COLUMNS))
 
 
 def _public(point):

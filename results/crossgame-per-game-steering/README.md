@@ -259,10 +259,15 @@ and concludes `选择 合作（C）`. The scorer reads those correctly, but cove
 falls to 0.86 and 14% of k=+5 answers are unparsed.
 
 So the claim this game supports is the smaller one: **P(Cooperate) rises
-significantly and with the surface intact at k=+2 (+0.100, p = 1.3e−03) and k=+3
-(+0.240, p = 2.0e−07)**, where non-Latin script is at 3%. The 0.622 and 0.907 at
+significantly and with the surface intact at k=+2 (+0.100, p = 1.2e−03) and k=+3
+(+0.240, p = 1.8e−07)**, where non-Latin script is at 3%. The 0.622 and 0.907 at
 k=+4 and +5 are past the point where this game separates the direction from the
 size of the edit, and they are reported for completeness, not as the headline.
+
+P(Cooperate) is a 0/1 outcome, so it is the one own measure in this package read
+with Wilson and Newcombe rather than a t interval and Welch — `METHOD.md` § 8. It
+is the same quantity as this game's altruistic pole share, and `analysis/points.csv`
+and `analysis/steering.json` carry the same interval for both.
 
 ## 4. The nulls are not inert, and that is the point
 
@@ -405,9 +410,12 @@ another tenant, first attempt, no OOM, no resume. Per game: dictator 30.0 min,
 trust 63.6, ultimatum 32.7, apology 29.7, overfishing 56.0, prisoners_dilemma
 44.7. transformers 4.52.3, torch 2.6.0+cu124.
 
-Checked rather than assumed: each game's `k = 0` decision and null runs are
-**byte-identical** (the delta is exactly zero for both vectors, so the arms share
-an origin) — true for all six. Each null vector was written only after its
+Checked rather than assumed: at `k = 0` the delta is exactly zero for both
+vectors, so the decision and null arms must have generated the **same text**, and
+they did — every row's continuation, scored answer, value and tag match, in all
+six games of both rounds. The row files themselves are not identical and cannot
+be: three columns name which vector file was loaded, which is the one thing the
+two arms differ in by design. Each null vector was written only after its
 committed real vector was rebuilt from the archived activations through the same
 function that produced it; max relative per-layer deviation across all six games
 was **2.7e−08**, against a 1e−06 refusal threshold

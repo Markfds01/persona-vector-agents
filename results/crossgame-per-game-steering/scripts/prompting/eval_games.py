@@ -112,6 +112,17 @@ def classify(family: str, value: float, policy: str) -> str:
     return poles.classify(value, by_family(family), policy)
 
 
+def measure_is_binary(family: str) -> bool:
+    """Is this game's OWN measure a 0/1 outcome rather than an amount?
+
+    The scorer decides it, so there is nothing extra to keep in step: a
+    `binary_choice` game resolves to 0.0 or 1.0 and to nothing else
+    (`poles._binary_pole` raises otherwise), which makes its mean a share and a
+    t interval on it undefined at the ends of the ladder.
+    """
+    return by_family(family).scorer == "binary_choice"
+
+
 def pairs(families=FAMILIES) -> Tuple[Tuple[str, str], ...]:
     """The `(game_id, mode)` pairs `audit.generate.run` takes, mode `free`."""
     return tuple((by_family(f).id, "free") for f in families)

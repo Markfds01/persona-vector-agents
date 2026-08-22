@@ -55,5 +55,5 @@ pole policy: strict   games: 6   points: 84
   overfishing        5  -0.039 [-0.102,+0.015] ns           +24.46 p=3.8e-32
   prisoners_dil     -5  -0.020 [-0.085,+0.041] ns            -0.02 p=4.7e-01
   prisoners_dil      0  +0.000 [-0.037,+0.037] ns                +0.00 p=n/a
-  prisoners_dil      5     +0.697 [+0.577,+0.779]            +0.70 p=4.8e-29
+  prisoners_dil      5     +0.697 [+0.577,+0.779]            +0.70 p=2.1e-21
 

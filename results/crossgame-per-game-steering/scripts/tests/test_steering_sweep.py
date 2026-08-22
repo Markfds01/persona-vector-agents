@@ -305,3 +305,135 @@ def test_a_point_the_scorer_could_not_read_at_all_reports_rather_than_crashes():
     moves = analyze_game.move_from_zero(points, "strict")
     assert moves[2]["mean"]["diff"] is None
     assert moves[2]["altruistic"]["diff"] is None
+
+
+# --- a 0/1 measure is a share, whatever the column is called -------------------
+
+def test_the_prisoners_dilemma_is_the_one_game_whose_own_measure_is_binary():
+    binary = [f for f in eval_games.FAMILIES if eval_games.measure_is_binary(f)]
+    assert binary == ["prisoners_dilemma"]
+
+
+def test_a_t_interval_on_a_zero_one_measure_runs_below_zero_and_wilson_does_not():
+    """The shipped defect: P(Cooperate) at k=-5 was 0.030, CI [-0.0040, 0.0640]."""
+    values = [1.0] * 3 + [0.0] * 97
+    gaussian = stats.describe(values)
+    binomial = stats.describe_binary(values)
+    assert gaussian["ci_low"] < 0.0
+    assert binomial["ci_low"] > 0.0
+    assert binomial["mean"] == gaussian["mean"] == 0.03
+
+
+def test_a_measure_every_answer_agrees_on_gets_an_interval_rather_than_a_point():
+    """At k=0 the PD never cooperated; a t interval there has width exactly zero."""
+    values = [0.0] * 100
+    assert stats.describe(values)["ci_high"] == stats.describe(values)["ci_low"]
+    binomial = stats.describe_binary(values)
+    assert binomial["ci_high"] > 0.0
+    assert binomial["ci_high"] == pytest.approx(0.036993, abs=1e-6)
+
+
+def test_a_binary_summary_carries_no_wald_standard_error_to_be_misused():
+    summary = stats.describe_binary([1.0, 0.0, 1.0])
+    assert summary["se"] is None
+    assert summary["estimator"] == "wilson"
+    assert summary["successes"] == 2
+
+
+def test_a_value_that_is_neither_zero_nor_one_is_refused_not_rounded():
+    with pytest.raises(ValueError):
+        stats.describe_binary([0.0, 0.5, 1.0])
+
+
+def test_the_sample_sd_is_the_same_number_under_both_summaries():
+    values = [1.0] * 24 + [0.0] * 76
+    assert stats.describe_binary(values)["sd"] == stats.describe(values)["sd"]
+
+
+# --- and its difference goes down the same path -------------------------------
+
+def test_a_difference_of_two_shares_is_newcombe_and_a_score_test():
+    a = stats.describe_binary([1.0] * 24 + [0.0] * 76)
+    b = stats.describe_binary([0.0] * 100)
+    contrast = stats.difference(a, b)
+    assert contrast["estimator"] == "newcombe"
+    assert contrast["diff"] == pytest.approx(0.24)
+    assert contrast["ci_low"] > 0.0 and contrast["excludes_zero"]
+    assert contrast["p"] == pytest.approx(1.7668604e-07, rel=1e-6)
+
+
+def test_a_difference_of_two_means_is_still_welch():
+    a = stats.describe([1.0, 2.0, 3.0, 4.0])
+    b = stats.describe([2.0, 3.0, 4.0, 5.0])
+    assert stats.difference(a, b)["estimator"] == "welch"
+
+
+def test_differencing_a_share_against_a_mean_is_refused_rather_than_guessed():
+    with pytest.raises(ValueError):
+        stats.difference(stats.describe_binary([1.0, 0.0]),
+                         stats.describe([1.0, 2.0, 3.0]))
+
+
+def test_welch_refuses_a_share_outright_rather_than_reporting_a_t_test_on_it():
+    with pytest.raises(ValueError):
+        stats.welch(stats.describe_binary([1.0, 0.0]),
+                    stats.describe_binary([0.0, 0.0]))
+
+
+def test_the_score_test_has_nothing_to_say_when_neither_sample_varies():
+    assert stats.score_test(0, 100, 0, 100) is None
+    assert stats.score_test(50, 50, 50, 50) is None
+
+
+def test_a_binary_own_measure_and_its_altruistic_pole_are_the_same_number():
+    """For the PD they must be: `poles._binary_pole` calls 1.0 the altruistic pole."""
+    values = [1.0] * 62 + [0.0] * 38
+    classified = [eval_games.classify("prisoners_dilemma", v, "strict") for v in values]
+    share = stats.wilson(classified.count("altruistic"), len(classified))
+    measure = stats.describe_binary(values)
+    assert (measure["mean"], measure["ci_low"], measure["ci_high"]) == (
+        share["p"], share["lo"], share["hi"])
+
+
+# --- the shared no-op at beta = 0 ---------------------------------------------
+
+def _beta0_pair(tmp_path, decision_rows, null_rows):
+    coefficients = []
+    for arm, rows in (("decision", decision_rows), ("shuffled-null", null_rows)):
+        name = "%s_coef0.csv" % arm
+        with open(tmp_path / name, "w", encoding="utf-8", newline="") as handle:
+            writer = csv.DictWriter(handle, fieldnames=["continuation", "answer",
+                                                        "value", "tag", "steer_vector"])
+            writer.writeheader()
+            writer.writerows(rows)
+        coefficients.append({"family": "dictator", "arm": arm, "k": 0,
+                             "rows_csv": name})
+    return coefficients
+
+
+def _row(continuation="I will give $50.", answer="50", vector="decision.pt"):
+    return {"continuation": continuation, "answer": answer, "value": answer,
+            "tag": "bare", "steer_vector": vector}
+
+
+def test_the_two_arms_at_beta_zero_may_differ_only_in_which_vector_was_named(tmp_path):
+    coefficients = _beta0_pair(tmp_path, [_row()], [_row(vector="null.pt")])
+    assert analyze_game._beta0_generations_identical(tmp_path, coefficients,
+                                                     "dictator") is True
+
+
+def test_a_different_generation_at_beta_zero_is_caught_even_when_it_scores_the_same(
+        tmp_path):
+    """The old check compared the scored answer alone, so this pair passed it."""
+    coefficients = _beta0_pair(
+        tmp_path, [_row()], [_row(continuation="Fifty dollars, I think.")])
+    assert analyze_game._beta0_generations_identical(tmp_path, coefficients,
+                                                     "dictator") is False
+
+
+def test_one_arm_missing_beta_zero_reports_nothing_rather_than_a_pass(tmp_path):
+    coefficients = _beta0_pair(tmp_path, [_row()], [_row()])
+    coefficients = [entry for entry in coefficients if entry["arm"] == "decision"]
+    assert analyze_game._beta0_generations_identical(tmp_path, coefficients,
+                                                     "dictator") is None
+

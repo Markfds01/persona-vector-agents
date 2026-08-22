@@ -157,7 +157,7 @@ def print_null(analysis):
 
 
 def _p(value):
-    """`None` where Welch has no p to give — two byte-identical arms at beta=0."""
+    """`None` where the test has none to give — two identical arms at beta=0."""
     return "n/a" if value is None else "%.1e" % value
 
 
