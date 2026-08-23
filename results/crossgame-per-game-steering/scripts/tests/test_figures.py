@@ -666,3 +666,91 @@ def test_the_prisoners_dilemma_axis_does_not_move(analysis, relaxed):
     assert tops["prisoners_dilemma"] == make_figures.measure_top(
         [analysis["games"]["prisoners_dilemma"]])
     assert 1.0 < tops["prisoners_dilemma"] < 1.2
+
+
+# --- both policies on one set of axes -----------------------------------------
+
+def test_the_combined_files_are_a_third_sibling_of_the_two_policy_names():
+    names = [name for _build, name in make_figures.combined_figure_files()]
+    assert names == ["steering_pole_shares_both_policies.png",
+                     "steering_own_measure_both_policies.png",
+                     "steering_vs_null_both_policies.png"]
+    for policy in ("strict", "relaxed"):
+        assert not set(names) & {name for _build, name
+                                 in make_figures.figure_files(policy)}
+
+
+def test_the_policies_are_drawn_in_a_fixed_order_whichever_run_drew_them():
+    """Either invocation writes the combined figures, so they must not differ."""
+    strict = {"games": {"trust": "strict game"}}
+    relaxed = {"games": {"trust": "relaxed game"}}
+    forward = make_figures.drawn_policies("trust", {"strict": strict,
+                                                    "relaxed": relaxed})
+    backward = make_figures.drawn_policies("trust", {"relaxed": relaxed,
+                                                     "strict": strict})
+    assert forward == backward == [("strict", "strict game"),
+                                   ("relaxed", "relaxed game")]
+
+
+def test_a_game_only_one_policy_ran_still_gets_a_panel(analysis, relaxed):
+    by_policy = {"strict": analysis, "relaxed": relaxed}
+    assert make_figures.combined_games(by_policy) == list(make_figures.GAMES)
+    assert make_figures.drawn_policies("prisoners_dilemma", by_policy) == [
+        ("strict", analysis["games"]["prisoners_dilemma"])]
+
+
+def test_the_combined_own_measure_axis_is_the_per_policy_shared_one(analysis,
+                                                                    relaxed):
+    by_policy = {"strict": analysis, "relaxed": relaxed}
+    tops = make_figures.measure_tops(analysis, _drawn(analysis), relaxed)
+    for game in make_figures.combined_games(by_policy):
+        assert make_figures.combined_measure_top(game, by_policy) == tops[game]
+
+
+def test_a_combined_panel_draws_both_arms_of_both_policies(analysis, relaxed):
+    """Four series, because dropping the nulls would hide which arm moved."""
+    import matplotlib.pyplot as plt
+    by_policy = {"strict": analysis, "relaxed": relaxed}
+    fig, ax = plt.subplots()
+    make_figures._combined_panel(
+        ax, "dictator", make_figures.drawn_policies("dictator", by_policy),
+        make_figures._pole_getter, "P(altruistic pole)", (-0.05, 1.08))
+    assert len(ax.containers) == 4
+    plt.close(fig)
+
+
+def test_the_prisoners_dilemma_panel_draws_one_pair_and_says_why(analysis,
+                                                                 relaxed):
+    """Two coincident pairs would read as a plotting fault; it is vector reuse."""
+    import matplotlib.pyplot as plt
+    by_policy = {"strict": analysis, "relaxed": relaxed}
+    fig, ax = plt.subplots()
+    make_figures._combined_panel(
+        ax, "prisoners_dilemma",
+        make_figures.drawn_policies("prisoners_dilemma", by_policy),
+        make_figures._pole_getter, "P(altruistic pole)", (-0.05, 1.08))
+    assert len(ax.containers) == 2
+    assert any(make_figures.REUSED_NOTE in text.get_text() for text in ax.texts)
+    plt.close(fig)
+
+
+def test_each_policys_null_keeps_its_own_degradation_marks(analysis, relaxed):
+    """The Ultimatum's strict null fails at k=-5 and its relaxed null at k=+5.
+
+    A panel-level mark would say the game is unreadable at both ends, which is
+    the opposite of what these two runs show.
+    """
+    by_policy = {"strict": analysis, "relaxed": relaxed}
+    flagged = {}
+    for policy, game in make_figures.drawn_policies("ultimatum", by_policy):
+        series = make_figures._series(game["arms"]["shuffled-null"],
+                                      make_figures._pole_getter(policy))
+        flagged[policy] = sorted(point["k"] for point in series
+                                 if point["degenerate"] or point["low_coverage"])
+    assert flagged == {"strict": [-5], "relaxed": [5]}
+
+
+def test_the_policies_wear_different_colours_in_the_combined_figures():
+    assert (make_figures.POLICY_COLOUR["strict"]
+            != make_figures.POLICY_COLOUR["relaxed"])
+    assert make_figures.POLICY_COLOUR["strict"] == make_figures.DECISION

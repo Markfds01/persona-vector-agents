@@ -485,14 +485,21 @@ part of the pipeline.
 ## 10. The figures
 
 Three per arm, all six in `figures/`, all written by
-`scripts/figures/make_figures.py` from the analysis JSON alone — no torch, no GPU,
-no second analysis path, so a figure cannot disagree with the table it came from.
+`scripts/figures/make_figures.py` from the analysis JSON — no torch, no GPU, no
+re-analysis, so a figure cannot disagree with the table it came from. The two
+policy files are read together: the own-measure y axis has to span both, and the
+three `_both_policies` figures draw both. Every policy-specific figure still
+draws only the numbers its own analysis carries.
+
 Both policies land in the one directory and carry the policy in the name, the way
 `vectors/` already names its strict and relaxed pairs; the suffix comes from the
 analysis's own policy, so the two invocations differ only in their arguments.
+Either invocation writes the `_both_policies` trio once both analyses exist, and
+writes them identically — the policies are ordered by name, never by which run
+drew them.
 
 ```sh
-# the three _strict figures, from analysis/steering.json
+# the three _strict figures, from analysis/steering.json (+ the _both_policies trio)
 python results/crossgame-per-game-steering/scripts/figures/make_figures.py
 
 # the three _relaxed ones, from the relaxed analysis (§ 11)
@@ -506,6 +513,7 @@ python results/crossgame-per-game-steering/scripts/figures/make_figures.py \
 | `steering_own_measure_strict.png` | the same six arms on each game's own measure (dollars, fish, `P(Cooperate)`), each game's y axis shared with its relaxed twin |
 | `steering_vs_null_strict.png` | decision minus its own null at both extremes, six games on one axis — the bar itself |
 | `steering_pole_shares_relaxed.png`, `steering_own_measure_relaxed.png`, `steering_vs_null_relaxed.png` | the same three for the relaxed arm's five games (§ 11) |
+| `steering_pole_shares_both_policies.png`, `steering_own_measure_both_policies.png`, `steering_vs_null_both_policies.png` | the same three measures with **both policies on the same axes** — a comparison aid, not a replacement (§ below) |
 
 Six things are decided by a function rather than written into a caption, so the
 rule can be checked instead of the picture trusted. `scripts/tests/test_figures.py`
@@ -562,6 +570,38 @@ Separately, a point whose parse coverage is under 0.90 is drawn hollow with the
 number of answers the scorer actually resolved. That is a caveat, not a
 disqualification — Overfishing's `k = -4` and `k = -5` (89 and 86 rows) carry a
 large, graded, real effect.
+
+### Both policies on one set of axes
+
+`steering_pole_shares_both_policies.png`, `steering_own_measure_both_policies.png`
+and `steering_vs_null_both_policies.png` put the strict and the relaxed round on
+the same axes, one panel per game, so the two can be compared in one image
+instead of across two. They are a comparison aid and **not a replacement**: the
+supported bands, the ceilings and the struck-out spans stay on the six
+per-policy figures, which are unchanged.
+
+* **Both nulls are drawn**, not the two decision arms alone. The verdict is
+  "beats its **own** null", and the Dictator's `k = +5` verdict flips between the
+  policies because **its null moved further than its arm did**: the null goes
+  0.000 → 0.351 and the decision arm only 0.116 → 0.234, so `decision − null`
+  turns from **+0.116 [+0.052, +0.196]** into **−0.116 [−0.240, +0.013]**. A
+  decision-arms-only overlay would hide the one thing worth seeing.
+  Four series stay readable because the two channels are independent: **colour is
+  the policy** (strict blue, relaxed orange) and **linestyle is the arm** (decision
+  solid, null dashed).
+* **Degradation marks stay per series.** The Ultimatum's strict null fails at
+  `k = -5` and its relaxed null at `k = +5` — different ends — and a panel-level
+  mark would say the game is unreadable at both.
+* **The Prisoner's Dilemma draws one pair, labelled as the reuse it is.** Its
+  relaxed vector is element-wise identical to its strict one, so it was never
+  re-run; plotting the same numbers twice would invent a second arm rather than
+  show one. The panel says so on its face.
+* **`steering_vs_null_both_policies.png` keeps colour on the verdict**, as its
+  per-policy version does — beating the null is what that figure is about — and
+  names the policy on each row instead.
+
+Either invocation writes all three, and writes them identically: the policies are
+ordered by name, so which run drew them cannot change the bytes.
 
 ### What drawing it surfaced
 

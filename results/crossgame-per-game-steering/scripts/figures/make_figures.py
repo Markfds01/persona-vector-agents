@@ -98,6 +98,12 @@ GREY = "#666666"
 #: A supported band wears the verdict of the end it sits on.
 BAND_COLOUR = {"beats": DECISION, "null": BAD, "undetermined": UNDET}
 
+#: In the both-policies figures colour is the POLICY and linestyle is the arm, so
+#: the four series per panel separate on two independent channels. Strict keeps
+#: the decision blue it wears on the per-policy figures.
+RELAXED = "#d95f02"
+POLICY_COLOUR = {"strict": DECISION, "relaxed": RELAXED}
+
 
 # --- the rules, as functions rather than as caption text ----------------------
 
@@ -745,6 +751,247 @@ def figure_vs_null(analysis, games, policy, label, _limits, out_path):
     return out_path
 
 
+# --- both policies on one set of axes -----------------------------------------
+#
+# The per-policy figures stay the deliverable: they carry the verdict bands, the
+# ceilings and the struck-out points. These three exist so the two policies can be
+# read against each other in one image instead of across two, which is the only
+# way to see that the Dictator's k=+5 verdict flips because its NULL moved and not
+# because its decision arm did. Both nulls are therefore drawn: a comparison of
+# decision arms alone would hide exactly that.
+
+#: A game the relaxed round did not re-run is labelled, so one arm where a reader
+#: expects two is never read as a plotting fault. `run_steering.sh` says why.
+REUSED_NOTE = "relaxed not re-run: identical vector, so this arm IS both policies"
+
+
+def combined_games(by_policy):
+    """The games any policy ran, in the canonical order."""
+    return [name for name in GAMES
+            if any(name in analysis["games"] for analysis in by_policy.values())]
+
+
+def drawn_policies(name, by_policy):
+    """`[(policy, game)]` for one game, always strict before relaxed.
+
+    The order is fixed rather than taken from the caller, so the combined figures
+    come out the same whichever policy's invocation drew them.
+    """
+    return [(policy, by_policy[policy]["games"][name])
+            for policy in ("strict", "relaxed")
+            if policy in by_policy and name in by_policy[policy]["games"]]
+
+
+def combined_measure_top(name, by_policy):
+    """One game's own-measure top across every policy that ran it."""
+    return measure_top([analysis["games"][name]
+                        for analysis in by_policy.values()
+                        if name in analysis["games"]])
+
+
+def _combined_panel(ax, name, drawn, getter_for, ylabel, ylim):
+    """One game, every policy that ran it, both arms of each.
+
+    Every degradation mark stays on its own series - the Ultimatum's strict null
+    collapsed at k=-5 and its relaxed null at k=+5, and which is which is the
+    point.
+    """
+    for policy, game in drawn:
+        colour = POLICY_COLOUR[policy]
+        getter = getter_for(policy)
+        _draw_arm(ax, _series(game["arms"]["shuffled-null"], getter), colour,
+                  "^", "--", 1.4, None, 3)
+        _draw_arm(ax, _series(game["arms"]["decision"], getter), colour,
+                  "o", "-", 2.0, None, 5)
+
+    ax.set_ylim(*ylim)
+    ax.set_ylabel(ylabel, fontsize=8.5)
+    norms = "      ".join(
+        "%s ||v||@20 = %.4f"
+        % (policy, game["arms"]["decision"]["points"]["0"]["vector_layer_norm"])
+        for policy, game in drawn)
+    ax.text(0.0, 1.125, "%s      %s" % (LABELS[name], norms),
+            transform=ax.transAxes, ha="left", va="bottom", fontsize=12.0)
+    for row, (policy, game) in enumerate(drawn):
+        line, _colour = verdict_line(null_verdict(game))
+        ax.text(0.0, 1.070 - 0.040 * row, "%s: %s" % (policy, line),
+                transform=ax.transAxes, ha="left", va="bottom", fontsize=8.6,
+                color=POLICY_COLOUR[policy], weight="bold")
+    if len(drawn) == 1:
+        ax.text(0.0, 1.070 - 0.040 * len(drawn), REUSED_NOTE,
+                transform=ax.transAxes, ha="left", va="bottom", fontsize=8.6,
+                color=GREY, weight="bold")
+    _axis_furniture(ax)
+
+
+def _combined_legend_handles():
+    handles = []
+    for policy in ("strict", "relaxed"):
+        colour = POLICY_COLOUR[policy]
+        handles.append(Line2D([], [], color=colour, marker="o", linewidth=2.0,
+                              label="%s decision vector" % policy))
+        handles.append(Line2D([], [], color=colour, marker="^", linestyle="--",
+                              linewidth=1.4,
+                              label="%s shuffled-label null" % policy))
+    handles.append(Line2D([], [], color=BAD, marker="x", linestyle="none",
+                          markersize=10, markeredgewidth=2.2,
+                          label="every answer non-Latin: a degeneration, not a "
+                                "result"))
+    handles.append(Line2D([], [], color=GREY, marker="o", markerfacecolor="white",
+                          linestyle="none", markeredgewidth=1.4,
+                          label="parse coverage < %.2f (parsed n on the marker)"
+                                % LOW_COVERAGE))
+    return handles
+
+
+def combined_footer():
+    return (
+        "Qwen2.5-7B-Instruct rev a09a3545, bfloat16, sdpa, altruism_v3, mode free, layer 20, positions=all, norm=unit, neutral preset, seed 0, n = 100 per point. Colour is the pole policy, linestyle is the arm.\n"
+        "Both nulls are drawn because the verdict is 'beats its OWN null': where a policy's verdict changes it can be the null that moved, not the decision arm, and comparing decision arms alone would hide that.\n"
+        "Error bars are 95%% intervals - Wilson on a share, Student's t on a mean. One k is the SAME sized activation edit in every game (unit beta = k x %.4f). The supported bands, the ceilings and the\n"
+        "struck-out spans live on the six per-policy figures, which this one does not replace."
+    ) % REFERENCE_NORM
+
+
+def _finish_combined(fig, suptitle):
+    fig.suptitle(suptitle, fontsize=14.5, y=0.988)
+    fig.legend(handles=_combined_legend_handles(), loc="lower center", ncol=3,
+               fontsize=8.8, frameon=False, bbox_to_anchor=(0.5, 0.098))
+    fig.text(0.5, 0.006, combined_footer(), ha="center", fontsize=7.7,
+             color="#444444")
+    fig.tight_layout(rect=(0, 0.170, 1, 0.950), h_pad=4.6)
+
+
+def _combined_grid(games):
+    rows, columns = _grid(len(games))
+    fig, axes = plt.subplots(rows, columns, figsize=(6.5 * columns, 6.2 * rows),
+                             squeeze=False)
+    return fig, axes.ravel()
+
+
+def figure_pole_shares_both(by_policy, out_path):
+    games = combined_games(by_policy)
+    fig, flat = _combined_grid(games)
+    for ax, name in zip(flat, games):
+        _combined_panel(ax, name, drawn_policies(name, by_policy), _pole_getter,
+                        "P(altruistic pole)", (-0.05, 1.08))
+    for ax in flat[len(games):]:
+        ax.axis("off")
+    _finish_combined(fig, "Strict and relaxed on the same axes: P(altruistic), "
+                          "each policy's arm against its OWN null")
+    fig.savefig(out_path, dpi=190)
+    plt.close(fig)
+    return out_path
+
+
+def figure_own_measure_both(by_policy, out_path):
+    games = combined_games(by_policy)
+    fig, flat = _combined_grid(games)
+    for ax, name in zip(flat, games):
+        top = combined_measure_top(name, by_policy)
+        game = drawn_policies(name, by_policy)[0][1]
+        units = game["measure_units"]
+        if not game["altruistic_is_high_on_own_measure"]:
+            units += "   (HIGHER = LESS altruistic)"
+        _combined_panel(ax, name, drawn_policies(name, by_policy),
+                        lambda _policy: _measure, units, (-0.04 * top, top))
+    for ax in flat[len(games):]:
+        ax.axis("off")
+    _finish_combined(fig, "Strict and relaxed on the same axes: each game's own "
+                          "measure - one axis per game, never one across games")
+    fig.savefig(out_path, dpi=190)
+    plt.close(fig)
+    return out_path
+
+
+def figure_vs_null_both(by_policy, out_path):
+    """The bar itself, both policies: four rows per game rather than two.
+
+    Colour stays the VERDICT here, as it is on the per-policy version - beating
+    the null is what this figure is about - and the policy is named on the row.
+    """
+    games = combined_games(by_policy)
+    colours = {"beats": GOOD, "null": BAD, "undetermined": UNDET}
+    rows, y, ticks = [], 0.0, []
+    for name in games:
+        first = y
+        for policy, game in drawn_policies(name, by_policy):
+            verdict = null_verdict(game)
+            ends = ladder_ends(game)
+            for side in (+1, -1):
+                key = ends[side]
+                contrast = (game["decision_vs_null"][key]
+                            ["altruistic_decision_minus_null"])
+                rows.append((y, policy, int(key), contrast, verdict[side],
+                             comparison_degraded(game, side)))
+                y -= 1.0
+        ticks.append((first + y + 1.0) / 2.0)
+        y -= 0.8
+
+    fig, ax = plt.subplots(figsize=(11.6, 0.62 * len(rows) + 1.6))
+    for pos, policy, k, contrast, state, degraded in rows:
+        colour = colours[state]
+        ax.errorbar([contrast["diff"]], [pos],
+                    xerr=[[contrast["diff"] - contrast["lo"]],
+                          [contrast["hi"] - contrast["diff"]]],
+                    color=colour, marker="o" if k > 0 else "s", capsize=3.5,
+                    markersize=7, linewidth=2.0, linestyle="none",
+                    markerfacecolor="white" if degraded else colour, zorder=4)
+        # the "did not answer" wording the per-policy figure spells out would run
+        # off this one's right edge; the hollow marker and the legend carry it
+        ax.text(contrast["hi"] + 0.02, pos, "%s  k=%+d" % (policy, k),
+                va="center", fontsize=8.2, color=POLICY_COLOUR[policy])
+
+    ax.axvline(0, color="#333333", linewidth=1.2, zorder=2)
+    ax.set_yticks(ticks)
+    ax.set_yticklabels([LABELS[name] for name in games], fontsize=10.5)
+    ax.set_xlabel("P(altruistic), decision arm minus its own shuffled-label null "
+                  "   (95% Newcombe interval)", fontsize=9.5)
+    ax.set_xlim(-1.12, 1.28)
+    ax.grid(True, axis="x", alpha=0.22, linewidth=0.6)
+    ax.set_title("Beating the null is the bar, both policies. Colour is the "
+                 "verdict; the policy is named on the row.", fontsize=12.5,
+                 loc="left", pad=40)
+    ax.text(0.0, 1.012,
+            "Where a policy's verdict differs from the other's, this is where to "
+            "read WHICH arm moved: the contrast is decision minus that policy's "
+            "own null.\n"
+            "A game showing two rows rather than four was not re-run under the "
+            "relaxed poles - its relaxed vector is element-wise identical to its "
+            "strict one.",
+            transform=ax.transAxes, va="bottom", fontsize=8.6, color=GREY)
+    fig.legend(handles=[
+        Line2D([], [], color=GOOD, marker="o", linewidth=2,
+               label="beats its null at that end"),
+        Line2D([], [], color=BAD, marker="o", linewidth=2,
+               label="does not: the interval contains zero on healthy points"),
+        Line2D([], [], color=UNDET, marker="o", linewidth=2,
+               label="undetermined: an arm at that end did not produce a "
+                     "distribution, wherever its interval fell"),
+        Line2D([], [], color=GREY, marker="o", markerfacecolor="white",
+               linestyle="none", markeredgewidth=1.6,
+               label="hollow: an arm at that end did not produce readable answers"),
+    ], loc="lower center", ncol=2, fontsize=8.6, frameon=False,
+        bbox_to_anchor=(0.5, 0.040))
+    fig.tight_layout(rect=(0, 0.085, 1, 1))
+    fig.savefig(out_path, dpi=190)
+    plt.close(fig)
+    return out_path
+
+
+#: The combined view's own three files. The suffix is a third sibling of
+#: `_strict` and `_relaxed` and cannot be mistaken for either.
+COMBINED_SUFFIX = "both_policies"
+COMBINED_FIGURES = ((figure_pole_shares_both, "steering_pole_shares"),
+                    (figure_own_measure_both, "steering_own_measure"),
+                    (figure_vs_null_both, "steering_vs_null"))
+
+
+def combined_figure_files():
+    return [(build, "%s_%s.png" % (stem, COMBINED_SUFFIX))
+            for build, stem in COMBINED_FIGURES]
+
+
 #: Each figure and the stem its filename is built from. Every builder takes the
 #: same arguments so this table can drive them; only the own-measure figure uses
 #: `limits`, and the other two name it `_limits`.
@@ -821,6 +1068,20 @@ def main():
     for build, name in figure_files(policy):
         print("wrote", build(analysis, games, policy, label, limits,
                              out_dir / name))
+
+    if sibling is None:
+        print("no combined figures: the other policy's analysis was not read")
+        return
+    stray = sorted(set(sibling["games"]) - set(GAMES))
+    if stray:
+        raise SystemExit("the %s analysis holds games this does not know how to "
+                         "label: %s" % (OTHER_POLICY[policy], stray))
+    by_policy = {policy: analysis, OTHER_POLICY[policy]: sibling}
+    for name in combined_games(by_policy):
+        for arm_policy, game in drawn_policies(name, by_policy):
+            _require_drawable("%s (%s)" % (name, arm_policy), game)
+    for build, name in combined_figure_files():
+        print("wrote", build(by_policy, out_dir / name))
 
 
 if __name__ == "__main__":

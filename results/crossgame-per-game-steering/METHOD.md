@@ -138,6 +138,13 @@ contrast, oriented the same way, in all six games, and they are the contrast the
 vectors were built from. Every cross-game table and every monotonicity claim is
 made on P(altruistic).
 
+Both measures, and the decision-minus-null contrast, also get a **both-policies**
+figure that puts a game's strict and relaxed arms — and both of their nulls — in
+one panel. It exists because a verdict can change between the policies through
+the null rather than through the decision arm, which is invisible across two
+images. It is a comparison aid: the verdict bands, ceilings and struck-out spans
+stay on the per-policy figures.
+
 The pole definitions are the vector study's, imported from its
 `scripts/prompting/poles.py` rather than restated, under the **strict** policy:
 
