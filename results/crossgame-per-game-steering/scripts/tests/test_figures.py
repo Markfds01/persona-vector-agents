@@ -447,3 +447,93 @@ def test_only_the_two_ends_the_report_qualifies_are_degraded_comparisons(analysi
         for side in make_figures.degraded_ends(analysis["games"][game]):
             found.append((game, side))
     assert sorted(found) == [("prisoners_dilemma", +1), ("ultimatum", -1)]
+
+
+# --- the filenames ------------------------------------------------------------
+
+def test_the_policy_is_in_every_filename_because_one_directory_holds_both():
+    """`figures/` holds both policies, the way `vectors/` holds both."""
+    assert [name for _build, name in make_figures.figure_files("strict")] == [
+        "steering_pole_shares_strict.png",
+        "steering_own_measure_strict.png",
+        "steering_vs_null_strict.png",
+    ]
+    assert [name for _build, name in make_figures.figure_files("relaxed")] == [
+        "steering_pole_shares_relaxed.png",
+        "steering_own_measure_relaxed.png",
+        "steering_vs_null_relaxed.png",
+    ]
+
+
+def test_no_filename_is_shared_between_the_two_policies():
+    """The collision the one-directory layout would otherwise reintroduce."""
+    strict = {name for _build, name in make_figures.figure_files("strict")}
+    relaxed = {name for _build, name in make_figures.figure_files("relaxed")}
+    assert not strict & relaxed
+
+
+# --- against the committed relaxed analysis -----------------------------------
+
+def _drawn(analysis):
+    """The games an analysis carries, in the canonical order."""
+    return [game for game in make_figures.GAMES if game in analysis["games"]]
+
+
+@pytest.fixture(scope="module")
+def relaxed():
+    path = PACKAGE / "analysis" / "steering_relaxed.json"
+    if not path.exists():
+        pytest.skip("no committed relaxed analysis to check the rules against")
+    return json.loads(path.read_text())
+
+
+def test_the_rules_reproduce_the_published_relaxed_per_game_verdicts(relaxed):
+    """README section 11.1, derived rather than transcribed.
+
+    Five games. The Prisoner's Dilemma was not re-run: its relaxed vector is
+    element-wise identical to its strict one, so section 3 already holds it.
+    """
+    expected = {
+        "dictator": {-1: "beats", +1: "null"},
+        "trust": {-1: "beats", +1: "beats"},
+        "apology": {-1: "beats", +1: "beats"},
+        # the negative end is the win the round existed to settle; at +5 the
+        # NULL arm parsed 7 of 100, so that end is not evidence either way
+        "ultimatum": {-1: "beats", +1: "undetermined"},
+        "overfishing": {-1: "beats", +1: "null"},
+    }
+    assert set(relaxed["games"]) == set(expected)
+    for game, want in expected.items():
+        assert make_figures.null_verdict(relaxed["games"][game]) == want, game
+
+
+def test_only_overfishing_has_no_room_on_the_relaxed_arm(relaxed):
+    ceilings, floors = [], []
+    for game in _drawn(relaxed):
+        baseline = (relaxed["games"][game]["arms"]["decision"]["points"]["0"]
+                    ["poles"]["relaxed"]["altruistic"])
+        if make_figures.no_room(baseline, +1):
+            ceilings.append(game)
+        if make_figures.no_room(baseline, -1):
+            floors.append(game)
+    assert ceilings == ["overfishing"]
+    assert floors == []
+
+
+def test_the_relaxed_runs_only_degenerate_point_is_the_ultimatums_null(relaxed):
+    found = []
+    for game in _drawn(relaxed):
+        for arm_name, arm in relaxed["games"][game]["arms"].items():
+            for key, point in arm["points"].items():
+                if make_figures.point_flags(point)[0]:
+                    found.append((game, arm_name, int(key)))
+    assert sorted(found) == [("ultimatum", "shuffled-null", 5)]
+
+
+def test_only_the_ultimatums_positive_end_is_degraded_on_the_relaxed_arm(relaxed):
+    """README section 11.2 qualifies exactly this one end."""
+    found = []
+    for game in _drawn(relaxed):
+        for side in make_figures.degraded_ends(relaxed["games"][game]):
+            found.append((game, side))
+    assert sorted(found) == [("ultimatum", +1)]

@@ -372,8 +372,8 @@ rows_relaxed/<game>/<arm>/ the same, for the relaxed arm (§ 11); five games, no
 analysis/steering.json    every number in this file, per game / arm / point
 analysis/points.csv       one flat row per (game, arm, k)
 analysis/steering_relaxed.json, analysis/points_relaxed.csv   the same, relaxed (§ 11)
-figures/                  the three figures of § 10, regenerated from steering.json
-figures/relaxed/          the same three for the relaxed arm
+figures/                  the six figures of § 10, regenerated from the analysis
+                          JSONs; `_strict` / `_relaxed` in the name, one directory
 provenance/               the sweep manifest, the null-vector report, and the run logs
 scripts/prompting/        eval_games.py (the games and their pole scales), run_sweep.py
 scripts/measurement/      build_nulls.py, analyze_game.py, stats.py,
@@ -381,7 +381,7 @@ scripts/measurement/      build_nulls.py, analyze_game.py, stats.py,
                           by the figures and the pooled tables so they agree
 scripts/pooling/          crossgame_tables.py — the six games side by side
 scripts/figures/          make_figures.py — the figures, from the analysis alone
-scripts/tests/            144 offline tests, in `python -m pytest -q`
+scripts/tests/            150 offline tests, in `python -m pytest -q`
 scripts/run_steering.sh   the whole pipeline, parameterised by environment
 ```
 
@@ -416,11 +416,11 @@ by, from the same module, so the log and the picture cannot disagree.
 
 **The repo-wide test count depends on the interpreter, and neither one runs the
 whole suite.** Under a python with torch and transformers but no matplotlib:
-**534 passed, 3 skipped** — the 44 figure tests are not collected at all, because
+**534 passed, 3 skipped** — the 50 figure tests are not collected at all, because
 `test_figures.py` skips at import. Under a plain python3 with matplotlib but no
-transformers: **574 passed, 6 skipped**. Nothing fails under either, and the two
+transformers: **580 passed, 6 skipped**. Nothing fails under either, and the two
 sets are not nested: the union is what the suite covers and a single number is
-not. This package's own 144 tests are 100 of them under the first interpreter.
+not. This package's own 150 tests are 100 of them under the first interpreter.
 
 Rebuilding the null vectors needs the activation shards (~7 GB, not committed);
 `build_nulls.py` refuses to write one unless it can first rebuild the committed
@@ -484,28 +484,33 @@ part of the pipeline.
 
 ## 10. The figures
 
-Three, in `figures/`, all written by `scripts/figures/make_figures.py` from
-`analysis/steering.json` alone — no torch, no GPU, no second analysis path, so a
-figure cannot disagree with the table it came from.
+Three per arm, all six in `figures/`, all written by
+`scripts/figures/make_figures.py` from the analysis JSON alone — no torch, no GPU,
+no second analysis path, so a figure cannot disagree with the table it came from.
+Both policies land in the one directory and carry the policy in the name, the way
+`vectors/` already names its strict and relaxed pairs; the suffix comes from the
+analysis's own policy, so the two invocations differ only in their arguments.
 
 ```sh
+# the three _strict figures, from analysis/steering.json
 python results/crossgame-per-game-steering/scripts/figures/make_figures.py
 
-# the three in figures/relaxed/, from the relaxed analysis (§ 11)
+# the three _relaxed ones, from the relaxed analysis (§ 11)
 python results/crossgame-per-game-steering/scripts/figures/make_figures.py \
-    --analysis results/crossgame-per-game-steering/analysis/steering_relaxed.json \
-    --out-dir results/crossgame-per-game-steering/figures/relaxed
+    --analysis results/crossgame-per-game-steering/analysis/steering_relaxed.json
 ```
 
 | file | what it is |
 |---|---|
-| `steering_pole_shares.png` | the headline: `P(altruistic)` for all six games, each real arm with **its own null on the same axes** |
-| `steering_own_measure.png` | the same six arms on each game's own measure (dollars, fish, `P(Cooperate)`) |
-| `steering_vs_null.png` | decision minus its own null at both extremes, six games on one axis — the bar itself |
+| `steering_pole_shares_strict.png` | the headline: `P(altruistic)` for all six games, each real arm with **its own null on the same axes** |
+| `steering_own_measure_strict.png` | the same six arms on each game's own measure (dollars, fish, `P(Cooperate)`) |
+| `steering_vs_null_strict.png` | decision minus its own null at both extremes, six games on one axis — the bar itself |
+| `steering_pole_shares_relaxed.png`, `steering_own_measure_relaxed.png`, `steering_vs_null_relaxed.png` | the same three for the relaxed arm's five games (§ 11) |
 
 Five things are decided by a function rather than written into a caption, so the
 rule can be checked instead of the picture trusted. `scripts/tests/test_figures.py`
-pins each one, and pins that together they reproduce § 5 exactly.
+pins each one, and pins that together they reproduce § 5 and § 11.1 exactly —
+both policies' verdicts, and both policies' filenames.
 
 * **The null is drawn for every game.** § 4 is the reason: four of six nulls move
   significantly and two move the wrong way, so a figure of real arms alone would

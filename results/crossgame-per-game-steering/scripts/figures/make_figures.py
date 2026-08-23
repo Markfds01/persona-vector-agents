@@ -636,6 +636,23 @@ def figure_vs_null(analysis, games, policy, label, out_path):
     return out_path
 
 
+#: Each figure and the stem its filename is built from.
+FIGURES = ((figure_pole_shares, "steering_pole_shares"),
+           (figure_own_measure, "steering_own_measure"),
+           (figure_vs_null, "steering_vs_null"))
+
+
+def figure_files(policy):
+    """`(builder, filename)` for one policy's three figures.
+
+    Both policies write into ONE `figures/` directory, so the policy is part of
+    every name - the convention `vectors/` already uses for its strict and
+    relaxed pairs. The suffix comes from the analysis's own policy; there is no
+    unsuffixed name to fall back to.
+    """
+    return [(build, "%s_%s.png" % (stem, policy)) for build, stem in FIGURES]
+
+
 def _require_drawable(name, game):
     """Refuse an analysis this cannot draw, by name, rather than deep in a panel.
 
@@ -660,8 +677,8 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--analysis", default=str(package / "analysis" / "steering.json"))
     ap.add_argument("--out-dir", default=str(package / "figures"),
-                    help="one directory per set of figures; a second set of the "
-                         "same three names belongs in a different one")
+                    help="where the three land; both policies write to the same "
+                         "directory and are told apart by the name")
     ap.add_argument("--label", default=None,
                     help="which vectors these are, for the headings; defaults to "
                          "the analysis's own pole policy")
@@ -685,9 +702,7 @@ def main():
 
     out_dir = Path(args.out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
-    for build, name in ((figure_pole_shares, "steering_pole_shares.png"),
-                        (figure_own_measure, "steering_own_measure.png"),
-                        (figure_vs_null, "steering_vs_null.png")):
+    for build, name in figure_files(policy):
         print("wrote", build(analysis, games, policy, label, out_dir / name))
 
 
