@@ -34,13 +34,22 @@ picture:
   Ultimatum's k=-5 null parsed 8 answers of 100 and the Prisoner's Dilemma's
   k=+5 decision arm answered entirely in Chinese, and both ends say nothing.
 
-Reads `analysis/steering.json` only. No torch, no GPU, no re-analysis — every
-number drawn here is one `analyze_game.py` wrote.
+The own-measure panels take their y limit from BOTH pole policies, per game: the
+two policies are drawn by separate invocations, and a limit read from one alone
+gave the same game a different axis in the strict and the relaxed figure, which
+made two arms that differ look alike. It stays per game — dollars given and fish
+caught are not one scale — and when the other policy's analysis cannot be read
+the figure says the axis is not shared rather than looking comparable.
+
+Reads the analysis it is pointed at, plus the other policy's file beside it for
+those limits. No torch, no GPU, no re-analysis — every number drawn here is one
+`analyze_game.py` wrote.
 """
 
 import argparse
 import json
 import sys
+from collections import namedtuple
 from pathlib import Path
 
 import matplotlib
@@ -65,6 +74,16 @@ REFERENCE_NORM = 10.508308410644531
 #: order; nothing here assumes all six are present.
 GAMES = ("dictator", "trust", "ultimatum", "apology", "overfishing",
          "prisoners_dilemma")
+
+#: The pair `run_steering.sh` writes, one file per pole policy, side by side in
+#: `analysis/`. The own-measure axis is shared across the pair, so this is how
+#: one invocation finds the other policy's numbers.
+ANALYSIS_NAME = {"strict": "steering.json", "relaxed": "steering_relaxed.json"}
+OTHER_POLICY = {"strict": "relaxed", "relaxed": "strict"}
+
+#: Headroom above the tallest interval an own-measure panel has to hold.
+MEASURE_HEADROOM = 1.20
+
 LABELS = {"dictator": "Dictator", "trust": "Trust", "ultimatum": "Ultimatum",
           "apology": "Apology", "overfishing": "Overfishing",
           "prisoners_dilemma": "Prisoner's Dilemma"}
@@ -231,6 +250,95 @@ def degenerate_runs(arm):
     if run:
         runs.append(run)
     return runs
+
+
+# --- the own-measure axis, which is shared across the two pole policies -------
+
+#: `tops` maps a game to the top of its own-measure axis. `unshared_reason` is
+#: None when that top spans both policies, and otherwise says why it could not -
+#: which the figure prints, because an axis set from one run alone does not match
+#: the other policy's figure and a reader comparing the two would be misled.
+MeasureLimits = namedtuple("MeasureLimits", ("tops", "unshared_reason"))
+
+
+def measure_top(games):
+    """The top that holds every own-measure interval in `games`, with headroom.
+
+    Passing BOTH policies' copies of one game is what makes the strict and the
+    relaxed figure share that game's axis. It is per game and never across games:
+    dollars given and fish caught are not on a common scale, and one top over all
+    six would flatten the Dictator against Overfishing's range.
+    """
+    values = [point["measure"]["ci_high"]
+              for game in games
+              for arm in game["arms"].values()
+              for point in arm["points"].values()
+              if point["measure"]["ci_high"] is not None]
+    return max(values) * MEASURE_HEADROOM if values else 1.0
+
+
+def measure_tops(analysis, games, sibling):
+    """Per game, its own-measure top taken across this analysis and `sibling`.
+
+    `sibling` is the other policy's analysis, or None when it could not be read.
+    A game the sibling does not carry keeps its own top: the relaxed round ran
+    five games, and the Prisoner's Dilemma has only one figure to be consistent
+    with.
+    """
+    tops = {}
+    for name in games:
+        both = [analysis["games"][name]]
+        if sibling is not None and name in sibling["games"]:
+            both.append(sibling["games"][name])
+        tops[name] = measure_top(both)
+    return tops
+
+
+def sibling_analysis_path(path, policy):
+    """Where the other policy's analysis sits, or None if this is not the pair.
+
+    Only the two names `run_steering.sh` writes are paired. An analysis under any
+    other name has no locatable twin, and guessing one would risk sharing an axis
+    between two runs that are not the same sweep.
+    """
+    path = Path(path)
+    if path.name != ANALYSIS_NAME[policy]:
+        return None
+    return path.with_name(ANALYSIS_NAME[OTHER_POLICY[policy]])
+
+
+def load_sibling(path, policy):
+    """`(analysis, None)` for the other policy, or `(None, why not)`.
+
+    Never falls back silently to a per-file axis: every way this can fail returns
+    a reason the figure prints.
+    """
+    other = OTHER_POLICY[policy]
+    sibling = sibling_analysis_path(path, policy)
+    if sibling is None:
+        return None, ("%s is not one of the two names a sweep writes, so the %s "
+                      "analysis could not be located" % (Path(path).name, other))
+    if not sibling.exists():
+        return None, "%s is not beside this analysis" % sibling.name
+    try:
+        loaded = json.loads(sibling.read_text())
+    except (OSError, ValueError) as exc:
+        return None, "%s could not be read (%s)" % (sibling.name, exc)
+    if loaded.get("policy") != other:
+        return None, ("%s carries pole policy %r, not %r"
+                      % (sibling.name, loaded.get("policy"), other))
+    return loaded, None
+
+
+def measure_axis_note(policy, limits):
+    """What the own-measure figure says about its y axes, and in which colour."""
+    other = OTHER_POLICY[policy]
+    if limits.unshared_reason is None:
+        return ("Each game's y axis spans BOTH pole policies, so this panel and "
+                "its %s twin can be read against each other." % other, "#444444")
+    return ("y axes are NOT shared with the %s figure - %s - so each is set from "
+            "this run alone and heights must not be compared across the two."
+            % (other, limits.unshared_reason), BAD)
 
 
 # --- drawing ------------------------------------------------------------------
@@ -513,15 +621,19 @@ def _comparison_notes(analysis, games):
     return "\n".join(lines)
 
 
-def _finish(fig, suptitle, policy):
+def _finish(fig, suptitle, policy, note=None):
+    """`note` is `(text, colour)` drawn under the title, or None for no note."""
     fig.suptitle(suptitle, fontsize=14.5, y=0.988)
+    if note is not None:
+        text, colour = note
+        fig.text(0.5, 0.9635, text, ha="center", fontsize=9.6, color=colour)
     fig.legend(handles=_legend_handles(), loc="lower center", ncol=3, fontsize=8.8,
                frameon=False, bbox_to_anchor=(0.5, 0.098))
     fig.text(0.5, 0.006, footer(policy), ha="center", fontsize=7.7, color="#444444")
     fig.tight_layout(rect=(0, 0.170, 1, 0.955), h_pad=4.2)
 
 
-def figure_pole_shares(analysis, games, policy, label, out_path):
+def figure_pole_shares(analysis, games, policy, label, _limits, out_path):
     rows, columns = _grid(len(games))
     fig, axes = plt.subplots(rows, columns, figsize=(6.5 * columns, 6.0 * rows),
                              squeeze=False)
@@ -539,18 +651,14 @@ def figure_pole_shares(analysis, games, policy, label, out_path):
     return out_path
 
 
-def figure_own_measure(analysis, games, policy, label, out_path):
+def figure_own_measure(analysis, games, policy, label, limits, out_path):
     rows, columns = _grid(len(games))
     fig, axes = plt.subplots(rows, columns, figsize=(6.5 * columns, 6.0 * rows),
                              squeeze=False)
     flat = axes.ravel()
     for ax, name in zip(flat, games):
         game = analysis["games"][name]
-        values = [point["measure"]["ci_high"]
-                  for arm in game["arms"].values()
-                  for point in arm["points"].values()
-                  if point["measure"]["ci_high"] is not None]
-        top = max(values) * 1.20 if values else 1.0
+        top = limits.tops[name]
         units = game["measure_units"]
         if not game["altruistic_is_high_on_own_measure"]:
             units += "   (HIGHER = LESS altruistic)"
@@ -559,13 +667,14 @@ def figure_own_measure(analysis, games, policy, label, out_path):
         ax.axis("off")
     _finish(fig, "The same %s arms on each game's own measure - not comparable "
                  "across games, which is why every shared claim is made on the "
-                 "pole share" % label, policy)
+                 "pole share" % label, policy,
+            note=measure_axis_note(policy, limits))
     fig.savefig(out_path, dpi=190)
     plt.close(fig)
     return out_path
 
 
-def figure_vs_null(analysis, games, policy, label, out_path):
+def figure_vs_null(analysis, games, policy, label, _limits, out_path):
     """The bar itself: decision minus its own null at each extreme, per game."""
     fig, ax = plt.subplots(figsize=(11.6, 1.24 * len(games) + 0.9))
     colours = {"beats": GOOD, "null": BAD, "undetermined": UNDET}
@@ -636,7 +745,9 @@ def figure_vs_null(analysis, games, policy, label, out_path):
     return out_path
 
 
-#: Each figure and the stem its filename is built from.
+#: Each figure and the stem its filename is built from. Every builder takes the
+#: same arguments so this table can drive them; only the own-measure figure uses
+#: `limits`, and the other two name it `_limits`.
 FIGURES = ((figure_pole_shares, "steering_pole_shares"),
            (figure_own_measure, "steering_own_measure"),
            (figure_vs_null, "steering_vs_null"))
@@ -700,10 +811,16 @@ def main():
         _require_drawable(name, analysis["games"][name])
     label = args.label or policy
 
+    sibling, unshared = load_sibling(args.analysis, policy)
+    if unshared is not None:
+        print("own-measure y axes are NOT shared across policies:", unshared)
+    limits = MeasureLimits(measure_tops(analysis, games, sibling), unshared)
+
     out_dir = Path(args.out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
     for build, name in figure_files(policy):
-        print("wrote", build(analysis, games, policy, label, out_dir / name))
+        print("wrote", build(analysis, games, policy, label, limits,
+                             out_dir / name))
 
 
 if __name__ == "__main__":

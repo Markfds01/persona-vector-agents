@@ -537,3 +537,132 @@ def test_only_the_ultimatums_positive_end_is_degraded_on_the_relaxed_arm(relaxed
         for side in make_figures.degraded_ends(relaxed["games"][game]):
             found.append((game, side))
     assert sorted(found) == [("ultimatum", +1)]
+
+
+# --- the own-measure axis, which is shared across the two policies ------------
+
+def _measure_game(ci_highs):
+    """One game whose single arm carries exactly these interval upper bounds."""
+    points = {str(k): {"measure": {"ci_high": hi}}
+              for k, hi in enumerate(ci_highs)}
+    return {"arms": {"decision": {"points": points}}}
+
+
+def test_the_top_spans_both_policies_and_not_the_file_it_was_drawn_from():
+    strict = {"games": {"trust": _measure_game([10.0, 20.0])}}
+    relaxed = {"games": {"trust": _measure_game([10.0, 50.0])}}
+    assert (make_figures.measure_tops(strict, ["trust"], relaxed)["trust"]
+            == pytest.approx(50.0 * make_figures.MEASURE_HEADROOM))
+    assert (make_figures.measure_tops(strict, ["trust"], relaxed)
+            == make_figures.measure_tops(relaxed, ["trust"], strict))
+
+
+def test_a_point_that_produced_no_interval_does_not_set_the_top():
+    game = {"games": {"trust": _measure_game([10.0, None])}}
+    assert (make_figures.measure_tops(game, ["trust"], None)["trust"]
+            == pytest.approx(10.0 * make_figures.MEASURE_HEADROOM))
+
+
+def test_a_game_the_other_policy_never_ran_keeps_its_own_top():
+    strict = {"games": {"trust": _measure_game([10.0]),
+                        "apology": _measure_game([40.0])}}
+    relaxed = {"games": {"trust": _measure_game([90.0])}}
+    tops = make_figures.measure_tops(strict, ["trust", "apology"], relaxed)
+    assert tops["apology"] == pytest.approx(40.0 * make_figures.MEASURE_HEADROOM)
+
+
+def test_the_top_is_per_game_and_never_one_limit_across_games():
+    """Dollars given and fish caught are not one scale; §4 says so."""
+    analysis = {"games": {"trust": _measure_game([10.0]),
+                          "overfishing": _measure_game([100.0])}}
+    tops = make_figures.measure_tops(analysis, ["trust", "overfishing"], None)
+    assert tops["trust"] != tops["overfishing"]
+
+
+# --- finding the other policy's analysis --------------------------------------
+
+def test_the_sibling_is_the_other_policys_file_beside_this_one():
+    strict = Path("/somewhere/analysis/steering.json")
+    assert make_figures.sibling_analysis_path(strict, "strict") == (
+        Path("/somewhere/analysis/steering_relaxed.json"))
+    assert make_figures.sibling_analysis_path(
+        Path("/somewhere/analysis/steering_relaxed.json"), "relaxed") == strict
+
+
+def test_an_analysis_under_another_name_has_no_twin_rather_than_a_guessed_one():
+    """Guessing would risk sharing an axis between two different sweeps."""
+    assert make_figures.sibling_analysis_path(Path("/x/mine.json"), "strict") is None
+
+
+def test_a_missing_sibling_is_stated_and_not_silently_a_per_file_axis(tmp_path):
+    path = tmp_path / "steering.json"
+    path.write_text("{}")
+    sibling, why = make_figures.load_sibling(path, "strict")
+    assert sibling is None
+    assert "steering_relaxed.json" in why
+
+
+def test_an_unreadable_sibling_is_stated_rather_than_crashed_on(tmp_path):
+    (tmp_path / "steering.json").write_text("{}")
+    (tmp_path / "steering_relaxed.json").write_text("{not json")
+    sibling, why = make_figures.load_sibling(tmp_path / "steering.json", "strict")
+    assert sibling is None
+    assert "could not be read" in why
+
+
+def test_a_sibling_carrying_the_same_policy_is_refused(tmp_path):
+    for name in ("steering.json", "steering_relaxed.json"):
+        (tmp_path / name).write_text(json.dumps({"policy": "strict"}))
+    sibling, why = make_figures.load_sibling(tmp_path / "steering.json", "strict")
+    assert sibling is None
+    assert "'relaxed'" in why
+
+
+def test_an_unshared_axis_says_so_on_the_figure_and_a_shared_one_says_it_is():
+    shared, colour = make_figures.measure_axis_note(
+        "strict", make_figures.MeasureLimits({}, None))
+    assert "BOTH pole policies" in shared and "relaxed twin" in shared
+    assert colour != make_figures.BAD
+    warned, colour = make_figures.measure_axis_note(
+        "strict", make_figures.MeasureLimits(
+            {}, "steering_relaxed.json is not beside this analysis"))
+    assert "NOT shared" in warned and "steering_relaxed.json" in warned
+    assert colour == make_figures.BAD
+
+
+# --- the shared axis on the committed pair ------------------------------------
+
+def test_the_committed_pair_locate_each_other(analysis, relaxed):
+    for name, policy in (("steering.json", "strict"),
+                         ("steering_relaxed.json", "relaxed")):
+        sibling, why = make_figures.load_sibling(
+            PACKAGE / "analysis" / name, policy)
+        assert why is None
+        assert sibling["policy"] == make_figures.OTHER_POLICY[policy]
+
+
+def test_a_game_gets_the_same_own_measure_axis_in_both_policies_figures(analysis,
+                                                                        relaxed):
+    """The property the operator asked for: same game, both policies, one axis."""
+    strict_tops = make_figures.measure_tops(analysis, _drawn(analysis), relaxed)
+    relaxed_tops = make_figures.measure_tops(relaxed, _drawn(relaxed), analysis)
+    for game in _drawn(relaxed):
+        assert strict_tops[game] == relaxed_tops[game], game
+
+
+def test_every_shared_game_would_have_had_a_different_axis_per_file(analysis,
+                                                                    relaxed):
+    """Without this the axes really did differ - the test is not a no-op."""
+    differ = [game for game in _drawn(relaxed)
+              if make_figures.measure_top([analysis["games"][game]])
+              != make_figures.measure_top([relaxed["games"][game]])]
+    assert sorted(differ) == sorted(_drawn(relaxed))
+
+
+def test_the_prisoners_dilemma_axis_does_not_move(analysis, relaxed):
+    """Only strict ran it, and its own measure is already a proportion."""
+    assert "prisoners_dilemma" not in relaxed["games"]
+    tops = make_figures.measure_tops(analysis, _drawn(analysis), relaxed)
+    assert tops["prisoners_dilemma"] == make_figures.measure_top(
+        [analysis["games"]["prisoners_dilemma"]])
+    assert 1.0 < tops["prisoners_dilemma"] < 1.2

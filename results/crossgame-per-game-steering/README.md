@@ -503,11 +503,11 @@ python results/crossgame-per-game-steering/scripts/figures/make_figures.py \
 | file | what it is |
 |---|---|
 | `steering_pole_shares_strict.png` | the headline: `P(altruistic)` for all six games, each real arm with **its own null on the same axes** |
-| `steering_own_measure_strict.png` | the same six arms on each game's own measure (dollars, fish, `P(Cooperate)`) |
+| `steering_own_measure_strict.png` | the same six arms on each game's own measure (dollars, fish, `P(Cooperate)`), each game's y axis shared with its relaxed twin |
 | `steering_vs_null_strict.png` | decision minus its own null at both extremes, six games on one axis — the bar itself |
 | `steering_pole_shares_relaxed.png`, `steering_own_measure_relaxed.png`, `steering_vs_null_relaxed.png` | the same three for the relaxed arm's five games (§ 11) |
 
-Five things are decided by a function rather than written into a caption, so the
+Six things are decided by a function rather than written into a caption, so the
 rule can be checked instead of the picture trusted. `scripts/tests/test_figures.py`
 pins each one, and pins that together they reproduce § 5 and § 11.1 exactly —
 both policies' verdicts, and both policies' filenames.
@@ -547,6 +547,16 @@ both policies' verdicts, and both policies' filenames.
   the run that qualify, and both sit at 1.00. `k = +5` is also the only rung the
   null ran on that side, which is why that game's positive verdict is
   `undetermined` and its band is amber rather than blue.
+* **The own-measure y axis is the same for a game under both pole policies.** It
+  is read from the two analyses together, so `steering_own_measure_strict.png`
+  and `steering_own_measure_relaxed.png` can be held against each other; a limit
+  taken from one file alone gave every one of the five re-run games a different
+  axis in the two figures, and Overfishing — where the relaxed vector moved mean
+  catch 50.04 → 35.20 and strict did nothing — is where that mattered most. It
+  stays **per game**: the units are not shared across games (§ 4), so one limit
+  over all six would flatten the Dictator against Overfishing's range. When the
+  other policy's analysis is not beside this one, the figure says the axis is
+  **not** shared instead of looking comparable when it is not.
 
 Separately, a point whose parse coverage is under 0.90 is drawn hollow with the
 number of answers the scorer actually resolved. That is a caveat, not a

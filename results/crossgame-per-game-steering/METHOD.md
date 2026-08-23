@@ -128,7 +128,10 @@ Two measures are reported per point, and they are not interchangeable.
 **The game's own measure** — dollars given, fish caught, P(Cooperate). It is what
 a reader wants to see and it is **not comparable across games**: the units differ,
 and in Overfishing a *higher* number is the *less* altruistic answer. It is never
-summed or averaged across games anywhere in this directory.
+summed or averaged across games anywhere in this directory. Its figure gives a
+game **one y axis across both pole policies** — read from the two analyses
+together, so the strict and the relaxed panel for that game can be compared — and
+still a different axis per game, because the units are not shared.
 
 **The pole shares** — P(altruistic) and P(self-interested) — are the same
 contrast, oriented the same way, in all six games, and they are the contrast the
