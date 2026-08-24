@@ -66,7 +66,7 @@ sized activation edit in every game. Any shared constant achieves that; this one
 also puts the six games on the same axis as the Dictator-only sweep and as the
 authors' own raw beta `k`, for free, and does not change if a seventh game is ever
 added. Both the unit beta and the per-game equivalent raw beta are in
-`provenance/coefficients.csv`.
+`provenance/coefficients_strict.csv`.
 
 ---
 
@@ -374,14 +374,16 @@ analysis/points.csv       one flat row per (game, arm, k)
 analysis/steering_relaxed.json, analysis/points_relaxed.csv   the same, relaxed (§ 11)
 figures/                  the six figures of § 10, regenerated from the analysis
                           JSONs; `_strict` / `_relaxed` in the name, one directory
-provenance/               the sweep manifest, the null-vector report, and the run logs
+provenance/               the sweep manifest, the null-vector report, the coefficient
+                          ladder and the run logs; one flat directory, `_strict` /
+                          `_relaxed` in every name
 scripts/prompting/        eval_games.py (the games and their pole scales), run_sweep.py
 scripts/measurement/      build_nulls.py, analyze_game.py, stats.py,
                           degradation.py — which points are not results, shared
                           by the figures and the pooled tables so they agree
 scripts/pooling/          crossgame_tables.py — the six games side by side
 scripts/figures/          make_figures.py — the figures, from the analysis alone
-scripts/tests/            150 offline tests, in `python -m pytest -q`
+scripts/tests/            172 offline tests, in `python -m pytest -q`
 scripts/run_steering.sh   the whole pipeline, parameterised by environment
 ```
 
@@ -394,7 +396,8 @@ path and the SHA-256 of the file that was actually used.
 Everything downstream of the rows is CPU-only and runs from the checkout. The row
 CSVs land in the follow-up PR (§ 7), so until that lands `analyze_game.py` has
 nothing to read; the test suite and the figures (§ 10) run either way, and every
-number below was produced from the rows named in `provenance/sweep_provenance.json`.
+number below was produced from the rows named in
+`provenance/sweep_provenance_strict.json`.
 
 ```sh
 python -m pytest -q                       # repo-wide; see the note below
@@ -402,13 +405,13 @@ python -m pytest -q                       # repo-wide; see the note below
 PY=<python with torch>
 $PY results/crossgame-per-game-steering/scripts/measurement/analyze_game.py \
     --rows-root results/crossgame-per-game-steering/rows \
-    --coefficients results/crossgame-per-game-steering/provenance/coefficients.csv \
+    --coefficients results/crossgame-per-game-steering/provenance/coefficients_strict.csv \
     --out /tmp/steering.json
 $PY results/crossgame-per-game-steering/scripts/pooling/crossgame_tables.py \
     --analysis /tmp/steering.json --out-csv /tmp/points.csv
 ```
 
-The null table that second command prints (and `provenance/tables.log` holds)
+The null table that second command prints (and `provenance/tables_strict.log` holds)
 carries a **both arms readable?** column, marking the two contrasts computed
 across an arm that produced no distribution — the Ultimatum's `k = -5` and the
 Prisoner's Dilemma's `k = +5`. It is the same rule the figures strike a point out
@@ -416,11 +419,11 @@ by, from the same module, so the log and the picture cannot disagree.
 
 **The repo-wide test count depends on the interpreter, and neither one runs the
 whole suite.** Under a python with torch and transformers but no matplotlib:
-**534 passed, 3 skipped** — the 50 figure tests are not collected at all, because
+**534 passed, 3 skipped** — the 72 figure tests are not collected at all, because
 `test_figures.py` skips at import. Under a plain python3 with matplotlib but no
-transformers: **580 passed, 6 skipped**. Nothing fails under either, and the two
+transformers: **602 passed, 6 skipped**. Nothing fails under either, and the two
 sets are not nested: the union is what the suite covers and a single number is
-not. This package's own 150 tests are 100 of them under the first interpreter.
+not. This package's own 172 tests are 100 of them under the first interpreter.
 
 Rebuilding the null vectors needs the activation shards (~7 GB, not committed);
 `build_nulls.py` refuses to write one unless it can first rebuild the committed
@@ -437,13 +440,14 @@ vector nor its policy, so `RESUME=1` additionally checks each finished CSV's
 rows directory that holds another arm's answers rather than reporting it complete:
 
 ```sh
-# the strict round: rows/, analysis/steering.json, analysis/points.csv, provenance/
+# the strict round: rows/, analysis/steering.json, analysis/points.csv,
+# provenance/*_strict.*
 SAMPLES=100 ACTS=<shards> PY=<python> \
     bash results/crossgame-per-game-steering/scripts/run_steering.sh
 
 # the relaxed round exactly as it was run — five games, not six (§ 11):
-# rows_relaxed/, analysis/steering_relaxed.json, analysis/points_relaxed.csv,
-# provenance/relaxed/ and provenance/null_vectors_relaxed.json
+# rows_relaxed/, analysis/steering_relaxed.json, analysis/points_relaxed.csv and
+# provenance/*_relaxed.*
 POLICY=relaxed GAMES=ultimatum,overfishing,dictator,trust,apology \
     SAMPLES=100 DEVICE=1 ACTS=<shards> PY=<python> \
     bash results/crossgame-per-game-steering/scripts/run_steering.sh
@@ -457,15 +461,16 @@ trust 63.6, ultimatum 32.7, apology 29.7, overfishing 56.0, prisoners_dilemma
 44.7. transformers 4.52.3, torch 2.6.0+cu124.
 
 **The recorded commit does not pin the code that ran.** Both rounds record
-`repo_dirty = true` on every row and in `provenance/sweep_provenance.json` —
-`7898d6f2…` for the strict round, `e049cc79…` for the relaxed one. The working
-tree had uncommitted changes at both moments, so the commit identifies the
-baseline each run started from, not the code it executed. The practical
-consequence: "the scripts here are the scripts that ran" is a statement about the
-copy they were taken from, and there is no committed tree from either moment to
-diff against. It is the weakest link in this directory's provenance and it cannot
-be repaired after the fact. `results/dictator-decision-vector` discloses the same
-thing about its own run for the same reason.
+`repo_dirty = true` on every row and in `provenance/sweep_provenance_strict.json`
+and `_relaxed.json` — `7898d6f2…` for the strict round, `e049cc79…` for the
+relaxed one. The working tree had uncommitted changes at both moments, so the
+commit identifies the baseline each run started from, not the code it executed.
+The practical consequence: "the scripts here are the scripts that ran" is a
+statement about the copy they were taken from, and there is no committed tree
+from either moment to diff against. It is the weakest link in this directory's
+provenance and it cannot be repaired after the fact.
+`results/dictator-decision-vector` discloses the same thing about its own run for
+the same reason.
 
 Checked rather than assumed: at `k = 0` the delta is exactly zero for both
 vectors, so the decision and null arms must have generated the **same text**, and
@@ -476,11 +481,11 @@ two arms differ in by design. Each null vector was written only after its
 committed real vector was rebuilt from the archived activations through the same
 function that produced it; max relative per-layer deviation was **2.77e−08**
 across the six strict games and **2.92e−08** across the six relaxed ones, against
-a 1e−06 refusal threshold (`provenance/null_vectors.json`, and `_relaxed.json`;
-the run log rounds both to `2.7e-08`).
+a 1e−06 refusal threshold (`provenance/null_vectors_strict.json`, and
+`_relaxed.json`; the run log rounds both to `2.7e-08`).
 
-`provenance/steering_run_notes.md` records the machine and the schedule and is not
-part of the pipeline.
+`provenance/steering_run_notes_strict.md` and `_relaxed.md` record the machine
+and the schedule of each round and are not part of the pipeline.
 
 ## 10. The figures
 

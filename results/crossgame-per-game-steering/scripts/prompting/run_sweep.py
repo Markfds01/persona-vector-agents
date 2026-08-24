@@ -305,6 +305,8 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--out-dir", required=True, help="the rows/ root of the package")
     ap.add_argument("--provenance", required=True, help="JSON this run accumulates into")
+    ap.add_argument("--coefficients", required=True,
+                    help="flat CSV of every point landed, rewritten per game")
     ap.add_argument("--games", default=",".join(eval_games.FAMILIES))
     ap.add_argument("--policy", default="strict",
                     help="which pole policy's vectors to steer with")
@@ -347,6 +349,8 @@ def main():
     out_dir.mkdir(parents=True, exist_ok=True)
     provenance_path = Path(args.provenance).resolve()
     provenance_path.parent.mkdir(parents=True, exist_ok=True)
+    coefficients_path = Path(args.coefficients).resolve()
+    coefficients_path.parent.mkdir(parents=True, exist_ok=True)
 
     unit = reference_norm(args.reference_vector, args.layer)
     real_betas = [k * unit for k in real_ks]
@@ -415,7 +419,7 @@ def main():
         write_json_atomically(provenance_path, record)
         # rewritten per game, not once at the end: a run that dies on game five
         # must still leave an analysable manifest for the four that landed
-        rows = write_coefficients(provenance_path.parent / "coefficients.csv", record)
+        rows = write_coefficients(coefficients_path, record)
         print("=== %s done in %.1f min (%d points landed) ==="
               % (family, record["games"][family]["minutes"], len(rows)), flush=True)
 

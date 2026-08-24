@@ -142,7 +142,7 @@ def _entry(family, policy, seed=1, layer=20):
 def test_the_relaxed_report_holding_strict_entries_is_refused(tmp_path):
     """This module never rebuilds a vector: an entry read under the wrong name
     puts that policy's row counts and provenance on every entry silently."""
-    _report(tmp_path, "null_vectors.json", [_entry("dictator", "strict")])
+    _report(tmp_path, "null_vectors_strict.json", [_entry("dictator", "strict")])
     _report(tmp_path, "null_vectors_relaxed.json", [_entry("dictator", "strict")])
     with pytest.raises(SystemExit) as excinfo:
         manifest.load_reports(tmp_path, 1, 20)
@@ -152,7 +152,7 @@ def test_the_relaxed_report_holding_strict_entries_is_refused(tmp_path):
 def test_a_null_built_at_another_layer_is_refused(tmp_path):
     """`build_nulls.py` takes --layer; an angle measured at one and described as
     another is wrong in a way no number in the file shows."""
-    _report(tmp_path, "null_vectors.json", [_entry("dictator", "strict", layer=16)])
+    _report(tmp_path, "null_vectors_strict.json", [_entry("dictator", "strict", layer=16)])
     _report(tmp_path, "null_vectors_relaxed.json",
             [_entry("dictator", "relaxed", layer=16)])
     with pytest.raises(SystemExit) as excinfo:
@@ -161,7 +161,7 @@ def test_a_null_built_at_another_layer_is_refused(tmp_path):
 
 
 def test_a_matching_pair_of_reports_loads(tmp_path):
-    _report(tmp_path, "null_vectors.json", [_entry("dictator", "strict")])
+    _report(tmp_path, "null_vectors_strict.json", [_entry("dictator", "strict")])
     _report(tmp_path, "null_vectors_relaxed.json", [_entry("dictator", "relaxed")])
     reports = manifest.load_reports(tmp_path, 1, 20)
     assert sorted(reports) == [("dictator", "relaxed"), ("dictator", "strict")]

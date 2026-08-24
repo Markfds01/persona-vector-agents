@@ -1,8 +1,8 @@
 """The pooled log's one judgement call: which contrasts are not evidence at all.
 
-`provenance/tables.log` is what `README.md` section 8 tells a reproducer to run,
-and two of its eighteen contrasts are computed across an arm that never produced a
-distribution. Printed bare, one of them reads as a win and the other as a measured
+`provenance/tables_strict.log` is what `README.md` section 8 tells a reproducer
+to run, and two of its eighteen contrasts are computed across an arm that never
+produced a distribution. Printed bare, one of them reads as a win and the other as a measured
 null. The rule that marks them is `degradation.py`, shared with the figures, so
 these tests pin both the rule and the marking.
 """

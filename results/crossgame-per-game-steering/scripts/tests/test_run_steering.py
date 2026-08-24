@@ -96,11 +96,12 @@ def test_the_strict_run_writes_the_paths_the_committed_strict_round_holds(tmp_pa
     assert _run(script, recorder, "strict", tmp_path).returncode == 0
     assert _outputs(tmp_path, package) == {
         ("build_nulls.py", "--out-dir"): "vectors",
-        ("build_nulls.py", "--report"): "provenance/null_vectors.json",
+        ("build_nulls.py", "--report"): "provenance/null_vectors_strict.json",
         ("run_sweep.py", "--out-dir"): "rows",
-        ("run_sweep.py", "--provenance"): "provenance/sweep_provenance.json",
+        ("run_sweep.py", "--provenance"): "provenance/sweep_provenance_strict.json",
+        ("run_sweep.py", "--coefficients"): "provenance/coefficients_strict.csv",
         ("analyze_game.py", "--rows-root"): "rows",
-        ("analyze_game.py", "--coefficients"): "provenance/coefficients.csv",
+        ("analyze_game.py", "--coefficients"): "provenance/coefficients_strict.csv",
         ("analyze_game.py", "--out"): "analysis/steering.json",
         ("crossgame_tables.py", "--analysis"): "analysis/steering.json",
         ("crossgame_tables.py", "--out-csv"): "analysis/points.csv",
@@ -110,15 +111,16 @@ def test_the_strict_run_writes_the_paths_the_committed_strict_round_holds(tmp_pa
 def test_the_relaxed_run_writes_the_paths_the_committed_relaxed_round_holds(tmp_path):
     package, script, recorder = _tree(tmp_path)
     assert _run(script, recorder, "relaxed", tmp_path).returncode == 0
-    # build_vector_manifest.load_reports reads null_vectors_relaxed.json at that
-    # exact name, beside the strict report rather than nested with the rest
+    # provenance/ is flat under both policies: the policy is in every filename,
+    # and build_vector_manifest.load_reports reads the report at exactly this one
     assert _outputs(tmp_path, package) == {
         ("build_nulls.py", "--out-dir"): "vectors",
         ("build_nulls.py", "--report"): "provenance/null_vectors_relaxed.json",
         ("run_sweep.py", "--out-dir"): "rows_relaxed",
-        ("run_sweep.py", "--provenance"): "provenance/relaxed/sweep_provenance.json",
+        ("run_sweep.py", "--provenance"): "provenance/sweep_provenance_relaxed.json",
+        ("run_sweep.py", "--coefficients"): "provenance/coefficients_relaxed.csv",
         ("analyze_game.py", "--rows-root"): "rows_relaxed",
-        ("analyze_game.py", "--coefficients"): "provenance/relaxed/coefficients.csv",
+        ("analyze_game.py", "--coefficients"): "provenance/coefficients_relaxed.csv",
         ("analyze_game.py", "--out"): "analysis/steering_relaxed.json",
         ("crossgame_tables.py", "--analysis"): "analysis/steering_relaxed.json",
         ("crossgame_tables.py", "--out-csv"): "analysis/points_relaxed.csv",
@@ -159,17 +161,24 @@ def test_the_relaxed_run_leaves_every_file_the_strict_run_wrote_alone(tmp_path):
 def test_no_environment_variable_can_move_a_policys_output_paths(tmp_path):
     """POLICY owns every output path, and README section 8 says so unconditionally.
 
-    LOGS was settable, and `LOGS=<package>/provenance` on a relaxed run put
-    sweep_provenance.json, coefficients.csv, analysis.log and tables.log back on
-    top of the committed strict round's.
+    The log directory used to be settable, and pointing it at the package's own
+    provenance/ on a relaxed run put the sweep manifest, the coefficients CSV and
+    both logs back on top of the committed strict round's. Every provenance path
+    is now derived from POLICY alone, so the environment aims at the strict names
+    here and must not reach them.
     """
     package, script, recorder = _tree(tmp_path)
     assert _run(script, recorder, "relaxed", tmp_path,
-                LOGS=str(package / "provenance")).returncode == 0
+                LOGS=str(package / "provenance"),
+                PROVENANCE=str(package / "provenance"),
+                SWEEP_PROVENANCE=str(package / "provenance"
+                                     / "sweep_provenance_strict.json"),
+                COEFFICIENTS=str(package / "provenance"
+                                 / "coefficients_strict.csv")).returncode == 0
     assert _outputs(tmp_path, package)[("run_sweep.py", "--provenance")] == \
-        "provenance/relaxed/sweep_provenance.json"
+        "provenance/sweep_provenance_relaxed.json"
     assert _outputs(tmp_path, package)[("analyze_game.py", "--coefficients")] == \
-        "provenance/relaxed/coefficients.csv"
+        "provenance/coefficients_relaxed.csv"
 
 
 # --- an unknown policy stops rather than inventing a third layout -------------

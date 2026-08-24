@@ -100,9 +100,8 @@ def load_reports(package: Path, seed: int, layer: int) -> dict:
     `--layer`, and angles measured at one layer described as another are wrong.
     """
     reports = {}
-    for policy, name in (("strict", "null_vectors.json"),
-                         ("relaxed", "null_vectors_relaxed.json")):
-        path = package / "provenance" / name
+    for policy in ("strict", "relaxed"):
+        path = package / "provenance" / ("null_vectors_%s.json" % policy)
         if not path.is_file():
             raise SystemExit("no null-build report at %s; run build_nulls.py "
                              "--policy %s first" % (path, policy))

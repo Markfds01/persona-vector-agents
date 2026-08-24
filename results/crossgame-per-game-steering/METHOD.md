@@ -106,7 +106,7 @@ The alternative that is **not** available is per-game raw beta, i.e. steering ea
 game at `beta = k` with its own vector. That is the 3.7x error above.
 
 `--reference-vector` changes the axis, and the resolved norm is written to
-`provenance/sweep_provenance.json` under `axis.reference_layer_norm`, so a run on
+`provenance/sweep_provenance_strict.json` under `axis.reference_layer_norm`, so a run on
 a different reference is self-describing rather than silently different.
 
 ### Where the ladder stops
@@ -272,8 +272,8 @@ runs through `analyze_crossgame.balanced_vector` — the function that produced 
 committed vectors — rather than a transcription of it. Measured max relative
 per-layer deviation: **2.77e-08** over the six strict games and **2.92e-08** over
 the six relaxed ones (float32 storage round-trip), against a refusal threshold of
-1e-6. `provenance/null_vectors.json` and `null_vectors_relaxed.json` record it per
-game; the run log prints the same numbers rounded to `2.7e-08`.
+1e-6. `provenance/null_vectors_strict.json` and `null_vectors_relaxed.json` record
+it per game; the run log prints the same numbers rounded to `2.7e-08`.
 
 The nulls are much shorter than the real vectors (1.30 to 2.69 against 2.27 to
 8.47) — which is the expected consequence of destroying the systematic
