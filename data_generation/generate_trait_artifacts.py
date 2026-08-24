@@ -63,6 +63,33 @@ PREDEFINED_TRAITS = {
         "description": "Responses that emphasize positive outcomes and hopeful perspectives.",
         "question_instruction": ""
     },
+
+    # This project's own research traits, used by scripts/batch_generate_vec.sh.
+    # Above are the generic traits inherited from upstream.
+    "altruism": {
+        "description": "Responses that emphasize benefitting other people, often at a cost or risk to the speaker/author, without expecting something in return.",
+        "question_instruction": "Focus on questions that broadly relate to strategic decisions where we might not expect altruistic behavior, or moral decision-making."
+    },
+    "forgiveness": {
+        "description": "Responses that emphasize giving second chances, moving past previous wrongs, and being willing to restore trust after it has been broken, rather than holding grudges or permanently punishing past transgressions.",
+        "question_instruction": "Focus on questions where someone has been wronged, betrayed, or harmed in the past and must decide whether to restore the relationship or hold a grudge. Questions MUST include context about a past transgression (e.g., 'my partner cheated last year', 'a colleague took credit for my work', 'my business partner broke our agreement six months ago but has been reliable since')."
+    },
+    "retaliation": {
+        "description": "Responses that emphasize punishing wrongdoing and ensuring that harmful actions have consequences, rather than turning the other cheek or maintaining consistent behavior regardless of how others act.",
+        "question_instruction": "Focus on questions where someone has just been wronged or harmed and has an opportunity to retaliate or punish the transgressor. Questions MUST include a recent transgression and an opportunity for payback (e.g., 'they just threw me under the bus in a meeting, I could do the same next week', 'a competitor spread lies about my company and I have damaging information about theirs', 'my neighbor keeps violating our agreement and I could report them')."
+    },
+    "conditional_cooperation": {
+        "description": "Responses that emphasize matching behavior to how others have acted—treating cooperative people well and being guarded with those who have exploited others—rather than maintaining the same behavior regardless of others' track records.",
+        "question_instruction": "Focus on questions where the decision-maker has information about how others have behaved in the past and must decide whether to treat them accordingly. Questions MUST include behavioral history of other parties (e.g., 'this vendor has always delivered on time, that one has missed deadlines repeatedly', 'some of my teammates have been contributing, others have been slacking', 'this person has a reputation for honest dealing, that one has cheated others before')."
+    },
+    "expected_altruism": {
+        "description": "Responses that express expectations that other people will be generous, helpful, and willing to benefit others at personal cost, rather than expecting others to be selfish and self-interested.",
+        "question_instruction": "Focus on questions that ask the speaker to PREDICT how other people will behave in strategic or moral situations where the speaker may be the beneficiary of altruistic behavior. Questions should include context about a situation and ask for a prediction about the other party's response. The speaker should be an observer or recipient, NOT the decision-maker. Do NOT ask what the speaker would do if they were in the situation."
+    },
+    "expected_forgiveness": {
+        "description": "Responses that express expectations that other people will give second chances, move past previous wrongs, and be willing to restore trust after it has been broken, rather than expecting others to hold grudges or permanently punish past transgressions.",
+        "question_instruction": "Focus on questions where the speaker (or a third party) has wronged someone and must predict whether they will be forgiven. Questions should include context about a past transgression and ask for a prediction about the wronged party's response. Do NOT ask what the speaker would do if they were wronged."
+    },
 }
 
 
