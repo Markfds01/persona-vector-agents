@@ -1,0 +1,5 @@
+ultimatum            points=11  monotone_up_to_noise=True  rho=+0.845
+overfishing          points=11  monotone_up_to_noise=True  rho=+0.970
+dictator             points=11  monotone_up_to_noise=False  rho=+0.752
+trust                points=11  monotone_up_to_noise=True  rho=+0.943
+apology              points=11  monotone_up_to_noise=True  rho=+0.929

@@ -1,0 +1,6 @@
+dictator             |real|= 7.5047 |null|= 1.2984 cos=+0.3769 cells=30/30 rebuild_dev=2.7e-08
+trust                |real|= 5.3733 |null|= 1.5709 cos=-0.1472 cells=20/30 rebuild_dev=2.7e-08
+ultimatum            |real|= 5.3665 |null|= 2.6862 cos=+0.2128 cells=10/30 rebuild_dev=2.7e-08
+apology              |real|= 8.0029 |null|= 1.3286 cos=+0.4152 cells=25/30 rebuild_dev=2.7e-08
+overfishing          |real|= 2.2738 |null|= 1.4864 cos=-0.0937 cells=17/30 rebuild_dev=2.7e-08
+prisoners_dilemma    |real|= 8.4669 |null|= 2.5449 cos=+0.1706 cells=9/30 rebuild_dev=2.8e-08

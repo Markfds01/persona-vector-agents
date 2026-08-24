@@ -1,0 +1,52 @@
+pole policy: relaxed   games: 5   points: 70
+
+### per game: the vector steered, its norm, and what the steering did
+  game             |v|@20 n/point  P(altruistic) at k=-5,0,+5 own measure at k=-5,0,+5 units
+  ultimatum        7.1660     100  0.100 0.212 0.697        10.43 19.74 49.08        dollars offered
+  overfishing      2.1486     100  0.056 0.959 0.990        94.11 50.04 35.20        fish caught
+  dictator         6.9216     100  0.010 0.140 0.234        0.50 11.39 37.87         dollars given
+  trust            4.7255     100  0.056 0.337 0.939        5.56 33.45 61.62         dollars sent
+  apology          7.7990     100  0.011 0.400 0.990        1.06 25.23 50.40         dollars transferred
+
+### P(altruistic pole), relaxed policy, decision arm — the six games on one unit-beta axis
+  game               k=-5     k=-4     k=-3     k=-2     k=-1     k=+0     k=+1     k=+2     k=+3     k=+4     k=+5
+  ultimatum         0.100    0.090    0.130    0.080    0.040    0.212    0.398    0.415    0.511    0.571    0.697
+  overfishing       0.056    0.143    0.374    0.553    0.918    0.959    0.959    0.970    0.980    0.960    0.990
+  dictator          0.010    0.031    0.040    0.010    0.030    0.140    0.612    0.612    0.438    0.351    0.234
+  trust             0.056    0.075    0.054    0.065    0.075    0.337    0.490    0.690    0.776    0.879    0.939
+  apology           0.011    0.011    0.021    0.010    0.071    0.400    0.910    0.980    0.990    1.000    0.990
+
+### P(altruistic pole), relaxed policy, shuffled-null arm — the six games on one unit-beta axis
+  game               k=-5     k=+0     k=+5
+  ultimatum         0.424    0.212    0.000
+  overfishing       0.450    0.959    1.000
+  dictator          0.240    0.140    0.351
+  trust             0.913    0.337    0.100
+  apology           0.826    0.400    0.188
+
+### monotone in beta? (on P(altruistic), relaxed policy)
+  game                rho  direction       strict reversals
+  ultimatum        +0.845 increasing        False none
+  overfishing      +0.970 increasing        False none
+  dictator         +0.752 increasing        False +2->+3 -0.175
+  trust            +0.943 increasing        False none
+  apology          +0.929 increasing        False none
+
+### the real arm against its own shuffled-label null, at matched unit beta
+  game               k     P(alt) decision - null       mean decision - null  both arms readable?
+  ultimatum         -5     -0.324 [-0.432,-0.205]           -23.25 p=1.1e-05  yes
+  ultimatum          0  +0.000 [-0.114,+0.114] ns            +0.00 p=1.0e+00  yes
+  ultimatum          5     +0.697 [+0.326,+0.789]           +46.51 p=5.1e-64  NO - the null arm produced no distribution, so this interval is not evidence either way
+  overfishing       -5     -0.394 [-0.497,-0.279]           +17.58 p=1.4e-06  yes
+  overfishing        0  +0.000 [-0.064,+0.064] ns            +0.00 p=1.0e+00  yes
+  overfishing        5  -0.010 [-0.054,+0.030] ns            +7.37 p=6.8e-03  yes
+  dictator          -5     -0.230 [-0.324,-0.143]           -17.22 p=3.6e-06  yes
+  dictator           0  +0.000 [-0.098,+0.098] ns            +0.00 p=1.0e+00  yes
+  dictator           5  -0.116 [-0.240,+0.013] ns            +0.20 p=8.7e-01  yes
+  trust             -5     -0.857 [-0.910,-0.756]           -85.75 p=3.1e-53  yes
+  trust              0  +0.000 [-0.130,+0.130] ns            +0.00 p=1.0e+00  yes
+  trust              5     +0.839 [+0.740,+0.895]           +32.17 p=1.5e-42  yes
+  apology           -5     -0.815 [-0.881,-0.710]           -45.13 p=2.5e-55  yes
+  apology            0  +0.000 [-0.133,+0.133] ns            +0.00 p=1.0e+00  yes
+  apology            5     +0.802 [+0.703,+0.868]           +31.65 p=5.5e-12  yes
+
