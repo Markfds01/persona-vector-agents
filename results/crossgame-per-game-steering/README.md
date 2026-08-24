@@ -383,7 +383,7 @@ scripts/measurement/      build_nulls.py, analyze_game.py, stats.py,
                           by the figures and the pooled tables so they agree
 scripts/pooling/          crossgame_tables.py — the six games side by side
 scripts/figures/          make_figures.py — the figures, from the analysis alone
-scripts/tests/            172 offline tests, in `python -m pytest -q`
+scripts/tests/            174 offline tests, in `python -m pytest -q`
 scripts/run_steering.sh   the whole pipeline, parameterised by environment
 ```
 
@@ -419,11 +419,11 @@ by, from the same module, so the log and the picture cannot disagree.
 
 **The repo-wide test count depends on the interpreter, and neither one runs the
 whole suite.** Under a python with torch and transformers but no matplotlib:
-**534 passed, 3 skipped** — the 72 figure tests are not collected at all, because
+**536 passed, 3 skipped** — the 72 figure tests are not collected at all, because
 `test_figures.py` skips at import. Under a plain python3 with matplotlib but no
-transformers: **602 passed, 6 skipped**. Nothing fails under either, and the two
+transformers: **604 passed, 6 skipped**. Nothing fails under either, and the two
 sets are not nested: the union is what the suite covers and a single number is
-not. This package's own 172 tests are 100 of them under the first interpreter.
+not. This package's own 174 tests are 102 of them under the first interpreter.
 
 Rebuilding the null vectors needs the activation shards (~7 GB, not committed);
 `build_nulls.py` refuses to write one unless it can first rebuild the committed
@@ -482,7 +482,28 @@ committed real vector was rebuilt from the archived activations through the same
 function that produced it; max relative per-layer deviation was **2.77e−08**
 across the six strict games and **2.92e−08** across the six relaxed ones, against
 a 1e−06 refusal threshold (`provenance/null_vectors_strict.json`, and
-`_relaxed.json`; the run log rounds both to `2.7e-08`).
+`_relaxed.json`; the run logs print each game's own figure, rounded).
+
+**`provenance/sweep_relaxed.log` does not exist and cannot honestly be made.** The
+relaxed round was invoked by hand, stage by stage: at that moment `run_steering.sh`
+did not derive its output paths from `POLICY`, so putting the relaxed arm through
+the wrapper would have overwritten the committed strict round. The wrapper is what
+tees each stage's stdout into `provenance/`, so the relaxed sweep's stdout was never
+captured, and re-running the sweep now would be a new 2 h 15 min run rather than a
+record of that one. What does exist in its place is
+`provenance/sweep_provenance_relaxed.json`, which `run_sweep.py` writes directly and
+which carries the per-point detail; the rows, the analysis and every number in this
+file are unaffected. `provenance/null_vectors_relaxed.log` was absent for the same
+reason but was recoverable, because that build is deterministic and seeded: it was
+re-run on 2026-08-24, the six vectors it produced were verified byte-identical to the
+committed ones, `null_vectors_relaxed.json` was unchanged by the re-run, and the log
+states at its top that it is a post-hoc capture rather than the original stdout.
+`null_vectors_strict.log` and `sweep_strict.log` are their own runs' stdout, with no
+counterpart problem of their own: both were committed with the strict round minutes
+after it finished, `sweep_strict.log` carries its own `08:01:15Z`-`12:18:10Z` stamps,
+and neither has been edited since. The script now derives both log names from
+`POLICY` and `scripts/tests/test_run_steering.py` pins the set of logs each policy
+writes, so a relaxed run produces both and this gap is historical.
 
 `provenance/steering_run_notes_strict.md` and `_relaxed.md` record the machine
 and the schedule of each round and are not part of the pipeline.

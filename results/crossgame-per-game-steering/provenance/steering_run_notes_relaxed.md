@@ -46,6 +46,27 @@ Fixed and identical to round 1: `SEED=0`, `BATCH=20`, `SAMPLES=100`, reference
 norm 10.5083084106, the same 11-rung real ladder and 3-rung null ladder, null
 seed 20260821. Only the vectors changed.
 
+## What this round's logs are missing, and why
+
+**`sweep_relaxed.log` does not exist.** Running by hand is exactly what cost it:
+`run_steering.sh` is what tees each stage's stdout into `provenance/`, and this
+round bypassed it for the reason above. Re-running the sweep would produce a NEW
+2 h 15 min run, not a record of this one, so it is not manufactured. The record
+this round does have is `sweep_provenance_relaxed.json`, written directly by
+`run_sweep.py`, with the per-point detail; the rows in `rows_relaxed/`, the
+analysis and every number that came out of them are unaffected by the missing
+stdout.
+
+**`null_vectors_relaxed.log` was missing for the same reason and was recovered.**
+The null build is deterministic and seeded, so it was re-run on 2026-08-24 from
+the same archived shards with the same seed; all six vectors it produced are
+byte-identical to the committed ones and `null_vectors_relaxed.json` came out
+unchanged. Its stdout is committed as `null_vectors_relaxed.log`, headed by a note
+saying it is that post-hoc capture and not this round's own stdout.
+
+The strict round has no equivalent hole: it went through the wrapper, so
+`null_vectors_strict.log` and `sweep_strict.log` are its own stdout.
+
 ## Timings
 
 2026-08-22, 14:25:05Z to 16:39:53Z, 2 h 15 min for 70 points / 7,000 generations.

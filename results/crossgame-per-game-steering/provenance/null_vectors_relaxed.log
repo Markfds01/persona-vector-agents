@@ -1,0 +1,29 @@
+# POST-HOC CAPTURE, 2026-08-24. This is NOT the original run's stdout.
+#
+# The relaxed round of 2026-08-22 was invoked by hand, one stage at a time: at
+# that moment run_steering.sh did not derive its output paths from POLICY, so
+# running the relaxed arm through the wrapper would have landed on the committed
+# strict round. The wrapper is what tees each stage's stdout into provenance/, so
+# this stage's stdout was never captured. The script has since been fixed and a
+# relaxed run now writes this file itself.
+#
+# The lines below are the stdout of a re-run of that same stage, on 2026-08-24,
+# from the same archived activation shards, the same script and the same seed
+# (20260821). The build is deterministic and this was verified, not assumed: all
+# six relaxed null vectors it wrote are byte-identical (md5) to the committed
+# ones, and provenance/null_vectors_relaxed.json is byte-identical too. So the
+# numbers are the numbers the original run printed; only the wall clock is not.
+#
+#   OMP_NUM_THREADS=8 CUDA_VISIBLE_DEVICES= <python> -u \
+#       scripts/measurement/build_nulls.py --acts <shards> \
+#       --out-dir results/crossgame-per-game-steering/vectors \
+#       --policy relaxed --seed 20260821 \
+#       --report results/crossgame-per-game-steering/provenance/null_vectors_relaxed.json
+#
+# provenance/null_vectors_strict.log is its own run's stdout and carries no header.
+dictator             |real|= 6.9216 |null|= 0.8486 cos=+0.1933 cells=30/30 rebuild_dev=2.7e-08
+trust                |real|= 4.7255 |null|= 1.3192 cos=+0.1808 cells=25/30 rebuild_dev=2.7e-08
+ultimatum            |real|= 7.1660 |null|= 1.0338 cos=+0.2743 cells=24/30 rebuild_dev=2.6e-08
+apology              |real|= 7.7990 |null|= 1.1114 cos=-0.4269 cells=25/30 rebuild_dev=2.6e-08
+overfishing          |real|= 2.1486 |null|= 1.3336 cos=-0.0508 cells=30/30 rebuild_dev=2.9e-08
+prisoners_dilemma    |real|= 8.4669 |null|= 2.5449 cos=+0.1706 cells=9/30 rebuild_dev=2.8e-08

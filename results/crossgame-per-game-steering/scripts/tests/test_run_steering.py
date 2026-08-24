@@ -127,6 +127,20 @@ def test_the_relaxed_run_writes_the_paths_the_committed_relaxed_round_holds(tmp_
     }
 
 
+def _logs(policy):
+    return {Path("provenance") / ("%s_%s.log" % (stage, policy))
+            for stage in ("null_vectors", "sweep", "analysis", "tables")}
+
+
+@pytest.mark.parametrize("policy", ("strict", "relaxed"))
+def test_each_policy_tees_its_own_four_stage_logs(tmp_path, policy):
+    """The logs are shell redirections, not flags, so the tests above cannot see
+    them. The relaxed pair went missing once, by running the stages by hand."""
+    package, script, recorder = _tree(tmp_path)
+    assert _run(script, recorder, policy, tmp_path).returncode == 0
+    assert _written(package) == _logs(policy)
+
+
 # --- the bug itself ----------------------------------------------------------
 
 def test_the_two_policies_share_no_path_but_the_vectors_directory(tmp_path):
