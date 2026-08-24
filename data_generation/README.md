@@ -1,14 +1,10 @@
 # Trait Artifact Generation
 
-This directory contains tools for generating trait artifacts (instructions, questions, and evaluation prompts) using Claude Sonnet with extended thinking.
+This directory contains tooling for generating trait artifacts (instructions, questions, and evaluation prompts) using Claude Sonnet with extended thinking.
 
-## Tools Available
+## Usage
 
-### 1. Python Script (`generate_trait_artifacts.py`)
-
-Command-line tool for generating trait artifacts.
-
-**Usage:**
+`generate_trait_artifacts.py` is the command-line tool for generating trait artifacts.
 
 ```bash
 # Generate a single predefined trait
@@ -40,23 +36,6 @@ python generate_trait_artifacts.py --trait evil --quiet
 - `--validate-only`: Only validate existing artifacts
 - `--quiet`: Suppress verbose output
 
-### 2. Jupyter Notebook (`generate_trait_artifacts.ipynb`)
-
-Interactive notebook for generating trait artifacts with more control and visibility.
-
-**Usage:**
-
-```bash
-jupyter notebook generate_trait_artifacts.ipynb
-```
-
-The notebook includes:
-- Step-by-step generation process
-- Preview of generated artifacts
-- Validation checks
-- Support for custom traits
-- Batch generation of all traits
-
 ## Prerequisites
 
 ### Environment Variables
@@ -74,8 +53,7 @@ The script will try `ANTHROPIC_API_KEY` first, then fall back to `OPENAI_API_KEY
 ### Dependencies
 
 All dependencies are included in the main `requirements.txt`:
-- `anthropic>=0.18.0` (for Claude API)
-- `jupyter` (for notebook, optional)
+- `anthropic==0.40.0` (for Claude API)
 
 ## Output Structure
 
@@ -103,7 +81,9 @@ Each artifact contains:
 
 ## Predefined Traits
 
-The following traits are predefined and can be generated with `--all`:
+The following 13 traits are predefined and can be generated with `--all`.
+
+Generic traits inherited from upstream:
 
 - **evil**: Malicious intent, seeking to harm or cause suffering
 - **sycophantic**: Excessively agreeable, prioritizing flattery over truth
@@ -112,6 +92,15 @@ The following traits are predefined and can be generated with `--all`:
 - **humorous**: Incorporating jokes, wit, or comedic elements
 - **apathetic**: Showing lack of interest, emotion, or concern
 - **optimistic**: Emphasizing positive outcomes and hopeful perspectives
+
+This project's own research traits, used by `scripts/batch_generate_vec.sh`:
+
+- **altruism**: Benefitting others at a cost or risk to oneself, expecting nothing back
+- **forgiveness**: Giving second chances and restoring trust after it was broken
+- **retaliation**: Punishing wrongdoing so that harmful actions have consequences
+- **conditional_cooperation**: Matching behavior to how others have acted before
+- **expected_altruism**: Predicting that others will be generous rather than self-interested
+- **expected_forgiveness**: Predicting that others will forgive rather than hold a grudge
 
 ## Model Configuration
 
@@ -158,7 +147,7 @@ python generate_trait_artifacts.py \
 python generate_trait_artifacts.py --all
 ```
 
-This will generate artifacts for all 7 predefined traits and save them to both extract and eval directories.
+This will generate artifacts for all 13 predefined traits and save them to both extract and eval directories.
 
 ## Troubleshooting
 
