@@ -368,6 +368,53 @@ def test_reasoning_field_is_not_parsed(server, tmp_path):
     assert (r.status, r.score) == ("ok", 64.0)
 
 
+# --- scoring: choice_1_2 (the pairwise judgment) ---------------------------------------
+
+def choice_config(**kw):
+    base = dict(model=MODEL, mode="choice_1_2", max_tokens=32, seed=0, concurrency=2,
+                timeout_s=5.0, max_transport_retries=2, retry_backoff_s=0.0)
+    base.update(kw)
+    return jc.JudgeConfig(**base)
+
+
+@pytest.mark.parametrize("content,status,score", [
+    ("<choice>1</choice>", "ok", 1.0),
+    ("<choice>2</choice>", "ok", 2.0),
+    ("thinking... <choice>2</choice>", "ok", 2.0),
+    ("<choice>3</choice>", "unparseable", None),
+    ("<choice>1</choice><choice>1</choice>", "unparseable", None),
+    ("<choice>1</choice> or <choice>2</choice>", "unparseable", None),
+    ("<choice> 1 </choice>", "unparseable", None),
+    ("1", "unparseable", None),
+    ("Response 2", "unparseable", None),
+    ("", "unparseable", None),
+])
+def test_choice_parse(content, status, score):
+    got_status, got_score, _ = jc.score_choice(content)
+    assert (got_status, got_score) == (status, score)
+
+
+def test_choice_harmony_final_channel_only():
+    raw = ("<|channel|>analysis<|message|>maybe <choice>1</choice><|end|>"
+           "<|start|>assistant<|channel|>final<|message|><choice>2</choice><|return|>")
+    assert jc.score_choice(raw)[:2] == ("ok", 2.0)
+
+
+def test_choice_mode_sends_no_logprobs_and_reads_the_choice(server, tmp_path):
+    server.default = ("json", completion_text("<choice>2</choice>"))
+    _, (r,) = run(choice_config(), tmp_path / "c.jsonl", ["p"])
+    assert (r.status, r.score) == ("ok", 2.0)
+    body = server.posts()[0][2]
+    assert "logprobs" not in body and "top_logprobs" not in body
+    assert body["cache_prompt"] is False
+
+
+def test_choice_truncated(server, tmp_path):
+    server.default = ("json", completion_text("<choice>", finish="length"))
+    _, (r,) = run(choice_config(), tmp_path / "c.jsonl", ["p"])
+    assert (r.status, r.score) == ("truncated", None)
+
+
 # --- cache ------------------------------------------------------------------------
 
 def test_cache_hit_sends_nothing(server, tmp_path):

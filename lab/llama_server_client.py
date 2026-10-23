@@ -26,7 +26,8 @@ talks to it. What it guarantees, each in the code rather than in a convention:
   `no_logprobs`, `few_logprobs`, `truncated`, `http_error`, `transport_error`.
   Nothing is dropped, imputed or re-asked for a better answer.
 
-Two scoring modes, fixed per judge before any judgment exists, never switched:
+Three modes, fixed per judge before any judgment exists, never switched; the first
+two are 0-100 scorers and the third is the pairwise forced choice (PREREG section 6):
 
 * `logprob_0_100` - upstream's: one completion token, `top_logprobs`, the expected
   value over tokens that are integers 0..100, `low_mass` if their total probability
@@ -38,6 +39,9 @@ Two scoring modes, fixed per judge before any judgment exists, never switched:
   (gpt-oss) only the FINAL channel is parsed: a server that separates reasoning
   returns it as `content`; a raw harmony transcript is cut at its last
   `<|channel|>final<|message|>`.
+* `choice_1_2` - the pairwise judgment: the judge writes text; exactly one
+  `<choice>1</choice>` or `<choice>2</choice>` in the final channel is a choice (the
+  score is 1.0 or 2.0), anything else is `unparseable`. No logprobs.
 
 The client never sees what a call is about. A request is a rendered prompt - the
 question and the answer substituted into a verbatim template - and an opaque key
@@ -74,7 +78,7 @@ log = logging.getLogger("lab.llama_server_client")
 ENV_BASE_URL = "PIMIENTOROJO_BASE_URL"
 ENV_API_KEY = "PIMIENTOROJO_API_KEY"
 
-MODES = ("logprob_0_100", "text_0_100")
+MODES = ("logprob_0_100", "text_0_100", "choice_1_2")
 #: upstream's threshold: under this much probability on 0..100 there is no score
 MIN_NUMBER_MASS = 0.25
 
@@ -83,6 +87,8 @@ STATUSES = ("ok", "unparseable", "refusal", "low_mass", "no_logprobs", "few_logp
 
 _SCORE_TAG = re.compile(r"<score>(\d{1,3})</score>")
 _ANY_SCORE_TAG = re.compile(r"<score>", re.IGNORECASE)
+_CHOICE_TAG = re.compile(r"<choice>([12])</choice>")
+_ANY_CHOICE_TAG = re.compile(r"<choice>", re.IGNORECASE)
 _INTEGER_TOKEN = re.compile(r"^[0-9]{1,3}$")
 _HARMONY_FINAL = "<|channel|>final<|message|>"
 _HARMONY_END = re.compile(r"<\|(?:return|end|call)\|>")
@@ -274,6 +280,22 @@ def score_text(content: Optional[str]):
     return "unparseable", None, detail
 
 
+def score_choice(content: Optional[str]):
+    """Exactly one `<choice>1</choice>` or `<choice>2</choice>` in the final channel."""
+    if content is None:
+        return "unparseable", None, {"reason": "no content"}
+    final = final_channel(content)
+    if final is None:
+        return "unparseable", None, {"reason": "channel markers without a final channel"}
+    tags = _CHOICE_TAG.findall(final)
+    loose = len(_ANY_CHOICE_TAG.findall(final))
+    detail = {"final_text": final, "n_choice_tags": loose}
+    if len(tags) == 1 and loose == 1:
+        return "ok", float(tags[0]), detail
+    detail["reason"] = "expected exactly one <choice>1|2</choice>, found %d tag(s)" % loose
+    return "unparseable", None, detail
+
+
 def interpret(config: JudgeConfig, response: Mapping[str, Any]):
     """(status, score, detail) for one completion body."""
     try:
@@ -297,7 +319,8 @@ def interpret(config: JudgeConfig, response: Mapping[str, Any]):
     if finish == "length":
         return "truncated", None, {"finish_reason": finish,
                                    "content": message.get("content")}
-    status, score, detail = score_text(message.get("content"))
+    parse = score_choice if config.mode == "choice_1_2" else score_text
+    status, score, detail = parse(message.get("content"))
     detail["finish_reason"] = finish
     return status, score, detail
 

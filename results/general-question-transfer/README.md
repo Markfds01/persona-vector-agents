@@ -1,10 +1,12 @@
 # General-question transfer of the game-derived decision vectors — frozen pre-registration
 
-**There is no result in this directory yet.** Nothing has been generated and nothing
-has been judged. Checkpoint 1 was approved by the operator on 2026-10-23, and this
-directory holds the **frozen** pre-registration (`PREREG.md`, never edited again: later
-changes go to `DEVIATIONS.md`), the frozen question sets, the arm vectors pinned by sha256,
-the llama-server client, the tokenizer check, the cost estimate and the human grader page.
+**There is no result in this directory yet.** Checkpoint 1 was approved on 2026-10-23 and the
+pre-registration (`PREREG.md`, never edited again: later changes go to `DEVIATIONS.md`) is frozen.
+This directory now also holds **checkpoint 2: the pilot** (one game arm, the trait vector and that
+game's two nulls at k in {-3, 0, +3}, held-out and bridge sets, 3 samples per question) and the judge
+validation. The pilot's rows and judgments are study data, but **its numbers are plumbing, not
+results**; nothing beyond the pilot has been generated or judged, and full judging waits for the
+operator's approval and the "poor agreement" rule (D12). Start at `analysis/pilot_report.md`.
 `provenance/freeze.md` records the sha256 of everything the pre-registration pins.
 
 The question the study answers: does a direction learned from what
@@ -29,7 +31,11 @@ beyond a same-size shuffled-label null and an orthogonal null? `PREREG.md` § 1�
 | the measured judge results (speed, logprob usability, determinism) | `provenance/judge_measurement_2026-10-23.md` |
 | cost estimate, the ÷8 design and its alternative | `analysis/cost.md` / `cost.json` |
 | the human grader page, demonstrated on SYNTHETIC items | `grader_demo/grader_SYNTHETIC.html` (open it in a browser; load `judge_reveal_SYNTHETIC.json` for audit mode) |
-| deviations log (empty; the "poor agreement" rule is fixed here at checkpoint 2) | `DEVIATIONS.md` |
+| **checkpoint 2 report**: controls, judge throughput, determinism, bridge AUC, judge-judge agreement, questions for the operator | `analysis/pilot_report.md` (numbers in `analysis/pilot_validation.json`) |
+| the pilot generations (immutable rows, one JSONL per point) and the per-point hook counts | `rows/`, `provenance/generation_points_*.json`, `provenance/generation_*.log` |
+| the pilot judgments (one row per call, with raw response and provenance) | `judgments/<judge>/{trait,coherence,pairwise,determinism_resend}.jsonl`, `run_*.json` |
+| **the human calibration sheet and grader page** for the two labellers | `human/grader.html`, `human/calibration_sheet.csv` (the id-to-row key and the judge-reveal files are listed in `analysis/pilot_report.md` § 10) |
+| deviations log (pilot scope, served ids, interpreter, pairwise parameters; the "poor agreement" rule is fixed here at checkpoint 2) | `DEVIATIONS.md` |
 
 ## Layout
 
@@ -37,10 +43,21 @@ beyond a same-size shuffled-label null and an orthogonal null? `PREREG.md` § 1�
 PREREG.md, DEVIATIONS.md, README.md
 questions/        frozen question sets, near-duplicate report, SHA256SUMS
 vectors/          the six per-game orthogonal nulls (built 2026-10-23, reproducible)
-provenance/       freeze.md, arm_vectors.json, tokenizer_check.json, pimientorojo_probe.md
-analysis/         cost.md, cost.json
+provenance/       freeze.md, arm_vectors.json, tokenizer_check.json, pimientorojo_probe.md,
+                  generation_points_*.json (hook counts), human_sample_key.json (keep from the labellers)
+rows/             generation rows (stage 1), rows/<arm>/<set>_k<k>.jsonl
+judgments/        judgment rows (stage 2), judgments/<judge>/*.jsonl
+human/            blind calibration sheet, grader page, judge-reveal files (stage 3)
+analysis/         cost.md, cost.json, pilot_validation.json, pilot_report.md
 grader_demo/      the grader page on synthetic placeholder items, and its inputs
 scripts/
+  run_generation.sh           stage 1: owns rows/ and provenance/generation_*
+  run_judging.sh              stage 2: owns judgments/
+  run_validation.sh           stage 3: owns human/, analysis/pilot_*, provenance/human_sample_key.json
+  generation/run_generation.py the generation entry point (lab/general_questions.py is its library)
+  judging/run_judging.py      the judging entry point; judging/gqt_judging.py what is asked, of which rows
+  human/export_calibration.py the stratified blind sample, sheet, page and judge-reveal files
+  validation/pilot_validation.py, validation/write_report.py  the checkpoint-2 numbers and report
   grader_page.py              blind grader page, two independent reviewers (page | retest | demo)
   judging/tokenizer_check.py  GGUF-vocab + HF tokenizer single-token check
   measurement/bridge_parse.py the bridge set's A/B reader (no judge)
@@ -79,6 +96,15 @@ python results/general-question-transfer/scripts/judging/tokenizer_check.py \
 python results/general-question-transfer/scripts/grader_page.py demo \
     --out results/general-question-transfer/grader_demo
 python -m pytest -q
+```
+
+The pilot, stage by stage (each script owns its output paths; run from the repository root):
+
+```
+PY=<python with torch+transformers> bash results/general-question-transfer/scripts/run_generation.sh
+PRIMARY_URL=<llama-server endpoint> SECONDARY_URL=<gpt-oss endpoint> \
+    bash results/general-question-transfer/scripts/run_judging.sh
+bash results/general-question-transfer/scripts/run_validation.sh
 ```
 
 ## What this does not establish
