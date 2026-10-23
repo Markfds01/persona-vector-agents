@@ -1,0 +1,410 @@
+{
+ "layer": 20,
+ "reference_norm": 10.5083,
+ "unit_beta": "k * 10.5083 with norm='unit' (every vector rescaled to unit norm at the steered layer before scaling)",
+ "torch_version": "2.6.0+cu124",
+ "orthogonal_null_construction": "v_orth = v_null - (v_null . v_hat) v_hat per layer, v_hat = decision / |decision|, float64, saved float32 via torch.save; as results/dictator-decision-vector/scripts/build_orthogonal_null.py",
+ "arms": [
+  {
+   "arm": "decision/dictator",
+   "role": "decision",
+   "game": "dictator",
+   "path": "results/crossgame-per-game-steering/vectors/decision_dictator_response_avg_diff_cellbalanced_strict.pt",
+   "sha256": "4f9038dd1ff94d3c80f6ff3fed047df92d358d08a5683f77e2617a325a814a89",
+   "shape": [
+    29,
+    3584
+   ],
+   "dtype": "float32",
+   "norm_at_layer_20": 7.504713363958373,
+   "loaded_with": "torch.load(weights_only=True)"
+  },
+  {
+   "arm": "decision/trust",
+   "role": "decision",
+   "game": "trust",
+   "path": "results/crossgame-per-game-steering/vectors/decision_trust_response_avg_diff_cellbalanced_strict.pt",
+   "sha256": "69501e25e573e02863ceb8b93de92c55cbebd838bb8097cb79be0ee9af7c76f7",
+   "shape": [
+    29,
+    3584
+   ],
+   "dtype": "float32",
+   "norm_at_layer_20": 5.373255186663716,
+   "loaded_with": "torch.load(weights_only=True)"
+  },
+  {
+   "arm": "decision/ultimatum",
+   "role": "decision",
+   "game": "ultimatum",
+   "path": "results/crossgame-per-game-steering/vectors/decision_ultimatum_response_avg_diff_cellbalanced_strict.pt",
+   "sha256": "6b5a28aa4ee6756b5dd5306e4111e2160057b46083ff2d1c06446f55d1ab8b8d",
+   "shape": [
+    29,
+    3584
+   ],
+   "dtype": "float32",
+   "norm_at_layer_20": 5.366469373975343,
+   "loaded_with": "torch.load(weights_only=True)"
+  },
+  {
+   "arm": "decision/apology",
+   "role": "decision",
+   "game": "apology",
+   "path": "results/crossgame-per-game-steering/vectors/decision_apology_response_avg_diff_cellbalanced_strict.pt",
+   "sha256": "dcfdee45d18289926d0af2615563ea699ec2f694b34902f1621ff12911a10fe9",
+   "shape": [
+    29,
+    3584
+   ],
+   "dtype": "float32",
+   "norm_at_layer_20": 8.002891977887112,
+   "loaded_with": "torch.load(weights_only=True)"
+  },
+  {
+   "arm": "decision/overfishing",
+   "role": "decision",
+   "game": "overfishing",
+   "path": "results/crossgame-per-game-steering/vectors/decision_overfishing_response_avg_diff_cellbalanced_strict.pt",
+   "sha256": "6fc1fc3ada23fef68dee8e7b376372ce82b13dda071aad21d23739ee52acf837",
+   "shape": [
+    29,
+    3584
+   ],
+   "dtype": "float32",
+   "norm_at_layer_20": 2.273778797536846,
+   "loaded_with": "torch.load(weights_only=True)"
+  },
+  {
+   "arm": "decision/prisoners_dilemma",
+   "role": "decision",
+   "game": "prisoners_dilemma",
+   "path": "results/crossgame-per-game-steering/vectors/decision_prisoners_dilemma_response_avg_diff_cellbalanced_strict.pt",
+   "sha256": "716251c82d41031e43c220b1b4e1ee086b65adb6f8bc6e514ec14b9f630f188e",
+   "shape": [
+    29,
+    3584
+   ],
+   "dtype": "float32",
+   "norm_at_layer_20": 8.466909381721154,
+   "loaded_with": "torch.load(weights_only=True)"
+  },
+  {
+   "arm": "relaxed/ultimatum",
+   "role": "decision_relaxed",
+   "game": "ultimatum",
+   "path": "results/crossgame-per-game-steering/vectors/decision_ultimatum_response_avg_diff_cellbalanced_relaxed.pt",
+   "sha256": "aee9f6b7ec451da83e850e87da94257c1db6395a0da01b5dfc550e6bf305839e",
+   "shape": [
+    29,
+    3584
+   ],
+   "dtype": "float32",
+   "norm_at_layer_20": 7.166027361223843,
+   "loaded_with": "torch.load(weights_only=True)",
+   "compared_with": "results/crossgame-per-game-steering/vectors/decision_ultimatum_response_avg_diff_cellbalanced_strict.pt",
+   "cos_at_layer_20": 0.7981750274130966,
+   "angle_deg_at_layer_20": 37.043818003285836
+  },
+  {
+   "arm": "relaxed/overfishing",
+   "role": "decision_relaxed",
+   "game": "overfishing",
+   "path": "results/crossgame-per-game-steering/vectors/decision_overfishing_response_avg_diff_cellbalanced_relaxed.pt",
+   "sha256": "5f1a184168581fba0e4b6e3cf402a004a4f9d5c79f4b2f5b94cd5708ee12b266",
+   "shape": [
+    29,
+    3584
+   ],
+   "dtype": "float32",
+   "norm_at_layer_20": 2.1485688598546155,
+   "loaded_with": "torch.load(weights_only=True)",
+   "compared_with": "results/crossgame-per-game-steering/vectors/decision_overfishing_response_avg_diff_cellbalanced_strict.pt",
+   "cos_at_layer_20": 0.6564188337861052,
+   "angle_deg_at_layer_20": 48.97267880106745
+  },
+  {
+   "arm": "dictator_only",
+   "role": "decision_dictator_only",
+   "game": "dictator",
+   "path": "results/dictator-decision-vector/vectors/decision_response_avg_diff_cellbalanced.pt",
+   "sha256": "50643c04fe40ab9e3345cd2f538abde100b964565602ae8206087dff047482df",
+   "shape": [
+    29,
+    3584
+   ],
+   "dtype": "float32",
+   "norm_at_layer_20": 6.872108722940985,
+   "loaded_with": "torch.load(weights_only=True)",
+   "compared_with": "results/crossgame-per-game-steering/vectors/decision_dictator_response_avg_diff_cellbalanced_strict.pt",
+   "cos_at_layer_20": 0.9831228083364455,
+   "angle_deg_at_layer_20": 10.54145177172839
+  },
+  {
+   "arm": "trait/altruism",
+   "role": "trait",
+   "game": null,
+   "path": "persona_vectors/Qwen2.5-7B-Instruct/altruism_response_avg_diff.pt",
+   "sha256": "fe59088876ea2d7849e4dc1d60053871d42c1a3b61b335be6aaaa8eececfd5a1",
+   "shape": [
+    29,
+    3584
+   ],
+   "dtype": "float32",
+   "norm_at_layer_20": 10.508307958483506,
+   "loaded_with": "torch.load(weights_only=True)"
+  },
+  {
+   "arm": "shuffled_null/dictator",
+   "role": "shuffled_null",
+   "game": "dictator",
+   "path": "results/crossgame-per-game-steering/vectors/null_dictator_response_avg_diff_cellbalanced_strict_seed20260821.pt",
+   "sha256": "a92a362929f1c62999ebe158ce2ca9849db32ee6c4108d4a52bf108a5de8391b",
+   "shape": [
+    29,
+    3584
+   ],
+   "dtype": "float32",
+   "norm_at_layer_20": 1.2984334022673305,
+   "loaded_with": "torch.load(weights_only=True)",
+   "compared_with": "results/crossgame-per-game-steering/vectors/decision_dictator_response_avg_diff_cellbalanced_strict.pt",
+   "cos_at_layer_20": 0.37685920364307185,
+   "angle_deg_at_layer_20": 67.86073032634931
+  },
+  {
+   "arm": "shuffled_null/trust",
+   "role": "shuffled_null",
+   "game": "trust",
+   "path": "results/crossgame-per-game-steering/vectors/null_trust_response_avg_diff_cellbalanced_strict_seed20260821.pt",
+   "sha256": "973b465d51dc43eb44e254cc4495a6cb93197c2e878fea1d4f5593da32392e83",
+   "shape": [
+    29,
+    3584
+   ],
+   "dtype": "float32",
+   "norm_at_layer_20": 1.5709184426218294,
+   "loaded_with": "torch.load(weights_only=True)",
+   "compared_with": "results/crossgame-per-game-steering/vectors/decision_trust_response_avg_diff_cellbalanced_strict.pt",
+   "cos_at_layer_20": -0.14715274266218203,
+   "angle_deg_at_layer_20": 98.46195969211425
+  },
+  {
+   "arm": "shuffled_null/ultimatum",
+   "role": "shuffled_null",
+   "game": "ultimatum",
+   "path": "results/crossgame-per-game-steering/vectors/null_ultimatum_response_avg_diff_cellbalanced_strict_seed20260821.pt",
+   "sha256": "dfc1231bac5fe0969994aeffe0f0a41bf202642ec61967f87c007e7aecc353ac",
+   "shape": [
+    29,
+    3584
+   ],
+   "dtype": "float32",
+   "norm_at_layer_20": 2.686237686434393,
+   "loaded_with": "torch.load(weights_only=True)",
+   "compared_with": "results/crossgame-per-game-steering/vectors/decision_ultimatum_response_avg_diff_cellbalanced_strict.pt",
+   "cos_at_layer_20": 0.2128013898583942,
+   "angle_deg_at_layer_20": 77.7134284351003
+  },
+  {
+   "arm": "shuffled_null/apology",
+   "role": "shuffled_null",
+   "game": "apology",
+   "path": "results/crossgame-per-game-steering/vectors/null_apology_response_avg_diff_cellbalanced_strict_seed20260821.pt",
+   "sha256": "ef7322c9143e69fc831822816bd2fe57b0aece535e44b1a3a861842e124b5b42",
+   "shape": [
+    29,
+    3584
+   ],
+   "dtype": "float32",
+   "norm_at_layer_20": 1.3286071300156388,
+   "loaded_with": "torch.load(weights_only=True)",
+   "compared_with": "results/crossgame-per-game-steering/vectors/decision_apology_response_avg_diff_cellbalanced_strict.pt",
+   "cos_at_layer_20": 0.4151712192284216,
+   "angle_deg_at_layer_20": 65.46990056494928
+  },
+  {
+   "arm": "shuffled_null/overfishing",
+   "role": "shuffled_null",
+   "game": "overfishing",
+   "path": "results/crossgame-per-game-steering/vectors/null_overfishing_response_avg_diff_cellbalanced_strict_seed20260821.pt",
+   "sha256": "deddaef033b3747cb511519093a5726c562abaa10b610665a8239175f6b2cd12",
+   "shape": [
+    29,
+    3584
+   ],
+   "dtype": "float32",
+   "norm_at_layer_20": 1.4864209878122532,
+   "loaded_with": "torch.load(weights_only=True)",
+   "compared_with": "results/crossgame-per-game-steering/vectors/decision_overfishing_response_avg_diff_cellbalanced_strict.pt",
+   "cos_at_layer_20": -0.0937427969518695,
+   "angle_deg_at_layer_20": 95.37896446131062
+  },
+  {
+   "arm": "shuffled_null/prisoners_dilemma",
+   "role": "shuffled_null",
+   "game": "prisoners_dilemma",
+   "path": "results/crossgame-per-game-steering/vectors/null_prisoners_dilemma_response_avg_diff_cellbalanced_strict_seed20260821.pt",
+   "sha256": "057492a94069e3f05bd0cb3e9ab773d2365c07391c7e180f53518915c402139d",
+   "shape": [
+    29,
+    3584
+   ],
+   "dtype": "float32",
+   "norm_at_layer_20": 2.544945051667305,
+   "loaded_with": "torch.load(weights_only=True)",
+   "compared_with": "results/crossgame-per-game-steering/vectors/decision_prisoners_dilemma_response_avg_diff_cellbalanced_strict.pt",
+   "cos_at_layer_20": 0.1706236403972968,
+   "angle_deg_at_layer_20": 80.17591920386938
+  },
+  {
+   "arm": "orthogonal_null/dictator",
+   "role": "orthogonal_null",
+   "game": "dictator",
+   "path": "results/general-question-transfer/vectors/orthnull_dictator_response_avg_diff_cellbalanced_strict_seed20260821.pt",
+   "sha256": "93fe4ed9e5123ce7a1a6567fa4749aff567ca9f42684f95b209a484e9a5a1384",
+   "shape": [
+    29,
+    3584
+   ],
+   "dtype": "float32",
+   "norm_at_layer_20": 1.202700629256379,
+   "loaded_with": "torch.load(weights_only=True)",
+   "compared_with": "results/crossgame-per-game-steering/vectors/decision_dictator_response_avg_diff_cellbalanced_strict.pt",
+   "cos_at_layer_20": 8.119529568584827e-10,
+   "angle_deg_at_layer_20": 89.99999995347852,
+   "build": {
+    "sha256": "93fe4ed9e5123ce7a1a6567fa4749aff567ca9f42684f95b209a484e9a5a1384",
+    "cos_shuffled_vs_decision": 0.37685920364307185,
+    "cos_after_save_vs_decision": 8.119529568584827e-10,
+    "worst_layer_abs_cos_after_save": 1.4978579544268856e-09,
+    "source_null_sha256": "a92a362929f1c62999ebe158ce2ca9849db32ee6c4108d4a52bf108a5de8391b",
+    "source_decision_sha256": "4f9038dd1ff94d3c80f6ff3fed047df92d358d08a5683f77e2617a325a814a89"
+   }
+  },
+  {
+   "arm": "orthogonal_null/trust",
+   "role": "orthogonal_null",
+   "game": "trust",
+   "path": "results/general-question-transfer/vectors/orthnull_trust_response_avg_diff_cellbalanced_strict_seed20260821.pt",
+   "sha256": "5641d89f520dc9375445639cfcb9b7be6022a188a6efa9ebda526eaa6069c1de",
+   "shape": [
+    29,
+    3584
+   ],
+   "dtype": "float32",
+   "norm_at_layer_20": 1.5538170676362324,
+   "loaded_with": "torch.load(weights_only=True)",
+   "compared_with": "results/crossgame-per-game-steering/vectors/decision_trust_response_avg_diff_cellbalanced_strict.pt",
+   "cos_at_layer_20": 6.911477329246477e-10,
+   "angle_deg_at_layer_20": 89.99999996040016,
+   "build": {
+    "sha256": "5641d89f520dc9375445639cfcb9b7be6022a188a6efa9ebda526eaa6069c1de",
+    "cos_shuffled_vs_decision": -0.14715274266218203,
+    "cos_after_save_vs_decision": 6.911477329246477e-10,
+    "worst_layer_abs_cos_after_save": 2.8746848424160117e-09,
+    "source_null_sha256": "973b465d51dc43eb44e254cc4495a6cb93197c2e878fea1d4f5593da32392e83",
+    "source_decision_sha256": "69501e25e573e02863ceb8b93de92c55cbebd838bb8097cb79be0ee9af7c76f7"
+   }
+  },
+  {
+   "arm": "orthogonal_null/ultimatum",
+   "role": "orthogonal_null",
+   "game": "ultimatum",
+   "path": "results/general-question-transfer/vectors/orthnull_ultimatum_response_avg_diff_cellbalanced_strict_seed20260821.pt",
+   "sha256": "44b930c04f12279095106585cf59b46d77e524c7ade3ada11770f468186695ff",
+   "shape": [
+    29,
+    3584
+   ],
+   "dtype": "float32",
+   "norm_at_layer_20": 2.624710684676549,
+   "loaded_with": "torch.load(weights_only=True)",
+   "compared_with": "results/crossgame-per-game-steering/vectors/decision_ultimatum_response_avg_diff_cellbalanced_strict.pt",
+   "cos_at_layer_20": -5.07197359393559e-10,
+   "angle_deg_at_layer_20": 90.00000002906027,
+   "build": {
+    "sha256": "44b930c04f12279095106585cf59b46d77e524c7ade3ada11770f468186695ff",
+    "cos_shuffled_vs_decision": 0.2128013898583942,
+    "cos_after_save_vs_decision": -5.07197359393559e-10,
+    "worst_layer_abs_cos_after_save": 2.5620428375644993e-09,
+    "source_null_sha256": "dfc1231bac5fe0969994aeffe0f0a41bf202642ec61967f87c007e7aecc353ac",
+    "source_decision_sha256": "6b5a28aa4ee6756b5dd5306e4111e2160057b46083ff2d1c06446f55d1ab8b8d"
+   }
+  },
+  {
+   "arm": "orthogonal_null/apology",
+   "role": "orthogonal_null",
+   "game": "apology",
+   "path": "results/general-question-transfer/vectors/orthnull_apology_response_avg_diff_cellbalanced_strict_seed20260821.pt",
+   "sha256": "865a61f4d848da5b834333df0b8359d41241271c4fc067cd65078828c47350b2",
+   "shape": [
+    29,
+    3584
+   ],
+   "dtype": "float32",
+   "norm_at_layer_20": 1.2086914239054156,
+   "loaded_with": "torch.load(weights_only=True)",
+   "compared_with": "results/crossgame-per-game-steering/vectors/decision_apology_response_avg_diff_cellbalanced_strict.pt",
+   "cos_at_layer_20": -3.5987717284492255e-10,
+   "angle_deg_at_layer_20": 90.00000002061945,
+   "build": {
+    "sha256": "865a61f4d848da5b834333df0b8359d41241271c4fc067cd65078828c47350b2",
+    "cos_shuffled_vs_decision": 0.4151712192284216,
+    "cos_after_save_vs_decision": -3.5987717284492255e-10,
+    "worst_layer_abs_cos_after_save": 1.8140386534284203e-09,
+    "source_null_sha256": "ef7322c9143e69fc831822816bd2fe57b0aece535e44b1a3a861842e124b5b42",
+    "source_decision_sha256": "dcfdee45d18289926d0af2615563ea699ec2f694b34902f1621ff12911a10fe9"
+   }
+  },
+  {
+   "arm": "orthogonal_null/overfishing",
+   "role": "orthogonal_null",
+   "game": "overfishing",
+   "path": "results/general-question-transfer/vectors/orthnull_overfishing_response_avg_diff_cellbalanced_strict_seed20260821.pt",
+   "sha256": "314b786cb5ed79ec9c246b1c0e3f551be2e6a4ae7569a930e28a6a15532a5361",
+   "shape": [
+    29,
+    3584
+   ],
+   "dtype": "float32",
+   "norm_at_layer_20": 1.4798754626057784,
+   "loaded_with": "torch.load(weights_only=True)",
+   "compared_with": "results/crossgame-per-game-steering/vectors/decision_overfishing_response_avg_diff_cellbalanced_strict.pt",
+   "cos_at_layer_20": -4.057316552562982e-10,
+   "angle_deg_at_layer_20": 90.00000002324671,
+   "build": {
+    "sha256": "314b786cb5ed79ec9c246b1c0e3f551be2e6a4ae7569a930e28a6a15532a5361",
+    "cos_shuffled_vs_decision": -0.0937427969518695,
+    "cos_after_save_vs_decision": -4.057316552562982e-10,
+    "worst_layer_abs_cos_after_save": 1.8165130210650068e-09,
+    "source_null_sha256": "deddaef033b3747cb511519093a5726c562abaa10b610665a8239175f6b2cd12",
+    "source_decision_sha256": "6fc1fc3ada23fef68dee8e7b376372ce82b13dda071aad21d23739ee52acf837"
+   }
+  },
+  {
+   "arm": "orthogonal_null/prisoners_dilemma",
+   "role": "orthogonal_null",
+   "game": "prisoners_dilemma",
+   "path": "results/general-question-transfer/vectors/orthnull_prisoners_dilemma_response_avg_diff_cellbalanced_strict_seed20260821.pt",
+   "sha256": "ef057dae4b4882c8892d95f061198549aa706e49ec4bf76e5c557ae5844fc95a",
+   "shape": [
+    29,
+    3584
+   ],
+   "dtype": "float32",
+   "norm_at_layer_20": 2.507626668949251,
+   "loaded_with": "torch.load(weights_only=True)",
+   "compared_with": "results/crossgame-per-game-steering/vectors/decision_prisoners_dilemma_response_avg_diff_cellbalanced_strict.pt",
+   "cos_at_layer_20": -9.938621440382066e-10,
+   "angle_deg_at_layer_20": 90.0000000569441,
+   "build": {
+    "sha256": "ef057dae4b4882c8892d95f061198549aa706e49ec4bf76e5c557ae5844fc95a",
+    "cos_shuffled_vs_decision": 0.1706236403972968,
+    "cos_after_save_vs_decision": -9.938621440382066e-10,
+    "worst_layer_abs_cos_after_save": 2.7799059947177343e-09,
+    "source_null_sha256": "057492a94069e3f05bd0cb3e9ab773d2365c07391c7e180f53518915c402139d",
+    "source_decision_sha256": "716251c82d41031e43c220b1b4e1ee086b65adb6f8bc6e514ec14b9f630f188e"
+   }
+  }
+ ]
+}

@@ -1,0 +1,307 @@
+{
+ "measured_generation_throughput": {
+  "per_game": {
+   "dictator": {
+    "generations": 1400,
+    "minutes": 30.002940293153127,
+    "generated_tokens": 309930,
+    "mean_tokens": 221.37857142857143,
+    "share_at_1000": 0.0,
+    "tokens_per_s": 172.166459337947,
+    "seconds_per_generation": 1.285840298277991
+   },
+   "trust": {
+    "generations": 1400,
+    "minutes": 63.62813960313797,
+    "generated_tokens": 598166,
+    "mean_tokens": 427.26142857142855,
+    "share_at_1000": 0.011428571428571429,
+    "tokens_per_s": 156.68277267754135,
+    "seconds_per_generation": 2.726920268705913
+   },
+   "ultimatum": {
+    "generations": 1400,
+    "minutes": 32.71269878943761,
+    "generated_tokens": 360947,
+    "mean_tokens": 257.81928571428574,
+    "share_at_1000": 0.024285714285714285,
+    "tokens_per_s": 183.89749412163235,
+    "seconds_per_generation": 1.4019728052616118
+   },
+   "apology": {
+    "generations": 1400,
+    "minutes": 29.74300500949224,
+    "generated_tokens": 277820,
+    "mean_tokens": 198.44285714285715,
+    "share_at_1000": 0.0,
+    "tokens_per_s": 155.67806050046389,
+    "seconds_per_generation": 1.2747002146925246
+   },
+   "overfishing": {
+    "generations": 1400,
+    "minutes": 56.02011559804281,
+    "generated_tokens": 543403,
+    "mean_tokens": 388.145,
+    "share_at_1000": 0.0064285714285714285,
+    "tokens_per_s": 161.66901067557035,
+    "seconds_per_generation": 2.4008620970589774
+   },
+   "prisoners_dilemma": {
+    "generations": 1400,
+    "minutes": 44.66209479173025,
+    "generated_tokens": 458794,
+    "mean_tokens": 327.71,
+    "share_at_1000": 0.0007142857142857143,
+    "tokens_per_s": 171.20931524426672,
+    "seconds_per_generation": 1.914089776788439
+   }
+  },
+  "pooled": {
+   "generations": 8400,
+   "hours": 4.2794832347499,
+   "generated_tokens": 2549060,
+   "tokens_per_s": 165.45741235123756,
+   "seconds_per_generation": 1.834064243464243
+  }
+ },
+ "general_answer_length_proxy": {
+  "source": "eval_persona_extract/Qwen2.5-7B-Instruct/altruism_{pos,neg}_instruct.csv",
+  "n": 4000,
+  "mean": 364.6015,
+  "median": 361,
+  "p90": 482,
+  "p99": 627,
+  "max": 784,
+  "share_ge": {
+   "400": 0.309,
+   "600": 0.01525,
+   "800": 0.0,
+   "1000": 0.0
+  },
+  "mean_question_tokens": 27.575
+ },
+ "design": {
+  "arms_steered": 22,
+  "k_nonzero": [
+   -5,
+   -3,
+   -1,
+   1,
+   3,
+   5
+  ],
+  "n_samples": 5,
+  "points_per_question_set": 134,
+  "rows_per_point": 200,
+  "question_sets": [
+   "heldout",
+   "in_distribution",
+   "bridge"
+  ],
+  "generations": 80400,
+  "judged_rows": 79800,
+  "pairwise_steered_rows": 52800
+ },
+ "generated_tokens_estimate": 29313960.599999998,
+ "gpu_hours_estimate": {
+  "from_tokens_per_s": 49.21367207198697,
+  "from_seconds_per_generation": 40.960768104034756,
+  "note": "one A40, batch 20, exclusive; the per-game sweep's pooled rate. Two A40s in parallel halve the wall clock."
+ },
+ "judge_template_tokens": {
+  "trait": 197,
+  "coherence": 241,
+  "pairwise": 197
+ },
+ "judge_calls": {
+  "primary": {
+   "trait": 79800,
+   "coherence": 79800,
+   "pairwise": 105600,
+   "determinism_resend": 13260,
+   "total": 278460
+  },
+  "secondary": {
+   "trait": 79800,
+   "coherence": 79800,
+   "pairwise": 21120,
+   "determinism_resend": 9036,
+   "total": 189756
+  }
+ },
+ "judge_hours_assumed_speeds": {
+  "primary|llama-3.3-70b-instruct-q8_0|logprob_0_100": [
+   {
+    "prompt_tps": 60,
+    "gen_tps": 3,
+    "mode": "logprob_0_100",
+    "output_tokens_per_call": 1,
+    "seconds_per_call": 12.66755288551318,
+    "calls_per_hour": 284.19064301811744,
+    "hours_single_stream": 979.8352156944445
+   },
+   {
+    "prompt_tps": 120,
+    "gen_tps": 4,
+    "mode": "logprob_0_100",
+    "output_tokens_per_call": 1,
+    "seconds_per_call": 6.417109776089924,
+    "calls_per_hour": 561.0002205998654,
+    "hours_single_stream": 496.3634411805556
+   },
+   {
+    "prompt_tps": 250,
+    "gen_tps": 5,
+    "mode": "logprob_0_100",
+    "output_tokens_per_call": 1,
+    "seconds_per_call": 3.1602126925231637,
+    "calls_per_hour": 1139.1638317627612,
+    "hours_single_stream": 244.44245176666672
+   }
+  ],
+  "primary|llama-3.3-70b-instruct-q8_0|text_0_100": [
+   {
+    "prompt_tps": 60,
+    "gen_tps": 3,
+    "mode": "text_0_100",
+    "output_tokens_per_call": 12,
+    "seconds_per_call": 16.334219552179846,
+    "calls_per_hour": 220.39620494262124,
+    "hours_single_stream": 1263.451882361111
+   },
+   {
+    "prompt_tps": 120,
+    "gen_tps": 4,
+    "mode": "text_0_100",
+    "output_tokens_per_call": 12,
+    "seconds_per_call": 9.167109776089923,
+    "calls_per_hour": 392.70828951887165,
+    "hours_single_stream": 709.0759411805556
+   },
+   {
+    "prompt_tps": 250,
+    "gen_tps": 5,
+    "mode": "text_0_100",
+    "output_tokens_per_call": 12,
+    "seconds_per_call": 5.360212692523162,
+    "calls_per_hour": 671.615140388283,
+    "hours_single_stream": 414.6124517666666
+   }
+  ],
+  "secondary|gpt-oss-20b-mxfp4|text_0_100": [
+   {
+    "prompt_tps": 500,
+    "gen_tps": 30,
+    "mode": "text_0_100",
+    "output_tokens_per_call": 250,
+    "seconds_per_call": 9.629854756782397,
+    "calls_per_hour": 373.83741405491986,
+    "hours_single_stream": 507.5896442300001
+   },
+   {
+    "prompt_tps": 1000,
+    "gen_tps": 50,
+    "mode": "text_0_100",
+    "output_tokens_per_call": 250,
+    "seconds_per_call": 5.6482607117245305,
+    "calls_per_hour": 637.3643469621015,
+    "hours_single_stream": 297.719822115
+   },
+   {
+    "prompt_tps": 2000,
+    "gen_tps": 70,
+    "mode": "text_0_100",
+    "output_tokens_per_call": 250,
+    "seconds_per_call": 3.8955589272908373,
+    "calls_per_hour": 924.1292628843935,
+    "hours_single_stream": 205.33491105750002
+   }
+  ]
+ },
+ "trim_scenarios": {
+  "default": {
+   "change": {},
+   "generations": 80400,
+   "gpu_hours": 49.21367207198697,
+   "primary_calls": 278460,
+   "secondary_calls": 189756
+  },
+  "ladder_4k": {
+   "change": {
+    "k_nonzero": [
+     -5,
+     -3,
+     3,
+     5
+    ]
+   },
+   "generations": 54000,
+   "gpu_hours": 33.05395885431961,
+   "primary_calls": 186060,
+   "secondary_calls": 126924
+  },
+  "ladder_2k": {
+   "change": {
+    "k_nonzero": [
+     -3,
+     3
+    ]
+   },
+   "generations": 27600,
+   "gpu_hours": 16.894245636652247,
+   "primary_calls": 93660,
+   "secondary_calls": 64092
+  },
+  "samples_3": {
+   "change": {
+    "n_samples": 3
+   },
+   "generations": 48240,
+   "gpu_hours": 29.528203243192188,
+   "primary_calls": 167076,
+   "secondary_calls": 113854
+  },
+  "pairwise_heldout_k3_only": {
+   "change": {
+    "pairwise_sets": [
+     "heldout"
+    ],
+    "pairwise_k": [
+     -3,
+     3
+    ]
+   },
+   "generations": 80400,
+   "gpu_hours": 49.21367207198697,
+   "primary_calls": 186060,
+   "secondary_calls": 171276
+  },
+  "no_secondary_pairwise": {
+   "change": {
+    "secondary_pairwise_share": 0.0
+   },
+   "generations": 80400,
+   "gpu_hours": 49.21367207198697,
+   "primary_calls": 278460,
+   "secondary_calls": 167580
+  },
+  "secondary_on_20pct": {
+   "change": {
+    "secondary_share": 0.2
+   },
+   "generations": 80400,
+   "gpu_hours": 49.21367207198697,
+   "primary_calls": 278460,
+   "secondary_calls": 55692
+  },
+  "in_distribution_core_arms_only": {
+   "change": {
+    "in_distribution_arms": 10
+   },
+   "generations": 66000,
+   "gpu_hours": 40.39928304416841,
+   "primary_calls": 217980,
+   "secondary_calls": 153468
+  }
+ }
+}
