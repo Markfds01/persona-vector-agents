@@ -9,7 +9,7 @@ The prompt is rendered once, here, and frozen with the items: generation reads
 `prompt` verbatim and the parser (`scripts/measurement/bridge_parse.py`) reads the
 `Answer: A` / `Answer: B` line it asks for.
 
-    python scripts/questions/build_bridge.py            # writes questions/bridge_draft.json
+    python scripts/questions/build_bridge.py            # writes questions/bridge.json
     python scripts/questions/build_bridge.py --check    # rebuild in memory, compare
 """
 
@@ -20,7 +20,7 @@ import sys
 from pathlib import Path
 
 PACKAGE = Path(__file__).resolve().parents[2]
-OUT = PACKAGE / "questions" / "bridge_draft.json"
+OUT = PACKAGE / "questions" / "bridge.json"
 
 #: The counterbalancing seed. Fixed before any generation; recorded in the output.
 SEED = 20261023
@@ -179,8 +179,8 @@ def build(seed=SEED):
             "prompt": PROMPT_TEMPLATE.format(scenario=scenario, option_a=a, option_b=b),
         })
     return {
-        "status": "DRAFT - pending operator review and freeze at checkpoint 1; not to be used for generation until frozen",
-        "authorship": "drafted by an LLM agent (Claude) on 2026-10-23, pending operator review",
+        "status": "FROZEN 2026-10-23 - accepted unedited by the operator at checkpoint 1; frozen with PREREG.md (provenance/freeze.md)",
+        "authorship": "drafted by an LLM agent (Claude) on 2026-10-23, accepted unedited by the operator on 2026-10-23",
         "purpose": "bridge set: judge-free ground truth. P(other-regarding choice) is read by "
                    "scripts/measurement/bridge_parse.py from the required 'Answer: A' / 'Answer: B' line",
         "counterbalance": {
@@ -204,8 +204,8 @@ def main(argv=None):
     text = json.dumps(build(), indent=1, ensure_ascii=False) + "\n"
     if args.check:
         if OUT.read_text(encoding="utf-8") != text:
-            raise SystemExit("bridge_draft.json does not match a rebuild from this script")
-        print("ok: bridge_draft.json reproduces")
+            raise SystemExit("bridge.json does not match a rebuild from this script")
+        print("ok: bridge.json reproduces")
         return
     OUT.write_text(text, encoding="utf-8")
     print("wrote %s" % OUT.relative_to(PACKAGE))

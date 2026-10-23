@@ -1,50 +1,47 @@
 # PRE-REGISTRATION — general-question transfer of the game-derived decision vectors
 
-> **STATUS: DRAFT, pending checkpoint-1 approval.** Nothing in this file is frozen
-> yet. It becomes the pre-registration — and from then on is never edited; changes
-> go to `DEVIATIONS.md` — only after the operator approves checkpoint 1 and the
-> freezing commit records its sha256 in `provenance/`. Until then every item marked
-> **OPEN DECISION** or **operator to confirm** is a proposal, not a choice. No
-> generation and no judgment exists for this study at the time of writing
-> (2026-10-23).
+> **STATUS: FROZEN, 2026-10-23.** The operator approved checkpoint 1 on 2026-10-23 and
+> answered every decision in § 0. The freezing commit records this file's sha256 in
+> `provenance/freeze.md`, and a test fails if it ever changes. **This file is never edited
+> again; every later change goes to `DEVIATIONS.md`**, dated, with its reason. No
+> generation and no judgment exists for this study at the time of freezing.
 >
-> Drafted by an LLM agent (Claude) on 2026-10-23 for the operator's review. **Revision 2
-> (2026-10-23)** after the operator's feedback: a ÷8 design (§ 4, § 10), the measured judge
-> results (§ 11), the local-llama-server client wording, a single human labeller (§ 9.1), and
-> every remaining open decision gathered in § 0.
+> Authorship: drafted by an LLM agent (Claude) on 2026-10-23, accepted unedited by the
+> operator on 2026-10-23 (the two question sets); the rest of this file was drafted by the
+> same agent through two revisions on 2026-10-23 and approved by the operator at
+> checkpoint 1 with the decisions of § 0.
 
-Contents: 0 remaining decisions for the operator · 1 question · 2 hypotheses · 3 arms · 4 ladder, n, generation · 5 question
-sets · 6 judgments and templates · 7 metrics and exclusion · 8 statistics and verdicts ·
-9 judge validation (checkpoint 2) · 10 cost and trims · 11 judges: OPEN DECISIONS ·
-12 every other open decision · 13 seeds · 14 what is not pre-registered here.
+Contents: 0 decisions · 1 question · 2 hypotheses · 3 arms · 4 ladder, n, generation ·
+5 question sets · 6 judgments and templates · 7 metrics and exclusion · 8 statistics and
+verdicts · 9 judge validation (checkpoint 2) · 10 cost and trims · 11 judges · 12 every
+other decision · 13 seeds · 14 what is not pre-registered here.
 
 ---
 
-## 0. Remaining open decisions and questions for the operator
+## 0. Decisions (operator, 2026-10-23)
 
-Everything still undecided, each with the answer recommended here. Nothing below is chosen
-until the operator says so; "ready to freeze" means only that no further change is planned.
-Details are in the section named in the last column.
+Decided at checkpoint 1: **D1–D9, D11, D13 and D14 take the value recommended in the
+draft**; D5 and D8 were explained and agreed; **D10 was changed by the operator** (two human
+labellers) and **D12 was deferred**. Details are in the section named in the last column.
 
-| # | decision / question | recommended answer | § |
+| # | decision | value | § |
 |---|---|---|---|
-| D1 | **The ÷8 configuration** (total judge work ≈ 1/8 of the default's 348 h) | **`div8_main`**: ladder {−3, 0, +3} for all 22 arms (trait vector also at ±1, ±5 on held-out), 3 samples per question, held-out for all arms, in-distribution for the 6 decision vectors + trait vector, bridge for all arms, pairwise on held-out at ±3 by the primary judge, secondary judge on a pre-registered 25% subset. 13,200 generations; 33,264 primary + 7,182 secondary calls; **37.3 h** of judging (1/9.3), 44.3 h if pairwise calls are priced by length. The one alternative, `div8_alt` (no pairwise, 5 samples on held-out): 34.1 h. | 4, 10 |
+| D1 | **The ÷8 configuration** (total judge work ≈ 1/8 of the default's 348 h) | **`div8_main`**: ladder {−3, 0, +3} for all 22 arms (trait vector also at ±1, ±5 on held-out), 3 samples per question, held-out for all arms, in-distribution for the 6 decision vectors + trait vector, bridge for all arms, pairwise on held-out at ±3 by the primary judge, secondary judge on a pre-registered 25% subset. 13,200 generations; 33,264 primary + 7,182 secondary calls; **37.3 h** of judging (1/9.3), 44.3 h if pairwise calls are priced by length. The one alternative, `div8_alt` (no pairwise, 5 samples on held-out), is not adopted | 4, 10 |
 | D2 | primary / secondary judge | **primary Llama-3.3-70B-Instruct Q8_0 (`logprob_0_100`); secondary gpt-oss-20b MXFP4 (`text_0_100`)** — measured, not assumed | 11 |
-| D3 | quant level of the 70B | **Q8_0** (the only quant measured). Q4_K_M would be faster but is unmeasured and a coarser judge; it would need its own measurement and calibration | 11 |
-| D4 | gpt-oss reasoning effort | **low** (measured 1.00 s/call; medium/high not measured, slower roughly in proportion to reasoning tokens) | 11 |
-| D5 | `max_new_tokens` | **1000** (the per-game study's value; longest proxy answer 784 tokens) | 4 |
-| D6 | **Llama system header** "Cutting Knowledge Date: December 2023 / Today Date: 26 Jul 2024" | the header comes from the GGUF-embedded Llama-3.x chat template, which defaults `date_string` to "26 Jul 2024" when the caller passes none (llama-server passes none). **Recommended: pass a fixed explicit `date_string` (the freeze date) via `chat_template_kwargs`**, so the rendered prompt is fully specified by this repository's own config, and hash the rendered system header with the prompt template. The alternative (record the template default as-is) is identical on every call and also valid | 11 |
-| D7 | gpt-oss "Current date" in its own system header | its template writes `Current date: <today>` with `strftime_now` and takes no override, so the secondary judge's prompt carries the day it runs. **Recommended: accept, record the call timestamp (already on every row), and run the whole secondary pass in one sitting** (about 2 h) so it sees one date | 11 |
-| D8 | primary rung k* | **3** | 8.3 |
-| D9 | secondary-judge subset | **25%** of the (question, sample) pairs, one fixed subset for every point. Giving the secondary judge all held-out rows costs 2.6 h more (39.9 h total) | 4, 10 |
-| D10 | human labels | **the operator is the only labeller** (no colleague). The human–human agreement of the original specification cannot be computed; **declared substitute**: intra-rater test–retest on a hidden random 25% of the calibration sheet re-labelled after ≥ 3 days, plus human–judge and judge–judge agreement. **A deviation from the original specification; operator to confirm.** A second labeller can be added later without changing anything else | 9.1 |
-| D11 | question sets | the 40 held-out and 40 bridge drafts are accepted as-is ("draft is okay") and are **ready to freeze**. Authorship to record in the freezing commit: drafted by an LLM agent (Claude) on 2026-10-23, accepted unedited by the operator on 2026-10-23 | 5 |
-| D12 | "poor agreement" threshold | human–judge Spearman lower bound < 0.5 on trait, or bridge AUC lower bound ≤ 0.5 (§ 9.4); with one labeller the test–retest Spearman must itself reach 0.7, otherwise the labels are too noisy to calibrate against | 9.4 |
+| D3 | quant level of the 70B | **Q8_0** (the only quant measured) | 11 |
+| D4 | gpt-oss reasoning effort | **low** (measured 1.00 s/call) | 11 |
+| D5 | `max_new_tokens` | **1000** (the per-game study's value and upstream's; the longest of 4,000 unsteered general answers is 784 tokens) | 4 |
+| D6 | **Llama system header** "Cutting Knowledge Date: December 2023 / Today Date: …" | the header comes from the GGUF-embedded Llama-3.x chat template, which defaults `date_string` to "26 Jul 2024" when the caller passes none. **Decided: pass the fixed explicit `date_string` "23 Oct 2026" (the freeze date, in the template's own format) via `chat_template_kwargs` on every Llama request**, so the rendered prompt is fully specified by this repository's own config; the rendered system header is included in the template sha256 recorded in `provenance/freeze.md` | 11 |
+| D7 | gpt-oss "Current date" in its own system header | its template writes `Current date: <today>` with `strftime_now` and takes no override, so the secondary judge's prompt carries the day it runs. **Decided: accept, record the call timestamp (already on every row), and run the whole secondary pass in one sitting** (about 2 h) so it sees one date | 11 |
+| D8 | primary rung k* | **3** (unit beta ±31.5249): the largest rung where the earlier studies' surfaces were intact | 8.3 |
+| D9 | secondary-judge subset | **25%** of the (question, sample) pairs, one fixed subset for every point | 4, 10 |
+| D10 | human labels | **two human labellers, the operator and one colleague, labelling independently and blind.** The original specification's human–human agreement is computed (Spearman and Krippendorff's α / quadratic-weighted κ on binned scores, bootstrap CIs), beside human–judge and judge–judge agreement. Intra-rater test–retest is an **optional extra**, not required. The colleague's identity (name or initials, the operator's choice) is recorded in the provenance at checkpoint 2 | 9.1 |
+| D11 | question sets | the 40 held-out and 40 bridge questions are **frozen as drafted** (drafted by an LLM agent (Claude) on 2026-10-23, accepted unedited by the operator on 2026-10-23) | 5 |
+| D12 | "poor agreement" decision rule | **NOT pre-registered here.** The operator will fix it at checkpoint 2, before any full judging, and it will be recorded in `DEVIATIONS.md` with its date and reason. Nothing beyond the pilot runs before that | 9.4 |
 | D13 | pairwise secondary judge | on the same 25% subset (above) | 6 |
 | D14 | minor items | truncated generations kept and judged; bridge judge-free and unfiltered with the filtered analysis beside it; bridge sensitivity by clustered bootstrap; no null verdicts for the relaxed and Dictator-only arms; human sample from the pilot rows (§ 12, O5–O10) | 12 |
 
-When the operator approves, the freezing commit records this file's sha256 in `provenance/`
-together with the answers to D1–D14.
+The freezing commit records this file's sha256 in `provenance/freeze.md`.
 
 ---
 
@@ -72,8 +69,7 @@ score on the held-out set (coherence-filtered, § 7):
 * **H⁺(g, O)**: `T(D_g, +k*) − T(O_g, +k*) > 0`
 * **H⁻(g, O)**: `T(D_g, −k*) − T(O_g, −k*) < 0`
 
-`k*` is the primary comparison rung (§ 8.3; proposal `k* = 3`, **operator to
-confirm**). Positive steering along a decision vector is expected to make the answer
+`k*` is the primary comparison rung (§ 8.3; `k* = 3`, D8). Positive steering along a decision vector is expected to make the answer
 more other-regarding because every decision vector is oriented altruistic-minus-self
 (its altruistic pole minus its self-interested pole), which is also the orientation of
 the trait vector.
@@ -148,10 +144,10 @@ One `k` is the same-sized activation edit for every arm, nulls included.
 
 ## 4. Ladder, n, generation
 
-* **Design (proposal `div8_main`; operator to confirm, D1).** The operator asked for judge
+* **Design `div8_main` (D1).** The operator asked for judge
   work of about 1/8 of the default design's (the default — 7-rung ladder, 5 samples, every
   arm on every set — is 80,400 generations and 348 h of judging at the measured speeds and
-  is **not** proposed; `analysis/cost.md`).
+  is **not** adopted; `analysis/cost.md`).
   * **Ladder**: `k ∈ {−3, 0, +3}` for **every** arm, i.e. `unit_beta ∈ {±31.5249, 0}`;
     plus the **trait vector only** at `k ∈ {−5, −1, +1, +5}`
     (`unit_beta ±52.5415, ±10.5083`) on the held-out set, a dose-response reference.
@@ -181,7 +177,7 @@ One `k` is the same-sized activation edit for every arm, nulls included.
   by question id, then sample index). One user turn holding the question verbatim; no
   explicit system message, so Qwen's chat template inserts its own default one,
   exactly as in the per-game study.
-* **`max_new_tokens` = 1000 — operator to confirm.** Justification: (i) it is the
+* **`max_new_tokens` = 1000 (D5).** Justification: (i) it is the
   per-game study's setting and upstream's `max_tokens` default, so the k = 0 point
   matches every earlier run in this repository; (ii) on the closest committed proxy —
   4,000 unsteered Qwen2.5-7B-Instruct answers to upstream's general altruism questions
@@ -203,18 +199,20 @@ sha256, layer, positions, norm mode, unit beta, the question set and question id
 
 ## 5. Question sets
 
-| set | file (DRAFT until frozen) | n | role |
+| set | file (frozen) | n | role |
 |---|---|---|---|
-| held-out | `questions/heldout_draft.json` | 40 | **primary** |
+| held-out | `questions/heldout.json` | 40 | **primary** |
 | in-distribution | `data_generation/trait_data_eval/altruistic.json` (sha256 `a1a2d2b6…07dc`) | 40 | secondary, decision vectors and trait vector only, labelled "in-distribution for the trait vector" |
-| bridge | `questions/bridge_draft.json` | 40 | judge-free ground truth |
+| bridge | `questions/bridge.json` | 40 | judge-free ground truth |
 
 * **Held-out**: 40 new everyday dilemmas where self-interest and others' welfare
   conflict, same style as `altruistic.json`, no game framing, no money to split, no
   mention of the six games. Drafted by an LLM agent (Claude) on 2026-10-23; the operator
-  accepted both drafts as they stand ("draft is okay", 2026-10-23), so they are **ready to
-  freeze** (D11); the freezing commit renames and re-hashes them and records the
-  authorship (LLM-drafted, operator-accepted unedited).
+  accepted both drafts as they stand ("draft is okay", 2026-10-23) and they are **frozen**
+  (D11). Authorship: drafted by an LLM agent (Claude) on 2026-10-23, accepted unedited by
+  the operator on 2026-10-23; the frozen files `questions/heldout.json` and
+  `questions/bridge.json` differ from the drafts only in the `status` and `authorship`
+  fields and the file names.
 * **In-distribution**: `trait_data_eval/altruistic.json` and
   `trait_data_extract/altruistic.json` are byte-identical (both sha256
   `a1a2d2b6baa5830c3d575e50f0fb4592ed164e807f9541f301f92d8cfb7907dc`); the trait
@@ -237,8 +235,9 @@ sha256, layer, positions, norm mode, unit beta, the question set and question id
   item to any reference text 0.607; positive controls (paraphrases of six reference
   questions) score 0.86–0.97, so the embedding threshold does catch paraphrases. The
   character measure catches 3 of 6 controls and is the weaker of the two.
-* sha256 of each draft: `questions/SHA256SUMS`. The frozen files will be renamed
-  (`heldout.json`, `bridge.json`) and re-hashed in the freezing commit.
+* sha256 of each frozen file: `questions/SHA256SUMS` and `provenance/freeze.md`. The
+  near-duplicate report compared the question texts, which the freeze did not change; its
+  file names and input hashes were updated to the frozen files.
 
 ## 6. Judgments and templates
 
@@ -300,7 +299,7 @@ Answer with exactly one of <choice>1</choice> or <choice>2</choice>, and nothing
 ```
 
 The template is the text between the fences, without a trailing newline; its sha256
-is recorded when this file is frozen. A pairwise reply is parsed as exactly one
+is recorded in `provenance/freeze.md`. A pairwise reply is parsed as exactly one
 `<choice>1</choice>` or `<choice>2</choice>` in the final channel; anything else is
 `unparseable`. (The pairwise parser and its tests are added to `lab/llama_server_client.py`
 before checkpoint 2; the client implements the two 0–100 scoring modes only.)
@@ -347,11 +346,10 @@ the exclusion rule (§ 7.3), per (arm, k).
   `unparseable`, `truncated`, `http_error` or `transport_error` contributes no value
   to the mean and is counted per status. Retries only on transport errors, capped and
   logged on the row.
-* `truncated` **generations** are kept and judged like any other row (proposal,
-  **operator to confirm**); the share truncated is reported per point.
+* `truncated` **generations** are kept and judged like any other row (D14); the
+  share truncated is reported per point.
 * Bridge: the primary bridge analysis is judge-free and **unfiltered** (all parsed
-  rows); the coherence-filtered bridge analysis is reported beside it (proposal,
-  **operator to confirm**).
+  rows); the coherence-filtered bridge analysis is reported beside it (D14).
 
 ## 8. Statistical procedure
 
@@ -369,7 +367,7 @@ the exclusion rule (§ 7.3), per (arm, k).
   interval (the per-game `stats.py`, imported, not copied). These treat the 120 rows
   of a point as independent although they are 3 draws of 40 questions; as a
   sensitivity analysis the same differences are also reported with the
-  question-clustered bootstrap (proposal, **operator to confirm**).
+  question-clustered bootstrap (D14).
 * Agreement statistics (§ 9): bootstrap over items, 2,000 draws.
 
 ### 8.2 The verdict per end
@@ -391,8 +389,7 @@ the orthogonal null (`score_stats.end_verdict`):
 
 ### 8.3 Primary family and multiplicity
 
-* **Primary rung**: `k* = 3` (unit beta ±31.5249) — proposal, **operator to
-  confirm**. Why not ±5: the per-game study found the Prisoner's Dilemma answering
+* **Primary rung**: `k* = 3` (unit beta ±31.5249) (D8). Why not ±5: the per-game study found the Prisoner's Dilemma answering
   entirely in non-Latin script at k = +4/+5 and the Dictator peaking at k = +2 and
   falling back, and the Dictator study found its comparison at the largest dose
   measuring saturation rather than mechanism; ±3 is the largest rung where those
@@ -451,31 +448,33 @@ the orthogonal null (`score_stats.end_verdict`):
   shuffled null, orthogonal null} × k ∈ {−3, +3}, plus the k = 0 baseline as its own
   stratum (11 strata); 18 per steered stratum, the remaining 20 to the k = 0 stratum;
   uniform random rows within a stratum; seed **20261025** (§ 13).
-  Whether it is drawn from the checkpoint-2 pilot rows or from full generation is an
-  **OPEN DECISION** (§ 12).
+  It is drawn from the checkpoint-2 pilot rows if full generation has not run, otherwise
+  from full generation (O10, D14).
 * Exported as a **blind sheet**: `item_id` (opaque random id), `question`, `answer` —
   nothing else — in shuffled order. The id-to-row key is kept out of the sheet.
-* Labelled by **the operator, who is the only human labeller** (no colleague), in
-  `scripts/grader_page.py`'s page (trait 0–100, coherence 0–100, refusal/off-topic
-  flags, note), exported as `human_labels_<reviewer>_<date>.csv`. The page's audit
-  mode reveals a judge's score only for an item already rated, from a separate file,
-  and freezes that rating.
-* **Declared substitute for human–human agreement (operator to confirm, D10; a deviation
-  from the original specification, which had two labellers).** With one human the
-  inter-rater reliability cannot be computed, so the labels' reliability is measured by
-  **intra-rater test–retest**: after **≥ 3 days**, the operator re-labels a **random 25%**
-  of the calibration sheet (about 50 items; seed **20261029**), built by
-  `grader_page.py retest` — re-shuffled, every item under a **fresh opaque item_id**, no
-  marker that it is a repeat, the id-to-original key kept in a separate file and read only
-  by `agreement.py --retest-key`. The operator may still recognise an answer; the ≥ 3-day
-  gap is the mitigation and the limitation is reported. Reported: Spearman and
-  quadratic-weighted κ / Krippendorff's α (binned) between the two passes, with bootstrap
-  intervals over items. A test–retest Spearman below 0.7 on either score is reported as
-  "the human labels are too noisy to calibrate against" (D12).
-* Reported: test–retest (above), human–judge, judge–judge agreement — Spearman on raw scores,
-  quadratic-weighted κ and Krippendorff's α (interval) on scores binned 0–19, 20–39,
-  40–59, 60–79, 80–100 — each with a 95% bootstrap interval over items, 2,000 draws
-  (`scripts/measurement/agreement.py`).
+* Labelled by **two human labellers: the operator and one colleague (D10)**, each
+  **independently and blind** — separate sessions, no discussion of any item, neither sees
+  the other's labels nor any judge score before finishing — in `scripts/grader_page.py`'s
+  page (trait 0–100, coherence 0–100, refusal/off-topic flags, note). The page needs a
+  reviewer name before it accepts a rating, keeps each reviewer's ratings separate, and
+  exports `human_labels_<reviewer>_<date>.csv`: one export per labeller. The colleague's
+  identity (name or initials, the operator's choice) is recorded in the provenance at
+  checkpoint 2. The page's audit mode reveals a judge's score only for an item already
+  rated, from a separate file, and freezes that rating.
+* Reported, each with a 95% bootstrap interval over items, 2,000 draws
+  (`scripts/measurement/agreement.py`; Spearman on raw scores, quadratic-weighted κ and
+  Krippendorff's α (interval) on scores binned 0–19, 20–39, 40–59, 60–79, 80–100), for
+  trait and for coherence:
+  * **human–human** (operator vs colleague) — the original specification's inter-rater
+    agreement;
+  * **human–judge** (each labeller against each judge, and the labellers' mean against each
+    judge);
+  * **judge–judge** (primary vs secondary).
+* **Optional extra, not required (D10): intra-rater test–retest.** If the operator wishes,
+  after ≥ 3 days they re-label a random 25% of the calibration sheet (about 50 items; seed
+  **20261029**) built by `grader_page.py retest` — re-shuffled, every item under a fresh
+  opaque item_id, no marker that it is a repeat, the id-to-original key kept in a separate
+  file and read only by `agreement.py --retest-key`. Reported if done; nothing depends on it.
 
 ### 9.2 Determinism re-send
 
@@ -497,11 +496,16 @@ question-clustered bootstrap interval.
 ### 9.4 Decision rule
 
 All of 9.1–9.3 is reported to the operator and **full judging does not start until
-the operator approves.** If agreement is poor, the plan is changed explicitly and
-logged in `DEVIATIONS.md`. A numeric "poor" threshold is proposed for the operator to
-accept or replace: human–judge Spearman's lower interval bound < 0.5 on trait, or
-bridge AUC's lower bound ≤ 0.5, or — with a single labeller — a test–retest Spearman
-below 0.7 on trait (**OPEN DECISION**, D12).
+the operator approves.**
+
+**The "poor agreement" decision rule is NOT pre-registered here (D12).** The operator
+deferred it ("we will discuss it when we reach that"). It will be fixed by the operator at
+checkpoint 2, after seeing the pilot's agreement numbers and **before any full judging**,
+and recorded in `DEVIATIONS.md` with its date and reason. Nothing beyond the pilot runs
+before that. The draft's candidate thresholds (human–judge Spearman lower bound < 0.5 on
+trait; bridge AUC lower bound ≤ 0.5) were proposals only and are not adopted by this file.
+If agreement is judged poor under the rule then chosen, the plan is changed explicitly and
+logged in `DEVIATIONS.md` as well.
 
 ## 10. Cost and the ÷8 design
 
@@ -509,12 +513,12 @@ Full estimate, with every measured input and every assumption printed beside its
 **`analysis/cost.md`** (generated by `scripts/provenance/cost_estimate.py`). The judge speeds
 in it are **measured** (§ 11); the one assumption is the length of a pairwise call.
 
-**Default design (reference only, not proposed)**: 80,400 generations (22 arms × 6 rungs +
+**Default design (reference only, not adopted)**: 80,400 generations (22 arms × 6 rungs +
 shared k = 0 + unhooked check, × 200 rows × 3 sets), ~2.9e7 generated tokens, ~41–49 GPU-hours
 on one A40; **278,460 primary and 189,756 secondary judge calls**, which at the measured
 speeds is 295.5 h + 52.7 h = **348.2 h (14.5 days)** of serial judging at `--parallel 1`.
 
-**The operator asked for ÷8.** Proposed configuration **`div8_main`** (§ 4 for the sets and
+**The operator asked for ÷8.** Configuration **`div8_main`** (decided) (§ 4 for the sets and
 rungs; D1):
 
 | quantity | `div8_main` | default |
@@ -541,16 +545,16 @@ coherence), the 360 bridge-AUC rows, 25% of the pairwise calls.
 per question on the held-out set** (200 rows per held-out point): 17,200 generations, 30,408
 primary + 6,468 secondary calls, 32.3 h + 1.8 h = **34.1 h (1/10.2)**. It buys back the
 within-question precision on the primary set (the SE inflation of § 8.4 disappears there) and
-gives up pairwise entirely. Recommended: `div8_main`, because pairwise is the one
+gives up pairwise entirely. Decided (D1): `div8_main`, because pairwise is the one
 corroboration in a different judging format; if the operator values the primary contrasts'
 precision above that, `div8_alt`.
 
-Also priced: `div8_main` with the secondary judge on **all** held-out rows (D9): 16,443
+Also priced, not adopted: `div8_main` with the secondary judge on **all** held-out rows (D9): 16,443
 secondary calls, 4.6 h, total 39.9 h (1/8.7). What the ÷8 design preserves and loses, and the
 power caveats: **§ 8.4**. Other single trims of the default are priced in `analysis/cost.md`
 for reference; none is adopted.
 
-## 11. Judges — measured, recommended values (operator to confirm)
+## 11. Judges — measured values, decided at checkpoint 1
 
 Measured on PimientoRojo on 2026-10-23, bench items only (no study data), full report
 `provenance/judge_measurement_2026-10-23.md`; the probe of the host is
@@ -579,7 +583,7 @@ Measured on PimientoRojo on 2026-10-23, bench items only (no study data), full r
     `gpt-oss-20b-MXFP4.gguf`
     (`27cd6c432c7672cb812a92f611cf3ba7bbc35928262bb1e1253ff4ee6ae35901`).
 
-**Measured results that fix the recommendations** (12 bench items, 24 distinct prompts per
+**Measured results behind the decisions** (12 bench items, 24 distinct prompts per
 mode, temperature 0, seed 0, `cache_prompt=false`, one request at a time):
 
 | | Llama-3.3-70B Q8_0, `logprob_0_100` | Llama-3.3-70B Q8_0, text | gpt-oss-20b MXFP4, `text_0_100`, effort low |
@@ -594,23 +598,23 @@ not scale at all), so planning uses `--parallel 1`. The two servers share one GP
 A cached-prefix call is ~24% faster, but the study sends `cache_prompt: false`, so the cold
 figure is the planning figure.
 
-**Recommended values** (each still **operator to confirm**, § 0):
+**Decided values** (approved by the operator at checkpoint 1, 2026-10-23; D2–D4, D6, D7):
 
-| # | decision | recommended | why |
+| # | decision | value | why |
 |---|---|---|---|
 | J1 | primary / secondary judge | **primary = Llama-3.3-70B-Instruct Q8_0; secondary = gpt-oss-20b MXFP4** | the operator wants Llama 70B to do the work; it is the only one of the two that gives a continuous, reproducible score; gpt-oss is the cheap (3.8× faster) second family |
 | J2 | quant level of the 70B | **Q8_0** | measured; FP8 is not a GGUF type. GGUF judges are quantised — a judge number here is a Q8_0 / MXFP4 number, not a bf16 one. Q4_K_M unmeasured |
 | J3 | Llama scoring mode | **`logprob_0_100`**, temperature 0, seed 0, `top_logprobs` 20, `max_tokens` 1, **`cache_prompt: false`**, **`--parallel 1`** | the endpoint check passed (above); `cache_prompt=false` is what makes it reproducible; it is sent by the client on every request. No fallback to text mode: if the endpoint stopped returning logprobs the run would stop |
 | J4 | gpt-oss scoring mode | **`text_0_100`, final channel only** | its first assistant token is `<\|channel\|>`, never a digit |
 | J5 | gpt-oss reasoning effort | **low**, `chat_template_kwargs: {"reasoning_effort": "low"}`, recorded in every request payload | measured 1.00 s/call; effort medium/high not measured |
-| J6 | text-mode format instruction | **append, after the verbatim template, exactly:** `\n\nWrite the number inside <score></score> tags, for example <score>73</score>, and write nothing else. If the model clearly refused to answer, write REFUSAL instead.` — sha256 recorded at freeze | the upstream templates ask for a bare number; `text_0_100` needs exactly one tag. The bench used a shorter instruction (`Respond with only your final score inside tags, exactly like <score>NN</score>.`); the few extra tokens do not move the measured speeds beyond their noise, and checkpoint 2 re-measures on the real prompts |
+| J6 | text-mode format instruction | **append, after the verbatim template, exactly:** `\n\nWrite the number inside <score></score> tags, for example <score>73</score>, and write nothing else. If the model clearly refused to answer, write REFUSAL instead.` — sha256 in `provenance/freeze.md` | the upstream templates ask for a bare number; `text_0_100` needs exactly one tag. The bench used a shorter instruction (`Respond with only your final score inside tags, exactly like <score>NN</score>.`); the few extra tokens do not move the measured speeds beyond their noise, and checkpoint 2 re-measures on the real prompts |
 | J7 | judge `max_tokens` | **1** (Llama logprob); **2048** (gpt-oss, reasoning + final; measured 35–75 generated tokens at low); **32** (Llama text, not used) — a hit is status `truncated` | explicit, not a server default |
 | J8 | judge seed / temperature / top_logprobs | **seed 0, temperature 0, top_logprobs 20** | upstream's values |
 | J9 | llama-server concurrency | **`--parallel 1`**; any larger value only after the determinism re-send (§ 9.2) shows no change; the launch line (`--parallel`, `-b`, `-ub`, `-c`, `-fa`, model path) recorded per run with `/props` | batching can change outputs at temperature 0; measured gain ≤ 1.3× |
 | J10 | served model ids | **set with `--alias`** to `llama-3.3-70b-instruct-q8_0` and `gpt-oss-20b-mxfp4`; the client aborts if `/v1/models` does not list the configured id | the bench servers were started without an alias (their id is the model path); the study relaunches them with the alias |
 | J11 | weights provenance per run | **GGUF file name(s) + sha256 + quant type + llama.cpp build `b11836` / commit `f5027fb21`**, from the run config plus `/props` (`model_path`, `build_info`) as returned; a field the server does not expose is recorded as unavailable, never guessed | operator decision 1 |
-| J12 | **Llama system header** (D6) | **pass a fixed explicit `chat_template_kwargs: {"date_string": "<freeze date, D Mon YYYY>"}`** on every Llama request, recorded in the payload (and therefore in the cache key), and **hash the rendered system header together with the prompt template** | see the next paragraph |
-| J13 | gpt-oss "Current date" (D7) | **accept; record the call timestamp; run the whole secondary pass in one sitting** | see the paragraph after the next |
+| J12 | **Llama system header** (D6) | **pass the fixed explicit `chat_template_kwargs: {"date_string": "23 Oct 2026"}`** (the freeze date, in the template's own `D Mon YYYY` format) on every Llama request, recorded in the payload (and therefore in the cache key); **the rendered system header is hashed together with the prompt template** in `provenance/freeze.md` | see the next paragraph |
+| J13 | gpt-oss "Current date" (D7) | **accepted: record the call timestamp; run the whole secondary pass in one sitting** | see the paragraph after the next |
 
 **Where "Today Date: 26 Jul 2024" comes from** (verified on 2026-10-23 against the template text
 that llama-server exposes at `/props` → `chat_template`, 4,613 characters, taken from the GGUF
@@ -620,13 +624,13 @@ system block, `Cutting Knowledge Date: December 2023` then `Today Date: <date_st
 begins with `{%- if not date_string is defined %}{%- set date_string = "26 Jul 2024" %}`. So
 when the caller passes no `date_string` — and llama-server passes none unless a request sets
 `chat_template_kwargs` — the date is the template's own default. The judge prompt then sits in
-the user turn after that header. Nothing in it comes from this study. Two options: (a) keep the
+the user turn after that header. Nothing in it comes from this study. Two options were weighed: (a) keep the
 template default — identical on every call, so harmless for comparisons across arms, but the
-rendered prompt is partly specified by a file this repository does not own; (b) **recommended**:
+rendered prompt is partly specified by a file this repository does not own; (b) **decided (D6)**:
 pass an explicit `date_string` (the freeze date), so the rendered prompt is fully specified by
 the study's own configuration. Whether this llama-server build forwards `chat_template_kwargs`
 to the template is checked at the start of checkpoint 2 by rendering one prompt and reading the
-header back; if it does not, (a) is used and the template default is recorded.
+header back; if it does not, (a) is used, the template default is recorded, and the change is logged in `DEVIATIONS.md`.
 
 **gpt-oss's own date.** The gpt-oss harmony template writes `Current date:` into its system
 header from `strftime_now("%Y-%m-%d")` and takes no override (`reasoning_effort` and
@@ -657,27 +661,27 @@ returned exactly 20 `top_logprobs` on 48/48 Llama calls, and the first token's d
 calls and the digit mass is 0 — its logprob mode is **not usable**, consistent with J4. The
 HF-tokenizer half for the Llama model is still not run (gated repository).
 
-## 12. Every other open decision
+## 12. Every other decision
 
-(The decisions that need the operator's attention are in § 0. These are the remaining
-parameters, each with its recommended value; unless the operator objects at checkpoint 1 they
-are frozen as written.)
+(The operator-facing decisions are in § 0. These are the remaining parameters; the operator
+approved every recommended value at checkpoint 1 on 2026-10-23 (D14 for O5–O10), so they are
+frozen as written.)
 
-| # | decision | proposal |
+| # | decision | value |
 |---|---|---|
 | O1 | ladder | **`div8_main`** (§ 4; D1): {−3, 0, +3} for every arm, trait vector also ±1, ±5 on held-out |
 | O2 | samples per question | **3** (5 on the held-out set under `div8_alt`) |
 | O3 | `max_new_tokens` | **1000** (§ 4) |
-| O4 | primary rung k* | **3** (§ 8.3) |
+| O4 | primary rung k* | **3** (§ 8.3; D8) |
 | O5 | truncated generations | **kept and judged**, share reported |
 | O6 | bridge primary analysis | **judge-free, unfiltered**; filtered beside it |
 | O7 | bridge sensitivity | **also question-clustered bootstrap** beside Wilson/Newcombe |
 | O8 | null verdicts for the secondary arms | **none**: relaxed and Dictator-only arms are compared with baseline and with the trait vector only (their committed shuffled nulls exist; no orthogonal null was built for them) |
 | O9 | pairwise scope | **held-out at ±3 only**, every steered row, both orders, primary judge; secondary judge on the 25% subset (§ 13) |
 | O10 | human sample source | **the checkpoint-2 pilot rows** if full generation has not run, otherwise full generation; strata as § 9.1 |
-| O11 | "poor agreement" threshold | **§ 9.4** (D12) |
-| O12 | held-out and bridge wording | **accepted as drafted; ready to freeze** (D11) |
-| O13 | human labelling | **single labeller; intra-rater test–retest substitute** (§ 9.1; D10) |
+| O11 | "poor agreement" decision rule | **not pre-registered**: fixed by the operator at checkpoint 2, before any full judging (§ 9.4; D12) |
+| O12 | held-out and bridge wording | **frozen as drafted** (D11) |
+| O13 | human labelling | **two labellers, the operator and one colleague, independent and blind** (§ 9.1; D10) |
 
 ## 13. Seeds (all fixed now)
 
@@ -690,7 +694,7 @@ are frozen as written.)
 | determinism re-send selection (§ 9.2) | 20261026 |
 | judge send order (`judge_many(order_seed=…)`) | 20261027 |
 | bootstrap (every interval in § 8; agreement in § 9) | 20261028 |
-| test–retest subset of the calibration sheet (§ 9.1; `grader_page.py retest`) | 20261029 |
+| optional extra: test–retest subset of the calibration sheet (§ 9.1; `grader_page.py retest`) | 20261029 |
 | judge request `seed` | 0 |
 
 ## 14. What this pre-registration does not cover
@@ -701,4 +705,8 @@ are frozen as written.)
   question as one user turn, through `audit.generate` and `audit.steer`) is
   implementation, written before the pilot and tested offline; it changes no choice
   above.
-* Anything decided after data exists goes to `DEVIATIONS.md`, dated, with its reason.
+* **The "poor agreement" decision rule (D12).** Not pre-registered here; the operator fixes
+  it at checkpoint 2, before any full judging, and it is recorded in `DEVIATIONS.md` with its
+  date and reason (§ 9.4). Nothing beyond the pilot runs before that.
+* Anything decided after data exists goes to `DEVIATIONS.md`, dated, with its reason. **This
+  file is never edited after the freeze** (`provenance/freeze.md`).

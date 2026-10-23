@@ -18,6 +18,12 @@ Format, one entry per deviation:
 * Effect on results: <which numbers / verdicts it can move, or "none">
 ```
 
-No deviations recorded. (The pre-registration is still a DRAFT pending
-checkpoint-1 approval; changes before the freeze are edits to the draft, not
-deviations.)
+No deviations recorded. `PREREG.md` was frozen on 2026-10-23 (`provenance/freeze.md`);
+this file is where every later change goes.
+
+## Pending, to be recorded here before it is used
+
+* **The "poor agreement" decision rule (PREREG § 9.4, D12).** Not pre-registered. The operator
+  fixes it at checkpoint 2, after seeing the pilot's agreement numbers and before any full
+  judging, and it is entered here with its date and reason. Nothing beyond the pilot runs
+  before that.

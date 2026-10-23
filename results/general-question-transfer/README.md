@@ -1,13 +1,13 @@
-# General-question transfer of the game-derived decision vectors — checkpoint 1
+# General-question transfer of the game-derived decision vectors — frozen pre-registration
 
 **There is no result in this directory yet.** Nothing has been generated and nothing
-has been judged. This is the checkpoint-1 review package: the draft
-pre-registration, the drafted question sets, the arm vectors pinned by sha256, the
-llama-server client, the tokenizer check, the cost estimate and the human grader page. The
-operator reviews it; the pre-registration and the question sets are frozen only on
-approval.
+has been judged. Checkpoint 1 was approved by the operator on 2026-10-23, and this
+directory holds the **frozen** pre-registration (`PREREG.md`, never edited again: later
+changes go to `DEVIATIONS.md`), the frozen question sets, the arm vectors pinned by sha256,
+the llama-server client, the tokenizer check, the cost estimate and the human grader page.
+`provenance/freeze.md` records the sha256 of everything the pre-registration pins.
 
-The question the study will answer, once approved: does a direction learned from what
+The question the study answers: does a direction learned from what
 Qwen2.5-7B-Instruct **does in a game** (`results/crossgame-per-game-steering`,
 `results/dictator-decision-vector`) move how it answers **everyday, non-game**
 questions about self-interest versus others' welfare, at both ends of the ladder,
@@ -17,36 +17,38 @@ beyond a same-size shuffled-label null and an orthogonal null? `PREREG.md` § 1�
 
 | item | file |
 |---|---|
-| the draft pre-registration; **§ 0 lists every remaining decision with the recommended answer** | `PREREG.md` (§ 0 decisions, § 4 and § 10 the ÷8 design, § 11 judges, § 12 the rest) |
-| 40 held-out dilemmas (drafted by an LLM agent, Claude, 2026-10-23) | `questions/heldout_draft.json` |
-| 40 forced-choice bridge items, counterbalanced by seed | `questions/bridge_draft.json` (built by `scripts/questions/build_bridge.py`) |
+| the frozen pre-registration; **§ 0 lists every decision as the operator decided it** (D1–D14) | `PREREG.md` (§ 0 decisions, § 4 and § 10 the ÷8 design, § 11 judges, § 12 the rest) |
+| the freeze record: sha256 of the pre-registration, the question sets, the templates (incl. the rendered Llama system header) and the arm-vectors table, and the commit it was frozen on | `provenance/freeze.md` |
+| 40 held-out dilemmas (drafted by an LLM agent, Claude, 2026-10-23; accepted unedited by the operator, 2026-10-23) | `questions/heldout.json` |
+| 40 forced-choice bridge items, counterbalanced by seed | `questions/bridge.json` (built by `scripts/questions/build_bridge.py`) |
 | near-duplicate report (no pair at either threshold) | `questions/near_duplicates.md` / `.json` |
-| draft checksums | `questions/SHA256SUMS` |
+| question-set checksums | `questions/SHA256SUMS` |
 | every arm's vector, path, sha256, norm, angle | `provenance/arm_vectors.json`; the six orthogonal nulls built here are in `vectors/` |
 | tokenizer single-token check for the judges | `provenance/tokenizer_check.json` |
 | what is known about the judge host | `provenance/pimientorojo_probe.md` |
 | the measured judge results (speed, logprob usability, determinism) | `provenance/judge_measurement_2026-10-23.md` |
 | cost estimate, the ÷8 design and its alternative | `analysis/cost.md` / `cost.json` |
 | the human grader page, demonstrated on SYNTHETIC items | `grader_demo/grader_SYNTHETIC.html` (open it in a browser; load `judge_reveal_SYNTHETIC.json` for audit mode) |
-| deviations log (empty) | `DEVIATIONS.md` |
+| deviations log (empty; the "poor agreement" rule is fixed here at checkpoint 2) | `DEVIATIONS.md` |
 
 ## Layout
 
 ```
 PREREG.md, DEVIATIONS.md, README.md
-questions/        drafts, near-duplicate report, SHA256SUMS
+questions/        frozen question sets, near-duplicate report, SHA256SUMS
 vectors/          the six per-game orthogonal nulls (built 2026-10-23, reproducible)
-provenance/       arm_vectors.json, tokenizer_check.json, pimientorojo_probe.md
+provenance/       freeze.md, arm_vectors.json, tokenizer_check.json, pimientorojo_probe.md
 analysis/         cost.md, cost.json
 grader_demo/      the grader page on synthetic placeholder items, and its inputs
 scripts/
-  grader_page.py              blind grader page (page | retest | demo)
+  grader_page.py              blind grader page, two independent reviewers (page | retest | demo)
   judging/tokenizer_check.py  GGUF-vocab + HF tokenizer single-token check
   measurement/bridge_parse.py the bridge set's A/B reader (no judge)
   measurement/score_stats.py  point summaries, clustered bootstrap, verdicts, Holm
   measurement/agreement.py    Spearman, quadratic-weighted kappa, Krippendorff's alpha
   provenance/arm_vectors.py   arm hashes + orthogonal-null build (--check rebuilds)
   provenance/cost_estimate.py the cost estimate
+  provenance/freeze.py        writes / checks provenance/freeze.md
   questions/build_bridge.py   bridge counterbalancing (--check rebuilds)
   questions/near_duplicates.py the near-duplicate report
   tests/                      offline tests, in `python -m pytest -q`
@@ -68,6 +70,7 @@ repository's measured interpreter (torch 2.6.0+cu124, transformers 4.52.3).
 ```
 python results/general-question-transfer/scripts/provenance/arm_vectors.py --check
 python results/general-question-transfer/scripts/questions/build_bridge.py --check
+python results/general-question-transfer/scripts/provenance/freeze.py --check
 HF_HUB_OFFLINE=1 python results/general-question-transfer/scripts/questions/near_duplicates.py
 HF_HUB_OFFLINE=1 python results/general-question-transfer/scripts/provenance/cost_estimate.py
 python results/general-question-transfer/scripts/judging/tokenizer_check.py \

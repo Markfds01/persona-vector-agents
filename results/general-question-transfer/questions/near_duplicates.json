@@ -20,16 +20,16 @@
   "bridge_text": "scenario + 'A: ' option + 'B: ' option (the fixed instruction line is identical in every item and left out)"
  },
  "n_compared": {
-  "heldout_draft": 40,
-  "bridge_draft": 40,
+  "heldout": 40,
+  "bridge": 40,
   "altruistic:trait_data_extract": 40,
   "altruistic:trait_data_eval": 40,
   "audit_game": 44,
   "audit_grid": 692
  },
  "inputs_sha256": {
-  "heldout_draft.json": "094281566fda573e6bf640a8d126d68c769364d9fb3e68fc91de783935ca4a0b",
-  "bridge_draft.json": "e1e13c79229ab45d50851e30c9d20e55ada7a2ad191bb765619b54c475a2c318"
+  "heldout.json": "d82c3347705e232fb2b08f72063bf8b7caa99a08bf0978d22722cdec2892bdae",
+  "bridge.json": "17d8d745d16acabaefdecef9ed0e1229b629ad63dd8b7618e2aa130a8d94b6a9"
  },
  "positive_controls": [
   {

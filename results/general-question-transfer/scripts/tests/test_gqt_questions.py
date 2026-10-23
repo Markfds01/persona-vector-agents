@@ -1,4 +1,4 @@
-"""The checkpoint-1 drafts: shape, counterbalancing, provenance and checksums."""
+"""The frozen question sets: shape, counterbalancing, provenance and checksums."""
 
 import hashlib
 import json
@@ -22,30 +22,31 @@ def load(name):
     return json.loads((PACKAGE / "questions" / name).read_text(encoding="utf-8"))
 
 
-def test_heldout_draft_shape_and_authorship():
-    doc = load("heldout_draft.json")
+def test_heldout_shape_and_authorship():
+    doc = load("heldout.json")
     qs = [q["question"] for q in doc["questions"]]
     assert len(qs) == 40 and len(set(qs)) == 40
     assert len({q["id"] for q in doc["questions"]}) == 40
-    assert "Claude" in doc["authorship"] and "2026-10-23" in doc["authorship"]
-    assert doc["status"].startswith("DRAFT")
+    assert doc["authorship"] == ("drafted by an LLM agent (Claude) on 2026-10-23, "
+                                 "accepted unedited by the operator on 2026-10-23")
+    assert doc["status"].startswith("FROZEN 2026-10-23")
     for q in qs:
         assert not GAME_WORDS.search(q), q
         assert q.rstrip().endswith("?")
 
 
 def test_bridge_counterbalanced_exactly_half_by_recorded_seed():
-    doc = load("bridge_draft.json")
+    doc = load("bridge.json")
     items = doc["items"]
     assert len(items) == 40
     assert sum(it["other_regarding_option"] == "A" for it in items) == 20
     assert doc["counterbalance"]["seed"] == build_bridge.SEED
     assert json.dumps(build_bridge.build(), indent=1, ensure_ascii=False) + "\n" == \
-        (PACKAGE / "questions" / "bridge_draft.json").read_text(encoding="utf-8")
+        (PACKAGE / "questions" / "bridge.json").read_text(encoding="utf-8")
 
 
 def test_bridge_items_render_their_options_in_the_assigned_order():
-    for it, (scenario, other, selfish) in zip(load("bridge_draft.json")["items"],
+    for it, (scenario, other, selfish) in zip(load("bridge.json")["items"],
                                               build_bridge.ITEMS):
         a, b = (other, selfish) if it["other_regarding_option"] == "A" else (selfish, other)
         assert (it["option_a"], it["option_b"]) == (a, b)
@@ -54,7 +55,7 @@ def test_bridge_items_render_their_options_in_the_assigned_order():
 
 
 def test_bridge_prompt_asks_for_what_the_parser_reads():
-    for it in load("bridge_draft.json")["items"]:
+    for it in load("bridge.json")["items"]:
         assert '"Answer: A"' in it["prompt"] and '"Answer: B"' in it["prompt"]
         # the prompt itself contains both answer strings; the parser must not be
         # fed the prompt, only the model's continuation
@@ -64,15 +65,15 @@ def test_bridge_prompt_asks_for_what_the_parser_reads():
 def test_sha256sums_match():
     sums = (PACKAGE / "questions" / "SHA256SUMS").read_text().split("\n")
     entries = [line.split() for line in sums if line.strip()]
-    assert {name for _, name in entries} == {"heldout_draft.json", "bridge_draft.json"}
+    assert {name for _, name in entries} == {"heldout.json", "bridge.json"}
     for digest, name in entries:
         data = (PACKAGE / "questions" / name).read_bytes()
         assert hashlib.sha256(data).hexdigest() == digest, name
 
 
-def test_near_duplicate_report_covers_the_current_drafts():
+def test_near_duplicate_report_covers_the_frozen_sets():
     report = json.loads((PACKAGE / "questions" / "near_duplicates.json").read_text())
-    for name in ("heldout_draft.json", "bridge_draft.json"):
+    for name in ("heldout.json", "bridge.json"):
         data = (PACKAGE / "questions" / name).read_bytes()
         assert report["inputs_sha256"][name] == hashlib.sha256(data).hexdigest()
     assert report["pairs_above_threshold"] == []

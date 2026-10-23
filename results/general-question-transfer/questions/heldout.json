@@ -1,6 +1,6 @@
 {
- "status": "DRAFT - pending operator review and freeze at checkpoint 1; not to be used for generation until frozen",
- "authorship": "drafted by an LLM agent (Claude) on 2026-10-23, pending operator review",
+ "status": "FROZEN 2026-10-23 - accepted unedited by the operator at checkpoint 1; frozen with PREREG.md (provenance/freeze.md)",
+ "authorship": "drafted by an LLM agent (Claude) on 2026-10-23, accepted unedited by the operator on 2026-10-23",
  "purpose": "primary held-out test set for results/general-question-transfer: open-ended everyday dilemmas where self-interest and others' welfare conflict, in the style and domain of data_generation/trait_data_eval/altruistic.json",
  "constraints": [
   "no game framing",

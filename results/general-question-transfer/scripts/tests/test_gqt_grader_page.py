@@ -97,6 +97,17 @@ def test_page_has_the_controls_the_operator_asked_for():
         assert needle in html
 
 
+def test_two_reviewers_get_separate_state_and_separate_exports():
+    html = gp.render([{"item_id": "a", "question": "q", "answer": "x"}])
+    # ratings are namespaced by reviewer, a rating needs a name, the export is named by it
+    assert "const stateKey = () => KEY + ':' + slug(reviewer.value)" in html
+    assert "if (!named())" in html
+    assert "localStorage.getItem(stateKey())" in html and "localStorage.setItem(stateKey()" in html
+    assert "human_labels_${fileSlug}_" in html
+    # the legacy shared namespace is gone: nothing reads or writes the bare sheet key
+    assert "localStorage.getItem(KEY)" not in html and "localStorage.setItem(KEY," not in html
+
+
 def test_committed_demo_is_reproducible():
     demo_dir = SCRIPTS.parent / "grader_demo"
     committed = (demo_dir / "grader_SYNTHETIC.html").read_text()

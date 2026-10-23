@@ -1,6 +1,6 @@
 {
- "status": "DRAFT - pending operator review and freeze at checkpoint 1; not to be used for generation until frozen",
- "authorship": "drafted by an LLM agent (Claude) on 2026-10-23, pending operator review",
+ "status": "FROZEN 2026-10-23 - accepted unedited by the operator at checkpoint 1; frozen with PREREG.md (provenance/freeze.md)",
+ "authorship": "drafted by an LLM agent (Claude) on 2026-10-23, accepted unedited by the operator on 2026-10-23",
  "purpose": "bridge set: judge-free ground truth. P(other-regarding choice) is read by scripts/measurement/bridge_parse.py from the required 'Answer: A' / 'Answer: B' line",
  "counterbalance": {
   "rule": "the other-regarding option is A in exactly half of the items",
