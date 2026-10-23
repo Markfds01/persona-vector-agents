@@ -1,0 +1,472 @@
+{
+ "generated_at": "2026-10-23T10:21:46+00:00",
+ "script": "results/general-question-transfer/scripts/judging/tokenizer_check.py",
+ "llama_tokenize_binary_sha256": "265935128d55de5646fc24b4ad877ba8f9912689793fb5daf2a2ee0418b00f91",
+ "endpoint_top_logprobs_ge_20": "not run (needs the live judge server; checkpoint-1 item makes no endpoint call)",
+ "judges": {
+  "llama-3.3-70b-instruct-q8_0": {
+   "gguf": {
+    "repo": "bartowski/Llama-3.3-70B-Instruct-GGUF",
+    "revision": "b6c5c9f176f3279204034e1d16d393105e95cb88",
+    "file": "Llama-3.3-70B-Instruct-Q8_0/Llama-3.3-70B-Instruct-Q8_0-00001-of-00002.gguf",
+    "expected_sha256": "0c4ec5083aec2efa104269e8b63e2d9f3322e2fa50511184314093a7b4697878",
+    "hf_lfs_sha256": "0c4ec5083aec2efa104269e8b63e2d9f3322e2fa50511184314093a7b4697878",
+    "file_size": 39927004064,
+    "sha256_matches_expected": true,
+    "header_bytes_read": 8388608,
+    "gguf_version": 3,
+    "tensor_count": 379,
+    "tokenizer_model": "gpt2",
+    "tokenizer_pre": "llama-bpe",
+    "n_tokens": 128256,
+    "n_merges": 280147,
+    "general_name": "Llama 3.3 70B Instruct",
+    "file_type": 7,
+    "chat_template_sha256": "e10ca381b1ccc5cf9db52e371f3b6651576caee0a630b452e2816b2d404d4b65",
+    "vocab_only_gguf_sha256": "ff1b024c8ddbbb7138b8ff8ae6cb54ca563027e08b0aa7027bc2e149ff0ac540",
+    "llama_tokenize_version": "version: 0.7.0-dev (build 11836, commit f5027fb21)\nbuilt with GNU 11.4.0 for Linux x86_64",
+    "chat_prefix": "<|start_header_id|>system<|end_header_id|>\n\nCutting Knowledge Date: December 2023\nToday Date: 26 Jul 2024\n\n<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nRate this answer.<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n\n",
+    "single_token": {
+     "bare": {
+      "status": "pass",
+      "n_tested": 101,
+      "n_single_token": 101,
+      "failures": {}
+     },
+     "leading_space": {
+      "status": "fail",
+      "n_tested": 101,
+      "n_single_token": 0,
+      "failures": {
+       "0": [
+        220,
+        15
+       ],
+       "1": [
+        220,
+        16
+       ],
+       "2": [
+        220,
+        17
+       ],
+       "3": [
+        220,
+        18
+       ],
+       "4": [
+        220,
+        19
+       ],
+       "5": [
+        220,
+        20
+       ],
+       "6": [
+        220,
+        21
+       ],
+       "7": [
+        220,
+        22
+       ],
+       "8": [
+        220,
+        23
+       ],
+       "9": [
+        220,
+        24
+       ],
+       "10": [
+        220,
+        605
+       ],
+       "11": [
+        220,
+        806
+       ],
+       "...": "89 more"
+      }
+     },
+     "first_assistant": {
+      "status": "pass",
+      "n_tested": 101,
+      "n_single_token": 101,
+      "failures": {}
+     }
+    },
+    "status": "run"
+   },
+   "hf": {
+    "repo": "meta-llama/Llama-3.3-70B-Instruct",
+    "revision": "6f6073b423013f6a7d4d9f39144961bfbfbc386b",
+    "status": "not run (gated)",
+    "reason": "OSError: You are trying to access a gated repo."
+   },
+   "summary": {
+    "gguf": {
+     "bare": "pass",
+     "leading_space": "fail",
+     "first_assistant": "pass"
+    },
+    "hf": "not run"
+   }
+  },
+  "gpt-oss-20b-mxfp4": {
+   "gguf": {
+    "repo": "ggml-org/gpt-oss-20b-GGUF",
+    "revision": "15dcfc7e7c608c6161507211ed43c5b590801b4b",
+    "file": "gpt-oss-20b-MXFP4.gguf",
+    "expected_sha256": "27cd6c432c7672cb812a92f611cf3ba7bbc35928262bb1e1253ff4ee6ae35901",
+    "hf_lfs_sha256": "27cd6c432c7672cb812a92f611cf3ba7bbc35928262bb1e1253ff4ee6ae35901",
+    "file_size": 12109566624,
+    "sha256_matches_expected": true,
+    "header_bytes_read": 16777216,
+    "gguf_version": 3,
+    "tensor_count": 459,
+    "tokenizer_model": "gpt2",
+    "tokenizer_pre": "gpt-4o",
+    "n_tokens": 201088,
+    "n_merges": 446189,
+    "general_name": "gpt-oss-20b",
+    "file_type": 38,
+    "chat_template_sha256": "a4c9919cbbd4acdd51ccffe22da049264b1b73e59055fa58811a99efbd7c8146",
+    "vocab_only_gguf_sha256": "60a66423ec4eb6e8f3c853160f423587cd4bd019308b561cf546e683d03145e1",
+    "llama_tokenize_version": "version: 0.7.0-dev (build 11836, commit f5027fb21)\nbuilt with GNU 11.4.0 for Linux x86_64",
+    "chat_prefix": "<|start|>system<|message|>You are ChatGPT, a large language model trained by OpenAI.\nKnowledge cutoff: 2024-06\nCurrent date: 2026-10-23\n\nReasoning: medium\n\n# Valid channels: analysis, commentary, final. Channel must be included for every message.<|end|><|start|>user<|message|>Rate this answer.<|end|><|start|>assistant<|channel|>final<|message|>",
+    "single_token": {
+     "bare": {
+      "status": "pass",
+      "n_tested": 101,
+      "n_single_token": 101,
+      "failures": {}
+     },
+     "leading_space": {
+      "status": "fail",
+      "n_tested": 101,
+      "n_single_token": 0,
+      "failures": {
+       "0": [
+        220,
+        15
+       ],
+       "1": [
+        220,
+        16
+       ],
+       "2": [
+        220,
+        17
+       ],
+       "3": [
+        220,
+        18
+       ],
+       "4": [
+        220,
+        19
+       ],
+       "5": [
+        220,
+        20
+       ],
+       "6": [
+        220,
+        21
+       ],
+       "7": [
+        220,
+        22
+       ],
+       "8": [
+        220,
+        23
+       ],
+       "9": [
+        220,
+        24
+       ],
+       "10": [
+        220,
+        702
+       ],
+       "11": [
+        220,
+        994
+       ],
+       "...": "89 more"
+      }
+     },
+     "first_assistant": {
+      "status": "pass",
+      "n_tested": 101,
+      "n_single_token": 101,
+      "failures": {}
+     }
+    },
+    "status": "run"
+   },
+   "hf": {
+    "repo": "openai/gpt-oss-20b",
+    "revision": "6cee5e81ee83917806bbde320786a8fb61efebee",
+    "status": "run",
+    "transformers_tokenizer_class": "PreTrainedTokenizerFast",
+    "chat_prefix": "<|start|>system<|message|>You are ChatGPT, a large language model trained by OpenAI.\nKnowledge cutoff: 2024-06\nCurrent date: 2026-10-23\n\nReasoning: medium\n\n# Valid channels: analysis, commentary, final. Channel must be included for every message.<|end|><|start|>user<|message|>Rate this answer.<|end|><|start|>assistant<|channel|>final<|message|>",
+    "chat_template_sha256": "a4c9919cbbd4acdd51ccffe22da049264b1b73e59055fa58811a99efbd7c8146",
+    "single_token": {
+     "bare": {
+      "status": "pass",
+      "n_tested": 101,
+      "n_single_token": 101,
+      "failures": {}
+     },
+     "leading_space": {
+      "status": "fail",
+      "n_tested": 101,
+      "n_single_token": 0,
+      "failures": {
+       "0": [
+        220,
+        15
+       ],
+       "1": [
+        220,
+        16
+       ],
+       "2": [
+        220,
+        17
+       ],
+       "3": [
+        220,
+        18
+       ],
+       "4": [
+        220,
+        19
+       ],
+       "5": [
+        220,
+        20
+       ],
+       "6": [
+        220,
+        21
+       ],
+       "7": [
+        220,
+        22
+       ],
+       "8": [
+        220,
+        23
+       ],
+       "9": [
+        220,
+        24
+       ],
+       "10": [
+        220,
+        702
+       ],
+       "11": [
+        220,
+        994
+       ],
+       "...": "89 more"
+      }
+     },
+     "first_assistant": {
+      "status": "pass",
+      "n_tested": 101,
+      "n_single_token": 101,
+      "failures": {}
+     }
+    },
+    "vocab_identity_with_gguf": {
+     "n_gguf_tokens": 201088,
+     "n_hf_tokens": 200019,
+     "n_token_mismatches": 1069,
+     "n_mismatches_that_are_gguf_padding_only": 1069,
+     "every_hf_token_identical": true,
+     "first_mismatches": [
+      [
+       200019,
+       "[PAD200019]",
+       null
+      ],
+      [
+       200020,
+       "[PAD200020]",
+       null
+      ],
+      [
+       200021,
+       "[PAD200021]",
+       null
+      ],
+      [
+       200022,
+       "[PAD200022]",
+       null
+      ],
+      [
+       200023,
+       "[PAD200023]",
+       null
+      ],
+      [
+       200024,
+       "[PAD200024]",
+       null
+      ],
+      [
+       200025,
+       "[PAD200025]",
+       null
+      ],
+      [
+       200026,
+       "[PAD200026]",
+       null
+      ],
+      [
+       200027,
+       "[PAD200027]",
+       null
+      ],
+      [
+       200028,
+       "[PAD200028]",
+       null
+      ]
+     ],
+     "merges_identical": true,
+     "n_gguf_merges": 446189,
+     "n_hf_merges": 446189
+    }
+   },
+   "summary": {
+    "gguf": {
+     "bare": "pass",
+     "leading_space": "fail",
+     "first_assistant": "pass"
+    },
+    "hf": {
+     "bare": "pass",
+     "leading_space": "fail",
+     "first_assistant": "pass"
+    }
+   }
+  }
+ },
+ "other_candidates": {
+  "gpt-oss-120b": {
+   "gguf": {
+    "status": "not run (no GGUF pinned for this candidate)"
+   },
+   "hf": {
+    "repo": "openai/gpt-oss-120b",
+    "revision": "b5c939de8f754692c1647ca79fbf85e8c1e70f8a",
+    "status": "run",
+    "transformers_tokenizer_class": "PreTrainedTokenizerFast",
+    "chat_prefix": "<|start|>system<|message|>You are ChatGPT, a large language model trained by OpenAI.\nKnowledge cutoff: 2024-06\nCurrent date: 2026-10-23\n\nReasoning: medium\n\n# Valid channels: analysis, commentary, final. Channel must be included for every message.<|end|><|start|>user<|message|>Rate this answer.<|end|><|start|>assistant<|channel|>final<|message|>",
+    "chat_template_sha256": "a4c9919cbbd4acdd51ccffe22da049264b1b73e59055fa58811a99efbd7c8146",
+    "single_token": {
+     "bare": {
+      "status": "pass",
+      "n_tested": 101,
+      "n_single_token": 101,
+      "failures": {}
+     },
+     "leading_space": {
+      "status": "fail",
+      "n_tested": 101,
+      "n_single_token": 0,
+      "failures": {
+       "0": [
+        220,
+        15
+       ],
+       "1": [
+        220,
+        16
+       ],
+       "2": [
+        220,
+        17
+       ],
+       "3": [
+        220,
+        18
+       ],
+       "4": [
+        220,
+        19
+       ],
+       "5": [
+        220,
+        20
+       ],
+       "6": [
+        220,
+        21
+       ],
+       "7": [
+        220,
+        22
+       ],
+       "8": [
+        220,
+        23
+       ],
+       "9": [
+        220,
+        24
+       ],
+       "10": [
+        220,
+        702
+       ],
+       "11": [
+        220,
+        994
+       ],
+       "...": "89 more"
+      }
+     },
+     "first_assistant": {
+      "status": "pass",
+      "n_tested": 101,
+      "n_single_token": 101,
+      "failures": {}
+     }
+    }
+   },
+   "summary": {
+    "gguf": "not run",
+    "hf": {
+     "bare": "pass",
+     "leading_space": "fail",
+     "first_assistant": "pass"
+    }
+   }
+  },
+  "llama-4-scout-17b-16e-instruct": {
+   "gguf": {
+    "status": "not run (no GGUF pinned for this candidate)"
+   },
+   "hf": {
+    "repo": "meta-llama/Llama-4-Scout-17B-16E-Instruct",
+    "revision": "92f3b1597a195b523d8d9e5700e57e4fbb8f20d3",
+    "status": "not run (gated)",
+    "reason": "OSError: You are trying to access a gated repo."
+   },
+   "summary": {
+    "gguf": "not run",
+    "hf": "not run"
+   }
+  }
+ }
+}
