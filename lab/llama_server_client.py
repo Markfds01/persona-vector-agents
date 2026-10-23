@@ -1,14 +1,14 @@
-"""One judge, one OpenAI-compatible endpoint, nothing else.
+"""HTTP client for the local llama-server (llama.cpp) endpoint, nothing else.
 
-The judges for `results/general-question-transfer` are plain HTTP calls to an
-OpenAI-compatible server (llama.cpp `llama-server` or vLLM) reached through
-`PIMIENTOROJO_BASE_URL`. This module is the only code that talks to it. What it
-guarantees, each in the code rather than in a convention:
+The judges for `results/general-question-transfer` are plain HTTP calls to the
+llama.cpp `llama-server` running on PimientoRojo (its `/v1/chat/completions`
+route), reached through `PIMIENTOROJO_BASE_URL`. This module is the only code that
+talks to it. What it guarantees, each in the code rather than in a convention:
 
 * **The endpoint comes from the environment and only from there.** The base URL is
   `PIMIENTOROJO_BASE_URL`, the key (optional) `PIMIENTOROJO_API_KEY`. There is no
-  default URL, no `OPENAI_*` lookup and no second provider anywhere: an unset or
-  unreachable endpoint is an error, never a fallback.
+  default URL, no other environment variable is read and there is no second
+  server anywhere: an unset or unreachable endpoint is an error, never a fallback.
 * **The served model is checked before anything is sent.** `JudgeClient.open()`
   calls `/v1/models`, records the raw response, and raises `ModelMismatch` unless
   the configured id is served. Every completion's own `model` field is checked too.
@@ -69,7 +69,7 @@ import urllib.request
 from pathlib import Path
 from typing import Any, Dict, List, Mapping, Optional, Sequence
 
-log = logging.getLogger("lab.judge_client")
+log = logging.getLogger("lab.llama_server_client")
 
 ENV_BASE_URL = "PIMIENTOROJO_BASE_URL"
 ENV_API_KEY = "PIMIENTOROJO_API_KEY"
@@ -145,7 +145,7 @@ class JudgeConfig:
         if self.concurrency < 1 or self.max_transport_retries < 0:
             raise ConfigError("concurrency >= 1 and max_transport_retries >= 0")
         owned = {"model", "messages", "temperature", "seed", "max_tokens", "logprobs",
-                 "top_logprobs", "stream", "n"}
+                 "top_logprobs", "stream", "n", "cache_prompt"}
         clash = owned & set(self.extra_payload)
         if clash:
             raise ConfigError("extra_payload may not set %s" % sorted(clash))
@@ -159,6 +159,7 @@ class JudgeConfig:
             "seed": self.seed,
             "max_tokens": self.max_tokens,
             "stream": False,
+            "cache_prompt": False,
         }
         if self.mode == "logprob_0_100":
             body["logprobs"] = True
@@ -436,8 +437,8 @@ class JudgeClient:
             raise ModelMismatch("configured model %r is not served; /v1/models lists %s"
                                 % (self.config.model, ids))
         self.models_response = models
-        # llama-server describes the loaded weights and slots at /props; vLLM has no
-        # such route. Recorded when present, recorded as unavailable when not.
+        # llama-server describes the loaded weights and slots at /props. Recorded when
+        # present, recorded as unavailable when not.
         try:
             self.server_props = await asyncio.to_thread(
                 _request, "GET", self.base_url + "/props", None, self.config.timeout_s)

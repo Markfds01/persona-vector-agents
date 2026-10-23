@@ -2,7 +2,7 @@
 
 No hostname, address or credential is recorded in this repository. The endpoint is
 configured only through the environment (`PIMIENTOROJO_BASE_URL`, optional
-`PIMIENTOROJO_API_KEY`), and `lab/judge_client.py` has no default and no fallback.
+`PIMIENTOROJO_API_KEY`), and `lab/llama_server_client.py` has no default and no fallback.
 
 **This checkpoint-1 item made no call to the judge endpoint.** Everything below was
 probed read-only by the orchestrator, or decided by the operator, on 2026-10-23, and
@@ -20,7 +20,7 @@ is recorded here as reported.
 ## What was found running, and why it is not used
 
 * Ollama 0.15.6, bound to localhost only (not exposed on the network). Its
-  OpenAI-compatible `/v1/models` returned exactly one model, `llama4-scout:latest`
+  `/v1/models` returned exactly one model, `llama4-scout:latest`
   (Ollama tag; Q6_K, 88.4 GB, family llama4). Llama-3.3-70B-Instruct and
   gpt-oss-120b were not installed. Whether that endpoint returns `top_logprobs` was
   not verified.
@@ -36,7 +36,7 @@ is recorded here as reported.
   `--list-devices` → `Vulkan0: AMD Radeon 8060S Graphics (RADV GFX1151)`, ~128 GB.
   Bound to localhost on PimientoRojo, reached through an SSH tunnel from the
   generation machine; nothing exposed.
-* OpenAI-compatible `/v1/chat/completions` and `/v1/models`; `/props` describes the
+* `/v1/chat/completions` and `/v1/models`; `/props` describes the
   loaded model and slots and is recorded by the client when present.
 * Judges (operator decision 2: two families, neither Qwen):
 

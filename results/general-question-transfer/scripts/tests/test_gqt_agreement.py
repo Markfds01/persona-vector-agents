@@ -97,3 +97,9 @@ def test_cli_reads_grader_export(tmp_path):
     import json
     result = json.loads(out.read_text())
     assert result["n_paired"] == 3 and result["only_in_a"] == 1 and result["only_in_b"] == 1
+
+
+def test_map_retest_rekeys_and_refuses_unknown_ids():
+    assert ag.map_retest({"r1": 10.0, "r2": None}, {"r1": "a", "r2": "b"}) == {"a": 10.0, "b": None}
+    with pytest.raises(SystemExit):
+        ag.map_retest({"zzz": 1.0}, {"r1": "a"})

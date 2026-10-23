@@ -3,7 +3,7 @@
 **There is no result in this directory yet.** Nothing has been generated and nothing
 has been judged. This is the checkpoint-1 review package: the draft
 pre-registration, the drafted question sets, the arm vectors pinned by sha256, the
-judge client, the tokenizer check, the cost estimate and the human grader page. The
+llama-server client, the tokenizer check, the cost estimate and the human grader page. The
 operator reviews it; the pre-registration and the question sets are frozen only on
 approval.
 
@@ -17,7 +17,7 @@ beyond a same-size shuffled-label null and an orthogonal null? `PREREG.md` § 1�
 
 | item | file |
 |---|---|
-| the draft pre-registration, with every open decision listed | `PREREG.md` (§ 11 judges, § 12 everything else) |
+| the draft pre-registration; **§ 0 lists every remaining decision with the recommended answer** | `PREREG.md` (§ 0 decisions, § 4 and § 10 the ÷8 design, § 11 judges, § 12 the rest) |
 | 40 held-out dilemmas (drafted by an LLM agent, Claude, 2026-10-23) | `questions/heldout_draft.json` |
 | 40 forced-choice bridge items, counterbalanced by seed | `questions/bridge_draft.json` (built by `scripts/questions/build_bridge.py`) |
 | near-duplicate report (no pair at either threshold) | `questions/near_duplicates.md` / `.json` |
@@ -25,7 +25,8 @@ beyond a same-size shuffled-label null and an orthogonal null? `PREREG.md` § 1�
 | every arm's vector, path, sha256, norm, angle | `provenance/arm_vectors.json`; the six orthogonal nulls built here are in `vectors/` |
 | tokenizer single-token check for the judges | `provenance/tokenizer_check.json` |
 | what is known about the judge host | `provenance/pimientorojo_probe.md` |
-| cost estimate and trim options | `analysis/cost.md` / `cost.json` |
+| the measured judge results (speed, logprob usability, determinism) | `provenance/judge_measurement_2026-10-23.md` |
+| cost estimate, the ÷8 design and its alternative | `analysis/cost.md` / `cost.json` |
 | the human grader page, demonstrated on SYNTHETIC items | `grader_demo/grader_SYNTHETIC.html` (open it in a browser; load `judge_reveal_SYNTHETIC.json` for audit mode) |
 | deviations log (empty) | `DEVIATIONS.md` |
 
@@ -39,7 +40,7 @@ provenance/       arm_vectors.json, tokenizer_check.json, pimientorojo_probe.md
 analysis/         cost.md, cost.json
 grader_demo/      the grader page on synthetic placeholder items, and its inputs
 scripts/
-  grader_page.py              blind grader page (page | demo)
+  grader_page.py              blind grader page (page | retest | demo)
   judging/tokenizer_check.py  GGUF-vocab + HF tokenizer single-token check
   measurement/bridge_parse.py the bridge set's A/B reader (no judge)
   measurement/score_stats.py  point summaries, clustered bootstrap, verdicts, Holm
@@ -51,11 +52,13 @@ scripts/
   tests/                      offline tests, in `python -m pytest -q`
 ```
 
-The judge client is `lab/judge_client.py` (tests in `lab/tests/test_judge_client.py`):
-an OpenAI-compatible async client that takes its endpoint only from
-`PIMIENTOROJO_BASE_URL`, checks `/v1/models` before sending anything, caches append-only
-on the request-payload sha256, retries only transport errors, and gives every call a
-status. It has made no call to the real endpoint.
+The judge client is `lab/llama_server_client.py` (tests in
+`lab/tests/test_llama_server_client.py`): an HTTP client for the local llama-server
+(llama.cpp) endpoint that takes its endpoint only from `PIMIENTOROJO_BASE_URL`, checks
+`/v1/models` before sending anything, sends `cache_prompt: false` on every request, caches
+append-only on the request-payload sha256, retries only transport errors, and gives every
+call a status. The study has not called it; the judge measurement
+(`provenance/judge_measurement_2026-10-23.md`) was a separate bench on 12 items.
 
 ## How to re-run what is here
 
@@ -78,10 +81,9 @@ python -m pytest -q
 ## What this does not establish
 
 * **Anything about transfer.** No steered text exists for this study.
-* **Anything about the judges' quality.** The judges have not been called; whether
+* **Anything about the judges' quality.** The judges have not scored study answers; whether
   Llama-3.3-70B-Instruct scores these answers the way a person would is exactly what
   checkpoint 2's human calibration measures.
-* **That llama-server returns top_logprobs.** The tokenizer half of the logprob-mode
-  check ran; the endpoint half did not.
-* **The judge throughput.** `analysis/cost.md` prices judging over an assumed range of
-  speeds, not a measured one.
+* **The judges' behaviour on study answers.** Speed, logprob usability and determinism
+  were measured on 12 bench items only; the length of a pairwise call is still an
+  assumption (`analysis/cost.md`).

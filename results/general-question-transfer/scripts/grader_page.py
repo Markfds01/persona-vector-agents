@@ -1,8 +1,8 @@
 """The human grader page: one static, offline HTML file for the blind calibration sheet.
 
-Checkpoint 2 has two people label ~200 answers for trait (0-100) and coherence
-(0-100), independently, so the judges can be checked against them. This writes the
-page they label in. Modelled on tennis_CV's `broadcast/review_page.py`: no server
+Checkpoint 2 has the operator (the only human labeller) label ~200 answers for
+trait (0-100) and coherence (0-100), so the judges can be checked against them. This
+writes the page they label in. Modelled on tennis_CV's `broadcast/review_page.py`: no server
 and no network, the items embedded as JSON, state in the browser's localStorage,
 a progress count, filters, keyboard shortcuts, and "Export CSV", which downloads
 `human_labels_<reviewer>_<date>.csv`.
@@ -17,6 +17,8 @@ human rating: the inputs are disabled and the export carries the time of the
 reveal, so a label changed after seeing the judge cannot pass for a blind one.
 
     python scripts/grader_page.py page --sheet calibration_sheet.csv --out grader.html
+    python scripts/grader_page.py retest --sheet calibration_sheet.csv \\
+        --out-sheet retest_sheet.csv --out-key retest_key.json  # hidden 25% repeat subset
     python scripts/grader_page.py demo --out grader_demo/      # synthetic items only
 
 The judge file for audit mode is JSON: `{"judge": "<label>", "items": {"<item_id>":
@@ -63,6 +65,28 @@ def sheet_key(rows):
     for row in rows:
         digest.update(json.dumps([row[c] for c in SHEET_COLUMNS]).encode("utf-8"))
     return digest.hexdigest()[:16]
+
+
+def make_retest(rows, share=0.25, seed=20261029):
+    """The hidden repeat subset for the intra-rater test-retest (PREREG 9.1).
+
+    A random `share` of the sheet's items, re-shuffled, each under a FRESH opaque
+    item_id so nothing in the file marks it as a repeat. Returns (rows, key) where
+    key maps each new id to the original id; the key is kept out of the page and is
+    read only by `agreement.py --retest-key`. The operator may still recognise an
+    answer; that cannot be removed and is why the retest waits at least 3 days.
+    """
+    rng = random.Random(seed)
+    chosen = rng.sample(range(len(rows)), round(share * len(rows)))
+    used, key, out = set(), {}, []
+    for i in chosen:
+        new = "r%08x" % rng.getrandbits(32)
+        while new in used or new in {r["item_id"] for r in rows}:
+            new = "r%08x" % rng.getrandbits(32)
+        used.add(new)
+        key[new] = rows[i]["item_id"]
+        out.append({"item_id": new, "question": rows[i]["question"], "answer": rows[i]["answer"]})
+    return out, key
 
 
 def render(rows, title="Blind calibration sheet"):
@@ -144,12 +168,26 @@ def main(argv=None):
     p.add_argument("--sheet", required=True)
     p.add_argument("--out", required=True)
     p.add_argument("--title", default="Blind calibration sheet")
+    r = sub.add_parser("retest", help="hidden repeat subset for the test-retest session")
+    r.add_argument("--sheet", required=True)
+    r.add_argument("--out-sheet", required=True)
+    r.add_argument("--out-key", required=True)
+    r.add_argument("--share", type=float, default=0.25)
+    r.add_argument("--seed", type=int, default=20261029)
     d = sub.add_parser("demo")
     d.add_argument("--out", required=True)
     d.add_argument("--n", type=int, default=12)
     args = ap.parse_args(argv)
     if args.cmd == "page":
         print(write_page(args.sheet, args.out, args.title))
+    elif args.cmd == "retest":
+        rows, key = make_retest(read_sheet(args.sheet), args.share, args.seed)
+        with open(args.out_sheet, "w", newline="", encoding="utf-8") as handle:
+            writer = csv.DictWriter(handle, fieldnames=SHEET_COLUMNS)
+            writer.writeheader()
+            writer.writerows(rows)
+        Path(args.out_key).write_text(json.dumps(key, indent=1, sort_keys=True) + "\n")
+        print("%d items -> %s (key: %s)" % (len(rows), args.out_sheet, args.out_key))
     else:
         print(demo(args.out, args.n)[1])
 

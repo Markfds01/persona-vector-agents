@@ -14,8 +14,11 @@ is ASSUMED is a named parameter printed beside its result:
   (4,000 answers, generated upstream with `max_tokens=1000`). They were generated
   under a persona system prompt and unsteered, so they bound the length of a
   steered general answer only roughly; that is stated, not hidden.
-* judge throughput on the judge server - NOT measured (no endpoint call in this
-  item). Shown as a table over assumed prompt-processing and generation speeds.
+* judge throughput on the judge server - MEASURED on 2026-10-23 on PimientoRojo
+  (`provenance/judge_measurement_2026-10-23.md`, 12 bench items, no study data):
+  the constants in `MEASURED_JUDGE` below are copied from that report, not assumed.
+  The one assumed quantity is the pairwise call's length, priced beside the flat
+  measured mean as a sensitivity row.
 
     python scripts/provenance/cost_estimate.py      # writes analysis/cost.json and cost.md
 """
@@ -54,16 +57,23 @@ DETERMINISM_SHARE = 0.05
 #: judge call shape. trait and coherence template lengths are MEASURED below from
 #: the verbatim upstream templates (Qwen tokenizer as a proxy for the judges');
 #: the pairwise template's length is taken as the trait template's.
-TEXT_MODE_OUTPUT_TOKENS = {"llama-3.3-70b-instruct-q8_0": 12, "gpt-oss-20b-mxfp4": 250}
-#: assumed judge speeds (tokens/s), NOT measured; one row each in the table
-ASSUMED_SPEEDS = {
-    "llama-3.3-70b-instruct-q8_0": [{"prompt_tps": 60, "gen_tps": 3},
-                                    {"prompt_tps": 120, "gen_tps": 4},
-                                    {"prompt_tps": 250, "gen_tps": 5}],
-    "gpt-oss-20b-mxfp4": [{"prompt_tps": 500, "gen_tps": 30},
-                          {"prompt_tps": 1000, "gen_tps": 50},
-                          {"prompt_tps": 2000, "gen_tps": 70}],
+#: MEASURED judge speeds (provenance/judge_measurement_2026-10-23.md section 2): cold,
+#: `cache_prompt=false`, one request at a time, mean seconds per call over 24 distinct
+#: prompts (12 trait + 12 coherence, ~570-630 prompt tokens).
+MEASURED_JUDGE = {
+    "primary": {"judge": "llama-3.3-70b-instruct-q8_0", "mode": "logprob_0_100",
+                "mean_s": 3.82, "median_s": 3.71, "calls_per_hour": 942,
+                "bench_prompt_tokens": 590},
+    "primary_text_mode": {"judge": "llama-3.3-70b-instruct-q8_0", "mode": "text_0_100",
+                          "mean_s": 6.09, "median_s": 5.97, "calls_per_hour": 591,
+                          "bench_prompt_tokens": 610},
+    "secondary": {"judge": "gpt-oss-20b-mxfp4", "mode": "text_0_100 (reasoning low)",
+                  "mean_s": 1.00, "median_s": 0.94, "calls_per_hour": 3600,
+                  "bench_prompt_tokens": 630},
 }
+#: gpt-oss prefill speed measured 1,800-2,000 tok/s: the extra prompt a pairwise call
+#: carries (two answers) costs this much more per call
+GPTOSS_PREFILL_TPS = 1900.0
 
 
 def tokenizer():
@@ -184,21 +194,103 @@ def judge_calls(d, secondary_pairwise_share=PAIRWISE_SECONDARY_SHARE, secondary_
     return out
 
 
-def judge_hours(calls, judge, mode, answer_tokens, question_tokens, template_tokens):
-    rows = []
-    out_tokens = 1 if mode == "logprob_0_100" else TEXT_MODE_OUTPUT_TOKENS[judge]
-    for speed in ASSUMED_SPEEDS[judge]:
-        seconds = 0.0
-        for kind in ("trait", "coherence", "pairwise", "determinism_resend"):
-            n = calls[kind]
-            body = answer_tokens * (2 if kind == "pairwise" else 1) + question_tokens
-            template = template_tokens.get(kind, template_tokens["trait"])
-            seconds += n * ((template + body) / speed["prompt_tps"] + out_tokens / speed["gen_tps"])
-        total = calls["total"]
-        rows.append({**speed, "mode": mode, "output_tokens_per_call": out_tokens,
-                     "seconds_per_call": seconds / total, "calls_per_hour": total / (seconds / 3600),
-                     "hours_single_stream": seconds / 3600})
-    return rows
+def seconds_per_call(role, kind, templates, answer_tokens, question_tokens):
+    """Measured mean seconds per call; a pairwise call is priced by prompt length.
+
+    Trait and coherence calls are the measured bench workload. A pairwise call carries
+    two answers; its prompt is longer by one answer, priced for the primary judge in
+    proportion to prompt tokens (its call is prefill-bound: one generated token) and
+    for the secondary at its measured prefill speed. That length is ASSUMED.
+    """
+    m = MEASURED_JUDGE[role]
+    if kind != "pairwise":
+        return m["mean_s"]
+    pair_tokens = templates["pairwise"] + question_tokens + 2 * answer_tokens
+    if role == "primary":
+        return m["mean_s"] * pair_tokens / m["bench_prompt_tokens"]
+    return m["mean_s"] + (pair_tokens - m["bench_prompt_tokens"]) / GPTOSS_PREFILL_TPS
+
+
+def hours(calls, role, templates, answer_tokens, question_tokens, flat):
+    """Serial hours at `--parallel 1` for one judge's calls (`flat`: pairwise at the mean)."""
+    seconds = 0.0
+    for kind in ("trait", "coherence", "pairwise", "determinism_resend"):
+        per = (MEASURED_JUDGE[role]["mean_s"] if flat else
+               seconds_per_call(role, "pairwise" if kind == "pairwise" else kind, templates,
+                                answer_tokens, question_tokens))
+        seconds += calls[kind] * per
+    return seconds / 3600
+
+
+#: The two /8 designs (PREREG sections 4, 10). `sets[name]` = (arms, k list, samples, whether
+#: the trait score is asked of every row of the set); `extra_k` = more rungs for one arm.
+ALL_ARMS = tuple(ARMS)
+DECISION_AND_TRAIT = tuple(a for a in ARMS if a.startswith("decision/")) + ("trait/altruism",)
+DIV8_DESIGNS = {
+    "div8_main": {
+        "label": "main: {-3,0,+3} for every arm, 3 samples, pairwise on held-out at +-3",
+        "sets": {"heldout": {"arms": ALL_ARMS, "k": (-3, 3), "samples": 3, "trait": "all",
+                             "extra_k": {"trait/altruism": (-5, -1, 1, 5)}},
+                 "in_distribution": {"arms": DECISION_AND_TRAIT, "k": (-3, 3), "samples": 3,
+                                     "trait": "all", "extra_k": {}},
+                 "bridge": {"arms": ALL_ARMS, "k": (-3, 3), "samples": 3, "trait": "auc",
+                            "extra_k": {}}},
+        "pairwise": True, "secondary_share": 0.25},
+    "div8_alt": {
+        "label": "alternative: as main but no pairwise anywhere and 5 samples on the held-out set",
+        "sets": {"heldout": {"arms": ALL_ARMS, "k": (-3, 3), "samples": 5, "trait": "all",
+                             "extra_k": {"trait/altruism": (-5, -1, 1, 5)}},
+                 "in_distribution": {"arms": DECISION_AND_TRAIT, "k": (-3, 3), "samples": 3,
+                                     "trait": "all", "extra_k": {}},
+                 "bridge": {"arms": ALL_ARMS, "k": (-3, 3), "samples": 3, "trait": "auc",
+                            "extra_k": {}}},
+        "pairwise": False, "secondary_share": 0.25},
+}
+#: the bridge set's trait score exists only where the bridge-AUC check (PREREG 9.3) needs it:
+#: the k=0 baseline and the trait vector at +-3
+BRIDGE_AUC_POINTS = 3
+
+
+def div8_plan(spec, secondary_share=None, secondary_heldout_full=False):
+    """Exact generation and judge-call counts of a /8 design."""
+    share = spec["secondary_share"] if secondary_share is None else secondary_share
+    gens, judged = 0, 0
+    prim = {"trait": 0, "coherence": 0, "pairwise": 0}
+    sec = {"trait": 0, "coherence": 0, "pairwise": 0}
+    detail = {}
+    for name, cfg in spec["sets"].items():
+        per = N_QUESTIONS * cfg["samples"]
+        points = 1 + sum(len(cfg["k"]) for _ in cfg["arms"]) \
+            + sum(len(v) for v in cfg["extra_k"].values())
+        unhooked = 1 if name == "heldout" else 0           # the byte-identity check, once
+        rows = points * per
+        gens += rows + unhooked * per
+        judged += rows
+        prim["coherence"] += rows
+        prim["trait"] += rows if cfg["trait"] == "all" else BRIDGE_AUC_POINTS * per
+        s_share = 1.0 if (secondary_heldout_full and name == "heldout") else share
+        if cfg["trait"] == "all":
+            sec["trait"] += int(round(s_share * rows))
+            sec["coherence"] += int(round(s_share * rows)) if name != "bridge" else 0
+        else:
+            sec["trait"] += BRIDGE_AUC_POINTS * per          # AUC subset is judged by both
+        detail[name] = {"points": points, "rows_per_point": per, "generations": rows
+                        + unhooked * per}
+        if name == "heldout" and spec["pairwise"]:
+            steered = len(cfg["arms"]) * len(cfg["k"]) * per
+            prim["pairwise"] = 2 * steered                       # both orders
+            sec["pairwise"] = int(round(share * prim["pairwise"]))
+    out = {}
+    for role, c in (("primary", prim), ("secondary", sec)):
+        base = sum(c.values())
+        out[role] = {**c, "determinism_resend": int(round(DETERMINISM_SHARE * base)),
+                     "total": base + int(round(DETERMINISM_SHARE * base))}
+    return {"generations": gens, "judged_rows": judged, "per_set": detail, "judge_calls": out}
+
+
+def flat_hours(calls):
+    return {role: calls[role]["total"] * MEASURED_JUDGE[role]["mean_s"] / 3600
+            for role in ("primary", "secondary")}
 
 
 def main():
@@ -211,13 +303,7 @@ def main():
     gpu_hours_tokens = gen_tokens / through["pooled"]["tokens_per_s"] / 3600
     gpu_hours_gens = d["generations"] * through["pooled"]["seconds_per_generation"] / 3600
     calls = judge_calls(d)
-    hours = {}
-    for role, judge, modes in (("primary", "llama-3.3-70b-instruct-q8_0", ("logprob_0_100", "text_0_100")),
-                               ("secondary", "gpt-oss-20b-mxfp4", ("text_0_100",))):
-        for mode in modes:
-            hours["%s|%s|%s" % (role, judge, mode)] = judge_hours(
-                calls[role], judge, mode, lengths["mean"], lengths["mean_question_tokens"],
-                templates)
+    default_hours = flat_hours(calls)
     scenarios = {}
     for name, change in SCENARIOS.items():
         sd = design(**change)
@@ -228,7 +314,29 @@ def main():
                            "gpu_hours": sd["generations"] * lengths["mean"]
                            / through["pooled"]["tokens_per_s"] / 3600,
                            "primary_calls": sc["primary"]["total"],
-                           "secondary_calls": sc["secondary"]["total"]}
+                           "secondary_calls": sc["secondary"]["total"],
+                           "judge_hours_flat": flat_hours(sc)}
+    div8 = {}
+    variants = [("div8_main", {}, ""), ("div8_alt", {}, ""),
+                ("div8_main", {"secondary_heldout_full": True}, "_secondary_100pct_heldout")]
+    for name, kw, suffix in variants:
+        spec = DIV8_DESIGNS[name]
+        plan = div8_plan(spec, **kw)
+        c = plan["judge_calls"]
+        ql = lengths["mean_question_tokens"]
+        plan.update({
+            "label": spec["label"] + (" (secondary judge on ALL held-out rows)" if suffix else ""),
+            "gpu_hours_tokens": plan["generations"] * lengths["mean"]
+            / through["pooled"]["tokens_per_s"] / 3600,
+            "gpu_hours_gens": plan["generations"] * through["pooled"]["seconds_per_generation"] / 3600,
+            "judge_hours_flat": flat_hours(c),
+            "judge_hours_pairwise_by_length": {
+                role: hours(c[role], role, templates, lengths["mean"], ql, flat=False)
+                for role in ("primary", "secondary")},
+            "pairwise_seconds_per_call": {
+                role: seconds_per_call(role, "pairwise", templates, lengths["mean"], ql)
+                for role in ("primary", "secondary")}})
+        div8[name + suffix] = plan
     result = {"measured_generation_throughput": through, "general_answer_length_proxy": lengths,
               "design": d, "generated_tokens_estimate": gen_tokens,
               "gpu_hours_estimate": {"from_tokens_per_s": gpu_hours_tokens,
@@ -236,13 +344,18 @@ def main():
                                      "note": "one A40, batch 20, exclusive; the per-game sweep's "
                                              "pooled rate. Two A40s in parallel halve the wall clock."},
               "judge_template_tokens": templates,
-              "judge_calls": calls, "judge_hours_assumed_speeds": hours,
-              "trim_scenarios": scenarios}
+              "judge_calls": calls, "measured_judge": MEASURED_JUDGE,
+              "default_judge_hours_flat": default_hours,
+              "trim_scenarios": scenarios, "div8": div8}
     out = PACKAGE / "analysis" / "cost.json"
     out.write_text(json.dumps(result, indent=1) + "\n")
     (PACKAGE / "analysis" / "cost.md").write_text(markdown(result))
     print(json.dumps({"generations": d["generations"], "gpu_hours": [gpu_hours_tokens, gpu_hours_gens],
-                      "calls": calls, "len": lengths}, indent=1))
+                      "calls": calls, "default_hours": default_hours,
+                      "div8": {k: {"generations": v["generations"],
+                                   "calls": {r: v["judge_calls"][r]["total"] for r in v["judge_calls"]},
+                                   "hours": v["judge_hours_flat"]} for k, v in div8.items()}},
+                     indent=1))
 
 
 def markdown(r):
@@ -255,7 +368,8 @@ def markdown(r):
         "",
         "Generated by `scripts/provenance/cost_estimate.py` into `cost.json`; every number "
         "below is in that file. **Measured** = read from committed files. **Assumed** = a "
-        "parameter, printed with its result. Nothing here was run against a judge.",
+        "parameter, printed with its result. The judge speeds are measured on the judge host "
+        "(bench items only); no study data has been judged.",
         "",
         "## Generation (Qwen2.5-7B-Instruct, one A40)",
         "",
@@ -304,7 +418,7 @@ def markdown(r):
         "## Judge calls",
         "",
         "Template lengths measured (Qwen tokenizer as proxy): trait %d tokens, coherence %d; "
-        "pairwise assumed equal to trait. Judged rows = every generation except the unhooked "
+        "pairwise template assumed equal to trait. Judged rows = every generation except the unhooked "
         "check point = %d." % (r["judge_template_tokens"]["trait"],
                                r["judge_template_tokens"]["coherence"], d["judged_rows"]),
         "",
@@ -320,46 +434,100 @@ def markdown(r):
         "call (one output token for `logprob_0_100`, a short generation for `text_0_100`, a "
         "reasoning trace plus answer for gpt-oss).",
         "",
-        "## Judge throughput (ASSUMED speeds - not measured)",
+        "## Judge throughput (MEASURED, 2026-10-23)",
         "",
-        "The judge server (PimientoRojo: AMD Strix Halo, Radeon 8060S iGPU, ~128 GB unified "
-        "memory, llama.cpp `llama-server` b11836 on Vulkan) has not been benchmarked by this "
-        "item. Speeds below are assumptions spanning a plausible range for a dense 70B at Q8_0 "
-        "and a 20B MoE (3.6B active) at MXFP4 on that hardware; replace them with a measured "
-        "`llama-bench` / pilot number at checkpoint 2. Single stream; `--parallel` slots help "
-        "generation but little with prompt processing, which dominates a one-token logprob call.",
+        "Measured on PimientoRojo by `provenance/judge_measurement_2026-10-23.md` (llama.cpp "
+        "b11836, Vulkan, `--parallel 1`, `cache_prompt=false`, 24 distinct prompts of ~600 "
+        "tokens, one request at a time; 12 bench items, no study data). Seconds per call are "
+        "means; calls/hour = 3600 / mean.",
         "",
-        "| judge / mode | prompt tok/s | gen tok/s | out tokens/call | s/call | calls/hour | hours for all calls |",
-        "|---|---|---|---|---|---|---|",
+        "| judge / mode | mean s/call | median s | calls/hour | usable? |",
+        "|---|---|---|---|---|",
     ]
-    for key, rows in r["judge_hours_assumed_speeds"].items():
-        role, judge, mode = key.split("|")
-        for row in rows:
-            lines.append("| %s %s `%s` | %d | %d | %d | %.1f | %.0f | %.0f |" % (
-                role, judge, mode, row["prompt_tps"], row["gen_tps"],
-                row["output_tokens_per_call"], row["seconds_per_call"], row["calls_per_hour"],
-                row["hours_single_stream"]))
-    primary_total = r["judge_calls"]["primary"]["total"]
+    usable = {"primary": "yes: digit mass >= 0.999 on 48/48, 20 top_logprobs returned",
+              "primary_text_mode": "yes (not the plan; 1.6x slower, coarse 4-value scores)",
+              "secondary": "yes (its logprob mode is NOT usable: first token `<|channel|>`, digit "
+                           "mass 0 on 48/48)"}
+    for role, m in r["measured_judge"].items():
+        lines.append("| %s `%s` | %.2f | %.2f | %d | %s |" % (
+            m["judge"], m["mode"], m["mean_s"], m["median_s"], m["calls_per_hour"], usable[role]))
+    dh = r["default_judge_hours_flat"]
     lines += [
         "",
-        "Calls/hour NEEDED for the primary judge's %d calls: %.0f/h to finish in one week "
-        "(168 h), %.0f/h in two weeks, %.0f/h in 72 h. Against the assumed range above "
-        "(roughly 200-1,100 calls/hour) the default design does **not** fit in a week on one "
-        "judge server. **Trims are therefore needed or the timeline is weeks** - the operator's "
-        "choice, below." % (primary_total, primary_total / 168, primary_total / 336,
-                            primary_total / 72),
+        "Parallelism gives at most 1.3x (gpt-oss, `--parallel 4`; the 70B logprob workload does "
+        "not scale at all), so the figures are `--parallel 1`, serial. The two judges share one "
+        "GPU: treat their hours as additive.",
         "",
-        "## Trim options (for the operator; none adopted)",
+        "**Default design, measured speeds**: primary %d calls x %.2f s = **%.1f h**; secondary "
+        "%d calls x %.2f s = **%.1f h**; together **%.1f h (%.1f days)**. It fits no schedule "
+        "short of two weeks, which is why the /8 design below exists." % (
+            r["judge_calls"]["primary"]["total"], MEASURED_JUDGE["primary"]["mean_s"], dh["primary"],
+            r["judge_calls"]["secondary"]["total"], MEASURED_JUDGE["secondary"]["mean_s"],
+            dh["secondary"], dh["primary"] + dh["secondary"], (dh["primary"] + dh["secondary"]) / 24),
         "",
-        "Each row changes one thing from the default.",
+        "## The /8 design (PREREG sections 4 and 10)",
         "",
-        "| option | change | generations | GPU h (1 A40) | primary calls | secondary calls |",
-        "|---|---|---|---|---|---|",
+        "Target: total judge work about 1/8 of the default's %.1f h = %.1f h. Every row below is "
+        "computed by `div8_plan`; counts include the 5%% determinism re-send." % (
+            dh["primary"] + dh["secondary"], (dh["primary"] + dh["secondary"]) / 8),
+        "",
+        "| design | generations | GPU h (1 A40, tokens / s-per-gen) | primary calls | primary h | "
+        "secondary calls | secondary h | total judge h | vs default |",
+        "|---|---|---|---|---|---|---|---|---|",
+        "| default | %d | %.1f / %.1f | %d | %.1f | %d | %.1f | %.1f | 1 |" % (
+            d["generations"], g["from_tokens_per_s"], g["from_seconds_per_generation"],
+            r["judge_calls"]["primary"]["total"], dh["primary"],
+            r["judge_calls"]["secondary"]["total"], dh["secondary"], dh["primary"] + dh["secondary"]),
     ]
+    for name, v in r["div8"].items():
+        h = v["judge_hours_flat"]
+        total = h["primary"] + h["secondary"]
+        lines.append("| %s | %d | %.1f / %.1f | %d | %.1f | %d | %.1f | %.1f | 1/%.1f |" % (
+            name, v["generations"], v["gpu_hours_tokens"], v["gpu_hours_gens"],
+            v["judge_calls"]["primary"]["total"], h["primary"],
+            v["judge_calls"]["secondary"]["total"], h["secondary"], total,
+            (dh["primary"] + dh["secondary"]) / total))
+    lines += ["", "What each design is:", ""]
+    for name, v in r["div8"].items():
+        lines.append("* `%s` - %s." % (name, v["label"]))
+    main_plan = r["div8"]["div8_main"]
+    lines += ["", "Per question set (`div8_main`; points = steered arm x k points + the shared k=0 "
+              "baseline; the unhooked byte-identity check is one extra generation-only point on the "
+              "held-out set):", "",
+              "| set | points | rows per point | generations |", "|---|---|---|---|"]
+    for name, v in main_plan["per_set"].items():
+        lines.append("| %s | %d | %d | %d |" % (name, v["points"], v["rows_per_point"],
+                                                  v["generations"]))
+    lines += ["", "Judge calls of `div8_main` by kind:", "",
+              "| judge | trait | coherence | pairwise (both orders) | 5% determinism re-send | total |",
+              "|---|---|---|---|---|---|"]
+    for role, c in main_plan["judge_calls"].items():
+        lines.append("| %s | %d | %d | %d | %d | **%d** |" % (
+            role, c["trait"], c["coherence"], c["pairwise"], c["determinism_resend"], c["total"]))
+    pw = main_plan["pairwise_seconds_per_call"]
+    hp = main_plan["judge_hours_pairwise_by_length"]
+    lines += ["",
+              "Sensitivity (ASSUMED pairwise prompt length): a pairwise prompt carries two answers, "
+              "so priced by length it costs %.1f s on the primary judge (not the measured %.2f) and "
+              "%.2f s on the secondary; `div8_main` then takes %.1f h primary + %.1f h secondary = "
+              "**%.1f h** (1/%.1f of the default). No pairwise call was measured." % (
+                  pw["primary"], MEASURED_JUDGE["primary"]["mean_s"], pw["secondary"],
+                  hp["primary"], hp["secondary"], hp["primary"] + hp["secondary"],
+                  (dh["primary"] + dh["secondary"]) / (hp["primary"] + hp["secondary"])),
+              "",
+              "## Other trims, priced at the measured speeds (for reference; none adopted)",
+              "",
+              "Each row changes one thing from the default.",
+              "",
+              "| option | change | generations | GPU h (1 A40) | primary calls | primary h | "
+              "secondary calls | secondary h |",
+              "|---|---|---|---|---|---|---|---|"]
     for name, sc in r["trim_scenarios"].items():
-        lines.append("| %s | %s | %d | %.1f | %d | %d |" % (
+        h = sc["judge_hours_flat"]
+        lines.append("| %s | %s | %d | %.1f | %d | %.1f | %d | %.1f |" % (
             name, json.dumps(sc["change"]) if sc["change"] else "-", sc["generations"],
-            sc["gpu_hours"], sc["primary_calls"], sc["secondary_calls"]))
+            sc["gpu_hours"], sc["primary_calls"], h["primary"], sc["secondary_calls"],
+            h["secondary"]))
     return "\n".join(lines) + "\n"
 
 

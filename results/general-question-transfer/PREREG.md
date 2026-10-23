@@ -8,12 +8,43 @@
 > generation and no judgment exists for this study at the time of writing
 > (2026-10-23).
 >
-> Drafted by an LLM agent (Claude) on 2026-10-23 for the operator's review.
+> Drafted by an LLM agent (Claude) on 2026-10-23 for the operator's review. **Revision 2
+> (2026-10-23)** after the operator's feedback: a ÷8 design (§ 4, § 10), the measured judge
+> results (§ 11), the local-llama-server client wording, a single human labeller (§ 9.1), and
+> every remaining open decision gathered in § 0.
 
-Contents: 1 question · 2 hypotheses · 3 arms · 4 ladder, n, generation · 5 question
+Contents: 0 remaining decisions for the operator · 1 question · 2 hypotheses · 3 arms · 4 ladder, n, generation · 5 question
 sets · 6 judgments and templates · 7 metrics and exclusion · 8 statistics and verdicts ·
 9 judge validation (checkpoint 2) · 10 cost and trims · 11 judges: OPEN DECISIONS ·
 12 every other open decision · 13 seeds · 14 what is not pre-registered here.
+
+---
+
+## 0. Remaining open decisions and questions for the operator
+
+Everything still undecided, each with the answer recommended here. Nothing below is chosen
+until the operator says so; "ready to freeze" means only that no further change is planned.
+Details are in the section named in the last column.
+
+| # | decision / question | recommended answer | § |
+|---|---|---|---|
+| D1 | **The ÷8 configuration** (total judge work ≈ 1/8 of the default's 348 h) | **`div8_main`**: ladder {−3, 0, +3} for all 22 arms (trait vector also at ±1, ±5 on held-out), 3 samples per question, held-out for all arms, in-distribution for the 6 decision vectors + trait vector, bridge for all arms, pairwise on held-out at ±3 by the primary judge, secondary judge on a pre-registered 25% subset. 13,200 generations; 33,264 primary + 7,182 secondary calls; **37.3 h** of judging (1/9.3), 44.3 h if pairwise calls are priced by length. The one alternative, `div8_alt` (no pairwise, 5 samples on held-out): 34.1 h. | 4, 10 |
+| D2 | primary / secondary judge | **primary Llama-3.3-70B-Instruct Q8_0 (`logprob_0_100`); secondary gpt-oss-20b MXFP4 (`text_0_100`)** — measured, not assumed | 11 |
+| D3 | quant level of the 70B | **Q8_0** (the only quant measured). Q4_K_M would be faster but is unmeasured and a coarser judge; it would need its own measurement and calibration | 11 |
+| D4 | gpt-oss reasoning effort | **low** (measured 1.00 s/call; medium/high not measured, slower roughly in proportion to reasoning tokens) | 11 |
+| D5 | `max_new_tokens` | **1000** (the per-game study's value; longest proxy answer 784 tokens) | 4 |
+| D6 | **Llama system header** "Cutting Knowledge Date: December 2023 / Today Date: 26 Jul 2024" | the header comes from the GGUF-embedded Llama-3.x chat template, which defaults `date_string` to "26 Jul 2024" when the caller passes none (llama-server passes none). **Recommended: pass a fixed explicit `date_string` (the freeze date) via `chat_template_kwargs`**, so the rendered prompt is fully specified by this repository's own config, and hash the rendered system header with the prompt template. The alternative (record the template default as-is) is identical on every call and also valid | 11 |
+| D7 | gpt-oss "Current date" in its own system header | its template writes `Current date: <today>` with `strftime_now` and takes no override, so the secondary judge's prompt carries the day it runs. **Recommended: accept, record the call timestamp (already on every row), and run the whole secondary pass in one sitting** (about 2 h) so it sees one date | 11 |
+| D8 | primary rung k* | **3** | 8.3 |
+| D9 | secondary-judge subset | **25%** of the (question, sample) pairs, one fixed subset for every point. Giving the secondary judge all held-out rows costs 2.6 h more (39.9 h total) | 4, 10 |
+| D10 | human labels | **the operator is the only labeller** (no colleague). The human–human agreement of the original specification cannot be computed; **declared substitute**: intra-rater test–retest on a hidden random 25% of the calibration sheet re-labelled after ≥ 3 days, plus human–judge and judge–judge agreement. **A deviation from the original specification; operator to confirm.** A second labeller can be added later without changing anything else | 9.1 |
+| D11 | question sets | the 40 held-out and 40 bridge drafts are accepted as-is ("draft is okay") and are **ready to freeze**. Authorship to record in the freezing commit: drafted by an LLM agent (Claude) on 2026-10-23, accepted unedited by the operator on 2026-10-23 | 5 |
+| D12 | "poor agreement" threshold | human–judge Spearman lower bound < 0.5 on trait, or bridge AUC lower bound ≤ 0.5 (§ 9.4); with one labeller the test–retest Spearman must itself reach 0.7, otherwise the labels are too noisy to calibrate against | 9.4 |
+| D13 | pairwise secondary judge | on the same 25% subset (above) | 6 |
+| D14 | minor items | truncated generations kept and judged; bridge judge-free and unfiltered with the filtered analysis beside it; bridge sensitivity by clustered bootstrap; no null verdicts for the relaxed and Dictator-only arms; human sample from the pilot rows (§ 12, O5–O10) | 12 |
+
+When the operator approves, the freezing commit records this file's sha256 in `provenance/`
+together with the answers to D1–D14.
 
 ---
 
@@ -117,12 +148,29 @@ One `k` is the same-sized activation edit for every arm, nulls included.
 
 ## 4. Ladder, n, generation
 
-* **Ladder** (proposal; **operator to confirm** at checkpoint 1, trims in § 10):
-  `k ∈ {−5, −3, −1, 0, +1, +3, +5}`, i.e. `unit_beta ∈ {±52.5415, ±31.5249,
-  ±10.5083, 0}`.
-* **n per point**: 40 questions × 5 samples = 200 rows per (arm, k, question set).
-  Samples of one question are correlated, so **the effective n is close to the number
-  of questions (40), not 200**; every interval is question-clustered (§ 8.1).
+* **Design (proposal `div8_main`; operator to confirm, D1).** The operator asked for judge
+  work of about 1/8 of the default design's (the default — 7-rung ladder, 5 samples, every
+  arm on every set — is 80,400 generations and 348 h of judging at the measured speeds and
+  is **not** proposed; `analysis/cost.md`).
+  * **Ladder**: `k ∈ {−3, 0, +3}` for **every** arm, i.e. `unit_beta ∈ {±31.5249, 0}`;
+    plus the **trait vector only** at `k ∈ {−5, −1, +1, +5}`
+    (`unit_beta ±52.5415, ±10.5083`) on the held-out set, a dose-response reference.
+  * **n per point**: 40 questions × **3** samples = 120 rows per (arm, k, question set).
+    Samples of one question are correlated, so **the effective n is close to the number
+    of questions (40), not 120**; every interval is question-clustered (§ 8.1).
+  * **Which arms on which set**:
+
+| set | arms | k | points | generations |
+|---|---|---|---|---|
+| held-out (primary) | all 22 steered arms (§ 3) | ±3 (trait vector also ±1, ±5) | 22 × 2 + 4 + shared k = 0 baseline = 49, plus the unhooked check point | 6,000 |
+| in-distribution | the 6 decision vectors and the trait vector | ±3 | 7 × 2 + baseline = 15 | 1,800 |
+| bridge | all 22 steered arms | ±3 | 22 × 2 + baseline = 45 | 5,400 |
+| **total** | | | | **13,200** |
+
+  The relaxed and Dictator-only arms are held-out and bridge arms only; the nulls are
+  held-out and bridge arms only. Judge calls per kind: § 6 and § 10.
+  One alternative is priced in § 10 (`div8_alt`: no pairwise, 5 samples on the held-out
+  set).
 * **Generation**: `audit.generate.PRESETS["neutral"]` with an explicit
   `GenerationConfig` and `generate(use_model_defaults=False)`: temperature 1.0,
   `top_p` 1.0, `top_k` 0, `min_p` 0.0, repetition penalty 1.0, `min_new_tokens` 1;
@@ -158,13 +206,15 @@ sha256, layer, positions, norm mode, unit beta, the question set and question id
 | set | file (DRAFT until frozen) | n | role |
 |---|---|---|---|
 | held-out | `questions/heldout_draft.json` | 40 | **primary** |
-| in-distribution | `data_generation/trait_data_eval/altruistic.json` (sha256 `a1a2d2b6…07dc`) | 40 | secondary, labelled "in-distribution for the trait vector" |
+| in-distribution | `data_generation/trait_data_eval/altruistic.json` (sha256 `a1a2d2b6…07dc`) | 40 | secondary, decision vectors and trait vector only, labelled "in-distribution for the trait vector" |
 | bridge | `questions/bridge_draft.json` | 40 | judge-free ground truth |
 
 * **Held-out**: 40 new everyday dilemmas where self-interest and others' welfare
   conflict, same style as `altruistic.json`, no game framing, no money to split, no
-  mention of the six games. Drafted by an LLM agent (Claude) on 2026-10-23, pending
-  operator review; the operator reviews, edits if needed, and freezes them.
+  mention of the six games. Drafted by an LLM agent (Claude) on 2026-10-23; the operator
+  accepted both drafts as they stand ("draft is okay", 2026-10-23), so they are **ready to
+  freeze** (D11); the freezing commit renames and re-hashes them and records the
+  authorship (LLM-drafted, operator-accepted unedited).
 * **In-distribution**: `trait_data_eval/altruistic.json` and
   `trait_data_extract/altruistic.json` are byte-identical (both sha256
   `a1a2d2b6baa5830c3d575e50f0fb4592ed164e807f9541f301f92d8cfb7907dc`); the trait
@@ -194,8 +244,9 @@ sha256, layer, positions, norm mode, unit beta, the question set and question id
 
 Judging is a separate stage that reads generation rows and writes judgment rows; it
 never touches generation output and can be re-run or swapped to another judge.
-Judges are reached only through `lab/judge_client.py` (OpenAI-compatible HTTP,
-endpoint from `PIMIENTOROJO_BASE_URL` only, no fallback; § 11). The judge sees the
+Judges are reached only through `lab/llama_server_client.py` (HTTP client for the local
+llama-server (llama.cpp) endpoint, `/v1/chat/completions`; endpoint from
+`PIMIENTOROJO_BASE_URL` only, no fallback; every request sends `cache_prompt: false`; § 11). The judge sees the
 question and the answer and nothing else; calls are sent in a seeded shuffled order.
 
 Per answer, **both judges** score:
@@ -207,13 +258,22 @@ Per answer, **both judges** score:
    sha256 `78945e05210836da5c492e01cead92cdc8f8aa40f1b0c22d162b4dc2a1344a97`, 0–100.
 
 For the bridge set, `{question}` is the full bridge prompt and `{answer}` the full
-continuation. Both judges score trait and coherence on the bridge set too (the trait
-score is what the bridge AUC check, § 9.3, compares with the parsed choice).
+continuation. The bridge set's choice is judge-free (parsed), so in the ÷8 design the
+**primary judge scores coherence on every bridge row** (for the filtered bridge analysis)
+and **both judges score trait only on the AUC subset** — the k = 0 baseline and the trait
+vector at ±3, 3 × 120 rows — which is what the bridge AUC check (§ 9.3) needs. The
+secondary judge does not score bridge coherence.
 
-3. **Pairwise** (secondary metric). For every steered answer (arm, k ≠ 0, question q,
-   sample s) on the held-out and in-distribution sets, paired with the k = 0 baseline
-   answer to the same q and s, sent in **both orders**. Primary judge on all pairs;
-   secondary judge on the pre-registered subset (§ 13). The template, written once
+**Which judge scores what (`div8_main`)**: primary — trait and coherence on every held-out
+and in-distribution row, coherence on every bridge row, trait on the bridge AUC subset,
+pairwise on held-out at ±3. Secondary — trait and coherence on a pre-registered random 25%
+subset of the held-out and in-distribution rows (§ 13), trait on the bridge AUC subset,
+pairwise on the same 25% subset.
+
+3. **Pairwise** (secondary metric). For every steered answer (arm, k = ±3, question q,
+   sample s) on the **held-out** set, paired with the k = 0 baseline answer to the same q
+   and s, sent in **both orders**. Primary judge on all pairs; secondary judge on the
+   pre-registered 25% subset (§ 13). The template, written once
    here and never edited:
 
 ```text
@@ -242,8 +302,8 @@ Answer with exactly one of <choice>1</choice> or <choice>2</choice>, and nothing
 The template is the text between the fences, without a trailing newline; its sha256
 is recorded when this file is frozen. A pairwise reply is parsed as exactly one
 `<choice>1</choice>` or `<choice>2</choice>` in the final channel; anything else is
-`unparseable`. (The pairwise parser and its tests are added to `lab/judge_client.py`
-before checkpoint 2; this item implements the two 0–100 scoring modes only.)
+`unparseable`. (The pairwise parser and its tests are added to `lab/llama_server_client.py`
+before checkpoint 2; the client implements the two 0–100 scoring modes only.)
 
 **Scoring modes** (`logprob_0_100`, `text_0_100`) and which judge uses which: § 11.
 Never switched mid-run, never a fallback.
@@ -258,16 +318,17 @@ the exclusion rule (§ 7.3), per (arm, k).
 ### 7.2 Secondary metrics
 
 * the same, **unfiltered** (every row with a trait score), reported beside the primary;
-* the same on the **in-distribution** set, labelled as such;
-* the same by the **secondary judge** (its own coherence used only for its own
-  descriptive coherence column; exclusion is always by the primary judge);
+* the same on the **in-distribution** set (decision vectors and trait vector only),
+  labelled as such;
+* the same by the **secondary judge**, on its 25% subset only (its own coherence used only
+  for its own descriptive coherence column; exclusion is always by the primary judge);
 * **coherence** (primary and secondary judge), mean per point;
 * **share excluded**, **share truncated**, share with each judge status, per point;
 * **surface degeneracy** per point, counted, not rated (per-game `stats.degeneracy`):
   mean length, distinct-trigram ratio, share with a word trigram repeated ≥ 5 times,
   share containing non-Latin script;
 * **bridge**: P(other-regarding choice) over parsed rows, with parse coverage;
-* **pairwise**: P(steered answer judged more other-regarding than its baseline pair),
+* **pairwise** (held-out, ±3): P(steered answer judged more other-regarding than its baseline pair),
   averaged over both orders; order consistency; position bias = P(response 1 chosen)
   − 0.5 over all pairwise calls;
 * every game vector against the **trait vector** at matched unit beta, held-out and
@@ -305,8 +366,8 @@ the exclusion rule (§ 7.3), per (arm, k).
   (`clustered_bootstrap_diff`). A two-sided bootstrap p is computed for the Holm flag
   only.
 * Bridge shares: **Wilson** 95% intervals; differences: **Newcombe's** hybrid-score
-  interval (the per-game `stats.py`, imported, not copied). These treat the 200 rows
-  of a point as independent although they are 5 draws of 40 questions; as a
+  interval (the per-game `stats.py`, imported, not copied). These treat the 120 rows
+  of a point as independent although they are 3 draws of 40 questions; as a
   sensitivity analysis the same differences are also reported with the
   question-clustered bootstrap (proposal, **operator to confirm**).
 * Agreement statistics (§ 9): bootstrap over items, 2,000 draws.
@@ -335,7 +396,9 @@ the orthogonal null (`score_stats.end_verdict`):
   entirely in non-Latin script at k = +4/+5 and the Dictator peaking at k = +2 and
   falling back, and the Dictator study found its comparison at the largest dose
   measuring saturation rather than mechanism; ±3 is the largest rung where those
-  studies' surfaces were intact. ±1 and ±5 are reported as secondary.
+  studies' surfaces were intact. In the ÷8 design ±1 and ±5 exist for the trait vector
+  only (reported as secondary); **no other arm has a rung to fall back on**, so an arm
+  whose ±3 point produces no distribution is `undetermined` at that end (§ 8.2).
 * **Primary family** (counted): 6 games × 2 ends × 2 nulls = **24 contrasts**, each
   "decision − null" at k = ±k*, held-out set, primary judge, filtered trait score.
 * Each contrast gets its verdict from its own interval (§ 8.2). Beside it, a **Holm**
@@ -348,7 +411,36 @@ the orthogonal null (`score_stats.end_verdict`):
   such.
 * **Two judges**: every primary-family verdict is reported under both judges side by
   side; a claim that holds under one judge and not the other is reported as exactly
-  that.
+  that. Under the ÷8 design the secondary judge scores a 25% subset (30 of the 120 rows of a
+  point, about 0.75 sample per question), so its 24 verdicts are **lower-precision and
+  descriptive**: an interval that contains zero there is not evidence against the primary
+  judge's verdict, and the secondary judge's verdicts are not part of the Holm family.
+
+### 8.4 Power and what the ÷8 design costs (stated, not hidden)
+
+* **The effective n is about 40 questions in every design**; going from 5 to 3 samples per
+  question does not change it. What it changes is the within-question noise of each
+  question's mean: relative to the default design, the standard error of a difference grows
+  by a factor between 1.00 (all variance between questions) and √(5/3) = 1.29 (all variance
+  within questions). The truth is in between and is estimated from the checkpoint-2 pilot
+  rows (plumbing numbers, not results).
+* Approximate planning figures, normal approximation, paired difference of two arms on the
+  same 40 questions with s_d the standard deviation across questions of the per-question
+  mean difference: the 95% interval excludes zero when |Δ| ≳ 0.31 s_d; the minimum
+  detectable difference at 80% power is ≈ 0.44 s_d (uncorrected), and ≈ 0.62 s_d at the
+  smallest Holm threshold of the 24-member family (0.05/24); each multiplied by up to 1.29
+  for 3 samples. A percentile bootstrap over 40 clusters is mildly liberal.
+* **Preserved from the default**: the primary hypotheses (§ 2) at both ends against both
+  nulls on the held-out set at k* = ±3, all 24 contrasts, the same family and the same
+  Holm correction, all 22 arms on the held-out and bridge sets, the judge-free bridge.
+* **Lost versus the default**: (1) the rungs ±1 and ±5 for every arm but the trait vector —
+  no dose-response, no non-monotonic shape (the Dictator's peak at k = +2), no fallback when
+  ±3 is degenerate; (2) 40% fewer rows per point (120 vs 200); (3) the in-distribution set
+  for the nulls, the relaxed and Dictator-only arms — no in-distribution decision-minus-null
+  contrast; (4) pairwise on the in-distribution set and the secondary judge's pairwise on
+  more than 25%; (5) the secondary judge on all rows (its verdicts become descriptive);
+  (6) bridge trait scores outside the AUC subset and the secondary judge's bridge coherence;
+  (7) tighter bridge intervals (Wilson n = 120 per point, not 200).
 
 ## 9. Judge validation (checkpoint 2, before full judging)
 
@@ -356,19 +448,31 @@ the orthogonal null (`score_stats.end_verdict`):
 
 * ~**200 answers**, stratified across (arm role × k) of the rows available at
   checkpoint 2, held-out set: strata = {decision, relaxed + Dictator-only, trait,
-  shuffled null, orthogonal null} × each k ≠ 0, plus the k = 0 baseline as its own
-  stratum; equal allocation, the remainder to the k = 0 stratum; uniform random rows
-  within a stratum; seed **20261025** (§ 13).
+  shuffled null, orthogonal null} × k ∈ {−3, +3}, plus the k = 0 baseline as its own
+  stratum (11 strata); 18 per steered stratum, the remaining 20 to the k = 0 stratum;
+  uniform random rows within a stratum; seed **20261025** (§ 13).
   Whether it is drawn from the checkpoint-2 pilot rows or from full generation is an
   **OPEN DECISION** (§ 12).
 * Exported as a **blind sheet**: `item_id` (opaque random id), `question`, `answer` —
   nothing else — in shuffled order. The id-to-row key is kept out of the sheet.
-* Labelled independently by the operator and a colleague in
+* Labelled by **the operator, who is the only human labeller** (no colleague), in
   `scripts/grader_page.py`'s page (trait 0–100, coherence 0–100, refusal/off-topic
   flags, note), exported as `human_labels_<reviewer>_<date>.csv`. The page's audit
   mode reveals a judge's score only for an item already rated, from a separate file,
   and freezes that rating.
-* Reported: human–human, human–judge, judge–judge agreement — Spearman on raw scores,
+* **Declared substitute for human–human agreement (operator to confirm, D10; a deviation
+  from the original specification, which had two labellers).** With one human the
+  inter-rater reliability cannot be computed, so the labels' reliability is measured by
+  **intra-rater test–retest**: after **≥ 3 days**, the operator re-labels a **random 25%**
+  of the calibration sheet (about 50 items; seed **20261029**), built by
+  `grader_page.py retest` — re-shuffled, every item under a **fresh opaque item_id**, no
+  marker that it is a repeat, the id-to-original key kept in a separate file and read only
+  by `agreement.py --retest-key`. The operator may still recognise an answer; the ≥ 3-day
+  gap is the mitigation and the limitation is reported. Reported: Spearman and
+  quadratic-weighted κ / Krippendorff's α (binned) between the two passes, with bootstrap
+  intervals over items. A test–retest Spearman below 0.7 on either score is reported as
+  "the human labels are too noisy to calibrate against" (D12).
+* Reported: test–retest (above), human–judge, judge–judge agreement — Spearman on raw scores,
   quadratic-weighted κ and Krippendorff's α (interval) on scores binned 0–19, 20–39,
   40–59, 60–79, 80–100 — each with a 95% bootstrap interval over items, 2,000 draws
   (`scripts/measurement/agreement.py`).
@@ -376,9 +480,13 @@ the orthogonal null (`score_stats.end_verdict`):
 ### 9.2 Determinism re-send
 
 5% of each judge's requests, selected by seed **20261026** from the sorted list of
-request-payload sha256s, re-sent after the main pass with the cache bypassed;
+request-payload sha256s, re-sent after the main pass (every request already carries
+`cache_prompt: false`, so a re-send is a cold repeat);
 reported: exact match of the returned content / top-logprob list, and the score
-delta distribution.
+delta distribution. Measured on the bench (`provenance/judge_measurement_2026-10-23.md`):
+Llama logprob 24/24 identical with the cache off, 10/24 differing (up to 0.30) with it on;
+Llama text 24/24; gpt-oss text 23/24 (one 80 ↔ 70 flip) — the re-send reports the study's
+own rates.
 
 ### 9.3 Bridge AUC
 
@@ -392,47 +500,75 @@ All of 9.1–9.3 is reported to the operator and **full judging does not start u
 the operator approves.** If agreement is poor, the plan is changed explicitly and
 logged in `DEVIATIONS.md`. A numeric "poor" threshold is proposed for the operator to
 accept or replace: human–judge Spearman's lower interval bound < 0.5 on trait, or
-bridge AUC's lower bound ≤ 0.5 (**OPEN DECISION**).
+bridge AUC's lower bound ≤ 0.5, or — with a single labeller — a test–retest Spearman
+below 0.7 on trait (**OPEN DECISION**, D12).
 
-## 10. Cost and trims
+## 10. Cost and the ÷8 design
 
-Full estimate, with every measured input and every assumption printed beside its
-result: **`analysis/cost.md`** (generated by `scripts/provenance/cost_estimate.py`).
-Headline numbers for the default design:
+Full estimate, with every measured input and every assumption printed beside its result:
+**`analysis/cost.md`** (generated by `scripts/provenance/cost_estimate.py`). The judge speeds
+in it are **measured** (§ 11); the one assumption is the length of a pairwise call.
 
-* **80,400 generations** (22 arms × 6 rungs + shared k = 0 + unhooked check point =
-  134 points × 200 rows × 3 sets), ~2.9e7 generated tokens;
-* **~41–49 GPU-hours on one A40** at the per-game sweep's measured 165.5 tok/s
-  (≈ 20–25 h wall clock on the two A40s of this machine);
-* **judge calls: 278,460 (primary)** and **189,756 (secondary)**, determinism re-send
-  included;
-* judge throughput on PimientoRojo is **not measured**; over an assumed range it is
-  roughly 200–1,100 calls/hour per judge, i.e. 241–1,247 hours for the primary judge's
-  calls. **The default design does not fit in a week on one judge server.**
+**Default design (reference only, not proposed)**: 80,400 generations (22 arms × 6 rungs +
+shared k = 0 + unhooked check, × 200 rows × 3 sets), ~2.9e7 generated tokens, ~41–49 GPU-hours
+on one A40; **278,460 primary and 189,756 secondary judge calls**, which at the measured
+speeds is 295.5 h + 52.7 h = **348.2 h (14.5 days)** of serial judging at `--parallel 1`.
 
-Trim options, each priced in `analysis/cost.md`, **for the operator to choose (none
-adopted)**: a 4- or 2-rung ladder; 3 samples per question; pairwise on held-out at
-k = ±3 only; no secondary-judge pairwise; secondary judge on a 20% subset; fewer arms
-on the in-distribution set.
+**The operator asked for ÷8.** Proposed configuration **`div8_main`** (§ 4 for the sets and
+rungs; D1):
 
-## 11. Judges — OPEN DECISIONS for the operator
+| quantity | `div8_main` | default |
+|---|---|---|
+| generations | **13,200** (6,000 held-out + 1,800 in-distribution + 5,400 bridge) | 80,400 |
+| generation GPU-hours, one A40 | 6.7–8.1 | 41–49 |
+| primary judge calls | **33,264** = trait 8,040 + coherence 13,080 + pairwise 10,560 + 5% re-send 1,584 | 278,460 |
+| secondary judge calls | **7,182** = trait 2,280 + coherence 1,920 + pairwise 2,640 + 5% re-send 342 | 189,756 |
+| primary hours (3.82 s/call) | **35.3 h** | 295.5 h |
+| secondary hours (1.00 s/call) | **2.0 h** | 52.7 h |
+| total judging | **37.3 h = 1/9.3** of the default | 348.2 h |
 
-Facts as of 2026-10-23 (`provenance/pimientorojo_probe.md` for the full record):
+With the pairwise calls priced by prompt length instead of at the measured 3.82 s (a pairwise
+prompt holds two answers: ≈ 6.2 s on the primary, ≈ 1.17 s on the secondary; no pairwise call
+was measured), `div8_main` takes 42.2 h + 2.1 h = **44.3 h = 1/7.9** — so the design sits
+between 1/8 and 1/9 whichever way that assumption falls.
+
+The trait counts: primary trait = 5,880 held-out + 1,800 in-distribution + 360 bridge-AUC
+rows; coherence = every judged row (5,880 + 1,800 + 5,400); pairwise = 22 arms × 2 rungs × 120
+steered rows × 2 orders. Secondary = 25% of the held-out and in-distribution rows (trait and
+coherence), the 360 bridge-AUC rows, 25% of the pairwise calls.
+
+**One alternative, `div8_alt`** — as `div8_main` but **no pairwise anywhere** and **5 samples
+per question on the held-out set** (200 rows per held-out point): 17,200 generations, 30,408
+primary + 6,468 secondary calls, 32.3 h + 1.8 h = **34.1 h (1/10.2)**. It buys back the
+within-question precision on the primary set (the SE inflation of § 8.4 disappears there) and
+gives up pairwise entirely. Recommended: `div8_main`, because pairwise is the one
+corroboration in a different judging format; if the operator values the primary contrasts'
+precision above that, `div8_alt`.
+
+Also priced: `div8_main` with the secondary judge on **all** held-out rows (D9): 16,443
+secondary calls, 4.6 h, total 39.9 h (1/8.7). What the ÷8 design preserves and loses, and the
+power caveats: **§ 8.4**. Other single trims of the default are priced in `analysis/cost.md`
+for reference; none is adopted.
+
+## 11. Judges — measured, recommended values (operator to confirm)
+
+Measured on PimientoRojo on 2026-10-23, bench items only (no study data), full report
+`provenance/judge_measurement_2026-10-23.md`; the probe of the host is
+`provenance/pimientorojo_probe.md`.
 
 * PimientoRojo is an AMD Strix Halo machine (Radeon 8060S iGPU, gfx1151, ~125–128 GB
-  unified memory, 32 cores, no NVIDIA GPU; shared, 7 users logged in at the probe). It
-  was found running Ollama 0.15.6 on localhost serving only `llama4-scout:latest`
-  (Q6_K). **Ollama is excluded by operator decision** ("it adds layers to the
-  experiment").
-* The judge server will be llama.cpp **`llama-server`** release **b11836**
-  (0.7.0-dev, commit `f5027fb21`, ubuntu-vulkan-x64 build, device Vulkan0 = AMD Radeon
-  8060S, RADV GFX1151), bound to localhost on PimientoRojo and reached through an SSH
-  tunnel; the endpoint is configured only through `PIMIENTOROJO_BASE_URL`. vLLM is not
-  installed there (no ROCm); if vLLM is ever used instead, weights provenance is the
-  HF repo + 40-hex revision.
-* Operator decision 2: judges are **Llama-3.3-70B-Instruct** and **gpt-oss-20b** —
-  two families, neither Qwen. Files (sha256 verified on the server against Hugging
-  Face LFS, and re-checked against HF's LFS metadata at the pinned revision by
+  unified memory, 32 cores, no NVIDIA GPU; shared). It was found running Ollama 0.15.6 on
+  localhost serving only `llama4-scout:latest` (Q6_K). **Ollama is excluded by operator
+  decision** ("it adds layers to the experiment").
+* The judge server is llama.cpp **`llama-server` b11836** (0.7.0-dev, commit `f5027fb21`,
+  Vulkan build, device Vulkan0 = AMD Radeon 8060S, RADV GFX1151), bound to the loopback
+  interface of PimientoRojo and reached through an SSH tunnel; the client talks only to this
+  server and the endpoint is configured only through `PIMIENTOROJO_BASE_URL`. Launch lines as
+  run: Llama `-c 8192 --parallel 1 --jinja`, gpt-oss `-c 16384 --parallel 1 --jinja`, both
+  `-ngl 999`.
+* Operator decision 2: judges are **Llama-3.3-70B-Instruct** and **gpt-oss-20b** — two
+  families, neither Qwen. Files (sha256 verified on the server against Hugging Face LFS, and
+  re-checked against HF's LFS metadata at the pinned revision by
   `scripts/judging/tokenizer_check.py`):
   * `bartowski/Llama-3.3-70B-Instruct-GGUF` @ `b6c5c9f176f3279204034e1d16d393105e95cb88`,
     **Q8_0**, `Llama-3.3-70B-Instruct-Q8_0-00001-of-00002.gguf`
@@ -443,21 +579,62 @@ Facts as of 2026-10-23 (`provenance/pimientorojo_probe.md` for the full record):
     `gpt-oss-20b-MXFP4.gguf`
     (`27cd6c432c7672cb812a92f611cf3ba7bbc35928262bb1e1253ff4ee6ae35901`).
 
-Decisions the operator makes (proposals in bold; nothing below is chosen silently):
+**Measured results that fix the recommendations** (12 bench items, 24 distinct prompts per
+mode, temperature 0, seed 0, `cache_prompt=false`, one request at a time):
 
-| # | decision | proposal | why |
+| | Llama-3.3-70B Q8_0, `logprob_0_100` | Llama-3.3-70B Q8_0, text | gpt-oss-20b MXFP4, `text_0_100`, effort low |
 |---|---|---|---|
-| J1 | primary / secondary judge | **primary = Llama-3.3-70B-Instruct Q8_0; secondary = gpt-oss-20b MXFP4** | the operator wants to check that Llama 70B does the work well; it passes the single-token check in the scored position and can use upstream's logprob mode; gpt-oss is a reasoning model and needs text mode |
-| J2 | quant level of the 70B | **Q8_0** (orchestrator's default) | FP8 is not a GGUF type; Q8_0 is the closest. GGUF judges are quantised — a judge number here is a Q8_0 / MXFP4 number, not a bf16 one |
-| J3 | Llama scoring mode | **`logprob_0_100`**, conditional on the endpoint check (top_logprobs ≥ 20 actually returned by llama-server) at the start of checkpoint 2; if it fails, `text_0_100`, fixed before any judgment | tokenizer check: every "0"…"100" is one token after the assistant header in the GGUF vocabulary, tokenized by llama.cpp b11836's own tokenizer (the HF tokenizer check is not run: gated, see below) |
-| J4 | gpt-oss scoring mode | **`text_0_100`**, final channel only | its first assistant token is a channel marker, never a digit, so a one-token logprob read does not apply |
-| J5 | gpt-oss reasoning effort | **low**, sent as `chat_template_kwargs: {"reasoning_effort": "low"}` (llama-server) and recorded in every request payload | fixed and recorded; low keeps the call cost bounded |
-| J6 | text-mode format instruction | **append, after the verbatim template, exactly:** `\n\nWrite the number inside <score></score> tags, for example <score>73</score>, and write nothing else. If the model clearly refused to answer, write REFUSAL instead.` — sha256 recorded at freeze | the upstream templates ask for a bare number; `text_0_100` needs exactly one tag. The template itself stays verbatim; the suffix is a separate, hashed constant |
-| J7 | judge `max_tokens` | **1** (logprob); **32** (Llama text); **2048** (gpt-oss, reasoning + final) — a hit is status `truncated` | explicit, not a server default |
+| usable as a scorer | **yes**: 20 `top_logprobs` on 48/48; integer tokens 0–100 with mass ≥ 0.999 on 48/48 | yes | yes; its logprob mode is **not** usable (first token `<\|channel\|>`, digit mass 0 on 48/48) |
+| seconds per call, mean / median | **3.82 / 3.71** (≈ 940 calls/h) | 6.09 / 5.97 (≈ 590/h) | **1.00 / 0.94** (≈ 3,600/h) |
+| determinism | **24/24 identical only with `cache_prompt=false`**; with the cache on, 10/24 pairs differed, up to 0.30 | 24/24 | 23/24 (one 80 ↔ 70 flip); not bitwise reproducible |
+| agreement with upstream's own scores, n = 12 (Spearman, trait / coherence) | 0.74 / 0.91 | 0.58 / 0.72 | 0.54 / 0.41 |
+
+Parallelism gives at most 1.3× (gpt-oss with `--parallel 4`; the 70B logprob workload does
+not scale at all), so planning uses `--parallel 1`. The two servers share one GPU: hours add.
+A cached-prefix call is ~24% faster, but the study sends `cache_prompt: false`, so the cold
+figure is the planning figure.
+
+**Recommended values** (each still **operator to confirm**, § 0):
+
+| # | decision | recommended | why |
+|---|---|---|---|
+| J1 | primary / secondary judge | **primary = Llama-3.3-70B-Instruct Q8_0; secondary = gpt-oss-20b MXFP4** | the operator wants Llama 70B to do the work; it is the only one of the two that gives a continuous, reproducible score; gpt-oss is the cheap (3.8× faster) second family |
+| J2 | quant level of the 70B | **Q8_0** | measured; FP8 is not a GGUF type. GGUF judges are quantised — a judge number here is a Q8_0 / MXFP4 number, not a bf16 one. Q4_K_M unmeasured |
+| J3 | Llama scoring mode | **`logprob_0_100`**, temperature 0, seed 0, `top_logprobs` 20, `max_tokens` 1, **`cache_prompt: false`**, **`--parallel 1`** | the endpoint check passed (above); `cache_prompt=false` is what makes it reproducible; it is sent by the client on every request. No fallback to text mode: if the endpoint stopped returning logprobs the run would stop |
+| J4 | gpt-oss scoring mode | **`text_0_100`, final channel only** | its first assistant token is `<\|channel\|>`, never a digit |
+| J5 | gpt-oss reasoning effort | **low**, `chat_template_kwargs: {"reasoning_effort": "low"}`, recorded in every request payload | measured 1.00 s/call; effort medium/high not measured |
+| J6 | text-mode format instruction | **append, after the verbatim template, exactly:** `\n\nWrite the number inside <score></score> tags, for example <score>73</score>, and write nothing else. If the model clearly refused to answer, write REFUSAL instead.` — sha256 recorded at freeze | the upstream templates ask for a bare number; `text_0_100` needs exactly one tag. The bench used a shorter instruction (`Respond with only your final score inside tags, exactly like <score>NN</score>.`); the few extra tokens do not move the measured speeds beyond their noise, and checkpoint 2 re-measures on the real prompts |
+| J7 | judge `max_tokens` | **1** (Llama logprob); **2048** (gpt-oss, reasoning + final; measured 35–75 generated tokens at low); **32** (Llama text, not used) — a hit is status `truncated` | explicit, not a server default |
 | J8 | judge seed / temperature / top_logprobs | **seed 0, temperature 0, top_logprobs 20** | upstream's values |
-| J9 | llama-server concurrency | **`--parallel 1`** for the validation pass; any larger value only after the determinism re-send (§ 9.2) shows no change; the launch line (`--parallel`, `-b`, `-ub`, `-c`, `-fa`, model path) recorded per run with `/props` | batching can change outputs at temperature 0 |
-| J10 | served model ids | **set with `--alias`** to `llama-3.3-70b-instruct-q8_0` and `gpt-oss-20b-mxfp4`; the client aborts if `/v1/models` does not list the configured id | the id is what the client checks |
-| J11 | weights provenance per run | **GGUF file name(s) + sha256 + quant type + llama.cpp build/commit**, from the run config plus `/props` (`model_path`, `build_info`) as returned; a field the server does not expose is recorded as unavailable, never guessed | operator decision 1 |
+| J9 | llama-server concurrency | **`--parallel 1`**; any larger value only after the determinism re-send (§ 9.2) shows no change; the launch line (`--parallel`, `-b`, `-ub`, `-c`, `-fa`, model path) recorded per run with `/props` | batching can change outputs at temperature 0; measured gain ≤ 1.3× |
+| J10 | served model ids | **set with `--alias`** to `llama-3.3-70b-instruct-q8_0` and `gpt-oss-20b-mxfp4`; the client aborts if `/v1/models` does not list the configured id | the bench servers were started without an alias (their id is the model path); the study relaunches them with the alias |
+| J11 | weights provenance per run | **GGUF file name(s) + sha256 + quant type + llama.cpp build `b11836` / commit `f5027fb21`**, from the run config plus `/props` (`model_path`, `build_info`) as returned; a field the server does not expose is recorded as unavailable, never guessed | operator decision 1 |
+| J12 | **Llama system header** (D6) | **pass a fixed explicit `chat_template_kwargs: {"date_string": "<freeze date, D Mon YYYY>"}`** on every Llama request, recorded in the payload (and therefore in the cache key), and **hash the rendered system header together with the prompt template** | see the next paragraph |
+| J13 | gpt-oss "Current date" (D7) | **accept; record the call timestamp; run the whole secondary pass in one sitting** | see the paragraph after the next |
+
+**Where "Today Date: 26 Jul 2024" comes from** (verified on 2026-10-23 against the template text
+that llama-server exposes at `/props` → `chat_template`, 4,613 characters, taken from the GGUF
+with `--jinja`, and against `provenance/tokenizer_check.json`'s rendered `chat_prefix`). The
+Llama-3.x chat template embedded in the GGUF (Meta's official Jinja template) always emits a
+system block, `Cutting Knowledge Date: December 2023` then `Today Date: <date_string>`, and
+begins with `{%- if not date_string is defined %}{%- set date_string = "26 Jul 2024" %}`. So
+when the caller passes no `date_string` — and llama-server passes none unless a request sets
+`chat_template_kwargs` — the date is the template's own default. The judge prompt then sits in
+the user turn after that header. Nothing in it comes from this study. Two options: (a) keep the
+template default — identical on every call, so harmless for comparisons across arms, but the
+rendered prompt is partly specified by a file this repository does not own; (b) **recommended**:
+pass an explicit `date_string` (the freeze date), so the rendered prompt is fully specified by
+the study's own configuration. Whether this llama-server build forwards `chat_template_kwargs`
+to the template is checked at the start of checkpoint 2 by rendering one prompt and reading the
+header back; if it does not, (a) is used and the template default is recorded.
+
+**gpt-oss's own date.** The gpt-oss harmony template writes `Current date:` into its system
+header from `strftime_now("%Y-%m-%d")` and takes no override (`reasoning_effort` and
+`model_identity` are the only template variables it reads); the rendered prefix in
+`provenance/tokenizer_check.json` shows the day of the check. The secondary judge's prompt
+therefore carries the date of the call. It cannot be pinned without editing the template, which
+this study will not do; it is recorded by every row's timestamp, and the secondary pass is
+about 2 h, so it can run in one sitting under one date.
 
 **Tokenizer check** (`provenance/tokenizer_check.json`, by
 `scripts/judging/tokenizer_check.py`; "first_assistant" = the string as the judge's
@@ -472,26 +649,35 @@ first assistant token after its own chat template's generation prompt):
 | gpt-oss-120b (candidate) | HF | 101/101 | 0/101 | 101/101 |
 | Llama-4-Scout-17B-16E-Instruct (candidate) | HF | **not run (gated)** | — | — |
 
-The endpoint half of the check — **does llama-server return `top_logprobs` ≥ 20** —
-is **not run** in this item (no endpoint call was made). It runs first at
-checkpoint 2, and J3 waits for it.
+The endpoint half of the check was **run on 2026-10-23** by the judge-measurement bench
+(`provenance/judge_measurement_2026-10-23.md`, 12 bench items, no study data): llama-server
+returned exactly 20 `top_logprobs` on 48/48 Llama calls, and the first token's digit mass was
+≥ 0.999 (minimum 1.000) on 48/48 trait and coherence calls, each score token a whole integer
+(`100`, `90`, `95`, `80`, `0`, …). For gpt-oss-20b the first token is `<|channel|>` on 48/48
+calls and the digit mass is 0 — its logprob mode is **not usable**, consistent with J4. The
+HF-tokenizer half for the Llama model is still not run (gated repository).
 
 ## 12. Every other open decision
 
+(The decisions that need the operator's attention are in § 0. These are the remaining
+parameters, each with its recommended value; unless the operator objects at checkpoint 1 they
+are frozen as written.)
+
 | # | decision | proposal |
 |---|---|---|
-| O1 | ladder | **k ∈ {−5,−3,−1,0,+1,+3,+5}**, or a trim from § 10 |
-| O2 | samples per question | **5** |
+| O1 | ladder | **`div8_main`** (§ 4; D1): {−3, 0, +3} for every arm, trait vector also ±1, ±5 on held-out |
+| O2 | samples per question | **3** (5 on the held-out set under `div8_alt`) |
 | O3 | `max_new_tokens` | **1000** (§ 4) |
 | O4 | primary rung k* | **3** (§ 8.3) |
 | O5 | truncated generations | **kept and judged**, share reported |
 | O6 | bridge primary analysis | **judge-free, unfiltered**; filtered beside it |
 | O7 | bridge sensitivity | **also question-clustered bootstrap** beside Wilson/Newcombe |
 | O8 | null verdicts for the secondary arms | **none**: relaxed and Dictator-only arms are compared with baseline and with the trait vector only (their committed shuffled nulls exist; no orthogonal null was built for them) |
-| O9 | pairwise scope | **held-out and in-distribution**, every steered row, both orders, primary judge; secondary judge on the 20% subset (§ 13) |
+| O9 | pairwise scope | **held-out at ±3 only**, every steered row, both orders, primary judge; secondary judge on the 25% subset (§ 13) |
 | O10 | human sample source | **the checkpoint-2 pilot rows** if full generation has not run, otherwise full generation; strata as § 9.1 |
-| O11 | "poor agreement" threshold | **§ 9.4** |
-| O12 | held-out and bridge wording | the operator reviews every item and freezes them |
+| O11 | "poor agreement" threshold | **§ 9.4** (D12) |
+| O12 | held-out and bridge wording | **accepted as drafted; ready to freeze** (D11) |
+| O13 | human labelling | **single labeller; intra-rater test–retest substitute** (§ 9.1; D10) |
 
 ## 13. Seeds (all fixed now)
 
@@ -499,11 +685,12 @@ checkpoint 2, and J3 waits for it.
 |---|---|
 | generation (`Sampling.seed`; batches `seed + batch_index`) | 0 |
 | bridge counterbalancing | 20261023 |
-| secondary-judge pairwise subset: `random.Random(20261024).sample(sorted (question_id, sample_index) pairs, 40)` of the 200 per point — the same 40 pairs for every (arm, k, set) | 20261024 |
+| secondary-judge subset: `random.Random(20261024).sample(sorted (question_id, sample_index) pairs, 30)` of the 120 per point (25%) — the same 30 pairs for every (arm, k, set); used for the secondary judge's trait, coherence and pairwise calls | 20261024 |
 | human calibration sample (§ 9.1) | 20261025 |
 | determinism re-send selection (§ 9.2) | 20261026 |
 | judge send order (`judge_many(order_seed=…)`) | 20261027 |
 | bootstrap (every interval in § 8; agreement in § 9) | 20261028 |
+| test–retest subset of the calibration sheet (§ 9.1; `grader_page.py retest`) | 20261029 |
 | judge request `seed` | 0 |
 
 ## 14. What this pre-registration does not cover

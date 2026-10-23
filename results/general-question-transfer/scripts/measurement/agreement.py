@@ -154,16 +154,28 @@ def read_scores(path, score) -> Dict[str, Optional[float]]:
     return out
 
 
+def map_retest(scores, key) -> Dict[str, Optional[float]]:
+    """Re-key a test-retest session's scores to the original item ids."""
+    unknown = sorted(set(scores) - set(key))
+    if unknown:
+        raise SystemExit("retest ids not in the key: %s" % unknown[:5])
+    return {key[i]: v for i, v in scores.items()}
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     ap.add_argument("--a", required=True)
     ap.add_argument("--b", required=True)
     ap.add_argument("--score", required=True, choices=("trait", "coherence"))
     ap.add_argument("--out", required=True)
+    ap.add_argument("--retest-key", help="test-retest: JSON {new item_id: original item_id}; "
+                    "b's ids are mapped back before pairing")
     ap.add_argument("--seed", type=int, default=BOOT_SEED)
     ap.add_argument("--n-boot", type=int, default=N_BOOT)
     args = ap.parse_args(argv)
     a, b = read_scores(args.a, args.score), read_scores(args.b, args.score)
+    if args.retest_key:
+        b = map_retest(b, json.loads(Path(args.retest_key).read_text()))
     items = sorted(set(a) | set(b))
     result = bootstrap_pair([a.get(i) for i in items], [b.get(i) for i in items],
                             n_boot=args.n_boot, seed=args.seed)

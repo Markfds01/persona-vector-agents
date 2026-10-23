@@ -1,4 +1,4 @@
-"""`lab.judge_client` against a fake OpenAI-compatible server on localhost.
+"""`lab.llama_server_client` against a fake llama-server on localhost.
 
 No network beyond 127.0.0.1 and no model. The fake server is scripted per test:
 each POST to /v1/chat/completions pops the next behaviour (a response body, an
@@ -16,7 +16,7 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
 import pytest
 
-from lab import judge_client as jc
+from lab import llama_server_client as jc
 
 MODEL = "judge-under-test"
 
@@ -166,9 +166,9 @@ def test_no_fallback_provider_when_endpoint_unset(monkeypatch, tmp_path):
     decoy = FakeServer()
     try:
         monkeypatch.delenv(jc.ENV_BASE_URL, raising=False)
-        monkeypatch.setenv("OPENAI_BASE_URL", decoy.url)
-        monkeypatch.setenv("OPENAI_API_BASE", decoy.url)
-        monkeypatch.setenv("OPENAI_API_KEY", "sk-decoy")
+        monkeypatch.setenv("LLM_BASE_URL", decoy.url)
+        monkeypatch.setenv("LLM_API_BASE", decoy.url)
+        monkeypatch.setenv("LLM_API_KEY", "sk-decoy")
         with pytest.raises(jc.ConfigError):
             run(text_config(), tmp_path / "c.jsonl", ["p"])
         assert decoy.requests == []
@@ -179,7 +179,7 @@ def test_no_fallback_provider_when_endpoint_unset(monkeypatch, tmp_path):
 def test_no_fallback_when_endpoint_fails_mid_run(server, monkeypatch, tmp_path):
     decoy = FakeServer()
     try:
-        monkeypatch.setenv("OPENAI_BASE_URL", decoy.url)
+        monkeypatch.setenv("LLM_BASE_URL", decoy.url)
         server.default = ("status", 503)
         _, results = run(text_config(), tmp_path / "c.jsonl", ["p"])
         assert results[0].status == "transport_error"
@@ -224,6 +224,22 @@ def test_payload_is_deterministic_and_explicit(server, tmp_path):
     assert body["logprobs"] is True and body["top_logprobs"] == 20
     assert body["messages"] == [{"role": "user", "content": "hello"}]
     assert body["model"] == MODEL
+    assert body["cache_prompt"] is False
+
+
+def test_template_date_string_is_sent_and_keyed(server, tmp_path):
+    cfg = text_config(extra_payload={"chat_template_kwargs": {"date_string": "23 Oct 2026"}})
+    server.default = ("json", completion_text("<score>5</score>"))
+    run(cfg, tmp_path / "c.jsonl", ["p"])
+    assert server.posts()[0][2]["chat_template_kwargs"] == {"date_string": "23 Oct 2026"}
+    other = text_config(extra_payload={"chat_template_kwargs": {"date_string": "24 Oct 2026"}})
+    assert jc.payload_sha256(cfg.payload("p")) != jc.payload_sha256(other.payload("p"))
+
+
+@pytest.mark.parametrize("extra", [{"cache_prompt": True}, {"cache_prompt": False}])
+def test_cache_prompt_is_owned_by_the_config(extra):
+    with pytest.raises(jc.ConfigError):
+        text_config(extra_payload=extra)
 
 
 def test_extra_payload_is_sent_and_keyed(server, tmp_path):
@@ -479,7 +495,8 @@ def test_request_carries_nothing_but_the_prompt(server, tmp_path):
     server.default = ("json", completion_text("<score>1</score>"))
     run(text_config(), tmp_path / "c.jsonl", ["Q and A only"])
     body = server.posts()[0][2]
-    assert set(body) == {"model", "messages", "temperature", "seed", "max_tokens", "stream"}
+    assert set(body) == {"model", "messages", "temperature", "seed", "max_tokens", "stream",
+                       "cache_prompt"}
     assert "k0" not in json.dumps(body)
 
 

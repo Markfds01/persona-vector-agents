@@ -102,3 +102,28 @@ def test_committed_demo_is_reproducible():
     committed = (demo_dir / "grader_SYNTHETIC.html").read_text()
     rows = gp.read_sheet(demo_dir / "blind_sheet_SYNTHETIC.csv")
     assert committed == gp.render(rows, "SYNTHETIC DEMO - placeholder items, not model outputs")
+
+
+def test_retest_subset_is_hidden_shuffled_and_keyed(tmp_path):
+    rows = [{"item_id": "x%d" % i, "question": "Q%d" % i, "answer": "A%d" % i} for i in range(40)]
+    out, key = gp.make_retest(rows, 0.25, seed=7)
+    assert len(out) == len(key) == 10
+    assert set(key.values()) <= {r["item_id"] for r in rows}
+    assert len(set(key.values())) == 10
+    assert not {r["item_id"] for r in out} & {r["item_id"] for r in rows}   # fresh ids
+    by_orig = {r["item_id"]: r for r in rows}
+    for r in out:
+        orig = by_orig[key[r["item_id"]]]
+        assert (r["question"], r["answer"]) == (orig["question"], orig["answer"])
+    assert gp.make_retest(rows, 0.25, seed=7) == (out, key)                  # seeded
+    assert gp.make_retest(rows, 0.25, seed=8)[1] != key
+
+
+def test_retest_cli_writes_a_sheet_the_page_accepts(tmp_path):
+    rows = [{"item_id": "x%d" % i, "question": "Q%d" % i, "answer": "A%d" % i} for i in range(8)]
+    sheet = tmp_path / "s.csv"
+    write_sheet(sheet, rows)
+    gp.main(["retest", "--sheet", str(sheet), "--out-sheet", str(tmp_path / "r.csv"),
+             "--out-key", str(tmp_path / "k.json")])
+    assert len(gp.read_sheet(tmp_path / "r.csv")) == 2
+    assert len(json.loads((tmp_path / "k.json").read_text())) == 2

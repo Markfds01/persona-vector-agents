@@ -84,3 +84,21 @@ def test_cost_design_arithmetic():
     assert calls["primary"]["pairwise"] == 2 * 22 * 6 * 200 * 2
     committed = json.loads((PACKAGE / "analysis" / "cost.json").read_text())
     assert committed["design"] == d and committed["judge_calls"] == calls
+
+
+def test_div8_design_arithmetic():
+    main = cost_estimate.div8_plan(cost_estimate.DIV8_DESIGNS["div8_main"])
+    assert main["generations"] == (49 + 1) * 120 + 15 * 120 + 45 * 120 == 13200
+    calls = main["judge_calls"]
+    assert calls["primary"]["pairwise"] == 22 * 2 * 120 * 2
+    assert calls["primary"]["trait"] == 49 * 120 + 15 * 120 + 3 * 120
+    assert calls["primary"]["coherence"] == (49 + 15 + 45) * 120
+    assert calls["secondary"]["pairwise"] == calls["primary"]["pairwise"] // 4
+    alt = cost_estimate.div8_plan(cost_estimate.DIV8_DESIGNS["div8_alt"])
+    assert alt["judge_calls"]["primary"]["pairwise"] == 0
+    default = cost_estimate.judge_calls(cost_estimate.design())
+    hours = cost_estimate.flat_hours({"primary": calls["primary"], "secondary": calls["secondary"]})
+    base = cost_estimate.flat_hours(default)
+    assert 1 / 10.5 < (hours["primary"] + hours["secondary"]) / (base["primary"] + base["secondary"]) < 1 / 7.5
+    committed = json.loads((PACKAGE / "analysis" / "cost.json").read_text())
+    assert committed["div8"]["div8_main"]["judge_calls"] == calls

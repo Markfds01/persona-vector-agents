@@ -129,94 +129,35 @@
    "total": 189756
   }
  },
- "judge_hours_assumed_speeds": {
-  "primary|llama-3.3-70b-instruct-q8_0|logprob_0_100": [
-   {
-    "prompt_tps": 60,
-    "gen_tps": 3,
-    "mode": "logprob_0_100",
-    "output_tokens_per_call": 1,
-    "seconds_per_call": 12.66755288551318,
-    "calls_per_hour": 284.19064301811744,
-    "hours_single_stream": 979.8352156944445
-   },
-   {
-    "prompt_tps": 120,
-    "gen_tps": 4,
-    "mode": "logprob_0_100",
-    "output_tokens_per_call": 1,
-    "seconds_per_call": 6.417109776089924,
-    "calls_per_hour": 561.0002205998654,
-    "hours_single_stream": 496.3634411805556
-   },
-   {
-    "prompt_tps": 250,
-    "gen_tps": 5,
-    "mode": "logprob_0_100",
-    "output_tokens_per_call": 1,
-    "seconds_per_call": 3.1602126925231637,
-    "calls_per_hour": 1139.1638317627612,
-    "hours_single_stream": 244.44245176666672
-   }
-  ],
-  "primary|llama-3.3-70b-instruct-q8_0|text_0_100": [
-   {
-    "prompt_tps": 60,
-    "gen_tps": 3,
-    "mode": "text_0_100",
-    "output_tokens_per_call": 12,
-    "seconds_per_call": 16.334219552179846,
-    "calls_per_hour": 220.39620494262124,
-    "hours_single_stream": 1263.451882361111
-   },
-   {
-    "prompt_tps": 120,
-    "gen_tps": 4,
-    "mode": "text_0_100",
-    "output_tokens_per_call": 12,
-    "seconds_per_call": 9.167109776089923,
-    "calls_per_hour": 392.70828951887165,
-    "hours_single_stream": 709.0759411805556
-   },
-   {
-    "prompt_tps": 250,
-    "gen_tps": 5,
-    "mode": "text_0_100",
-    "output_tokens_per_call": 12,
-    "seconds_per_call": 5.360212692523162,
-    "calls_per_hour": 671.615140388283,
-    "hours_single_stream": 414.6124517666666
-   }
-  ],
-  "secondary|gpt-oss-20b-mxfp4|text_0_100": [
-   {
-    "prompt_tps": 500,
-    "gen_tps": 30,
-    "mode": "text_0_100",
-    "output_tokens_per_call": 250,
-    "seconds_per_call": 9.629854756782397,
-    "calls_per_hour": 373.83741405491986,
-    "hours_single_stream": 507.5896442300001
-   },
-   {
-    "prompt_tps": 1000,
-    "gen_tps": 50,
-    "mode": "text_0_100",
-    "output_tokens_per_call": 250,
-    "seconds_per_call": 5.6482607117245305,
-    "calls_per_hour": 637.3643469621015,
-    "hours_single_stream": 297.719822115
-   },
-   {
-    "prompt_tps": 2000,
-    "gen_tps": 70,
-    "mode": "text_0_100",
-    "output_tokens_per_call": 250,
-    "seconds_per_call": 3.8955589272908373,
-    "calls_per_hour": 924.1292628843935,
-    "hours_single_stream": 205.33491105750002
-   }
-  ]
+ "measured_judge": {
+  "primary": {
+   "judge": "llama-3.3-70b-instruct-q8_0",
+   "mode": "logprob_0_100",
+   "mean_s": 3.82,
+   "median_s": 3.71,
+   "calls_per_hour": 942,
+   "bench_prompt_tokens": 590
+  },
+  "primary_text_mode": {
+   "judge": "llama-3.3-70b-instruct-q8_0",
+   "mode": "text_0_100",
+   "mean_s": 6.09,
+   "median_s": 5.97,
+   "calls_per_hour": 591,
+   "bench_prompt_tokens": 610
+  },
+  "secondary": {
+   "judge": "gpt-oss-20b-mxfp4",
+   "mode": "text_0_100 (reasoning low)",
+   "mean_s": 1.0,
+   "median_s": 0.94,
+   "calls_per_hour": 3600,
+   "bench_prompt_tokens": 630
+  }
+ },
+ "default_judge_hours_flat": {
+  "primary": 295.477,
+  "secondary": 52.71
  },
  "trim_scenarios": {
   "default": {
@@ -224,7 +165,11 @@
    "generations": 80400,
    "gpu_hours": 49.21367207198697,
    "primary_calls": 278460,
-   "secondary_calls": 189756
+   "secondary_calls": 189756,
+   "judge_hours_flat": {
+    "primary": 295.477,
+    "secondary": 52.71
+   }
   },
   "ladder_4k": {
    "change": {
@@ -238,7 +183,11 @@
    "generations": 54000,
    "gpu_hours": 33.05395885431961,
    "primary_calls": 186060,
-   "secondary_calls": 126924
+   "secondary_calls": 126924,
+   "judge_hours_flat": {
+    "primary": 197.43033333333332,
+    "secondary": 35.25666666666667
+   }
   },
   "ladder_2k": {
    "change": {
@@ -250,7 +199,11 @@
    "generations": 27600,
    "gpu_hours": 16.894245636652247,
    "primary_calls": 93660,
-   "secondary_calls": 64092
+   "secondary_calls": 64092,
+   "judge_hours_flat": {
+    "primary": 99.38366666666667,
+    "secondary": 17.803333333333335
+   }
   },
   "samples_3": {
    "change": {
@@ -259,7 +212,11 @@
    "generations": 48240,
    "gpu_hours": 29.528203243192188,
    "primary_calls": 167076,
-   "secondary_calls": 113854
+   "secondary_calls": 113854,
+   "judge_hours_flat": {
+    "primary": 177.28619999999998,
+    "secondary": 31.62611111111111
+   }
   },
   "pairwise_heldout_k3_only": {
    "change": {
@@ -274,7 +231,11 @@
    "generations": 80400,
    "gpu_hours": 49.21367207198697,
    "primary_calls": 186060,
-   "secondary_calls": 171276
+   "secondary_calls": 171276,
+   "judge_hours_flat": {
+    "primary": 197.43033333333332,
+    "secondary": 47.57666666666667
+   }
   },
   "no_secondary_pairwise": {
    "change": {
@@ -283,7 +244,11 @@
    "generations": 80400,
    "gpu_hours": 49.21367207198697,
    "primary_calls": 278460,
-   "secondary_calls": 167580
+   "secondary_calls": 167580,
+   "judge_hours_flat": {
+    "primary": 295.477,
+    "secondary": 46.55
+   }
   },
   "secondary_on_20pct": {
    "change": {
@@ -292,7 +257,11 @@
    "generations": 80400,
    "gpu_hours": 49.21367207198697,
    "primary_calls": 278460,
-   "secondary_calls": 55692
+   "secondary_calls": 55692,
+   "judge_hours_flat": {
+    "primary": 295.477,
+    "secondary": 15.47
+   }
   },
   "in_distribution_core_arms_only": {
    "change": {
@@ -301,7 +270,169 @@
    "generations": 66000,
    "gpu_hours": 40.39928304416841,
    "primary_calls": 217980,
-   "secondary_calls": 153468
+   "secondary_calls": 153468,
+   "judge_hours_flat": {
+    "primary": 231.301,
+    "secondary": 42.63
+   }
+  }
+ },
+ "div8": {
+  "div8_main": {
+   "generations": 13200,
+   "judged_rows": 13080,
+   "per_set": {
+    "heldout": {
+     "points": 49,
+     "rows_per_point": 120,
+     "generations": 6000
+    },
+    "in_distribution": {
+     "points": 15,
+     "rows_per_point": 120,
+     "generations": 1800
+    },
+    "bridge": {
+     "points": 45,
+     "rows_per_point": 120,
+     "generations": 5400
+    }
+   },
+   "judge_calls": {
+    "primary": {
+     "trait": 8040,
+     "coherence": 13080,
+     "pairwise": 10560,
+     "determinism_resend": 1584,
+     "total": 33264
+    },
+    "secondary": {
+     "trait": 2280,
+     "coherence": 1920,
+     "pairwise": 2640,
+     "determinism_resend": 342,
+     "total": 7182
+    }
+   },
+   "label": "main: {-3,0,+3} for every arm, 3 samples, pairwise on held-out at +-3",
+   "gpu_hours_tokens": 8.079856608833682,
+   "gpu_hours_gens": 6.724902226035557,
+   "judge_hours_flat": {
+    "primary": 35.2968,
+    "secondary": 1.995
+   },
+   "judge_hours_pairwise_by_length": {
+    "primary": 42.205704659887004,
+    "secondary": 2.1199669473684213
+   },
+   "pairwise_seconds_per_call": {
+    "primary": 6.175308406779661,
+    "secondary": 1.1704094736842106
+   }
+  },
+  "div8_alt": {
+   "generations": 17200,
+   "judged_rows": 17000,
+   "per_set": {
+    "heldout": {
+     "points": 49,
+     "rows_per_point": 200,
+     "generations": 10000
+    },
+    "in_distribution": {
+     "points": 15,
+     "rows_per_point": 120,
+     "generations": 1800
+    },
+    "bridge": {
+     "points": 45,
+     "rows_per_point": 120,
+     "generations": 5400
+    }
+   },
+   "judge_calls": {
+    "primary": {
+     "trait": 11960,
+     "coherence": 17000,
+     "pairwise": 0,
+     "determinism_resend": 1448,
+     "total": 30408
+    },
+    "secondary": {
+     "trait": 3260,
+     "coherence": 2900,
+     "pairwise": 0,
+     "determinism_resend": 308,
+     "total": 6468
+    }
+   },
+   "label": "alternative: as main but no pairwise anywhere and 5 samples on the held-out set",
+   "gpu_hours_tokens": 10.528298005449951,
+   "gpu_hours_gens": 8.762751385440271,
+   "judge_hours_flat": {
+    "primary": 32.26626666666667,
+    "secondary": 1.7966666666666666
+   },
+   "judge_hours_pairwise_by_length": {
+    "primary": 32.26626666666667,
+    "secondary": 1.7966666666666666
+   },
+   "pairwise_seconds_per_call": {
+    "primary": 6.175308406779661,
+    "secondary": 1.1704094736842106
+   }
+  },
+  "div8_main_secondary_100pct_heldout": {
+   "generations": 13200,
+   "judged_rows": 13080,
+   "per_set": {
+    "heldout": {
+     "points": 49,
+     "rows_per_point": 120,
+     "generations": 6000
+    },
+    "in_distribution": {
+     "points": 15,
+     "rows_per_point": 120,
+     "generations": 1800
+    },
+    "bridge": {
+     "points": 45,
+     "rows_per_point": 120,
+     "generations": 5400
+    }
+   },
+   "judge_calls": {
+    "primary": {
+     "trait": 8040,
+     "coherence": 13080,
+     "pairwise": 10560,
+     "determinism_resend": 1584,
+     "total": 33264
+    },
+    "secondary": {
+     "trait": 6690,
+     "coherence": 6330,
+     "pairwise": 2640,
+     "determinism_resend": 783,
+     "total": 16443
+    }
+   },
+   "label": "main: {-3,0,+3} for every arm, 3 samples, pairwise on held-out at +-3 (secondary judge on ALL held-out rows)",
+   "gpu_hours_tokens": 8.079856608833682,
+   "gpu_hours_gens": 6.724902226035557,
+   "judge_hours_flat": {
+    "primary": 35.2968,
+    "secondary": 4.5675
+   },
+   "judge_hours_pairwise_by_length": {
+    "primary": 42.205704659887004,
+    "secondary": 4.6924669473684215
+   },
+   "pairwise_seconds_per_call": {
+    "primary": 6.175308406779661,
+    "secondary": 1.1704094736842106
+   }
   }
  }
 }
