@@ -256,3 +256,21 @@ def test_cli_aborts_on_a_served_model_mismatch_and_writes_nothing(tmp_path):
         assert not out.exists() and server.posts == 0
     finally:
         server.close()
+
+
+def test_pairwise_render_never_resubstitutes_a_field_name_found_in_an_answer():
+    out = gj.render_pairwise("Q={question} 1={answer_1} 2={answer_2}", "what {answer_2}?", "A1 {question}", "A2")
+    assert out == "Q=what {answer_2}? 1=A1 {question} 2=A2"
+
+
+def test_plan_refuses_a_steered_row_without_its_baseline_pair():
+    rows = [r for r in rows_for(n_questions=2) if not (r["arm"] == "baseline" and r["question_set"] == "heldout"
+                                                        and r["question_id"] == "heldout_00")]
+    with pytest.raises(ValueError, match="no baseline row"):
+        gj.build_plan("primary", rows, TEMPLATES)
+
+
+def test_plan_refuses_a_question_set_it_has_no_plan_for():
+    rows = rows_for(n_questions=2) + [row("baseline", 0, "in_distribution", "q", 0)]
+    with pytest.raises(ValueError, match="in_distribution"):
+        gj.build_plan("primary", rows, TEMPLATES)

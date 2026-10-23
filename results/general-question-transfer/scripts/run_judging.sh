@@ -14,6 +14,7 @@
 # coherence calls, its pairwise calls, and its determinism re-send. Each call is resumable: a re-run
 # sends only the calls that have no finished row.
 set -eu
+set -o pipefail
 HERE="$(cd "$(dirname "$0")" && pwd)"
 DIR="$(dirname "$HERE")"
 REPO="$(cd "$DIR/../.." && pwd)"

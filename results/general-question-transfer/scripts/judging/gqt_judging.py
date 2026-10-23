@@ -25,6 +25,7 @@ import hashlib
 import json
 import math
 import random
+import re
 import sys
 from pathlib import Path
 from typing import Dict, Iterable, List, Mapping, NamedTuple, Optional, Sequence
@@ -98,9 +99,13 @@ def judge_configs(judge: str) -> Dict[str, "jc.JudgeConfig"]:
     raise ValueError("judge must be primary or secondary, got %r" % judge)
 
 
+_PAIRWISE_FIELD = re.compile(r"\{(question|answer_1|answer_2)\}")
+
+
 def render_pairwise(template: str, question: str, answer_1: str, answer_2: str) -> str:
-    return (template.replace("{question}", question).replace("{answer_1}", answer_1)
-            .replace("{answer_2}", answer_2))
+    """One pass over the template, so a field name inside an answer is never substituted again."""
+    values = {"question": question, "answer_1": answer_1, "answer_2": answer_2}
+    return _PAIRWISE_FIELD.sub(lambda match: values[match.group(1)], template)
 
 
 def secondary_subset(n_questions_samples: Sequence["tuple[str, int]"]) -> "set[tuple[str, int]]":
@@ -163,6 +168,10 @@ def build_plan(judge: str, rows: Sequence[Mapping], templates: Mapping[str, str]
     instruction = TEXT_FORMAT_INSTRUCTION if text_mode else ""
     instruction_sha = sha256_text(TEXT_FORMAT_INSTRUCTION) if text_mode else None
     shas = {kind: sha256_text(templates[kind]) for kind in KINDS}
+    unknown = sorted({r["question_set"] for r in rows} - {"heldout", "bridge"})
+    if unknown:
+        raise ValueError("no judging plan for question sets %s (the pilot judges heldout and bridge; "
+                         "the in-distribution set is added with the full run)" % unknown)
     heldout = [r for r in rows if r["question_set"] == "heldout"]
     by_point_pairs: Dict["tuple[str, float]", List["tuple[str, int]"]] = {}
     for r in heldout:
@@ -196,7 +205,8 @@ def build_plan(judge: str, rows: Sequence[Mapping], templates: Mapping[str, str]
             continue
         base = baseline.get((r["question_id"], r["sample_index"]))
         if base is None:
-            continue
+            raise ValueError("steered row %s has no baseline row for the same question and sample: "
+                             "the pairwise pair cannot be formed" % r["row_id"])
         for order, steered_position in (("baseline_first", 2), ("steered_first", 1)):
             first, second = (base, r) if order == "baseline_first" else (r, base)
             prompt = render_pairwise(templates["pairwise"], r["question"], first["answer"],

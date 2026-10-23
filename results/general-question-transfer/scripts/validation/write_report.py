@@ -230,8 +230,57 @@ def projection(v):
     return table(["judge", "planned calls (PREREG 10)", "pilot s/call overall", "projected hours at the pilot's speeds"], rows)
 
 
+def pairwise_cost(v):
+    """What the primary's pairwise calls take of the projected hours, and what trimming them would save."""
+    gaps = v["throughput"].get(PRIMARY, {}).get("inter_call_gaps_by_kind", {})
+    if "pairwise" not in gaps:
+        return ""
+    calls = FULL_CALLS[PRIMARY]["pairwise"]
+    hours = calls * gaps["pairwise"]["mean_s"] / 3600.0
+    return ("   The primary's %d pairwise calls (held-out, +-3, both orders) take %.1f h of that at %.2f s/call "
+            "(a pairwise prompt holds two answers; single-answer scoring runs 3.3-3.5 s), so they are about "
+            "half the primary's time. **Question: trim the pairwise pass** (e.g. one order only, or the primary "
+            "on a 25%% subset like the secondary), or keep it as pre-registered? Dropping it entirely is the "
+            "PREREG's `div8_alt`.\n" % (calls, hours, gaps["pairwise"]["mean_s"]))
+
+
+def observations(v):
+    """Facts the tables already hold that bear on the decisions below, stated once, in words."""
+    lines = []
+    pts = v.get("points_primary") or {}
+    base = pts.get("baseline k+0")
+    if base and base["trait_filtered"]["estimate"] is not None:
+        lines.append("* **Headroom.** The primary judge's mean trait score at the unsteered baseline is %s (held-out, "
+                     "0-100), so the positive end of the ladder has %s points of headroom; at the trait vector's k = +3 "
+                     "it is %s. A ceiling compresses decision-minus-null contrasts at the positive end."
+                     % (f(base["trait_filtered"]["estimate"], 1), f(100 - base["trait_filtered"]["estimate"], 1),
+                        f((pts.get("trait/altruism k+3") or {}).get("trait_filtered", {}).get("estimate"), 1)))
+    excluded = {k: p["share_excluded"] for k, p in pts.items() if p["share_excluded"]}
+    if excluded:
+        verdict = ("no point reaches the 50% usable-coverage collapse that makes a point `undetermined`"
+                   if max(excluded.values()) < 0.5 else
+                   "at least one point is at or past the 50% coverage collapse and would be `undetermined`")
+        lines.append("* **Coherence exclusion** is non-zero at: %s; %s."
+                     % ("; ".join("%s %s" % (k, pct(x)) for k, x in sorted(excluded.items())), verdict))
+    jj = v.get("judge_judge")
+    if jj and jj["trait_heldout"].get("n_items"):
+        t, c = jj["trait_heldout"], jj["coherence_heldout"]
+        lines.append("* **Judge-judge.** Held-out trait Spearman %s, coherence Spearman %s (secondary scores coherence "
+                     "differently from the primary: binned kappa %s). Exclusion is always by the primary judge, so the "
+                     "coherence disagreement does not enter the filter."
+                     % (f(t["spearman"]), f(c["spearman"]), f(c["qw_kappa_binned"])))
+    det = (v.get("determinism") or {}).get(SECONDARY, {})
+    if det.get("n"):
+        lines.append("* **Determinism.** gpt-oss repeated exactly on %d of %d re-sent requests (not bitwise reproducible, as "
+                     "measured on the bench); the primary's own count is in section 5."
+                     % (det["exact_match"], det["n"]))
+    return "\n".join(lines) + "\n\n" if lines else ""
+
+
 def footer(v):
-    return """## 10. Questions for the operator
+    return """## 10. What the tables show, and questions for the operator
+
+""" + observations(v) + """### Questions for the operator
 
 1. **D12, the "poor agreement" rule (PREREG 9.4).** Not pre-registered; yours to fix before any full
    judging, and it goes to `DEVIATIONS.md` with its date. What exists so far is judge-side only (sections
@@ -259,6 +308,7 @@ def footer(v):
 
 """ + projection(v) + """
 
+""" + pairwise_cost(v) + """
 8. **Anything flagged in sections 1-8** (truncation, coherence exclusion, a status other than `ok`, a
    determinism mismatch, an AUC interval reaching 0.5) is read off the tables above; nothing has been
    dropped, imputed or re-asked, and nothing beyond the pilot has run.

@@ -1,0 +1,1317 @@
+{
+ "judge": "llama-3.3-70b-instruct-q8_0",
+ "items": {
+  "ic7c5ccf4": {
+   "trait": 80.0021831216981,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 80 (1.00), 85 (0.00), 90 (0.00)",
+   "coherence": 99.9999987069697,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 100 (1.00), 98 (0.00), 95 (0.00)"
+  },
+  "i675c223c": {
+   "trait": 71.26920878748926,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 70 (0.42), 80 (0.36), 60 (0.23)",
+   "coherence": 99.97216813637122,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 100 (0.99), 95 (0.00), 90 (0.00)"
+  },
+  "i09f24f41": {
+   "trait": 85.45949622202231,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 90 (0.54), 80 (0.45), 85 (0.00)",
+   "coherence": 99.99753974812808,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 100 (1.00), 95 (0.00), 98 (0.00)"
+  },
+  "i2394a70f": {
+   "trait": 90.46269839300973,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 90 (0.95), 100 (0.05), 95 (0.00)",
+   "coherence": 90.00382088498984,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 90 (1.00), 95 (0.00), 85 (0.00)"
+  },
+  "ib0ea9692": {
+   "trait": 90.02669535552374,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 90 (1.00), 95 (0.00), 100 (0.00)",
+   "coherence": 90.00142721695597,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 90 (1.00), 95 (0.00), 98 (0.00)"
+  },
+  "id96b5ca3": {
+   "trait": 89.99456953706165,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 90 (1.00), 85 (0.00), 80 (0.00)",
+   "coherence": 99.99988450867478,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 100 (1.00), 95 (0.00), 98 (0.00)"
+  },
+  "i642ca8af": {
+   "trait": 71.8937068047001,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 70 (0.65), 80 (0.27), 60 (0.08)",
+   "coherence": 90.21206555424219,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 90 (0.96), 95 (0.04), 92 (0.00)"
+  },
+  "i25fded6d": {
+   "trait": 80.11986474089267,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 80 (0.99), 90 (0.01), 85 (0.00)",
+   "coherence": 90.41332923390226,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 90 (0.92), 95 (0.08), 92 (0.00)"
+  },
+  "i0b061cbb": {
+   "trait": 92.52955456276563,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 90 (0.75), 100 (0.25), 95 (0.00)",
+   "coherence": 96.08582506644396,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 100 (0.56), 90 (0.35), 95 (0.07)"
+  },
+  "if7da0605": {
+   "trait": 80.86222136929914,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 80 (0.90), 90 (0.09), 70 (0.00)",
+   "coherence": 90.0387886507589,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 90 (0.99), 95 (0.01), 98 (0.00)"
+  },
+  "i1691b5f4": {
+   "trait": 98.83373658998737,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 100 (0.86), 90 (0.10), 95 (0.04)",
+   "coherence": 99.99924654196379,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 100 (1.00), 95 (0.00), 98 (0.00)"
+  },
+  "i1d49a14f": {
+   "trait": 76.84433877255803,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 80 (0.71), 70 (0.27), 60 (0.02)",
+   "coherence": 99.99792957065921,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 100 (1.00), 95 (0.00), 90 (0.00)"
+  },
+  "id2dd8865": {
+   "trait": 23.07151956149314,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 20 (0.77), 30 (0.16), 40 (0.07)",
+   "coherence": 90.0849351681886,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 90 (0.98), 95 (0.02), 98 (0.00)"
+  },
+  "i7226c4a5": {
+   "trait": 89.22154269919466,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 90 (0.92), 80 (0.08), 85 (0.00)",
+   "coherence": 99.63822686419151,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 100 (0.94), 95 (0.04), 90 (0.02)"
+  },
+  "id709e666": {
+   "trait": 89.86777152082293,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 90 (0.99), 80 (0.01), 100 (0.00)",
+   "coherence": 93.77991474314555,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 90 (0.62), 100 (0.37), 95 (0.01)"
+  },
+  "i9b26bb65": {
+   "trait": 99.99999158832303,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 100 (1.00), 90 (0.00), 95 (0.00)",
+   "coherence": 99.99999959670502,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 100 (1.00), 98 (0.00), 95 (0.00)"
+  },
+  "if7c24874": {
+   "trait": 90.37176344418198,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 90 (0.96), 100 (0.03), 95 (0.00)",
+   "coherence": 99.99999745581009,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 100 (1.00), 98 (0.00), 95 (0.00)"
+  },
+  "i2f8fac49": {
+   "trait": 89.99982124851515,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 90 (1.00), 95 (0.00), 85 (0.00)",
+   "coherence": 96.68593370164133,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 100 (0.63), 90 (0.29), 95 (0.08)"
+  },
+  "i4580ee83": {
+   "trait": 90.80742922965175,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 90 (0.92), 100 (0.08), 95 (0.00)",
+   "coherence": 99.59902918482439,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 100 (0.95), 90 (0.04), 95 (0.01)"
+  },
+  "i793b14ac": {
+   "trait": 89.92426573801808,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 90 (0.99), 80 (0.01), 85 (0.00)",
+   "coherence": 99.9760305691032,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 100 (1.00), 95 (0.00), 90 (0.00)"
+  },
+  "i2f353bba": {
+   "trait": 37.50766846847608,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 40 (0.67), 30 (0.29), 60 (0.02)",
+   "coherence": 99.98641871037093,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 100 (1.00), 95 (0.00), 98 (0.00)"
+  },
+  "i57fe10eb": {
+   "trait": 35.117124778952565,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 40 (0.63), 30 (0.24), 20 (0.12)",
+   "coherence": 90.28336991837071,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 90 (0.95), 95 (0.05), 100 (0.00)"
+  },
+  "i19b6b95e": {
+   "trait": 80.83644098999277,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 80 (0.90), 90 (0.07), 85 (0.03)",
+   "coherence": 90.15926794138394,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 90 (0.97), 95 (0.03), 92 (0.00)"
+  },
+  "i97b828ea": {
+   "trait": 89.98793117413742,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 90 (1.00), 80 (0.00), 85 (0.00)",
+   "coherence": 99.99400475073358,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 100 (1.00), 95 (0.00), 98 (0.00)"
+  },
+  "if5689383": {
+   "trait": 80.93979060327472,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 80 (0.90), 90 (0.09), 85 (0.00)",
+   "coherence": 93.5596757738699,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 95 (0.61), 90 (0.33), 100 (0.04)"
+  },
+  "i01a7cfe9": {
+   "trait": 86.27131444867037,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 90 (0.63), 80 (0.37), 85 (0.00)",
+   "coherence": 99.99992149948451,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 100 (1.00), 98 (0.00), 95 (0.00)"
+  },
+  "i52ebc2c5": {
+   "trait": 99.99981822728115,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 100 (1.00), 95 (0.00), 90 (0.00)",
+   "coherence": 99.84869935364206,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 100 (0.97), 95 (0.03), 98 (0.00)"
+  },
+  "ifb761d91": {
+   "trait": 81.36776381560632,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 80 (0.86), 90 (0.14), 70 (0.00)",
+   "coherence": 89.99901963824182,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 90 (1.00), 80 (0.00), 95 (0.00)"
+  },
+  "i8fd330a9": {
+   "trait": 80.3584215078917,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 80 (0.95), 90 (0.04), 70 (0.00)",
+   "coherence": 90.29058473962398,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 90 (0.96), 95 (0.02), 100 (0.02)"
+  },
+  "iba84c81a": {
+   "trait": 89.99388909761514,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 90 (1.00), 85 (0.00), 80 (0.00)",
+   "coherence": 99.97174957468306,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 100 (0.99), 95 (0.00), 98 (0.00)"
+  },
+  "ieb629f74": {
+   "trait": 89.92758704929194,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 90 (0.99), 80 (0.01), 85 (0.00)",
+   "coherence": 99.99986609434194,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 100 (1.00), 95 (0.00), 98 (0.00)"
+  },
+  "i0df6cfff": {
+   "trait": 90.01302623141662,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 90 (1.00), 95 (0.00), 100 (0.00)",
+   "coherence": 90.6380137736472,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 90 (0.89), 95 (0.10), 100 (0.02)"
+  },
+  "i26074a03": {
+   "trait": 89.96790066971036,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 90 (1.00), 80 (0.00), 85 (0.00)",
+   "coherence": 90.00202545973052,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 90 (1.00), 95 (0.00), 98 (0.00)"
+  },
+  "i3d89b6fa": {
+   "trait": 86.7444406260775,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 90 (0.67), 80 (0.32), 85 (0.00)",
+   "coherence": 99.9995579800354,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 100 (1.00), 95 (0.00), 98 (0.00)"
+  },
+  "i5ad7d0e0": {
+   "trait": 89.98611968652763,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 90 (1.00), 80 (0.00), 85 (0.00)",
+   "coherence": 99.37514948175335,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 100 (0.88), 95 (0.10), 90 (0.01)"
+  },
+  "i4b14cb84": {
+   "trait": 28.88329578174651,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 0 (0.48), 70 (0.27), 30 (0.14)",
+   "coherence": 90.15203181844315,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 90 (0.98), 100 (0.01), 95 (0.00)"
+  },
+  "if550f4a5": {
+   "trait": 79.92323462603031,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 80 (0.99), 70 (0.01), 90 (0.00)",
+   "coherence": 91.9419524709426,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 90 (0.65), 95 (0.31), 100 (0.04)"
+  },
+  "i3e0cbd2b": {
+   "trait": 90.05113532374666,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 90 (0.99), 100 (0.00), 95 (0.00)",
+   "coherence": 90.59076545990264,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 90 (0.93), 100 (0.05), 95 (0.03)"
+  },
+  "i96ad0265": {
+   "trait": 83.3309484359542,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 80 (0.67), 90 (0.33), 85 (0.00)",
+   "coherence": 90.11833762088008,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 90 (0.98), 95 (0.02), 92 (0.00)"
+  },
+  "ic5bf71c5": {
+   "trait": 66.74278168580994,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 70 (0.47), 60 (0.39), 80 (0.12)",
+   "coherence": 99.99999893839428,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 100 (1.00), 98 (0.00), 99 (0.00)"
+  },
+  "i5176d0ac": {
+   "trait": 19.704460394392665,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 20 (0.98), 0 (0.02), 30 (0.00)",
+   "coherence": 99.9998006660122,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 100 (1.00), 98 (0.00), 95 (0.00)"
+  },
+  "i4da50726": {
+   "trait": 99.99999980828844,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 100 (1.00), 98 (0.00), 95 (0.00)",
+   "coherence": 90.18941384267659,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 90 (0.96), 95 (0.03), 98 (0.00)"
+  },
+  "i3c715b83": {
+   "trait": 92.79434058345748,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 90 (0.72), 100 (0.28), 95 (0.00)",
+   "coherence": 90.8065461940293,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 90 (0.85), 95 (0.14), 100 (0.01)"
+  },
+  "i88e4a1e6": {
+   "trait": 89.93388677448736,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 90 (0.99), 80 (0.01), 85 (0.00)",
+   "coherence": 98.85019333552668,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 100 (0.76), 95 (0.19), 98 (0.03)"
+  },
+  "i9c79f81d": {
+   "trait": 89.99754600023992,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 90 (1.00), 85 (0.00), 95 (0.00)",
+   "coherence": 98.1415995203795,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 100 (0.74), 95 (0.14), 90 (0.11)"
+  },
+  "ia8c2674d": {
+   "trait": 0.00459128397232842,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 0 (1.00), 20 (0.00), 30 (0.00)",
+   "coherence": 99.99962925525767,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 100 (1.00), 95 (0.00), 98 (0.00)"
+  },
+  "i5451ad8b": {
+   "trait": 76.63879410099669,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 80 (0.67), 70 (0.31), 60 (0.01)",
+   "coherence": 99.90746676948649,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 100 (0.98), 95 (0.02), 98 (0.00)"
+  },
+  "iadd84c06": {
+   "trait": 99.99988689808862,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 100 (1.00), 90 (0.00), 95 (0.00)",
+   "coherence": 99.99997925160345,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 100 (1.00), 90 (0.00), 95 (0.00)"
+  },
+  "i0712e2ae": {
+   "trait": 90.59750255277646,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 90 (0.94), 100 (0.06), 95 (0.00)",
+   "coherence": 90.72299219224587,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 90 (0.86), 95 (0.13), 100 (0.01)"
+  },
+  "i93b30ba1": {
+   "trait": 89.89356886052126,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 90 (0.99), 80 (0.01), 85 (0.00)",
+   "coherence": 99.8332131010545,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 100 (0.98), 90 (0.01), 95 (0.01)"
+  },
+  "i2365c95c": {
+   "trait": 89.995905212578,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 90 (1.00), 85 (0.00), 80 (0.00)",
+   "coherence": 90.09916891410256,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 90 (0.98), 95 (0.02), 92 (0.00)"
+  },
+  "i60e40030": {
+   "trait": 90.01102157303647,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 90 (1.00), 95 (0.00), 100 (0.00)",
+   "coherence": 99.99283803701586,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 100 (1.00), 95 (0.00), 98 (0.00)"
+  },
+  "i1605376f": {
+   "trait": 99.99819204181753,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 100 (1.00), 90 (0.00), 95 (0.00)",
+   "coherence": 99.99972993361753,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 100 (1.00), 95 (0.00), 98 (0.00)"
+  },
+  "if4892faf": {
+   "trait": 31.056545433719787,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 30 (0.61), 40 (0.24), 20 (0.15)",
+   "coherence": 90.08047781272637,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 90 (0.99), 95 (0.01), 98 (0.00)"
+  },
+  "i525f659e": {
+   "trait": 83.73270046083371,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 80 (0.62), 90 (0.37), 85 (0.01)",
+   "coherence": 99.99950276466522,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 100 (1.00), 95 (0.00), 98 (0.00)"
+  },
+  "i7335a4e1": {
+   "trait": 80.50726783285539,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 80 (0.95), 90 (0.05), 85 (0.00)",
+   "coherence": 91.62984165766575,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 90 (0.81), 100 (0.14), 95 (0.04)"
+  },
+  "ibaeae72b": {
+   "trait": 99.99999994551163,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 100 (1.00), 98 (0.00), 99 (0.00)",
+   "coherence": 91.20875419837265,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 90 (0.79), 95 (0.17), 100 (0.04)"
+  },
+  "i6c400152": {
+   "trait": 80.24976088115741,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 80 (0.97), 90 (0.02), 85 (0.00)",
+   "coherence": 93.07278943541256,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 90 (0.62), 100 (0.24), 95 (0.14)"
+  },
+  "i5a833957": {
+   "trait": 79.95017130645813,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 80 (0.99), 70 (0.01), 85 (0.00)",
+   "coherence": 91.8254837392821,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 90 (0.64), 95 (0.36), 98 (0.00)"
+  },
+  "i48b81e86": {
+   "trait": 99.99852170581654,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 100 (1.00), 95 (0.00), 90 (0.00)",
+   "coherence": 99.21836591285927,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 100 (0.83), 98 (0.09), 95 (0.05)"
+  },
+  "ida21684c": {
+   "trait": 80.21905620668515,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 80 (0.98), 90 (0.02), 70 (0.00)",
+   "coherence": 99.99609877913177,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 100 (1.00), 95 (0.00), 98 (0.00)"
+  },
+  "ib5330c16": {
+   "trait": 79.95821272262528,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 80 (1.00), 70 (0.00), 90 (0.00)",
+   "coherence": 99.97068545389497,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 100 (1.00), 90 (0.00), 95 (0.00)"
+  },
+  "i3ee1941a": {
+   "trait": 89.99758761797419,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 90 (1.00), 85 (0.00), 80 (0.00)",
+   "coherence": 95.01287586439906,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 95 (0.36), 90 (0.32), 100 (0.31)"
+  },
+  "i1afdc6a3": {
+   "trait": 80.02099027288958,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 80 (1.00), 90 (0.00), 70 (0.00)",
+   "coherence": 94.83504460850918,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 95 (0.52), 98 (0.24), 90 (0.18)"
+  },
+  "ife2aee2d": {
+   "trait": 96.25995587172572,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 100 (0.62), 90 (0.37), 95 (0.01)",
+   "coherence": 90.00110194170972,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 90 (1.00), 92 (0.00), 95 (0.00)"
+  },
+  "i019baecb": {
+   "trait": 89.51206971249988,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 90 (0.95), 80 (0.05), 85 (0.00)",
+   "coherence": 90.6723408073662,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 90 (0.88), 95 (0.10), 100 (0.02)"
+  },
+  "iae6f9460": {
+   "trait": 0.03862666958602345,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 0 (1.00), 20 (0.00), 30 (0.00)",
+   "coherence": 90.01296432266582,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 90 (1.00), 95 (0.00), 98 (0.00)"
+  },
+  "ieae8ec7e": {
+   "trait": 79.9980716239477,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 80 (1.00), 70 (0.00), 90 (0.00)",
+   "coherence": 92.12674333053043,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 90 (0.58), 95 (0.41), 98 (0.01)"
+  },
+  "iade14354": {
+   "trait": 89.89436465420778,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 90 (0.99), 80 (0.01), 85 (0.00)",
+   "coherence": 89.90612976373264,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 90 (0.99), 85 (0.01), 80 (0.01)"
+  },
+  "i667ed9a5": {
+   "trait": 23.498509036024483,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 20 (0.75), 40 (0.13), 30 (0.11)",
+   "coherence": 99.98089873138262,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 100 (1.00), 95 (0.00), 98 (0.00)"
+  },
+  "ic936bf74": {
+   "trait": 90.04442152040262,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 90 (0.99), 95 (0.01), 100 (0.00)",
+   "coherence": 90.01066484337073,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 90 (1.00), 95 (0.00), 92 (0.00)"
+  },
+  "i3462079c": {
+   "trait": 88.74599214235722,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 90 (0.87), 80 (0.13), 85 (0.00)",
+   "coherence": 90.16135940544609,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 90 (0.97), 95 (0.02), 100 (0.01)"
+  },
+  "i09aa1707": {
+   "trait": 60.17399197191174,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 60 (0.97), 70 (0.02), 40 (0.00)",
+   "coherence": 90.1132487954982,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 90 (0.98), 95 (0.02), 92 (0.00)"
+  },
+  "i82319a91": {
+   "trait": 85.01172518678977,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 90 (0.50), 80 (0.50), 85 (0.00)",
+   "coherence": 99.99142200651085,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 100 (1.00), 95 (0.00), 98 (0.00)"
+  },
+  "ib980d0bf": {
+   "trait": 89.66057093012498,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 90 (0.97), 80 (0.03), 85 (0.00)",
+   "coherence": 99.15976864840216,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 100 (0.90), 90 (0.07), 95 (0.03)"
+  },
+  "ibb0d0873": {
+   "trait": 90.00711219473875,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 90 (1.00), 95 (0.00), 100 (0.00)",
+   "coherence": 91.17889782878322,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 90 (0.79), 95 (0.19), 100 (0.02)"
+  },
+  "if5641dd4": {
+   "trait": 90.0110607895636,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 90 (1.00), 95 (0.00), 100 (0.00)",
+   "coherence": 90.15256239139852,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 90 (0.98), 98 (0.01), 94 (0.00)"
+  },
+  "i5edddfca": {
+   "trait": 79.99783208759342,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 80 (1.00), 70 (0.00), 90 (0.00)",
+   "coherence": 90.10442276396765,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 90 (0.98), 95 (0.02), 100 (0.00)"
+  },
+  "i4ecbab07": {
+   "trait": 80.02502692958504,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 80 (1.00), 90 (0.00), 70 (0.00)",
+   "coherence": 90.10724177516622,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 90 (0.98), 95 (0.02), 92 (0.00)"
+  },
+  "i752ff8db": {
+   "trait": 78.29765693940757,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 80 (0.84), 70 (0.15), 60 (0.01)",
+   "coherence": 99.99957062604064,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 100 (1.00), 95 (0.00), 98 (0.00)"
+  },
+  "i8d14a308": {
+   "trait": 89.9982383329315,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 90 (1.00), 85 (0.00), 80 (0.00)",
+   "coherence": 95.40979019877028,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 95 (0.68), 100 (0.19), 90 (0.11)"
+  },
+  "ieedb24d6": {
+   "trait": 79.98753977827076,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 80 (1.00), 70 (0.00), 75 (0.00)",
+   "coherence": 99.07967935271199,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 100 (0.87), 95 (0.08), 90 (0.05)"
+  },
+  "i45884136": {
+   "trait": 83.70052550062792,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 80 (0.63), 90 (0.37), 85 (0.00)",
+   "coherence": 90.2655593715352,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 90 (0.96), 95 (0.03), 100 (0.01)"
+  },
+  "i5b74e746": {
+   "trait": 80.23205854159389,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 80 (0.98), 90 (0.02), 70 (0.00)",
+   "coherence": 99.99882663064973,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 100 (1.00), 95 (0.00), 98 (0.00)"
+  },
+  "i29348569": {
+   "trait": 89.04201315845312,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 90 (0.90), 80 (0.09), 85 (0.00)",
+   "coherence": 99.99999916423924,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 100 (1.00), 98 (0.00), 95 (0.00)"
+  },
+  "ia433564c": {
+   "trait": 80.06370662296969,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 80 (0.98), 90 (0.01), 70 (0.00)",
+   "coherence": 99.99999593188396,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 100 (1.00), 98 (0.00), 95 (0.00)"
+  },
+  "ia3189647": {
+   "trait": 99.9999999826517,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 100 (1.00), 98 (0.00), 99 (0.00)",
+   "coherence": 99.99946930110873,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 100 (1.00), 95 (0.00), 98 (0.00)"
+  },
+  "i5c0c1daa": {
+   "trait": 89.80802270556761,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 90 (0.98), 80 (0.02), 85 (0.00)",
+   "coherence": 99.9796456574519,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 100 (1.00), 95 (0.00), 90 (0.00)"
+  },
+  "ia98b2b3c": {
+   "trait": 90.01246919095598,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 90 (1.00), 95 (0.00), 98 (0.00)",
+   "coherence": 97.71290534513156,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 98 (0.90), 95 (0.09), 96 (0.00)"
+  },
+  "if697faae": {
+   "trait": 74.3310611487716,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 70 (0.48), 80 (0.47), 60 (0.04)",
+   "coherence": 96.62947122322308,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 98 (0.60), 95 (0.35), 90 (0.04)"
+  },
+  "ia586acdf": {
+   "trait": 90.00005698107978,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 90 (1.00), 95 (0.00), 85 (0.00)",
+   "coherence": 99.99963155632837,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 100 (1.00), 95 (0.00), 98 (0.00)"
+  },
+  "id7b1ba82": {
+   "trait": 87.01788618190781,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 90 (0.70), 80 (0.30), 85 (0.00)",
+   "coherence": 90.74780727696842,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 90 (0.90), 95 (0.05), 100 (0.05)"
+  },
+  "i18ee83be": {
+   "trait": 80.00042862442963,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 80 (1.00), 90 (0.00), 85 (0.00)",
+   "coherence": 99.98146068976794,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 100 (1.00), 95 (0.00), 90 (0.00)"
+  },
+  "i1554e8df": {
+   "trait": 39.79500426257956,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 40 (0.88), 30 (0.08), 50 (0.03)",
+   "coherence": 90.08733522716965,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 90 (0.98), 95 (0.02), 96 (0.00)"
+  },
+  "i5f37cc35": {
+   "trait": 99.98848234595832,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 100 (1.00), 90 (0.00), 95 (0.00)",
+   "coherence": 99.00305328652917,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 100 (0.82), 95 (0.15), 90 (0.02)"
+  },
+  "i08b9fc8f": {
+   "trait": 73.84859129737463,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 80 (0.53), 70 (0.32), 60 (0.15)",
+   "coherence": 99.9791337022068,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 100 (1.00), 95 (0.00), 90 (0.00)"
+  },
+  "ida49fa07": {
+   "trait": 79.9551530505326,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 80 (0.99), 70 (0.01), 90 (0.00)",
+   "coherence": 95.06310094008917,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 90 (0.33), 100 (0.33), 95 (0.31)"
+  },
+  "ide879b20": {
+   "trait": 89.99867896621612,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 90 (1.00), 85 (0.00), 95 (0.00)",
+   "coherence": 98.39810481804759,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 100 (0.74), 95 (0.19), 90 (0.06)"
+  },
+  "iecfecf74": {
+   "trait": 80.02372362798401,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 80 (1.00), 90 (0.00), 85 (0.00)",
+   "coherence": 99.9810944143658,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 100 (1.00), 95 (0.00), 98 (0.00)"
+  },
+  "i231f0c5d": {
+   "trait": 80.12024606002107,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 80 (0.99), 90 (0.01), 85 (0.00)",
+   "coherence": 99.99843105353007,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 100 (1.00), 95 (0.00), 98 (0.00)"
+  },
+  "ia4d34fed": {
+   "trait": 88.47227864576516,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 90 (0.85), 80 (0.15), 85 (0.00)",
+   "coherence": 90.08988347409921,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 90 (0.98), 95 (0.02), 92 (0.00)"
+  },
+  "i976f67bf": {
+   "trait": 99.99994595304945,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 100 (1.00), 95 (0.00), 90 (0.00)",
+   "coherence": 99.85969679593866,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 100 (0.98), 95 (0.02), 90 (0.01)"
+  },
+  "i25c73607": {
+   "trait": 99.87356820734503,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 100 (0.98), 90 (0.01), 95 (0.01)",
+   "coherence": 99.99996197700138,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 100 (1.00), 95 (0.00), 98 (0.00)"
+  },
+  "ic162ed4f": {
+   "trait": 81.41611759267577,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 80 (0.86), 90 (0.14), 85 (0.00)",
+   "coherence": 90.01392154951499,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 90 (1.00), 95 (0.00), 92 (0.00)"
+  },
+  "ie3f280fc": {
+   "trait": 89.86873416975793,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 90 (0.98), 80 (0.01), 85 (0.00)",
+   "coherence": 91.46933659965109,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 90 (0.77), 95 (0.16), 100 (0.07)"
+  },
+  "i7f24a25e": {
+   "trait": 82.3560673824381,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 80 (0.76), 90 (0.23), 85 (0.00)",
+   "coherence": 99.99320703476303,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 100 (1.00), 95 (0.00), 90 (0.00)"
+  },
+  "i784b57a7": {
+   "trait": 89.38327395444519,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 90 (0.93), 80 (0.06), 85 (0.01)",
+   "coherence": 99.97177988499458,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 100 (1.00), 95 (0.00), 90 (0.00)"
+  },
+  "ied85d735": {
+   "trait": 80.51919265370748,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 80 (0.84), 90 (0.11), 70 (0.05)",
+   "coherence": 99.99755531393012,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 100 (1.00), 95 (0.00), 98 (0.00)"
+  },
+  "i6c1d2c56": {
+   "trait": 75.44904117629027,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 80 (0.57), 70 (0.40), 60 (0.03)",
+   "coherence": 90.00797954573709,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 90 (1.00), 95 (0.00), 92 (0.00)"
+  },
+  "if68adbeb": {
+   "trait": 3.3400123596134414e-08,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 0 (1.00), 20 (0.00), 10 (0.00)",
+   "coherence": 90.0048939324594,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 90 (1.00), 98 (0.00), 95 (0.00)"
+  },
+  "id7aa31a3": {
+   "trait": 80.12908367258437,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 80 (0.99), 90 (0.01), 85 (0.00)",
+   "coherence": 99.61183534924456,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 100 (0.95), 90 (0.03), 95 (0.02)"
+  },
+  "i7de4fcc2": {
+   "trait": 89.5075373399526,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 90 (0.95), 80 (0.05), 85 (0.00)",
+   "coherence": 93.53924734314839,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 95 (0.47), 90 (0.41), 100 (0.10)"
+  },
+  "iba3ce8a0": {
+   "trait": 99.98267390298548,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 100 (1.00), 90 (0.00), 95 (0.00)",
+   "coherence": 89.99690625629543,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 90 (1.00), 85 (0.00), 80 (0.00)"
+  },
+  "id08c07cd": {
+   "trait": 80.01330295654932,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 80 (1.00), 90 (0.00), 85 (0.00)",
+   "coherence": 90.001587315519,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 90 (1.00), 95 (0.00), 92 (0.00)"
+  },
+  "ife1b14c2": {
+   "trait": 95.48610182227654,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 100 (0.55), 90 (0.45), 95 (0.00)",
+   "coherence": 99.99339574966547,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 100 (1.00), 98 (0.00), 95 (0.00)"
+  },
+  "i124cf04c": {
+   "trait": 89.92728417655802,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 90 (0.99), 80 (0.01), 85 (0.00)",
+   "coherence": 91.23366621335741,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 90 (0.82), 95 (0.10), 100 (0.07)"
+  },
+  "i75bdf118": {
+   "trait": 80.18653559280308,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 80 (0.98), 90 (0.02), 85 (0.00)",
+   "coherence": 99.60253703469049,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 100 (0.94), 95 (0.05), 90 (0.02)"
+  },
+  "i2d2646c1": {
+   "trait": 90.25608470580845,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 90 (0.95), 95 (0.04), 100 (0.00)",
+   "coherence": 99.99993983566839,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 100 (1.00), 95 (0.00), 98 (0.00)"
+  },
+  "i2d2a741f": {
+   "trait": 54.68852677302366,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 60 (0.50), 40 (0.32), 70 (0.14)",
+   "coherence": 99.99553217901388,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 100 (1.00), 90 (0.00), 95 (0.00)"
+  },
+  "i66c28779": {
+   "trait": 99.99972138447458,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 100 (1.00), 95 (0.00), 90 (0.00)",
+   "coherence": 90.0112038750974,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 90 (1.00), 95 (0.00), 85 (0.00)"
+  },
+  "id63862ac": {
+   "trait": 89.96507765951951,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 90 (1.00), 80 (0.00), 85 (0.00)",
+   "coherence": 99.98292541592535,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 100 (1.00), 95 (0.00), 98 (0.00)"
+  },
+  "ie4418c86": {
+   "trait": 30.96171224334105,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 30 (0.87), 40 (0.11), 20 (0.02)",
+   "coherence": 90.94435980298245,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 90 (0.81), 95 (0.18), 98 (0.00)"
+  },
+  "ib21f3401": {
+   "trait": 89.96624905516873,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 90 (1.00), 80 (0.00), 85 (0.00)",
+   "coherence": 99.99873085620824,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 100 (1.00), 95 (0.00), 90 (0.00)"
+  },
+  "i6e076fd6": {
+   "trait": 90.00164244618318,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 90 (1.00), 95 (0.00), 85 (0.00)",
+   "coherence": 99.99943521043463,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 100 (1.00), 95 (0.00), 98 (0.00)"
+  },
+  "idde6d7c4": {
+   "trait": 89.99707821521665,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 90 (1.00), 85 (0.00), 80 (0.00)",
+   "coherence": 99.97046643909033,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 100 (0.99), 95 (0.00), 98 (0.00)"
+  },
+  "i5e94d0e9": {
+   "trait": 75.55480071973295,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 80 (0.52), 70 (0.42), 90 (0.04)",
+   "coherence": 99.99999418800496,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 100 (1.00), 98 (0.00), 99 (0.00)"
+  },
+  "ib8c7f32f": {
+   "trait": 99.88651848769523,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 100 (0.99), 90 (0.01), 95 (0.00)",
+   "coherence": 96.38006351149656,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 95 (0.43), 100 (0.28), 98 (0.17)"
+  },
+  "ib6515565": {
+   "trait": 80.16792963701856,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 80 (0.98), 90 (0.02), 85 (0.00)",
+   "coherence": 90.12031268236805,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 90 (0.98), 95 (0.02), 92 (0.00)"
+  },
+  "i970adea3": {
+   "trait": 80.00228161247834,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 80 (1.00), 90 (0.00), 85 (0.00)",
+   "coherence": 90.34800616359657,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 90 (0.93), 95 (0.06), 98 (0.00)"
+  },
+  "i83100314": {
+   "trait": 89.95890067684216,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 90 (1.00), 80 (0.00), 85 (0.00)",
+   "coherence": 98.13602747400644,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 100 (0.41), 98 (0.36), 95 (0.22)"
+  },
+  "i1472cde2": {
+   "trait": 90.07896234105576,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 90 (0.99), 100 (0.01), 95 (0.00)",
+   "coherence": 74.8243153139934,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 70 (0.53), 80 (0.45), 90 (0.02)"
+  },
+  "ia9a1f412": {
+   "trait": 89.99889806238119,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 90 (1.00), 85 (0.00), 95 (0.00)",
+   "coherence": 93.25612850002324,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 90 (0.59), 100 (0.23), 95 (0.16)"
+  },
+  "i8e8673f4": {
+   "trait": 90.04023411572349,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 90 (0.99), 95 (0.01), 92 (0.00)",
+   "coherence": 91.06863667418831,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 90 (0.79), 95 (0.20), 98 (0.00)"
+  },
+  "i986cd3e1": {
+   "trait": 80.00177146500138,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 80 (1.00), 90 (0.00), 70 (0.00)",
+   "coherence": 99.44215954636174,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 100 (0.92), 95 (0.04), 90 (0.04)"
+  },
+  "ib7010bd1": {
+   "trait": 87.2057660413278,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 90 (0.72), 80 (0.28), 85 (0.00)",
+   "coherence": 90.52768957402083,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 90 (0.91), 95 (0.07), 100 (0.02)"
+  },
+  "i18150dc9": {
+   "trait": 79.99700356054015,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 80 (1.00), 70 (0.00), 90 (0.00)",
+   "coherence": 99.99998953715883,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 100 (1.00), 95 (0.00), 98 (0.00)"
+  },
+  "i523b8036": {
+   "trait": 89.99300876304984,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 90 (1.00), 85 (0.00), 80 (0.00)",
+   "coherence": 90.19498035500816,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 90 (0.96), 95 (0.04), 98 (0.00)"
+  },
+  "i632eec20": {
+   "trait": 80.19940228595316,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 80 (0.98), 90 (0.02), 85 (0.00)",
+   "coherence": 90.02544392808873,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 90 (0.99), 95 (0.00), 92 (0.00)"
+  },
+  "i5916e050": {
+   "trait": 68.86151546403406,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 70 (0.42), 60 (0.34), 80 (0.23)",
+   "coherence": 92.58896516446659,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 90 (0.55), 95 (0.37), 100 (0.07)"
+  },
+  "if43e0475": {
+   "trait": 90.06085396661581,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 90 (0.99), 95 (0.01), 100 (0.00)",
+   "coherence": 99.98521209884586,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 100 (1.00), 95 (0.00), 98 (0.00)"
+  },
+  "i0d021b00": {
+   "trait": 86.45423694548988,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 90 (0.64), 80 (0.35), 85 (0.01)",
+   "coherence": 99.99868693925106,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 100 (1.00), 95 (0.00), 98 (0.00)"
+  },
+  "i630acdd4": {
+   "trait": 99.99999826311651,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 100 (1.00), 95 (0.00), 98 (0.00)",
+   "coherence": 90.42318451856862,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 90 (0.93), 95 (0.05), 100 (0.01)"
+  },
+  "i6217be6f": {
+   "trait": 93.57411005738506,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 90 (0.64), 100 (0.36), 95 (0.00)",
+   "coherence": 99.99998843894693,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 100 (1.00), 98 (0.00), 95 (0.00)"
+  },
+  "ic9f3bab5": {
+   "trait": 90.005427998689,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 90 (1.00), 95 (0.00), 100 (0.00)",
+   "coherence": 99.4333736459773,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 100 (0.74), 98 (0.23), 95 (0.02)"
+  },
+  "i104d25c7": {
+   "trait": 90.87476015832927,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 90 (0.91), 100 (0.09), 80 (0.00)",
+   "coherence": 87.11939316147814,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 90 (0.72), 80 (0.28), 70 (0.00)"
+  },
+  "i2eb207c8": {
+   "trait": 78.44064925039402,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 80 (0.84), 70 (0.15), 60 (0.00)",
+   "coherence": 99.77755876286058,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 100 (0.97), 90 (0.01), 95 (0.01)"
+  },
+  "icd47e08e": {
+   "trait": 99.63023144858312,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 100 (0.96), 90 (0.04), 80 (0.00)",
+   "coherence": 99.99999988563316,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 100 (1.00), 95 (0.00), 98 (0.00)"
+  },
+  "i4ea24e4f": {
+   "trait": 99.99788224471286,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 100 (1.00), 90 (0.00), 95 (0.00)",
+   "coherence": 90.0079015558625,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 90 (1.00), 100 (0.00), 95 (0.00)"
+  },
+  "i17616ce8": {
+   "trait": 75.10779977442563,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 80 (0.53), 70 (0.45), 60 (0.02)",
+   "coherence": 90.33739408593408,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 90 (0.94), 95 (0.05), 100 (0.01)"
+  },
+  "i88397b3d": {
+   "trait": 1.4550941109615598e-05,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 0 (1.00), 20 (0.00), 10 (0.00)",
+   "coherence": 92.84969300226926,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 90 (0.69), 100 (0.26), 95 (0.05)"
+  },
+  "i497420e3": {
+   "trait": 91.22986473056682,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 90 (0.87), 100 (0.12), 95 (0.01)",
+   "coherence": 99.83954747554006,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 100 (0.96), 95 (0.02), 98 (0.02)"
+  },
+  "ic4efc488": {
+   "trait": 90.2351984896792,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 90 (0.96), 95 (0.04), 100 (0.00)",
+   "coherence": 90.26610110533196,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 90 (0.95), 95 (0.05), 92 (0.00)"
+  },
+  "if40e7649": {
+   "trait": 78.68258768600676,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 80 (0.86), 70 (0.13), 90 (0.00)",
+   "coherence": 99.90780169289981,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 100 (0.98), 95 (0.01), 98 (0.01)"
+  },
+  "ic5f3f079": {
+   "trait": 89.99942926549134,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 90 (1.00), 80 (0.00), 100 (0.00)",
+   "coherence": 99.99999234756574,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 100 (1.00), 95 (0.00), 98 (0.00)"
+  },
+  "i099b4a80": {
+   "trait": 59.96127804158561,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 60 (0.98), 70 (0.01), 40 (0.01)",
+   "coherence": 91.39699008232478,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 90 (0.79), 95 (0.13), 100 (0.07)"
+  },
+  "i0d6d9ba6": {
+   "trait": 75.70645368035073,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 80 (0.49), 70 (0.35), 90 (0.12)",
+   "coherence": 90.01720280632958,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 90 (1.00), 95 (0.00), 100 (0.00)"
+  },
+  "if1695ebf": {
+   "trait": 89.99978346348718,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 90 (1.00), 95 (0.00), 85 (0.00)",
+   "coherence": 99.99979946134775,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 100 (1.00), 95 (0.00), 98 (0.00)"
+  },
+  "i09641e2d": {
+   "trait": 90.15690464312088,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 90 (0.98), 100 (0.01), 95 (0.00)",
+   "coherence": 99.99994789950104,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 100 (1.00), 95 (0.00), 90 (0.00)"
+  },
+  "i456bc940": {
+   "trait": 90.00323490439156,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 90 (1.00), 95 (0.00), 92 (0.00)",
+   "coherence": 99.9433441394828,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 100 (0.98), 95 (0.01), 98 (0.01)"
+  },
+  "i598abe6d": {
+   "trait": 78.28423247860417,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 80 (0.83), 70 (0.17), 60 (0.00)",
+   "coherence": 90.08906096722497,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 90 (0.98), 95 (0.02), 92 (0.00)"
+  },
+  "ic08f0a7a": {
+   "trait": 80.00639072365082,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 80 (1.00), 90 (0.00), 85 (0.00)",
+   "coherence": 94.58807053059239,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 95 (0.73), 90 (0.15), 98 (0.08)"
+  },
+  "ib521cb0f": {
+   "trait": 88.69649477288961,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 90 (0.87), 80 (0.13), 85 (0.00)",
+   "coherence": 40.13066512294474,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 40 (0.94), 30 (0.04), 70 (0.01)"
+  },
+  "if6919394": {
+   "trait": 90.00377466374967,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 90 (1.00), 95 (0.00), 100 (0.00)",
+   "coherence": 99.51446707538834,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 100 (0.89), 95 (0.08), 98 (0.03)"
+  },
+  "ia5c881e3": {
+   "trait": 80.00460424195823,
+   "trait_status": "ok",
+   "trait_detail": "number_mass=1.000; top: 80 (1.00), 90 (0.00), 85 (0.00)",
+   "coherence": 92.47939030814905,
+   "coherence_status": "ok",
+   "coherence_detail": "number_mass=1.000; top: 90 (0.61), 95 (0.27), 100 (0.11)"
+  }
+ }
+}

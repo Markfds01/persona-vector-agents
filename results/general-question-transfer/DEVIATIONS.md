@@ -48,7 +48,7 @@ Format, one entry per deviation:
 ## 2026-10-23 — Pairwise judging parameters and client mode the PREREG left open
 
 * PREREG section: § 6 (pairwise template and parser "added to lab/llama_server_client.py before checkpoint 2"), § 11 J7 (`max_tokens`: Llama 1 / gpt-oss 2048 / Llama text 32)
-* What changes: `lab/llama_server_client.py` gains a third mode `choice_1_2` (exactly one `<choice>1</choice>` or `<choice>2</choice>` in the final channel, else `unparseable`; no logprobs; tests in `lab/tests/test_llama_server_client.py`); the two 0-100 modes are untouched. Pairwise requests use `max_tokens` **32** on the primary and **2048** on the secondary (the reasoning budget J7 already sets for gpt-oss), temperature 0, seed 0, `cache_prompt: false`, the same `chat_template_kwargs` as that judge's other calls. The pairwise template is sent as the whole user message with no format instruction appended (it already fixes the reply format). The pairwise call's score is 1.0 or 2.0 (the response position chosen); the row stores which position the steered answer held.
+* What changes: `lab/llama_server_client.py` gains a third mode `choice_1_2` (exactly one `<choice>1</choice>` or `<choice>2</choice>` in the final channel, else `unparseable`; no logprobs; tests in `lab/tests/test_llama_server_client.py`); the two 0-100 modes are untouched. Pairwise requests use `max_tokens` **32** on the primary and **2048** on the secondary (the reasoning budget J7 already sets for gpt-oss), temperature 0, seed 0, `cache_prompt: false`, the same `chat_template_kwargs` as that judge's other calls. The pairwise template is sent as the whole user message with no format instruction appended (it already fixes the reply format). The pairwise call's score is 1.0 or 2.0 (the response position chosen); the row stores which position the steered answer held. The parser reads "exactly one `<choice>1|2</choice>` in the final channel" as exactly one such tag, with other text around it allowed (as the 0-100 text parser allows text around its one `<score>` tag).
 * Why: these values are not in the PREREG; they follow J7's reasoning and the template's own reply format.
 * Decided by: implementation choice, flagged for the operator at checkpoint 2.
 * Data existing at the time: none.
@@ -57,7 +57,7 @@ Format, one entry per deviation:
 ## 2026-10-23 — Judge order and the secondary judge's one-sitting rule
 
 * PREREG section: § 11 D7/J13 ("run the whole secondary pass in one sitting")
-* What changes: the pilot judging runs the secondary judge's whole pass first, then its determinism re-send, then the primary judge's trait/coherence, pairwise and re-send, so the two servers (one GPU) never compete and the secondary pass sits under one date. Nothing about what is judged changes.
+* What changes: the pilot judging runs the secondary judge's whole pass first, then its determinism re-send, then the primary judge's trait/coherence, pairwise and re-send, so the two servers (one GPU) never compete and the secondary pass sits under one date. Nothing about what is judged changes. The send order is the seeded global shuffle (20261027) cut into chunks of 50 calls, each chunk re-shuffled by `judge_many` with `order_seed = 20261027 + chunk offset` and sent score calls first, pairwise calls second; a resume therefore changes the order of the calls it still has to send, not what they are.
 * Why: D7 and the shared GPU.
 * Decided by: implementation choice within D7.
 * Data existing at the time: generation rows of the pilot.

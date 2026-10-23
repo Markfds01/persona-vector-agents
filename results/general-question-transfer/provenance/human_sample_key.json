@@ -1,0 +1,743 @@
+{
+ "baseline_n": 20,
+ "items": {
+  "i019baecb": {
+   "row_id": "decision/dictator|heldout|k+3|heldout_35|s0",
+   "stratum": "decision k+3"
+  },
+  "i01a7cfe9": {
+   "row_id": "baseline|heldout|k+0|heldout_10|s0",
+   "stratum": "baseline k+0"
+  },
+  "i0712e2ae": {
+   "row_id": "orthogonal_null/dictator|heldout|k-3|heldout_31|s0",
+   "stratum": "orthogonal_null k-3"
+  },
+  "i08b9fc8f": {
+   "row_id": "orthogonal_null/dictator|heldout|k+3|heldout_26|s1",
+   "stratum": "orthogonal_null k+3"
+  },
+  "i09641e2d": {
+   "row_id": "baseline|heldout|k+0|heldout_31|s2",
+   "stratum": "baseline k+0"
+  },
+  "i099b4a80": {
+   "row_id": "trait/altruism|heldout|k-3|heldout_21|s0",
+   "stratum": "trait k-3"
+  },
+  "i09aa1707": {
+   "row_id": "orthogonal_null/dictator|heldout|k+3|heldout_28|s0",
+   "stratum": "orthogonal_null k+3"
+  },
+  "i09f24f41": {
+   "row_id": "shuffled_null/dictator|heldout|k-3|heldout_29|s2",
+   "stratum": "shuffled_null k-3"
+  },
+  "i0b061cbb": {
+   "row_id": "baseline|heldout|k+0|heldout_30|s2",
+   "stratum": "baseline k+0"
+  },
+  "i0d021b00": {
+   "row_id": "baseline|heldout|k+0|heldout_08|s2",
+   "stratum": "baseline k+0"
+  },
+  "i0d6d9ba6": {
+   "row_id": "shuffled_null/dictator|heldout|k-3|heldout_17|s0",
+   "stratum": "shuffled_null k-3"
+  },
+  "i0df6cfff": {
+   "row_id": "trait/altruism|heldout|k+3|heldout_26|s1",
+   "stratum": "trait k+3"
+  },
+  "i104d25c7": {
+   "row_id": "trait/altruism|heldout|k+3|heldout_05|s0",
+   "stratum": "trait k+3"
+  },
+  "i124cf04c": {
+   "row_id": "decision/dictator|heldout|k-3|heldout_24|s1",
+   "stratum": "decision k-3"
+  },
+  "i1472cde2": {
+   "row_id": "trait/altruism|heldout|k+3|heldout_39|s0",
+   "stratum": "trait k+3"
+  },
+  "i1554e8df": {
+   "row_id": "decision/dictator|heldout|k-3|heldout_34|s2",
+   "stratum": "decision k-3"
+  },
+  "i1605376f": {
+   "row_id": "decision/dictator|heldout|k-3|heldout_32|s2",
+   "stratum": "decision k-3"
+  },
+  "i1691b5f4": {
+   "row_id": "shuffled_null/dictator|heldout|k-3|heldout_15|s2",
+   "stratum": "shuffled_null k-3"
+  },
+  "i17616ce8": {
+   "row_id": "shuffled_null/dictator|heldout|k+3|heldout_34|s0",
+   "stratum": "shuffled_null k+3"
+  },
+  "i18150dc9": {
+   "row_id": "decision/dictator|heldout|k-3|heldout_33|s0",
+   "stratum": "decision k-3"
+  },
+  "i18ee83be": {
+   "row_id": "shuffled_null/dictator|heldout|k+3|heldout_26|s0",
+   "stratum": "shuffled_null k+3"
+  },
+  "i19b6b95e": {
+   "row_id": "shuffled_null/dictator|heldout|k+3|heldout_22|s1",
+   "stratum": "shuffled_null k+3"
+  },
+  "i1afdc6a3": {
+   "row_id": "orthogonal_null/dictator|heldout|k+3|heldout_38|s0",
+   "stratum": "orthogonal_null k+3"
+  },
+  "i1d49a14f": {
+   "row_id": "decision/dictator|heldout|k-3|heldout_16|s0",
+   "stratum": "decision k-3"
+  },
+  "i231f0c5d": {
+   "row_id": "orthogonal_null/dictator|heldout|k-3|heldout_27|s0",
+   "stratum": "orthogonal_null k-3"
+  },
+  "i2365c95c": {
+   "row_id": "shuffled_null/dictator|heldout|k+3|heldout_07|s2",
+   "stratum": "shuffled_null k+3"
+  },
+  "i2394a70f": {
+   "row_id": "trait/altruism|heldout|k+3|heldout_25|s0",
+   "stratum": "trait k+3"
+  },
+  "i25c73607": {
+   "row_id": "baseline|heldout|k+0|heldout_18|s0",
+   "stratum": "baseline k+0"
+  },
+  "i25fded6d": {
+   "row_id": "orthogonal_null/dictator|heldout|k-3|heldout_30|s2",
+   "stratum": "orthogonal_null k-3"
+  },
+  "i26074a03": {
+   "row_id": "decision/dictator|heldout|k+3|heldout_14|s1",
+   "stratum": "decision k+3"
+  },
+  "i29348569": {
+   "row_id": "baseline|heldout|k+0|heldout_10|s1",
+   "stratum": "baseline k+0"
+  },
+  "i2d2646c1": {
+   "row_id": "decision/dictator|heldout|k+3|heldout_15|s0",
+   "stratum": "decision k+3"
+  },
+  "i2d2a741f": {
+   "row_id": "trait/altruism|heldout|k-3|heldout_00|s2",
+   "stratum": "trait k-3"
+  },
+  "i2eb207c8": {
+   "row_id": "orthogonal_null/dictator|heldout|k-3|heldout_00|s0",
+   "stratum": "orthogonal_null k-3"
+  },
+  "i2f353bba": {
+   "row_id": "orthogonal_null/dictator|heldout|k+3|heldout_00|s1",
+   "stratum": "orthogonal_null k+3"
+  },
+  "i2f8fac49": {
+   "row_id": "decision/dictator|heldout|k+3|heldout_24|s2",
+   "stratum": "decision k+3"
+  },
+  "i3462079c": {
+   "row_id": "shuffled_null/dictator|heldout|k-3|heldout_28|s0",
+   "stratum": "shuffled_null k-3"
+  },
+  "i3c715b83": {
+   "row_id": "shuffled_null/dictator|heldout|k+3|heldout_12|s2",
+   "stratum": "shuffled_null k+3"
+  },
+  "i3d89b6fa": {
+   "row_id": "shuffled_null/dictator|heldout|k-3|heldout_29|s0",
+   "stratum": "shuffled_null k-3"
+  },
+  "i3e0cbd2b": {
+   "row_id": "orthogonal_null/dictator|heldout|k-3|heldout_18|s1",
+   "stratum": "orthogonal_null k-3"
+  },
+  "i3ee1941a": {
+   "row_id": "orthogonal_null/dictator|heldout|k-3|heldout_32|s0",
+   "stratum": "orthogonal_null k-3"
+  },
+  "i456bc940": {
+   "row_id": "orthogonal_null/dictator|heldout|k+3|heldout_15|s1",
+   "stratum": "orthogonal_null k+3"
+  },
+  "i4580ee83": {
+   "row_id": "decision/dictator|heldout|k-3|heldout_03|s0",
+   "stratum": "decision k-3"
+  },
+  "i45884136": {
+   "row_id": "shuffled_null/dictator|heldout|k-3|heldout_05|s0",
+   "stratum": "shuffled_null k-3"
+  },
+  "i48b81e86": {
+   "row_id": "trait/altruism|heldout|k+3|heldout_15|s1",
+   "stratum": "trait k+3"
+  },
+  "i497420e3": {
+   "row_id": "baseline|heldout|k+0|heldout_36|s1",
+   "stratum": "baseline k+0"
+  },
+  "i4b14cb84": {
+   "row_id": "orthogonal_null/dictator|heldout|k-3|heldout_28|s2",
+   "stratum": "orthogonal_null k-3"
+  },
+  "i4da50726": {
+   "row_id": "trait/altruism|heldout|k+3|heldout_12|s1",
+   "stratum": "trait k+3"
+  },
+  "i4ea24e4f": {
+   "row_id": "trait/altruism|heldout|k+3|heldout_28|s2",
+   "stratum": "trait k+3"
+  },
+  "i4ecbab07": {
+   "row_id": "orthogonal_null/dictator|heldout|k-3|heldout_27|s2",
+   "stratum": "orthogonal_null k-3"
+  },
+  "i5176d0ac": {
+   "row_id": "trait/altruism|heldout|k-3|heldout_09|s0",
+   "stratum": "trait k-3"
+  },
+  "i523b8036": {
+   "row_id": "orthogonal_null/dictator|heldout|k-3|heldout_25|s2",
+   "stratum": "orthogonal_null k-3"
+  },
+  "i525f659e": {
+   "row_id": "trait/altruism|heldout|k-3|heldout_10|s2",
+   "stratum": "trait k-3"
+  },
+  "i52ebc2c5": {
+   "row_id": "baseline|heldout|k+0|heldout_22|s0",
+   "stratum": "baseline k+0"
+  },
+  "i5451ad8b": {
+   "row_id": "shuffled_null/dictator|heldout|k+3|heldout_09|s1",
+   "stratum": "shuffled_null k+3"
+  },
+  "i57fe10eb": {
+   "row_id": "trait/altruism|heldout|k-3|heldout_27|s0",
+   "stratum": "trait k-3"
+  },
+  "i5916e050": {
+   "row_id": "orthogonal_null/dictator|heldout|k+3|heldout_05|s0",
+   "stratum": "orthogonal_null k+3"
+  },
+  "i598abe6d": {
+   "row_id": "trait/altruism|heldout|k-3|heldout_25|s1",
+   "stratum": "trait k-3"
+  },
+  "i5a833957": {
+   "row_id": "orthogonal_null/dictator|heldout|k+3|heldout_22|s2",
+   "stratum": "orthogonal_null k+3"
+  },
+  "i5ad7d0e0": {
+   "row_id": "shuffled_null/dictator|heldout|k+3|heldout_06|s1",
+   "stratum": "shuffled_null k+3"
+  },
+  "i5b74e746": {
+   "row_id": "baseline|heldout|k+0|heldout_38|s1",
+   "stratum": "baseline k+0"
+  },
+  "i5c0c1daa": {
+   "row_id": "shuffled_null/dictator|heldout|k-3|heldout_23|s2",
+   "stratum": "shuffled_null k-3"
+  },
+  "i5e94d0e9": {
+   "row_id": "orthogonal_null/dictator|heldout|k-3|heldout_09|s1",
+   "stratum": "orthogonal_null k-3"
+  },
+  "i5edddfca": {
+   "row_id": "trait/altruism|heldout|k-3|heldout_16|s1",
+   "stratum": "trait k-3"
+  },
+  "i5f37cc35": {
+   "row_id": "decision/dictator|heldout|k-3|heldout_18|s0",
+   "stratum": "decision k-3"
+  },
+  "i60e40030": {
+   "row_id": "baseline|heldout|k+0|heldout_08|s1",
+   "stratum": "baseline k+0"
+  },
+  "i6217be6f": {
+   "row_id": "shuffled_null/dictator|heldout|k+3|heldout_11|s1",
+   "stratum": "shuffled_null k+3"
+  },
+  "i630acdd4": {
+   "row_id": "baseline|heldout|k+0|heldout_18|s2",
+   "stratum": "baseline k+0"
+  },
+  "i632eec20": {
+   "row_id": "shuffled_null/dictator|heldout|k+3|heldout_07|s1",
+   "stratum": "shuffled_null k+3"
+  },
+  "i642ca8af": {
+   "row_id": "baseline|heldout|k+0|heldout_19|s0",
+   "stratum": "baseline k+0"
+  },
+  "i667ed9a5": {
+   "row_id": "trait/altruism|heldout|k-3|heldout_09|s2",
+   "stratum": "trait k-3"
+  },
+  "i66c28779": {
+   "row_id": "trait/altruism|heldout|k+3|heldout_19|s1",
+   "stratum": "trait k+3"
+  },
+  "i675c223c": {
+   "row_id": "shuffled_null/dictator|heldout|k+3|heldout_16|s0",
+   "stratum": "shuffled_null k+3"
+  },
+  "i6c1d2c56": {
+   "row_id": "trait/altruism|heldout|k-3|heldout_04|s0",
+   "stratum": "trait k-3"
+  },
+  "i6c400152": {
+   "row_id": "decision/dictator|heldout|k+3|heldout_39|s1",
+   "stratum": "decision k+3"
+  },
+  "i6e076fd6": {
+   "row_id": "baseline|heldout|k+0|heldout_02|s1",
+   "stratum": "baseline k+0"
+  },
+  "i7226c4a5": {
+   "row_id": "shuffled_null/dictator|heldout|k-3|heldout_23|s1",
+   "stratum": "shuffled_null k-3"
+  },
+  "i7335a4e1": {
+   "row_id": "shuffled_null/dictator|heldout|k+3|heldout_28|s0",
+   "stratum": "shuffled_null k+3"
+  },
+  "i752ff8db": {
+   "row_id": "orthogonal_null/dictator|heldout|k+3|heldout_09|s1",
+   "stratum": "orthogonal_null k+3"
+  },
+  "i75bdf118": {
+   "row_id": "trait/altruism|heldout|k-3|heldout_23|s0",
+   "stratum": "trait k-3"
+  },
+  "i784b57a7": {
+   "row_id": "shuffled_null/dictator|heldout|k+3|heldout_16|s1",
+   "stratum": "shuffled_null k+3"
+  },
+  "i793b14ac": {
+   "row_id": "decision/dictator|heldout|k+3|heldout_03|s1",
+   "stratum": "decision k+3"
+  },
+  "i7de4fcc2": {
+   "row_id": "decision/dictator|heldout|k-3|heldout_06|s0",
+   "stratum": "decision k-3"
+  },
+  "i7f24a25e": {
+   "row_id": "decision/dictator|heldout|k+3|heldout_03|s0",
+   "stratum": "decision k+3"
+  },
+  "i82319a91": {
+   "row_id": "decision/dictator|heldout|k-3|heldout_08|s1",
+   "stratum": "decision k-3"
+  },
+  "i83100314": {
+   "row_id": "orthogonal_null/dictator|heldout|k+3|heldout_08|s1",
+   "stratum": "orthogonal_null k+3"
+  },
+  "i88397b3d": {
+   "row_id": "baseline|heldout|k+0|heldout_01|s0",
+   "stratum": "baseline k+0"
+  },
+  "i88e4a1e6": {
+   "row_id": "trait/altruism|heldout|k-3|heldout_02|s1",
+   "stratum": "trait k-3"
+  },
+  "i8d14a308": {
+   "row_id": "orthogonal_null/dictator|heldout|k+3|heldout_21|s2",
+   "stratum": "orthogonal_null k+3"
+  },
+  "i8e8673f4": {
+   "row_id": "orthogonal_null/dictator|heldout|k+3|heldout_14|s1",
+   "stratum": "orthogonal_null k+3"
+  },
+  "i8fd330a9": {
+   "row_id": "decision/dictator|heldout|k-3|heldout_28|s2",
+   "stratum": "decision k-3"
+  },
+  "i93b30ba1": {
+   "row_id": "orthogonal_null/dictator|heldout|k-3|heldout_20|s1",
+   "stratum": "orthogonal_null k-3"
+  },
+  "i96ad0265": {
+   "row_id": "shuffled_null/dictator|heldout|k-3|heldout_13|s1",
+   "stratum": "shuffled_null k-3"
+  },
+  "i970adea3": {
+   "row_id": "decision/dictator|heldout|k+3|heldout_26|s2",
+   "stratum": "decision k+3"
+  },
+  "i976f67bf": {
+   "row_id": "decision/dictator|heldout|k-3|heldout_18|s2",
+   "stratum": "decision k-3"
+  },
+  "i97b828ea": {
+   "row_id": "orthogonal_null/dictator|heldout|k-3|heldout_08|s2",
+   "stratum": "orthogonal_null k-3"
+  },
+  "i986cd3e1": {
+   "row_id": "trait/altruism|heldout|k-3|heldout_13|s2",
+   "stratum": "trait k-3"
+  },
+  "i9b26bb65": {
+   "row_id": "shuffled_null/dictator|heldout|k-3|heldout_21|s2",
+   "stratum": "shuffled_null k-3"
+  },
+  "i9c79f81d": {
+   "row_id": "decision/dictator|heldout|k+3|heldout_32|s0",
+   "stratum": "decision k+3"
+  },
+  "ia3189647": {
+   "row_id": "trait/altruism|heldout|k+3|heldout_13|s1",
+   "stratum": "trait k+3"
+  },
+  "ia433564c": {
+   "row_id": "baseline|heldout|k+0|heldout_09|s0",
+   "stratum": "baseline k+0"
+  },
+  "ia4d34fed": {
+   "row_id": "trait/altruism|heldout|k+3|heldout_09|s1",
+   "stratum": "trait k+3"
+  },
+  "ia586acdf": {
+   "row_id": "shuffled_null/dictator|heldout|k+3|heldout_02|s1",
+   "stratum": "shuffled_null k+3"
+  },
+  "ia5c881e3": {
+   "row_id": "orthogonal_null/dictator|heldout|k+3|heldout_19|s1",
+   "stratum": "orthogonal_null k+3"
+  },
+  "ia8c2674d": {
+   "row_id": "decision/dictator|heldout|k-3|heldout_38|s1",
+   "stratum": "decision k-3"
+  },
+  "ia98b2b3c": {
+   "row_id": "orthogonal_null/dictator|heldout|k-3|heldout_15|s2",
+   "stratum": "orthogonal_null k-3"
+  },
+  "ia9a1f412": {
+   "row_id": "decision/dictator|heldout|k+3|heldout_20|s1",
+   "stratum": "decision k+3"
+  },
+  "iadd84c06": {
+   "row_id": "trait/altruism|heldout|k+3|heldout_11|s1",
+   "stratum": "trait k+3"
+  },
+  "iade14354": {
+   "row_id": "trait/altruism|heldout|k+3|heldout_07|s0",
+   "stratum": "trait k+3"
+  },
+  "iae6f9460": {
+   "row_id": "trait/altruism|heldout|k-3|heldout_01|s1",
+   "stratum": "trait k-3"
+  },
+  "ib0ea9692": {
+   "row_id": "decision/dictator|heldout|k+3|heldout_18|s2",
+   "stratum": "decision k+3"
+  },
+  "ib21f3401": {
+   "row_id": "shuffled_null/dictator|heldout|k-3|heldout_35|s1",
+   "stratum": "shuffled_null k-3"
+  },
+  "ib521cb0f": {
+   "row_id": "trait/altruism|heldout|k+3|heldout_27|s2",
+   "stratum": "trait k+3"
+  },
+  "ib5330c16": {
+   "row_id": "orthogonal_null/dictator|heldout|k-3|heldout_26|s0",
+   "stratum": "orthogonal_null k-3"
+  },
+  "ib6515565": {
+   "row_id": "decision/dictator|heldout|k+3|heldout_26|s1",
+   "stratum": "decision k+3"
+  },
+  "ib7010bd1": {
+   "row_id": "decision/dictator|heldout|k+3|heldout_05|s2",
+   "stratum": "decision k+3"
+  },
+  "ib8c7f32f": {
+   "row_id": "decision/dictator|heldout|k-3|heldout_15|s1",
+   "stratum": "decision k-3"
+  },
+  "ib980d0bf": {
+   "row_id": "orthogonal_null/dictator|heldout|k-3|heldout_12|s0",
+   "stratum": "orthogonal_null k-3"
+  },
+  "iba3ce8a0": {
+   "row_id": "trait/altruism|heldout|k+3|heldout_05|s2",
+   "stratum": "trait k+3"
+  },
+  "iba84c81a": {
+   "row_id": "baseline|heldout|k+0|heldout_20|s1",
+   "stratum": "baseline k+0"
+  },
+  "ibaeae72b": {
+   "row_id": "trait/altruism|heldout|k+3|heldout_13|s2",
+   "stratum": "trait k+3"
+  },
+  "ibb0d0873": {
+   "row_id": "shuffled_null/dictator|heldout|k+3|heldout_03|s1",
+   "stratum": "shuffled_null k+3"
+  },
+  "ic08f0a7a": {
+   "row_id": "orthogonal_null/dictator|heldout|k+3|heldout_10|s1",
+   "stratum": "orthogonal_null k+3"
+  },
+  "ic162ed4f": {
+   "row_id": "shuffled_null/dictator|heldout|k-3|heldout_16|s2",
+   "stratum": "shuffled_null k-3"
+  },
+  "ic4efc488": {
+   "row_id": "trait/altruism|heldout|k+3|heldout_02|s0",
+   "stratum": "trait k+3"
+  },
+  "ic5bf71c5": {
+   "row_id": "decision/dictator|heldout|k-3|heldout_09|s1",
+   "stratum": "decision k-3"
+  },
+  "ic5f3f079": {
+   "row_id": "shuffled_null/dictator|heldout|k-3|heldout_36|s2",
+   "stratum": "shuffled_null k-3"
+  },
+  "ic7c5ccf4": {
+   "row_id": "orthogonal_null/dictator|heldout|k+3|heldout_33|s1",
+   "stratum": "orthogonal_null k+3"
+  },
+  "ic936bf74": {
+   "row_id": "trait/altruism|heldout|k+3|heldout_19|s2",
+   "stratum": "trait k+3"
+  },
+  "ic9f3bab5": {
+   "row_id": "shuffled_null/dictator|heldout|k+3|heldout_15|s0",
+   "stratum": "shuffled_null k+3"
+  },
+  "icd47e08e": {
+   "row_id": "shuffled_null/dictator|heldout|k-3|heldout_11|s2",
+   "stratum": "shuffled_null k-3"
+  },
+  "id08c07cd": {
+   "row_id": "orthogonal_null/dictator|heldout|k+3|heldout_39|s1",
+   "stratum": "orthogonal_null k+3"
+  },
+  "id2dd8865": {
+   "row_id": "decision/dictator|heldout|k-3|heldout_17|s1",
+   "stratum": "decision k-3"
+  },
+  "id63862ac": {
+   "row_id": "orthogonal_null/dictator|heldout|k+3|heldout_08|s2",
+   "stratum": "orthogonal_null k+3"
+  },
+  "id709e666": {
+   "row_id": "shuffled_null/dictator|heldout|k-3|heldout_12|s2",
+   "stratum": "shuffled_null k-3"
+  },
+  "id7aa31a3": {
+   "row_id": "decision/dictator|heldout|k+3|heldout_16|s1",
+   "stratum": "decision k+3"
+  },
+  "id7b1ba82": {
+   "row_id": "baseline|heldout|k+0|heldout_26|s1",
+   "stratum": "baseline k+0"
+  },
+  "id96b5ca3": {
+   "row_id": "orthogonal_null/dictator|heldout|k+3|heldout_02|s1",
+   "stratum": "orthogonal_null k+3"
+  },
+  "ida21684c": {
+   "row_id": "decision/dictator|heldout|k+3|heldout_38|s2",
+   "stratum": "decision k+3"
+  },
+  "ida49fa07": {
+   "row_id": "decision/dictator|heldout|k+3|heldout_29|s1",
+   "stratum": "decision k+3"
+  },
+  "idde6d7c4": {
+   "row_id": "shuffled_null/dictator|heldout|k+3|heldout_29|s1",
+   "stratum": "shuffled_null k+3"
+  },
+  "ide879b20": {
+   "row_id": "shuffled_null/dictator|heldout|k+3|heldout_21|s2",
+   "stratum": "shuffled_null k+3"
+  },
+  "ie3f280fc": {
+   "row_id": "shuffled_null/dictator|heldout|k+3|heldout_32|s1",
+   "stratum": "shuffled_null k+3"
+  },
+  "ie4418c86": {
+   "row_id": "orthogonal_null/dictator|heldout|k-3|heldout_34|s1",
+   "stratum": "orthogonal_null k-3"
+  },
+  "ieae8ec7e": {
+   "row_id": "trait/altruism|heldout|k-3|heldout_20|s0",
+   "stratum": "trait k-3"
+  },
+  "ieb629f74": {
+   "row_id": "baseline|heldout|k+0|heldout_29|s0",
+   "stratum": "baseline k+0"
+  },
+  "iecfecf74": {
+   "row_id": "baseline|heldout|k+0|heldout_06|s2",
+   "stratum": "baseline k+0"
+  },
+  "ied85d735": {
+   "row_id": "shuffled_null/dictator|heldout|k-3|heldout_38|s2",
+   "stratum": "shuffled_null k-3"
+  },
+  "ieedb24d6": {
+   "row_id": "orthogonal_null/dictator|heldout|k-3|heldout_36|s0",
+   "stratum": "orthogonal_null k-3"
+  },
+  "if1695ebf": {
+   "row_id": "shuffled_null/dictator|heldout|k-3|heldout_02|s1",
+   "stratum": "shuffled_null k-3"
+  },
+  "if40e7649": {
+   "row_id": "trait/altruism|heldout|k-3|heldout_29|s0",
+   "stratum": "trait k-3"
+  },
+  "if43e0475": {
+   "row_id": "decision/dictator|heldout|k+3|heldout_02|s0",
+   "stratum": "decision k+3"
+  },
+  "if4892faf": {
+   "row_id": "trait/altruism|heldout|k-3|heldout_17|s2",
+   "stratum": "trait k-3"
+  },
+  "if550f4a5": {
+   "row_id": "trait/altruism|heldout|k-3|heldout_39|s0",
+   "stratum": "trait k-3"
+  },
+  "if5641dd4": {
+   "row_id": "decision/dictator|heldout|k-3|heldout_30|s2",
+   "stratum": "decision k-3"
+  },
+  "if5689383": {
+   "row_id": "trait/altruism|heldout|k+3|heldout_09|s2",
+   "stratum": "trait k+3"
+  },
+  "if68adbeb": {
+   "row_id": "trait/altruism|heldout|k-3|heldout_01|s2",
+   "stratum": "trait k-3"
+  },
+  "if6919394": {
+   "row_id": "orthogonal_null/dictator|heldout|k+3|heldout_30|s1",
+   "stratum": "orthogonal_null k+3"
+  },
+  "if697faae": {
+   "row_id": "decision/dictator|heldout|k-3|heldout_29|s1",
+   "stratum": "decision k-3"
+  },
+  "if7c24874": {
+   "row_id": "baseline|heldout|k+0|heldout_15|s2",
+   "stratum": "baseline k+0"
+  },
+  "if7da0605": {
+   "row_id": "orthogonal_null/dictator|heldout|k-3|heldout_17|s2",
+   "stratum": "orthogonal_null k-3"
+  },
+  "ifb761d91": {
+   "row_id": "shuffled_null/dictator|heldout|k-3|heldout_01|s2",
+   "stratum": "shuffled_null k-3"
+  },
+  "ife1b14c2": {
+   "row_id": "decision/dictator|heldout|k-3|heldout_37|s1",
+   "stratum": "decision k-3"
+  },
+  "ife2aee2d": {
+   "row_id": "decision/dictator|heldout|k+3|heldout_39|s2",
+   "stratum": "decision k+3"
+  }
+ },
+ "n_items": 164,
+ "per_steered_stratum": 18,
+ "seed": 20261025,
+ "strata": [
+  {
+   "available": 120,
+   "drawn": 18,
+   "k": -3.0,
+   "role": "decision",
+   "wanted": 18
+  },
+  {
+   "available": 120,
+   "drawn": 18,
+   "k": 3.0,
+   "role": "decision",
+   "wanted": 18
+  },
+  {
+   "available": 0,
+   "drawn": 0,
+   "k": -3.0,
+   "role": "relaxed_dictator_only",
+   "wanted": 18
+  },
+  {
+   "available": 0,
+   "drawn": 0,
+   "k": 3.0,
+   "role": "relaxed_dictator_only",
+   "wanted": 18
+  },
+  {
+   "available": 120,
+   "drawn": 18,
+   "k": -3.0,
+   "role": "trait",
+   "wanted": 18
+  },
+  {
+   "available": 120,
+   "drawn": 18,
+   "k": 3.0,
+   "role": "trait",
+   "wanted": 18
+  },
+  {
+   "available": 120,
+   "drawn": 18,
+   "k": -3.0,
+   "role": "shuffled_null",
+   "wanted": 18
+  },
+  {
+   "available": 120,
+   "drawn": 18,
+   "k": 3.0,
+   "role": "shuffled_null",
+   "wanted": 18
+  },
+  {
+   "available": 120,
+   "drawn": 18,
+   "k": -3.0,
+   "role": "orthogonal_null",
+   "wanted": 18
+  },
+  {
+   "available": 120,
+   "drawn": 18,
+   "k": 3.0,
+   "role": "orthogonal_null",
+   "wanted": 18
+  },
+  {
+   "available": 120,
+   "drawn": 20,
+   "k": 0.0,
+   "role": "baseline",
+   "wanted": 20
+  }
+ ]
+}
