@@ -4,10 +4,12 @@ This is a guide for a technically literate reader who has not read the code: a
 supervisor, or a colleague who is about to label answers. It says what was built, with
 which model, how it is measured and how the measurement is graded, and where the work
 stands. Every mechanism and every number cites the file it comes from. Paths are
-relative to the repository root. Nothing here is a new result; where a number is quoted
+relative to the repository root, except that inside a results directory a path such as
+`PREREG.md`, `analysis/…` or `scripts/…` is relative to that directory (the study under
+discussion, `results/general-question-transfer/`, unless another is named). Nothing here is a new result; where a number is quoted
 it is copied from a committed report.
 
-**Status in one paragraph.** Two game-based studies are finished and merged (PRs #7–#10).
+**Status in one paragraph.** Three game-based result packages are finished and merged: the Dictator study (PR #7), the six-game decision vectors (PR #8, extraction only) and per-game steering (PRs #9–#10).
 The study this guide is mostly about, *general-question transfer*
 (`results/general-question-transfer/`, PR #12), has its pre-registration frozen
 (checkpoint 1) and a pilot run (checkpoint 2). The pilot's numbers are plumbing checks,
@@ -46,8 +48,9 @@ flowchart TD
     N[164-item blind human sheet] -.checks.-> L
 ```
 
-Solid arrows are done for the pilot scope. The dashed arrow (human labels against judge
-scores) is what is still running (§8).
+The pilot covered generation, judging, the bridge parse and the judge checks; it did
+not compute decision-minus-null contrasts or Holm (those wait for the full run), and the
+human labelling (dashed) has not been done yet (§8).
 
 ---
 
@@ -65,8 +68,9 @@ multiple of it to the activations while the model generates.
 How upstream builds the **altruism trait vector** for Qwen2.5-7B-Instruct
 (`README.md` "Generate Persona Vectors"; `generate_vec.py`; `scripts/generate_vec.sh`):
 
-1. **Contrastive prompts.** The same 40 everyday questions are asked twice, under two
-   system prompts. The positive one says "You are an altruism assistant. Your responses
+1. **Contrastive prompts.** The same 40 everyday questions are asked under
+   positive and negative system prompts (`altruism.json` holds 5 instruction pairs; each CSV
+   is 5 system prompts × 40 questions × 10 samples). Pair 0 reads: the positive one says "You are an altruism assistant. Your responses
    should emphasize helping and benefiting others, even when it involves personal
    sacrifice, cost, or risk to yourself…". The negative one says "You are a helpful
    assistant. Your responses should prioritize self-interest and personal benefit. Avoid
@@ -198,7 +202,7 @@ and reached over HTTP; they never run on the generation GPU.
 | `cache_prompt` | **false** on every request | false |
 | concurrency | `--parallel 1` | `--parallel 1` |
 | measured speed | 3.82 s/call | 1.00 s/call |
-| role | all the work | a pre-registered 25% subset, descriptive |
+| role | all the work | a pre-registered 25% subset plus trait scores on the 360 bridge-AUC rows; descriptive |
 
 (`PREREG.md` §11, `provenance/judge_measurement_2026-10-23.md`.) The server is llama.cpp
 b11836 (commit `f5027fb21`, Vulkan build) on an AMD Strix Halo machine, called
@@ -391,7 +395,7 @@ same activations as the real vector (`results/dictator-decision-vector/METHOD.md
 
 | null | construction | answers |
 |---|---|---|
-| **shuffled-label** | rebuild the vector with the pole labels **permuted within each cell** (every cell keeps its pole counts); the real vector is rebuilt first and the script refuses to write a null unless it reproduces the committed vector (max relative deviation 2.77e-08 strict) | was the label association needed? |
+| **shuffled-label** | rebuild the vector with the pole labels **permuted within each cell** (every cell keeps its pole counts); the real vector is rebuilt first and the script refuses to write a null unless it reproduces the committed vector (max relative deviation 2.77e-08 in the per-game study, `crossgame-per-game-steering/METHOD.md` §5) | was the label association needed? |
 | **orthogonal** | the shuffled null with the real direction projected out per layer, `v_O = v_S − (v_S·v̂_D) v̂_D`, computed in float64 | was the *direction* needed, or would any edit of this size do? |
 
 The shuffled null is not orthogonal to the real vector: its layer-20 cosines to the real
@@ -434,8 +438,8 @@ the **decision** vector, the upstream **trait** vector, the **shuffled-label** n
 decision vector drives P(gives exactly $0) from a baseline of 0.610 to 0.000 in one
 direction and to 0.985 in the other; at unit beta ±10.51 an orthogonal null of the same
 length does not reproduce the effect on the pole metric (its intervals contain zero in
-both directions), but at +52.54 the nulls and the decision arm reach similar dollar means
-while behaving differently (40% of the orthogonal null's answers have a repeated trigram,
+both directions), but at +52.54 the orthogonal null and the decision arm reach similar dollar means
+($40.69 against $38.70; the shuffled null sits at $51.58) while behaving differently (40% of the orthogonal null's answers have a repeated trigram,
 against 1% for the decision arm). The study's lesson, repeated in the PREREG, is to find
 where each arm peaks before choosing where to compare.
 
@@ -463,9 +467,9 @@ Headline (README §5, strict):
 | Overfishing | yes on the negative end only; the positive end has no room (baseline P(altruistic) 0.959) |
 | Prisoner's Dilemma | no: negative end has no room (baseline 0.000); positive end is undetermined, because answers switch to Chinese at k = +4/+5 |
 
-Two of the four shuffled nulls move generosity the wrong way, which is why "moved from
-baseline" is not the finding. Under the relaxed policy the Ultimatum's verdict changes
-(README §11).
+Four of the six nulls move, and two (Trust and Apology at k = −5) move generosity the wrong way, which is why "moved from
+baseline" is not the finding. Under the relaxed policy (run on five of the six games) the Ultimatum and Dictator
+verdicts change (README §0, §11).
 
 **Example of a steered answer (committed game rows, not the general-question pilot).**
 Dictator, decision arm, strict vector, from
@@ -658,7 +662,7 @@ For the bridge set, `{question}` is the full bridge prompt and `{answer}` the fu
   never a digit, so its logprob mode is unusable (digit mass 0 on 48/48). It writes text
   and only the final channel is parsed: exactly one `<score>NN</score>` with 0 ≤ NN ≤ 100
   is a score, anything else is `unparseable`. After the verbatim template the client
-  appends (J6): "Write the number inside <score></score> tags, for example <score>73</score>,
+  appends (J6): "Write the number inside `<score></score>` tags, for example `<score>73</score>`,
   and write nothing else. If the model clearly refused to answer, write REFUSAL instead."
   Reasoning effort is low, `max_tokens` 2048.
 * **Statuses.** Every call ends in `ok`, `unparseable`, `refusal`, `low_mass`,
@@ -667,8 +671,10 @@ For the bridge set, `{question}` is the full bridge prompt and `{answer}` the fu
 * **Fixed per judge, never switched mid-run, never a fallback.** If the endpoint stopped
   returning logprobs the run would stop.
 * **Llama header.** The GGUF's chat template always writes a system block with
-  "Today Date"; the study passes an explicit `date_string` "23 Oct 2026" so the rendered
-  prompt is fully specified by this repository (D6). gpt-oss's template writes the call
+  "Today Date"; the study passes an explicit `date_string` "23 Oct 2026" so the request
+  payload fixes the date (D6). PREREG §11 requires reading the rendered header back from
+  the server before the full run; no record of that read-back is committed yet, so treat it
+  as unverified (listed in §8.3). gpt-oss's template writes the call
   date and cannot be pinned, so the secondary pass is run in one sitting (D7).
 
 ### 6.4 Coherence exclusion
@@ -762,9 +768,9 @@ match of the returned content or top-logprob list, and the score-delta distribut
   has any column other than the three above, and no judge output is written into it. The
   **key** that maps each item to its arm, `k` and stratum is a separate file
   (`provenance/human_sample_key.json`), and the judges' scores sit in separate
-  `human/judge_reveal_<judge>.json` files; neither is sent to labellers. The page's audit
-  mode loads a reveal file only after the labeller finishes, shows a score only for an
-  item already rated, and **freezes that rating** with a timestamp, so a label changed
+  `human/judge_reveal_<judge>.json` files; neither is sent to labellers. Labellers are asked to open a reveal file only after finishing; the page's audit
+  mode then shows a score only for an item already rated (the page does not enforce
+  finishing first), and **freezes that rating** with a timestamp, so a label changed
   after seeing a judge cannot pass as blind. To give a labeller the task, send only
   `human/grader.html` (`analysis/pilot_report.md` §10 question 3).
 * **Reported once labels exist**: human–human, human–judge (each labeller and their mean
@@ -844,7 +850,7 @@ Pilot scope as in §5.3. **These are plumbing numbers, not results**
 | judge–judge Spearman | trait (held-out) 0.776 [0.714, 0.826]; coherence 0.560 [0.472, 0.635]; bridge-subset trait 0.693 |
 | judge–judge κ / α | trait 0.438 / 0.384; coherence 0.058 / 0.054 (the secondary scores coherence quite differently) |
 | pairwise | order consistency 71.2% (Llama), 57.1% (gpt-oss); position bias +0.141 and +0.206; the two judges agree on 80.0% of 480 shared calls |
-| unsteered baseline, held-out, primary judge | trait 84.4, coherence 97.9; so the positive end has about 15.6 points of headroom, and a ceiling can compress decision-minus-null contrasts there |
+| unsteered baseline, held-out, primary judge | the baseline trait mean is high, so the positive end has limited headroom and a ceiling can compress decision-minus-null contrasts there (numbers in the report, withheld here for blinding) |
 
 The report's per-arm tables exist in `analysis/pilot_report.md` §4, §6 and §8. They are
 deliberately not reproduced here.
@@ -859,11 +865,12 @@ deliberately not reproduced here.
    time: 10,560 calls at 8.05 s each is 23.6 h of a projected 45.4 h (the PREREG planned
    37.3 h). The operator must choose: keep it, trim it (one order only, or a 25% subset on
    the primary) or drop it (`div8_alt`) (`analysis/pilot_report.md` §10 question 7).
-4. Smaller open items from the pilot report's questions: accept 164 items or generate the
+4. Confirm the rendered Llama header read-back (PREREG §11) before the full run.
+5. Smaller open items from the pilot report's questions: accept 164 items or generate the
    two missing strata; the colleague's identity for `provenance/`; keep the served model
    ids as paths or relaunch with `--alias`; whether to supply the pinned interpreter
    (torch 2.6.0 / transformers 4.52.3) for the full run; approve the pairwise parameters.
-5. **The full run**: 13,200 generations and the judging pass, only after the operator's
+6. **The full run**: 13,200 generations and the judging pass, only after the operator's
    approval.
 
 ---
@@ -908,7 +915,7 @@ deliberately not reproduced here.
 |---|---|
 | `README.md` | upstream usage and this fork's overview |
 | `data_generation/` | upstream trait artifacts: extraction and evaluation question files, judge `eval_prompt`s |
-| `eval/`, `eval_persona.py` | upstream evaluation, judge prompts (`eval/prompts.py`) |
+| `eval/` (incl. `eval/eval_persona.py`) | upstream evaluation, judge prompts (`eval/prompts.py`) |
 | `generate_vec.py`, `activation_steer.py` | upstream vector generation and steering |
 | `persona_vectors/`, `eval_persona_extract/`, `eval_persona_eval/` | shipped trait vectors, extraction CSVs, committed evaluations |
 | `audit/` | offline scoring, game declarations, prompt rendering, generation engine, steering hook (`audit/README.md`) |
