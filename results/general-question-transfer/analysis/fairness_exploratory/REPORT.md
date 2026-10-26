@@ -104,7 +104,7 @@ Pearson r between the fairness and altruism judge scores over the baseline and n
 * One judge (llama-3.3-70b) was the primary. The secondary (gpt-oss-20b) is on a 30-row subset per point and 26 questions, so its numbers are noisy.
 * One arm pair, 40 held-out questions, 3 samples. The pilot is not a test of transfer.
 * No multiplicity correction. Several contrasts are reported, and none of the verdicts is confirmatory.
-* The fairness judgments came from three judge attempts (run files `run_20261026T150725Z`, `run_20261026T160049Z`; the first was killed at 700 of 1080 calls at about 4.45 s/call). Four primary calls were served from cache from the earlier attempt. `run_judging.py` keys each call, so the stored rows contain one entry per key (1,080 unique keys).
+* The primary fairness judgments came from two attempts (run files `run_20261026T150725Z`, killed at 700 of 1080 calls at about 4.45 s/call, and `run_20261026T160049Z`, which completed the rest). Four primary calls were served from cache from the earlier attempt. `run_judging.py` keys each call, so the stored rows contain one entry per key (1,080 unique keys).
 
 ## 7. Cost
 
