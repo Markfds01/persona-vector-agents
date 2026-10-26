@@ -63,6 +63,15 @@ Format, one entry per deviation:
 * Data existing at the time: generation rows of the pilot.
 * Effect on results: none.
 
+## 2026-10-26 — Exploratory fairness analysis (post-hoc, not confirmatory)
+
+* PREREG section: none changed. This is an analysis added after the pilot, not a departure from `PREREG.md`; it is recorded here so the dated record is complete. The confirmatory plan and the confirmatory analysis files are untouched.
+* What changes: the pilot's existing held-out answers are judged a second time with a **fairness** rubric (`data_generation/trait_data_eval/fairness_exploratory.json`, same format and `logprob_0_100` scale as the upstream altruism template), by the same primary judge through the same client, and the secondary judge on its existing 30-row subset. Contrasts are paired by question against the existing trait (altruism) scores. The full plan, rubric, anchors and predictions are in `docs/fairness_exploratory_prereg.md` (committed before any fairness score exists).
+* Why: the pilot judged only the altruistic dimension; regex shares in the pilot answers suggest the game-built vector moves fairness but not altruism. The operator asked for this measurement. Evidence: the pilot's judgments (`judgments/`), the regex shares in the prereg § 1.
+* Decided by: operator (the item "exploratory fairness analysis", 2026-10-26).
+* Data existing at the time: generation rows of the pilot (held-out set, 9 judged points, 1,080 rows); the pilot's trait and coherence judgments (primary and secondary).
+* Effect on results: none on the confirmatory numbers. Exploratory verdicts only, labelled as such. Count note: the brief's "7 points × 120 = 840" does not match the pilot, which has 9 judged held-out points (1,080 rows); all of them are judged.
+
 ## Pending, to be recorded here before it is used
 
 * **The "poor agreement" decision rule (PREREG § 9.4, D12).** Not pre-registered. The operator
