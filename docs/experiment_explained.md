@@ -1,5 +1,8 @@
 # The experiment, explained end to end
 
+> **Slide version:** [`experiment_explained.pdf`](experiment_explained.pdf) is a 23-page illustrated
+> deck of this guide, for presenting. Rebuild it with `python3 scripts/make_explainer_pdf.py`.
+
 This is a guide for a technically literate reader who has not read the code: a
 supervisor, or a colleague who is about to label answers. It says what was built, with
 which model, how it is measured and how the measurement is graded, and where the work
