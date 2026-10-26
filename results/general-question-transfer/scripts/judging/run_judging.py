@@ -157,7 +157,8 @@ def main(argv=None):
     ap.add_argument("--phase", default="judge", choices=("judge", "resend"))
     ap.add_argument("--rows-dir", required=True)
     ap.add_argument("--out-dir", required=True, help="the judgments/ root")
-    ap.add_argument("--kinds", default="trait,coherence,pairwise")
+    ap.add_argument("--kinds", default="trait,coherence,pairwise",
+                    help="add 'fairness' for the exploratory fairness rubric (docs/fairness_exploratory_prereg.md)")
     args = ap.parse_args(argv)
 
     rows = gj.load_generation_rows(args.rows_dir)
@@ -165,7 +166,8 @@ def main(argv=None):
         raise SystemExit("no generation rows under %s" % args.rows_dir)
     templates = gj.load_templates()
     configs = gj.judge_configs(args.judge)
-    plan = gj.build_plan(args.judge, rows, templates)
+    plan = gj.build_plan(args.judge, rows, templates,
+                         with_fairness="fairness" in args.kinds.split(","))
     out = Path(args.out_dir) / gj.JUDGE_DIRS[args.judge]
     run_id = dt.datetime.now(dt.timezone.utc).strftime("%Y%m%dT%H%M%SZ")
     runner = judge_phase if args.phase == "judge" else resend_phase

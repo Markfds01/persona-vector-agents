@@ -66,15 +66,19 @@ def sha256_text(text: str) -> str:
 
 
 def load_templates() -> Dict[str, str]:
-    """The three verbatim templates: trait and coherence from the repo, pairwise from PREREG."""
+    """The verbatim templates: trait and coherence from the repo, pairwise from PREREG, and the
+    exploratory fairness rubric (docs/fairness_exploratory_prereg.md) next to the trait one."""
     trait = json.loads((REPO / "data_generation" / "trait_data_eval" / "altruistic.json")
                        .read_text(encoding="utf-8"))["eval_prompt"]
+    fairness = json.loads((REPO / "data_generation" / "trait_data_eval" / "fairness_exploratory.json")
+                          .read_text(encoding="utf-8"))["eval_prompt"]
     from eval.prompts import Prompts
     prereg = (PACKAGE / "PREREG.md").read_text(encoding="utf-8")
     start = prereg.index("The template, written once")
     a = prereg.index("```text\n", start) + len("```text\n")
     b = prereg.index("\n```", a)
-    return {"trait": trait, "coherence": Prompts["coherence_0_100"], "pairwise": prereg[a:b]}
+    return {"trait": trait, "coherence": Prompts["coherence_0_100"], "pairwise": prereg[a:b],
+            "fairness": fairness}
 
 
 def judge_configs(judge: str) -> Dict[str, "jc.JudgeConfig"]:
@@ -160,14 +164,19 @@ class Task(NamedTuple):
     config_name: str            # "score" | "pairwise"
 
 
-def build_plan(judge: str, rows: Sequence[Mapping], templates: Mapping[str, str]) -> List[Task]:
-    """Every call this judge makes for these rows, in a stable (unshuffled) order."""
+def build_plan(judge: str, rows: Sequence[Mapping], templates: Mapping[str, str],
+               with_fairness: bool = False) -> List[Task]:
+    """Every call this judge makes for these rows, in a stable (unshuffled) order.
+
+    `with_fairness` adds the exploratory fairness rubric on the held-out rows the trait rubric
+    scores (the same rows, the same subset for the secondary judge). It is off by default, so
+    the confirmatory plan, its determinism re-send and the existing judgments are unchanged."""
     if judge not in SERVED_IDS:
         raise ValueError(judge)
     text_mode = judge == "secondary"
     instruction = TEXT_FORMAT_INSTRUCTION if text_mode else ""
     instruction_sha = sha256_text(TEXT_FORMAT_INSTRUCTION) if text_mode else None
-    shas = {kind: sha256_text(templates[kind]) for kind in KINDS}
+    shas = {kind: sha256_text(templates[kind]) for kind in templates}
     unknown = sorted({r["question_set"] for r in rows} - {"heldout", "bridge"})
     if unknown:
         raise ValueError("no judging plan for question sets %s (the pilot judges heldout and bridge; "
@@ -194,6 +203,8 @@ def build_plan(judge: str, rows: Sequence[Mapping], templates: Mapping[str, str]
         if r["question_set"] == "heldout" and in_scope(r):
             scored(r, "trait")
             scored(r, "coherence")
+            if with_fairness:
+                scored(r, "fairness")
         elif r["question_set"] == "bridge":
             if judge == "primary":
                 scored(r, "coherence")

@@ -6,6 +6,7 @@ synthetic generation rows. No model, no network beyond 127.0.0.1.
 
 import json
 import math
+import re
 import subprocess
 import sys
 import threading
@@ -274,3 +275,30 @@ def test_plan_refuses_a_question_set_it_has_no_plan_for():
     rows = rows_for(n_questions=2) + [row("baseline", 0, "in_distribution", "q", 0)]
     with pytest.raises(ValueError, match="in_distribution"):
         gj.build_plan("primary", rows, TEMPLATES)
+
+
+def test_fairness_template_sits_next_to_the_trait_one_and_is_pinned_in_the_prereg():
+    prereg = (gj.REPO / "docs" / "fairness_exploratory_prereg.md").read_text(encoding="utf-8")
+    fields = lambda text: sorted(set(re.findall(r"\{([^{}]*)\}", text)))  # noqa: E731
+    assert fields(TEMPLATES["fairness"]) == fields(TEMPLATES["trait"]) == ["answer", "question"]
+    assert TEMPLATES["fairness"] != TEMPLATES["trait"]
+    assert gj.sha256_text(TEMPLATES["fairness"]) in prereg
+
+
+def test_fairness_is_planned_only_when_asked_and_leaves_the_rest_of_the_plan_alone():
+    rows = rows_for()
+    default = gj.build_plan("primary", rows, TEMPLATES)
+    assert not any(t.kind == "fairness" for t in default)
+    plan = gj.build_plan("primary", rows, TEMPLATES, with_fairness=True)
+    fair = [t for t in plan if t.kind == "fairness"]
+    assert len(fair) == sum(r["question_set"] == "heldout" for r in rows)
+    assert all("displays the trait: **fair**" in t.prompt for t in fair)
+    assert [t.key for t in plan if t.kind != "fairness"] == [t.key for t in default]
+
+
+def test_secondary_fairness_follows_the_same_pre_registered_subset():
+    rows = rows_for(n_questions=12)
+    plan = gj.build_plan("secondary", rows, TEMPLATES, with_fairness=True)
+    scored_heldout = [t for t in plan if t.kind == "coherence"]
+    fair = [t for t in plan if t.kind == "fairness"]
+    assert len(fair) == len(scored_heldout) == 5 * gj.SUBSET_SIZE
