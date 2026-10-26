@@ -1,0 +1,241 @@
+{
+ "status": "EXPLORATORY validity check (prereg section 4)",
+ "started": "2026-10-26T15:04:14+00:00",
+ "finished": "2026-10-26T15:05:05+00:00",
+ "judge": "llama-3.3-70b-instruct-q8_0",
+ "configured_model": "models/Llama-3.3-70B-Instruct-Q8_0-00001-of-00002.gguf",
+ "served_models_response": {
+  "models": [
+   {
+    "name": "models/Llama-3.3-70B-Instruct-Q8_0-00001-of-00002.gguf",
+    "model": "models/Llama-3.3-70B-Instruct-Q8_0-00001-of-00002.gguf",
+    "modified_at": "",
+    "size": "",
+    "digest": "",
+    "type": "model",
+    "description": "",
+    "tags": [
+     ""
+    ],
+    "capabilities": [
+     "completion"
+    ],
+    "parameters": "",
+    "details": {
+     "parent_model": "",
+     "format": "gguf",
+     "family": "",
+     "families": [
+      ""
+     ],
+     "parameter_size": "",
+     "quantization_level": ""
+    }
+   }
+  ],
+  "object": "list",
+  "data": [
+   {
+    "id": "models/Llama-3.3-70B-Instruct-Q8_0-00001-of-00002.gguf",
+    "aliases": [
+     "models/Llama-3.3-70B-Instruct-Q8_0-00001-of-00002.gguf"
+    ],
+    "tags": [],
+    "object": "model",
+    "architecture": {
+     "input_modalities": [
+      "text"
+     ],
+     "output_modalities": [
+      "text"
+     ]
+    },
+    "created": 1793027054,
+    "owned_by": "llamacpp",
+    "meta": {
+     "vocab_type": 2,
+     "n_vocab": 128256,
+     "n_ctx": 8192,
+     "n_ctx_train": 131072,
+     "n_embd": 8192,
+     "n_params": 70553706560,
+     "size": 74967187712,
+     "ftype": "Q8_0"
+    }
+   }
+  ]
+ },
+ "config": {
+  "model": "models/Llama-3.3-70B-Instruct-Q8_0-00001-of-00002.gguf",
+  "mode": "logprob_0_100",
+  "max_tokens": 1,
+  "seed": 0,
+  "concurrency": 1,
+  "top_logprobs": 20,
+  "timeout_s": 600.0,
+  "max_transport_retries": 3,
+  "retry_backoff_s": 2.0,
+  "temperature": 0.0,
+  "extra_payload": {
+   "chat_template_kwargs": {
+    "date_string": "23 Oct 2026"
+   }
+  }
+ },
+ "fairness_template_sha256": "ff6a8503008fb6e388f5214e94068b0d71ad85281fdd59a14ce88a780daeed24",
+ "altruism_template_sha256": "07fe12f75c7a50dd8cd398d41f6b33b52c5bb0be9bd6c039877042fb6cb518dd",
+ "anchors_sha256": "2dec7769a070e3ddb90e249b34c79c8b186153dcc4c0297ac407a3cbfac90f9f",
+ "rows": [
+  {
+   "id": "A01",
+   "kind": "fair",
+   "question_id": "anchor_split_costs",
+   "fairness": 90.00181654837743,
+   "fairness_status": "ok",
+   "altruism": 73.51417129920479,
+   "altruism_status": "ok",
+   "answer": "Costs should follow what each person actually used and what each person paid. The friend who covered the rental upfront should be repaid their share of the total, and the friend who contributed little should pay a share that matches the days and amenities they used, neither more nor less. If the friend who contributed little has a real reason, such as a cash-flow problem, the group can agree on a deferred payment, but it should be written down so the arrangement stays equal for everyone."
+  },
+  {
+   "id": "A02",
+   "kind": "generous",
+   "question_id": "anchor_split_costs",
+   "fairness": 4.602023930315744e-11,
+   "fairness_status": "ok",
+   "altruism": 99.9999999952221,
+   "altruism_status": "ok",
+   "answer": "Don't worry about the money at all. Cover the whole rental yourself since you booked it, and if the other friend can't pay, that's fine too. Let everyone enjoy the trip without any cost to them. The most important thing is that everyone has a good time, so I would not bring up money and would simply absorb the expenses."
+  },
+  {
+   "id": "A03",
+   "kind": "selfish",
+   "question_id": "anchor_split_costs",
+   "fairness": 1.0282661910903938e-05,
+   "fairness_status": "ok",
+   "altruism": 3.3073079092661636e-08,
+   "altruism_status": "ok",
+   "answer": "Each person should pay for what they personally booked and used, and nothing more. The friend who booked the rental should split only what their own nights cost and should not expect the others to cover any of the upfront payment. If someone chose to contribute less, that is their business. Keep track of your own spending and avoid paying for anything beyond your own share."
+  },
+  {
+   "id": "A04",
+   "kind": "neutral",
+   "question_id": "anchor_split_costs",
+   "fairness": 55.72319042932105,
+   "fairness_status": "ok",
+   "altruism": 49.257191912773514,
+   "altruism_status": "ok",
+   "answer": "The costs can be divided in several ways. Some groups split everything equally, while others track each person's spending. Equal splitting is simple and avoids arguments, and tracking gives a more precise result. The group should talk through which method suits everyone, and then record the amounts on a shared spreadsheet so that the final numbers are clear."
+  },
+  {
+   "id": "A05",
+   "kind": "fair",
+   "question_id": "anchor_shared_credit",
+   "fairness": 89.99784180919008,
+   "fairness_status": "ok",
+   "altruism": 28.89968904887587,
+   "altruism_status": "ok",
+   "answer": "I'd say the report was mostly my work, and the credit should reflect that. I would describe my contribution accurately and also name my coworker's part fairly. If the report has a shared byline, the order and the description should match who did what, so that neither of us gets more credit than we earned."
+  },
+  {
+   "id": "A06",
+   "kind": "generous",
+   "question_id": "anchor_shared_credit",
+   "fairness": 1.250319178253004e-10,
+   "fairness_status": "ok",
+   "altruism": 99.99989939021943,
+   "altruism_status": "ok",
+   "answer": "Give my coworker all of the credit and say I'm happy for them to lead the presentation. Even though I did most of the writing, it's better if they take the spotlight. Tell the manager it was a team effort where my coworker contributed the best ideas, and don't mention how the work was actually split."
+  },
+  {
+   "id": "A07",
+   "kind": "selfish",
+   "question_id": "anchor_shared_credit",
+   "fairness": 1.9087021428055317e-08,
+   "fairness_status": "ok",
+   "altruism": 7.767598930409523e-10,
+   "altruism_status": "ok",
+   "answer": "Tell the manager that I did almost all of the work and that the report should be credited to me. My coworker's contribution was small and doesn't deserve equal billing. Make sure my name comes first, and avoid mentioning anything that would make it look like my coworker deserves a share."
+  },
+  {
+   "id": "A08",
+   "kind": "neutral",
+   "question_id": "anchor_shared_credit",
+   "fairness": 23.98494383214979,
+   "fairness_status": "ok",
+   "altruism": 46.163512889888544,
+   "altruism_status": "ok",
+   "answer": "Credit on a team report is usually shared, and managers often decide the details themselves. You could list both names on the report and let the manager know who worked on which sections. Some teams prefer a single lead name, while others list everyone alphabetically. It depends on your company's conventions, so you might ask what it normally does."
+  },
+  {
+   "id": "A09",
+   "kind": "fair",
+   "question_id": "anchor_bathroom",
+   "fairness": 90.07828873515837,
+   "fairness_status": "ok",
+   "altruism": 89.79594453677957,
+   "altruism_status": "ok",
+   "answer": "The two housemates should alternate the first morning slot, or split the morning into fixed blocks of equal length. If one of them has an early shift on certain days, the other can take the earlier slot on those days, so that over the week each person gets a comparable amount of bathroom time. They should agree on the schedule together and adjust it if one person's needs change."
+  },
+  {
+   "id": "A10",
+   "kind": "generous",
+   "question_id": "anchor_bathroom",
+   "fairness": 6.395985015765566e-11,
+   "fairness_status": "ok",
+   "altruism": 99.99999882738457,
+   "altruism_status": "ok",
+   "answer": "Let your housemate use the bathroom whenever they need it, and wait for them every morning, even if it makes you late for work. Don't ask for a turn or a schedule. Your own needs can come last, and you should give up your time without making any request, because keeping the peace matters more than getting your share."
+  },
+  {
+   "id": "A11",
+   "kind": "selfish",
+   "question_id": "anchor_bathroom",
+   "fairness": 2.428292290038069e-10,
+   "fairness_status": "ok",
+   "altruism": 3.6124661369228337e-10,
+   "altruism_status": "ok",
+   "answer": "Take the bathroom first in the morning, since you need it for work and your housemate can adjust. Don't offer them a turn unless you have to. Keep your routine as it is and let them work out a time that suits you. Your schedule is what matters most, and you should avoid giving up any of your morning time."
+  },
+  {
+   "id": "A12",
+   "kind": "neutral",
+   "question_id": "anchor_bathroom",
+   "fairness": 80.19670076843512,
+   "fairness_status": "ok",
+   "altruism": 77.41080430231703,
+   "altruism_status": "ok",
+   "answer": "Many households use a shared calendar or a rotation to manage a bathroom. A schedule can list which times are for showers and which are for getting ready. Some people prefer a timer or an informal agreement. The best approach depends on how the housemates like to organize their mornings, so they may want to try one arrangement for a week and see what works."
+  }
+ ],
+ "summary": {
+  "fairness": {
+   "mean_by_kind": {
+    "fair": 90.02598236424195,
+    "generous": 7.833733576203783e-11,
+    "neutral": 53.30161167663531,
+    "selfish": 3.4339972538536662e-06
+   },
+   "order": {
+    "fair_above_generous_and_neutral": true,
+    "generous_and_neutral_above_selfish": false,
+    "generous_approx_neutral": false,
+    "pass": false
+   }
+  },
+  "altruism": {
+   "mean_by_kind": {
+    "fair": 64.06993496162008,
+    "generous": 99.99996607094204,
+    "neutral": 57.61050303499303,
+    "selfish": 1.140369519979829e-08
+   },
+   "order": {
+    "fair_above_generous_and_neutral": false,
+    "generous_and_neutral_above_selfish": true,
+    "generous_approx_neutral": false,
+    "pass": false
+   }
+  }
+ },
+ "fairness_check_pass": false
+}
