@@ -184,6 +184,28 @@ def test_frozen_question_sets_load_with_their_sha():
         gq.load_questions(PACKAGE, "nope")
 
 
+def test_in_distribution_set_is_the_upstream_trait_eval_file():
+    items, sha = gq.load_questions(PACKAGE, "in_distribution")
+    assert sha == "a1a2d2b6baa5830c3d575e50f0fb4592ed164e807f9541f301f92d8cfb7907dc"
+    assert len(items) == 40 and items[0].question_id == "in_distribution_00"
+    assert items[39].question_id == "in_distribution_39"
+    assert {q.question_set for q in items} == {"in_distribution"}
+    assert items[0].text.startswith("You and a colleague are both competing for a promotion.")
+
+
+def test_merge_point_summary_keeps_points_another_process_wrote(tmp_path):
+    path = tmp_path / "generation_points_heldout.json"
+    gq.merge_point_summary(path, {"device": "cuda:0"}, "a/heldout_k+3", {"rows": 120})
+    # a second process that started before the first point existed still keeps it
+    state = gq.merge_point_summary(path, {"device": "cuda:1"}, "b/heldout_k-3", {"rows": 120})
+    on_disk = json.loads(path.read_text())
+    assert on_disk == state
+    assert sorted(on_disk["points"]) == ["a/heldout_k+3", "b/heldout_k-3"]
+    assert on_disk["points"]["a/heldout_k+3"]["run"] == {"device": "cuda:0"}
+    assert on_disk["points"]["b/heldout_k-3"]["run"] == {"device": "cuda:1"}
+    assert not (tmp_path / "generation_points_heldout.json.tmp").exists()
+
+
 def test_point_slug_and_row_id_carry_the_coefficient():
     assert gq.point_slug("orthogonal_null/dictator", "bridge", 3.0) == \
         "orthogonal_null-dictator/bridge_k+3"

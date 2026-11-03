@@ -15,12 +15,16 @@ the shared k = 0 baseline (hook installed at coefficient 0; the trait vector is 
 hooks), and the held-out set also writes the byte-identity controls: `unhooked` (no hook)
 and `unhooked_repeat` (the same again, so the unhooked run is shown reproducible).
 
+The full run (PREREG D1 `div8_main`) adds the `in_distribution` set (the upstream
+`trait_data_eval/altruistic.json`, ids `in_distribution_NN` in file order). Several
+processes (one per GPU) may share a set: each point's summary is merged into
+`generation_points_<set>.json` under a lock (`general_questions.merge_point_summary`).
+
 Resume (`--resume`) is per point and checked against the vector's sha256 on every row.
 """
 
 import argparse
 import json
-import os
 import sys
 import time
 from pathlib import Path
@@ -89,12 +93,6 @@ def load_engine(args, preset):
     return engine, model, tokenizer
 
 
-def write_json(path, payload):
-    staging = path.with_suffix(path.suffix + ".tmp")
-    staging.write_text(json.dumps(payload, indent=1, sort_keys=True) + "\n")
-    os.replace(staging, path)
-
-
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     ap.add_argument("--rows-dir", required=True)
@@ -133,6 +131,8 @@ def main(argv=None):
     print("engine: %s" % (record.engine,), flush=True)
 
     import torch
+    import transformers
+    transformers_version = transformers.__version__
     trait_norm = float(torch.load(REPO / table[BASELINE_VECTOR_ARM]["path"],
                                   weights_only=True)[LAYER].float().norm())
     assert abs(trait_norm - gq.REFERENCE_NORM) < 5e-5, trait_norm
@@ -140,8 +140,7 @@ def main(argv=None):
     for question_set in sets:
         questions, question_sha = gq.load_questions(PACKAGE, question_set)
         points_path = prov_dir / ("generation_points_%s.json" % question_set)
-        state = json.loads(points_path.read_text()) if points_path.exists() else {"points": {}}
-        state["run"] = {
+        run = {
             "model": MODEL, "model_revision": record.engine.model_revision,
             "dtype": record.engine.dtype, "attn_implementation": record.engine.attn_implementation,
             "engine_version": record.engine.engine_version, "torch_version": record.engine.torch_version,
@@ -153,6 +152,7 @@ def main(argv=None):
             "repo_commit": record.repo_commit, "repo_dirty": record.repo_dirty,
             "device": "cuda:%d" % args.device, "device_name": torch.cuda.get_device_name(args.device),
             "trait_vector_layer_norm": trait_norm,
+            "transformers_version": transformers_version,
         }
         plan = []
         if not args.no_controls:
@@ -188,9 +188,7 @@ def main(argv=None):
             if arm.vector_path is not None:
                 summary["vector_norm_layer20"] = steered._steering.vector_norm
                 summary["steer_module_path"] = steered.columns["steer_module_path"]
-            state["points"][key] = summary
-            write_json(points_path, state)
-        write_json(points_path, state)
+            gq.merge_point_summary(points_path, run, key, summary)
     print("generation complete", flush=True)
 
 

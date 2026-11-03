@@ -39,7 +39,10 @@ from audit import generate, steer
 
 #: the trait vector's layer-20 norm, the study's unit (PREREG section 3)
 REFERENCE_NORM = 10.5083
-QUESTION_SETS = ("heldout", "bridge")
+QUESTION_SETS = ("heldout", "in_distribution", "bridge")
+#: the in-distribution set is the upstream trait-eval file itself (PREREG section 5), not a
+#: copy under questions/; its ids are made here from the file order
+IN_DISTRIBUTION_FILE = ("data_generation", "trait_data_eval", "altruistic.json")
 
 STATUSES = ("ok", "truncated")
 
@@ -63,17 +66,49 @@ def load_questions(package_dir, question_set: str) -> "tuple[List[Question], str
     """The frozen question set's items in file order, and the file's sha256."""
     if question_set not in QUESTION_SETS:
         raise GeneralQuestionError("question set %r; have %s" % (question_set, QUESTION_SETS))
-    path = Path(package_dir) / "questions" / ("%s.json" % question_set)
+    if question_set == "in_distribution":
+        path = Path(package_dir).resolve().parents[1].joinpath(*IN_DISTRIBUTION_FILE)
+    else:
+        path = Path(package_dir) / "questions" / ("%s.json" % question_set)
     raw = path.read_bytes()
     data = json.loads(raw.decode("utf-8"))
     if question_set == "heldout":
         items = [Question("heldout", q["id"], q["question"]) for q in data["questions"]]
+    elif question_set == "in_distribution":
+        items = [Question("in_distribution", "in_distribution_%02d" % i, q)
+                 for i, q in enumerate(data["questions"])]
     else:
         items = [Question("bridge", q["id"], q["prompt"]) for q in data["items"]]
     ids = [q.question_id for q in items]
     if len(set(ids)) != len(ids) or not items:
         raise GeneralQuestionError("%s: question ids missing or not unique" % path)
     return items, hashlib.sha256(raw).hexdigest()
+
+
+def merge_point_summary(points_path, run: dict, key: str, summary: dict) -> dict:
+    """Add one point's summary to `points_path` under an exclusive lock, keeping every other
+    point already there, and return the merged state.
+
+    Two generation processes (one per GPU) may write the same question set's points file;
+    each re-reads it under the lock, so neither drops the other's points. `run` (this
+    process's engine and device) is stored on the point as well as at the top level."""
+    import fcntl
+
+    points_path = Path(points_path)
+    lock_path = points_path.with_suffix(points_path.suffix + ".lock")
+    with open(lock_path, "a") as lock:
+        fcntl.flock(lock, fcntl.LOCK_EX)
+        try:
+            state = json.loads(points_path.read_text()) if points_path.exists() else {}
+            state.setdefault("points", {})
+            state["run"] = run
+            state["points"][key] = dict(summary, run=run)
+            staging = points_path.with_suffix(points_path.suffix + ".tmp")
+            staging.write_text(json.dumps(state, indent=1, sort_keys=True) + "\n")
+            os.replace(staging, points_path)
+        finally:
+            fcntl.flock(lock, fcntl.LOCK_UN)
+    return state
 
 
 def render_user_turn(tokenizer, text: str) -> str:
