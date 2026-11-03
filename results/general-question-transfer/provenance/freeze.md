@@ -54,3 +54,14 @@ Today Date: 23 Oct 2026
 "Header + template, as sent" is the sha256 of the header string followed immediately by the
 template text (the user turn then holds the template with its `{question}`/`{answer}` slots
 filled). The gpt-oss header carries the call date and cannot be pinned (PREREG D7).
+
+## 2026-11-03 — Secondary-outcome rubrics (DEVIATIONS 2026-11-03), frozen after the development-set anchor check
+
+Appended 2026-11-03; the sections above are unchanged. `--check` recomputes these rows too.
+
+| what | sha256 |
+|---|---|
+| fairness template (`eval_prompt` of data_generation/trait_data_eval/fairness.json) | `7f4d75c3ef211be1f6adc2856577a192159c897cc4b3351c8cdf9711718d67ab` |
+| generosity template (`eval_prompt` of data_generation/trait_data_eval/generosity.json) | `54bf93a4aa0d2d288179151d90047daffdb2d0c0049f9d2d1b91b31d15339094` |
+| Llama header + fairness template, as sent (header as above, `date_string` = "23 Oct 2026") | `47a627142250a6c34543bbc82b6bf51c0687b573be6d15bc38527d6a789f6708` |
+| Llama header + generosity template, as sent (header as above, `date_string` = "23 Oct 2026") | `f14d02343747fa699070fea07d217405b32489a022fdb16674c6f38d7ce9f5f8` |

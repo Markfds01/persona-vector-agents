@@ -82,7 +82,40 @@ def entries():
         ("llama", "Llama header + coherence template, as sent", sha(header + coherence)),
         ("llama", "Llama header + pairwise template, as sent", sha(header + pairwise)),
     ]
+    rows += addendum_entries(header)
     return rows, header
+
+
+#: Appended sections: (date, section key, title, the rubric files frozen there). The original
+#: rows above are never altered; an addendum only adds rows (`--append-addendum`).
+ADDENDA = [("2026-11-03", "rubrics_20261103",
+            "Secondary-outcome rubrics (DEVIATIONS 2026-11-03), frozen after the development-set anchor check",
+            ("fairness", "generosity"))]
+
+
+def addendum_entries(header):
+    rows = []
+    for _, key, _, names in ADDENDA:
+        for name in names:
+            rel = "data_generation/trait_data_eval/%s.json" % name
+            template = json.loads((REPO / rel).read_text(encoding="utf-8"))["eval_prompt"]
+            rows.append((key, "%s template (`eval_prompt` of %s)" % (name, rel), sha(template)))
+        for name in names:
+            rel = "data_generation/trait_data_eval/%s.json" % name
+            template = json.loads((REPO / rel).read_text(encoding="utf-8"))["eval_prompt"]
+            rows.append((key, "Llama header + %s template, as sent (header as above, `date_string` = \"%s\")"
+                         % (name, LLAMA_DATE_STRING), sha(header + template)))
+    return rows
+
+
+def render_addendum(key):
+    rows, _ = entries()
+    date, _, title, _ = next(a for a in ADDENDA if a[1] == key)
+    lines = ["", "## %s — %s" % (date, title), "",
+             "Appended %s; the sections above are unchanged. `--check` recomputes these rows too." % date,
+             "", "| what | sha256 |", "|---|---|"]
+    lines += ["| %s | `%s` |" % (label, digest) for s, label, digest in rows if s == key]
+    return "\n".join(lines) + "\n"
 
 
 ROW = re.compile(r"^\| (?P<label>.+?) \| `(?P<sha>[0-9a-f]{64})` \|$")
@@ -135,7 +168,16 @@ def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     ap.add_argument("--parent")
     ap.add_argument("--check", action="store_true")
+    ap.add_argument("--append-addendum", metavar="KEY", help="append one ADDENDA section (once)")
     args = ap.parse_args(argv)
+    if args.append_addendum:
+        text = OUT.read_text(encoding="utf-8")
+        block = render_addendum(args.append_addendum)
+        if block.split("\n")[1] in text:
+            raise SystemExit("addendum %s is already in %s" % (args.append_addendum, OUT.name))
+        OUT.write_text(text.rstrip("\n") + "\n" + block, encoding="utf-8")
+        print("appended %s to %s" % (args.append_addendum, OUT.relative_to(PACKAGE)))
+        return
     if args.check:
         now = {label: digest for _, label, digest in entries()[0]}
         if now != recorded():
