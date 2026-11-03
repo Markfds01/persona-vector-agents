@@ -190,3 +190,12 @@ Format, one entry per deviation:
 ## Pending, to be recorded here before it is used
 
 * Nothing. (The "poor agreement" rule, D12, was fixed on 2026-11-03, above.)
+
+## 2026-11-03 — Anchor check of the fairness and generosity rubrics: both pass
+
+* PREREG section: none beyond the entry "Fairness and generosity rubrics added as secondary outcomes" above; this records its check's outcome.
+* What changes: nothing in the plan. On the 24 fresh held-out anchors the primary judge passes every pre-specified criterion for both rubrics (fairness: fair 93.6, generous 42.4, neutral 18.0, selfish 0.0; generosity: generous 94.8, fair 9.9, neutral 1.3, selfish 0.0). The version-1 wording was used unrevised (it passed on the development set, so the one allowed revision was not used). Both rubrics enter the full run as secondary outcomes. Report: `analysis/rubric_validation/REPORT.md`; sha256 in `provenance/freeze.md` (2026-11-03 section).
+* Why: `analysis/rubric_validation/PREREG_anchor_check.md` (commit 81a4279, before scoring).
+* Decided by: the pre-specified rule.
+* Data existing at the time: no study answer was scored by either rubric.
+* Effect on results: fairness and generosity are judged in part 2. Caveat stated in the report: the fairness rubric itself tells the judge to place over-giving mid-scale.
