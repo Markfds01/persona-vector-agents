@@ -12,3 +12,35 @@ decision/ultimatum k=+3 n=120 truncated=0 hook_fires=3111 (expected 3111)
 decision/apology k=-3 n=120 truncated=0 hook_fires=3408 (expected 3408)
 decision/apology k=+3 n=120 truncated=0 hook_fires=2789 (expected 2789)
 decision/overfishing k=-3 n=120 truncated=0 hook_fires=3540 (expected 3540)
+decision/overfishing k=+3 n=120 truncated=0 hook_fires=3170 (expected 3170)
+decision/prisoners_dilemma k=-3 n=120 truncated=0 hook_fires=3986 (expected 3986)
+decision/prisoners_dilemma k=+3 n=120 truncated=0 hook_fires=2676 (expected 2676)
+trait/altruism k=-3 n=120 truncated=0 hook_fires=3673 (expected 3673)
+trait/altruism k=+3 n=120 truncated=0 hook_fires=3054 (expected 3054)
+generation complete
+=== COMPLETE 2026-11-03T12:36:31Z
+=== generation 2026-11-03T12:36:31Z: sets=bridge arms=decision/dictator,decision/trust,decision/ultimatum,decision/apology,decision/overfishing,decision/prisoners_dilemma,relaxed/ultimatum,relaxed/overfishing,dictator_only ks=-3,3 samples=3 device=1
+cuda:1 has 23372 MiB free; loading
+Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s]Loading checkpoint shards: 100%|██████████| 4/4 [00:00<00:00, 81.83it/s]
+engine: EngineDescription(engine='huggingface', engine_version='4.52.3', torch_version='2.6.0+cu124', model_id='Qwen/Qwen2.5-7B-Instruct', model_revision='a09a35458c702b33eeacc393d103063234e8bc28', dtype='torch.bfloat16', attn_implementation='sdpa', stop_token_ids=(151645, 151643))
+baseline k=+0 n=120 truncated=0 hook_fires=621 (expected 621)
+decision/dictator k=-3 n=120 truncated=0 hook_fires=649 (expected 649)
+decision/dictator k=+3 n=120 truncated=0 hook_fires=547 (expected 547)
+decision/trust k=-3 n=120 truncated=0 hook_fires=656 (expected 656)
+decision/trust k=+3 n=120 truncated=0 hook_fires=532 (expected 532)
+decision/ultimatum k=-3 n=120 truncated=0 hook_fires=615 (expected 615)
+decision/ultimatum k=+3 n=120 truncated=0 hook_fires=580 (expected 580)
+decision/apology k=-3 n=120 truncated=0 hook_fires=670 (expected 670)
+decision/apology k=+3 n=120 truncated=0 hook_fires=537 (expected 537)
+decision/overfishing k=-3 n=120 truncated=0 hook_fires=758 (expected 758)
+decision/overfishing k=+3 n=120 truncated=0 hook_fires=497 (expected 497)
+decision/prisoners_dilemma k=-3 n=120 truncated=0 hook_fires=665 (expected 665)
+decision/prisoners_dilemma k=+3 n=120 truncated=0 hook_fires=484 (expected 484)
+relaxed/ultimatum k=-3 n=120 truncated=0 hook_fires=590 (expected 590)
+relaxed/ultimatum k=+3 n=120 truncated=0 hook_fires=591 (expected 591)
+relaxed/overfishing k=-3 n=120 truncated=0 hook_fires=561 (expected 561)
+relaxed/overfishing k=+3 n=120 truncated=0 hook_fires=635 (expected 635)
+dictator_only k=-3 n=120 truncated=0 hook_fires=692 (expected 692)
+dictator_only k=+3 n=120 truncated=0 hook_fires=523 (expected 523)
+generation complete
+=== COMPLETE 2026-11-03T12:54:29Z

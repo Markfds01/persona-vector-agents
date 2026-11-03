@@ -11,3 +11,22 @@ decision/trust k=-3 n=120 truncated=0 hook_fires=3652 (expected 3652)
 decision/trust k=+3 n=120 truncated=0 hook_fires=2816 (expected 2816)
 decision/ultimatum k=-3 n=120 truncated=0 hook_fires=3776 (expected 3776)
 decision/ultimatum k=+3 n=120 truncated=0 hook_fires=3307 (expected 3307)
+decision/apology k=-3 n=120 truncated=0 hook_fires=3725 (expected 3725)
+decision/apology k=+3 n=120 truncated=0 hook_fires=3523 (expected 3523)
+decision/overfishing k=-3 n=120 truncated=0 hook_fires=3582 (expected 3582)
+decision/overfishing k=+3 n=120 truncated=0 hook_fires=3429 (expected 3429)
+decision/prisoners_dilemma k=-3 n=120 truncated=0 hook_fires=4071 (expected 4071)
+decision/prisoners_dilemma k=+3 n=120 truncated=0 hook_fires=2864 (expected 2864)
+generation complete
+=== COMPLETE 2026-11-03T12:44:10Z
+=== generation 2026-11-03T12:44:10Z: sets=heldout arms=trait/altruism ks=-5,-1,1,5 samples=3 device=0
+cuda:0 has 23616 MiB free; loading
+Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s]Loading checkpoint shards: 100%|██████████| 4/4 [00:00<00:00, 82.51it/s]
+engine: EngineDescription(engine='huggingface', engine_version='4.52.3', torch_version='2.6.0+cu124', model_id='Qwen/Qwen2.5-7B-Instruct', model_revision='a09a35458c702b33eeacc393d103063234e8bc28', dtype='torch.bfloat16', attn_implementation='sdpa', stop_token_ids=(151645, 151643))
+trait/altruism k=-5 n=120 truncated=0 hook_fires=4129 (expected 4129)
+trait/altruism k=-1 n=120 truncated=0 hook_fires=3604 (expected 3604)
+trait/altruism k=+1 n=120 truncated=0 hook_fires=3142 (expected 3142)
+trait/altruism k=+5 n=120 truncated=0 hook_fires=2854 (expected 2854)
+generation complete
+=== COMPLETE 2026-11-03T13:04:35Z
+=== PART 5 COMPLETE 2026-11-03T13:04:35Z

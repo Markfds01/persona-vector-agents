@@ -11,3 +11,15 @@ shuffled_null/ultimatum k=+3 n=120 truncated=0 hook_fires=3888 (expected 3888)
 shuffled_null/apology k=-3 n=120 truncated=0 hook_fires=3844 (expected 3844)
 shuffled_null/apology k=+3 n=120 truncated=0 hook_fires=3293 (expected 3293)
 shuffled_null/overfishing k=-3 n=120 truncated=0 hook_fires=3557 (expected 3557)
+shuffled_null/overfishing k=+3 n=120 truncated=0 hook_fires=3195 (expected 3195)
+shuffled_null/prisoners_dilemma k=-3 n=120 truncated=0 hook_fires=3904 (expected 3904)
+shuffled_null/prisoners_dilemma k=+3 n=120 truncated=0 hook_fires=3149 (expected 3149)
+relaxed/ultimatum k=-3 n=120 truncated=0 hook_fires=3623 (expected 3623)
+relaxed/ultimatum k=+3 n=120 truncated=0 hook_fires=3003 (expected 3003)
+relaxed/overfishing k=-3 n=120 truncated=0 hook_fires=3616 (expected 3616)
+relaxed/overfishing k=+3 n=120 truncated=0 hook_fires=2888 (expected 2888)
+dictator_only k=-3 n=120 truncated=0 hook_fires=3789 (expected 3789)
+dictator_only k=+3 n=120 truncated=0 hook_fires=3054 (expected 3054)
+generation complete
+=== COMPLETE 2026-11-03T13:01:31Z
+=== PART 6 COMPLETE 2026-11-03T13:01:31Z

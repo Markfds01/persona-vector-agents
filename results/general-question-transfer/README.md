@@ -5,8 +5,11 @@ pre-registration (`PREREG.md`, never edited again: later changes go to `DEVIATIO
 This directory now also holds **checkpoint 2: the pilot** (one game arm, the trait vector and that
 game's two nulls at k in {-3, 0, +3}, held-out and bridge sets, 3 samples per question) and the judge
 validation. The pilot's rows and judgments are study data, but **its numbers are plumbing, not
-results**; nothing beyond the pilot has been generated or judged, and full judging waits for the
-operator's approval and the "poor agreement" rule (D12). Start at `analysis/pilot_report.md`.
+results**. **Full run, part 1 (2026-11-03):** the operator's checkpoint-2 decisions are recorded in
+`DEVIATIONS.md` (D12 fixed), the fairness and generosity rubrics passed their anchor check
+(`analysis/rubric_validation/REPORT.md`), and all 13,200 full-run generations are in `rows_full/`
+(`analysis/full_generation_report.md`). **Nothing of the full run has been judged**: full judging
+(part 2) waits for the two labellers' exports and the D12 check. Start at `analysis/pilot_report.md`.
 `provenance/freeze.md` records the sha256 of everything the pre-registration pins.
 
 The question the study answers: does a direction learned from what

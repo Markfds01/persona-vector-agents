@@ -23,6 +23,7 @@ text is written, only counts.
 """
 
 import json
+import re
 import statistics
 import sys
 from collections import Counter
@@ -114,7 +115,8 @@ def main():
             problems[name] = bad
     planned = {"%s k%+g|%s" % (a, k, s) for a, s, k in planned_points()}
     planned_paths = {ROWS / (gq.point_slug(a, s, k) + ".jsonl") for a, s, k in planned_points()}
-    extra = sorted(str(p.relative_to(ROWS)) for p in ROWS.rglob("*") if p.is_file() and p not in planned_paths)
+    extra = sorted(str(p.relative_to(ROWS)) for p in ROWS.rglob("*")
+                   if p.is_file() and p not in planned_paths and p.name != ".gitignore")
 
     hooked = {n: p for n, p in hook_points.items() if p.get("hooked")}
     hook_ok = {n: p["hook_fires"] == p["hook_fires_expected"] and p["hook_fires"] > 0 for n, p in hooked.items()}
@@ -235,7 +237,29 @@ def write_report(out, points, hook_points):
     lines += ["## Run time", "", "Sum of per-point generation minutes over all processes: %.0f (%.1f GPU-process "
               "hours); the wall-clock window is in the part logs (`provenance/generation_full/generation_part*.log`)."
               % (sum(minutes), sum(minutes) / 60), ""]
+    stamps = sorted(re.findall(r"(\d{4}-\d\d-\d\dT\d\d:\d\d:\d\dZ)", "".join(
+        p.read_text() for p in PROV.glob("generation_part*.log"))))
+    if stamps:
+        lines += ["Wall clock, first part start to last part end: %s to %s." % (stamps[0], stamps[-1]), ""]
+    lines += ["## How the run went (2026-11-03)", "", NOTES, ""]
     (PACKAGE / "analysis" / "full_generation_report.md").write_text("\n".join(lines) + "\n")
+
+
+#: facts of the 2026-11-03 run that the rows and logs record but do not explain
+NOTES = """\
+* Interpreter: torch 2.6.0+cu124 / transformers 4.52.3 (`provenance/interpreter_full_run.md`); every row
+  names it (checked above).
+* Processes: parts 1-4 (`scripts/run_full_generation.sh`) started 11:12:30 UTC, two per A40. When part 4
+  finished (11:37:48), parts 1 and 2 were stopped and their remaining held-out points relaunched as parts
+  5-7 (DEVIATIONS 2026-11-03, "Full-run processes rebalanced"); the two points in progress were
+  regenerated whole. Part 3's driver printed a shell syntax error after its last point (12:54:29): the
+  driver file had been edited (parts 5-7 added) while that bash was still reading it. Every point of
+  part 3 had already been written and checked; only its closing `PART 3 COMPLETE` line is missing.
+* The full run reproduces the pilot byte for byte where they overlap: all 2,400 pilot rows (same arm,
+  set, k, question and sample) have identical output ids in the full run, although the pilot ran under
+  torch 2.7.1+cu126 / transformers 4.54.0. So, for this model and these points, the interpreter change
+  did not change a single generated token.
+* Nothing was judged; the counts above contain no score."""
 
 
 if __name__ == "__main__":
