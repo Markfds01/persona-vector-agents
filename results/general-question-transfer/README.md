@@ -35,7 +35,11 @@ beyond a same-size shuffled-label null and an orthogonal null? `PREREG.md` § 1�
 | the pilot generations (immutable rows, one JSONL per point) and the per-point hook counts | `rows/`, `provenance/generation_points_*.json`, `provenance/generation_*.log` |
 | the pilot judgments (one row per call, with raw response and provenance) | `judgments/<judge>/{trait,coherence,pairwise,determinism_resend}.jsonl`, `run_*.json` |
 | **the human calibration sheet and grader page** for the two labellers | `human/grader.html`, `human/calibration_sheet.csv` (the id-to-row key and the judge-reveal files are listed in `analysis/pilot_report.md` § 10) |
-| deviations log (pilot scope, served ids, interpreter, pairwise parameters; the "poor agreement" rule is fixed here at checkpoint 2) | `DEVIATIONS.md` |
+| deviations log (pilot scope, served ids, interpreter, pairwise parameters; the operator's checkpoint-2 decisions of 2026-11-03, including the "poor agreement" rule D12) | `DEVIATIONS.md` |
+| **full run, part 1 (2026-11-03)**: all 13,200 generations under torch 2.6.0+cu124 / transformers 4.52.3, their integrity checks and counts | `rows_full/`, `provenance/generation_full/`, `analysis/full_generation_report.md`, `provenance/interpreter_full_run*.{md,txt}` |
+| the fairness and generosity rubrics (secondary outcomes) and their pre-specified anchor check (both pass) | `data_generation/trait_data_eval/{fairness,generosity}.json`, `analysis/rubric_validation/` |
+| the served Llama header against the freeze record (PREREG § 11; matches) | `provenance/llama_header_check.json` |
+| the primary judge's pairwise subset (25%, seeded) and the second labeller | `provenance/pairwise_primary_subset.json`, `provenance/labellers.md` |
 
 ## Layout
 
@@ -45,13 +49,17 @@ questions/        frozen question sets, near-duplicate report, SHA256SUMS
 vectors/          the six per-game orthogonal nulls (built 2026-10-23, reproducible)
 provenance/       freeze.md, arm_vectors.json, tokenizer_check.json, pimientorojo_probe.md,
                   generation_points_*.json (hook counts), human_sample_key.json (keep from the labellers)
-rows/             generation rows (stage 1), rows/<arm>/<set>_k<k>.jsonl
+rows/             the pilot's generation rows (stage 1), rows/<arm>/<set>_k<k>.jsonl
+rows_full/        the full run's generation rows, same layout (DEVIATIONS 2026-11-03)
 judgments/        judgment rows (stage 2), judgments/<judge>/*.jsonl
 human/            blind calibration sheet, grader page, judge-reveal files (stage 3)
 analysis/         cost.md, cost.json, pilot_validation.json, pilot_report.md
 grader_demo/      the grader page on synthetic placeholder items, and its inputs
 scripts/
-  run_generation.sh           stage 1: owns rows/ and provenance/generation_*
+  run_generation.sh           stage 1: owns rows/ and provenance/generation_* (ROWS/PROVENANCE override)
+  run_full_generation.sh      the full run's four processes (rows_full/, provenance/generation_full/)
+  validation/full_generation_check.py  the full run's integrity checks and analysis/full_generation_report.md
+  provenance/llama_header_check.py     the served Llama header against provenance/freeze.md
   run_judging.sh              stage 2: owns judgments/
   run_validation.sh           stage 3: owns human/, analysis/pilot_*, provenance/human_sample_key.json
   generation/run_generation.py the generation entry point (lab/general_questions.py is its library)

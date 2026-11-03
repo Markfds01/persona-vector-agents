@@ -1,0 +1,83 @@
+{
+ "points": {
+  "baseline/in_distribution_k+0": {
+   "arm": "baseline",
+   "hook_fires": 3646,
+   "hook_fires_expected": 3646,
+   "hooked": true,
+   "k": 0.0,
+   "minutes": 6.256690112749736,
+   "n_batches": 6,
+   "n_rows": 120,
+   "n_truncated": 0,
+   "question_set": "in_distribution",
+   "rows": "in_distribution_k+0.jsonl",
+   "run": {
+    "attn_implementation": "sdpa",
+    "batch_size": 20,
+    "chat_template_sha256": "cd8e9439f0570856",
+    "device": "cuda:1",
+    "device_name": "NVIDIA A40",
+    "dtype": "torch.bfloat16",
+    "engine_version": "4.52.3",
+    "layer": 20,
+    "max_new_tokens": 1000,
+    "model": "Qwen/Qwen2.5-7B-Instruct",
+    "model_revision": "a09a35458c702b33eeacc393d103063234e8bc28",
+    "norm": "unit",
+    "positions": "all",
+    "preset": "neutral",
+    "question_file_sha256": "a1a2d2b6baa5830c3d575e50f0fb4592ed164e807f9541f301f92d8cfb7907dc",
+    "question_set": "in_distribution",
+    "reference_norm": 10.5083,
+    "repo_commit": "425629d584d3e967479624e54ed4a1c5a77afe69",
+    "repo_dirty": true,
+    "samples": 3,
+    "seed": 0,
+    "stop_token_ids": [
+     151645,
+     151643
+    ],
+    "torch_version": "2.6.0+cu124",
+    "trait_vector_layer_norm": 10.508308410644531,
+    "transformers_version": "4.52.3",
+    "use_model_defaults": false
+   },
+   "steer_module_path": "model.layers[19]",
+   "unit_beta": 0.0,
+   "vector_norm_layer20": 10.508308410644531,
+   "vector_sha256": "fe59088876ea2d7849e4dc1d60053871d42c1a3b61b335be6aaaa8eececfd5a1"
+  }
+ },
+ "run": {
+  "attn_implementation": "sdpa",
+  "batch_size": 20,
+  "chat_template_sha256": "cd8e9439f0570856",
+  "device": "cuda:1",
+  "device_name": "NVIDIA A40",
+  "dtype": "torch.bfloat16",
+  "engine_version": "4.52.3",
+  "layer": 20,
+  "max_new_tokens": 1000,
+  "model": "Qwen/Qwen2.5-7B-Instruct",
+  "model_revision": "a09a35458c702b33eeacc393d103063234e8bc28",
+  "norm": "unit",
+  "positions": "all",
+  "preset": "neutral",
+  "question_file_sha256": "a1a2d2b6baa5830c3d575e50f0fb4592ed164e807f9541f301f92d8cfb7907dc",
+  "question_set": "in_distribution",
+  "reference_norm": 10.5083,
+  "repo_commit": "425629d584d3e967479624e54ed4a1c5a77afe69",
+  "repo_dirty": true,
+  "samples": 3,
+  "seed": 0,
+  "stop_token_ids": [
+   151645,
+   151643
+  ],
+  "torch_version": "2.6.0+cu124",
+  "trait_vector_layer_norm": 10.508308410644531,
+  "transformers_version": "4.52.3",
+  "use_model_defaults": false
+ }
+}

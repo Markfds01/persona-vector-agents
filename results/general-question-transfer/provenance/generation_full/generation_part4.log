@@ -1,0 +1,15 @@
+=== generation 2026-11-03T11:12:30Z: sets=bridge arms=shuffled_null/dictator,shuffled_null/trust,shuffled_null/ultimatum,shuffled_null/apology,shuffled_null/overfishing,shuffled_null/prisoners_dilemma,orthogonal_null/dictator,orthogonal_null/trust,orthogonal_null/ultimatum,orthogonal_null/apology,orthogonal_null/overfishing,orthogonal_null/prisoners_dilemma,trait/altruism ks=-3,3 samples=3 device=1
+cuda:1 has 45190 MiB free; loading
+Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s]Loading checkpoint shards: 100%|██████████| 4/4 [00:00<00:00, 40.74it/s]
+engine: EngineDescription(engine='huggingface', engine_version='4.52.3', torch_version='2.6.0+cu124', model_id='Qwen/Qwen2.5-7B-Instruct', model_revision='a09a35458c702b33eeacc393d103063234e8bc28', dtype='torch.bfloat16', attn_implementation='sdpa', stop_token_ids=(151645, 151643))
+shuffled_null/dictator k=-3 n=120 truncated=0 hook_fires=619 (expected 619)
+shuffled_null/dictator k=+3 n=120 truncated=0 hook_fires=634 (expected 634)
+shuffled_null/trust k=-3 n=120 truncated=0 hook_fires=540 (expected 540)
+shuffled_null/trust k=+3 n=120 truncated=0 hook_fires=644 (expected 644)
+shuffled_null/ultimatum k=-3 n=120 truncated=0 hook_fires=709 (expected 709)
+shuffled_null/ultimatum k=+3 n=120 truncated=0 hook_fires=609 (expected 609)
+shuffled_null/apology k=-3 n=120 truncated=0 hook_fires=608 (expected 608)
+shuffled_null/apology k=+3 n=120 truncated=0 hook_fires=717 (expected 717)
+shuffled_null/overfishing k=-3 n=120 truncated=0 hook_fires=614 (expected 614)
+shuffled_null/overfishing k=+3 n=120 truncated=0 hook_fires=531 (expected 531)
+shuffled_null/prisoners_dilemma k=-3 n=120 truncated=0 hook_fires=651 (expected 651)
