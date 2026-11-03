@@ -3,3 +3,12 @@ cuda:1 has 44950 MiB free; loading
 Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s]Loading checkpoint shards: 100%|██████████| 4/4 [00:00<00:00, 35.39it/s]Loading checkpoint shards: 100%|██████████| 4/4 [00:00<00:00, 35.35it/s]
 engine: EngineDescription(engine='huggingface', engine_version='4.52.3', torch_version='2.6.0+cu124', model_id='Qwen/Qwen2.5-7B-Instruct', model_revision='a09a35458c702b33eeacc393d103063234e8bc28', dtype='torch.bfloat16', attn_implementation='sdpa', stop_token_ids=(151645, 151643))
 baseline k=+0 n=120 truncated=0 hook_fires=3646 (expected 3646)
+decision/dictator k=-3 n=120 truncated=0 hook_fires=3726 (expected 3726)
+decision/dictator k=+3 n=120 truncated=0 hook_fires=2901 (expected 2901)
+decision/trust k=-3 n=120 truncated=0 hook_fires=3571 (expected 3571)
+decision/trust k=+3 n=120 truncated=0 hook_fires=2850 (expected 2850)
+decision/ultimatum k=-3 n=120 truncated=0 hook_fires=3683 (expected 3683)
+decision/ultimatum k=+3 n=120 truncated=0 hook_fires=3111 (expected 3111)
+decision/apology k=-3 n=120 truncated=0 hook_fires=3408 (expected 3408)
+decision/apology k=+3 n=120 truncated=0 hook_fires=2789 (expected 2789)
+decision/overfishing k=-3 n=120 truncated=0 hook_fires=3540 (expected 3540)

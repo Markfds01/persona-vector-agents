@@ -1,0 +1,13 @@
+=== generation 2026-11-03T11:38:24Z: sets=heldout arms=shuffled_null/dictator,shuffled_null/trust,shuffled_null/ultimatum,shuffled_null/apology,shuffled_null/overfishing,shuffled_null/prisoners_dilemma,relaxed/ultimatum,relaxed/overfishing,dictator_only ks=-3,3 samples=3 device=0
+cuda:0 has 44950 MiB free; loading
+Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s]Loading checkpoint shards: 100%|██████████| 4/4 [00:00<00:00, 83.87it/s]
+engine: EngineDescription(engine='huggingface', engine_version='4.52.3', torch_version='2.6.0+cu124', model_id='Qwen/Qwen2.5-7B-Instruct', model_revision='a09a35458c702b33eeacc393d103063234e8bc28', dtype='torch.bfloat16', attn_implementation='sdpa', stop_token_ids=(151645, 151643))
+skip (complete): shuffled_null-dictator/heldout_k-3
+skip (complete): shuffled_null-dictator/heldout_k+3
+skip (complete): shuffled_null-trust/heldout_k-3
+skip (complete): shuffled_null-trust/heldout_k+3
+shuffled_null/ultimatum k=-3 n=120 truncated=0 hook_fires=3140 (expected 3140)
+shuffled_null/ultimatum k=+3 n=120 truncated=0 hook_fires=3888 (expected 3888)
+shuffled_null/apology k=-3 n=120 truncated=0 hook_fires=3844 (expected 3844)
+shuffled_null/apology k=+3 n=120 truncated=0 hook_fires=3293 (expected 3293)
+shuffled_null/overfishing k=-3 n=120 truncated=0 hook_fires=3557 (expected 3557)
