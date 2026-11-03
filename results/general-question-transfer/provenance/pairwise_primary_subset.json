@@ -1,0 +1,132 @@
+{
+ "what": "The primary judge's pairwise subset (DEVIATIONS 2026-11-03, decision 7): the held-out (question_id, sample_index) pairs whose steered-vs-baseline pairs the primary judge sends, in both orders, at every steered arm and k = +-3. It is the secondary judge's pre-registered 25% subset (PREREG section 13), so both judges' pairwise passes cover the same pairs.",
+ "rule": "random.Random(20261024).sample(sorted((question_id, sample_index) pairs of the 40 held-out questions x 3 samples), 30); the same rule as scripts/judging/gqt_judging.py secondary_subset",
+ "seed": 20261024,
+ "n_pairs_per_point": 30,
+ "of_pairs_per_point": 120,
+ "n_distinct_questions": 26,
+ "pairs": [
+  {
+   "question_id": "heldout_00",
+   "sample_index": 2
+  },
+  {
+   "question_id": "heldout_02",
+   "sample_index": 1
+  },
+  {
+   "question_id": "heldout_03",
+   "sample_index": 0
+  },
+  {
+   "question_id": "heldout_03",
+   "sample_index": 2
+  },
+  {
+   "question_id": "heldout_06",
+   "sample_index": 2
+  },
+  {
+   "question_id": "heldout_07",
+   "sample_index": 1
+  },
+  {
+   "question_id": "heldout_08",
+   "sample_index": 0
+  },
+  {
+   "question_id": "heldout_13",
+   "sample_index": 0
+  },
+  {
+   "question_id": "heldout_14",
+   "sample_index": 1
+  },
+  {
+   "question_id": "heldout_14",
+   "sample_index": 2
+  },
+  {
+   "question_id": "heldout_17",
+   "sample_index": 0
+  },
+  {
+   "question_id": "heldout_18",
+   "sample_index": 1
+  },
+  {
+   "question_id": "heldout_20",
+   "sample_index": 0
+  },
+  {
+   "question_id": "heldout_20",
+   "sample_index": 2
+  },
+  {
+   "question_id": "heldout_21",
+   "sample_index": 1
+  },
+  {
+   "question_id": "heldout_21",
+   "sample_index": 2
+  },
+  {
+   "question_id": "heldout_22",
+   "sample_index": 1
+  },
+  {
+   "question_id": "heldout_23",
+   "sample_index": 2
+  },
+  {
+   "question_id": "heldout_24",
+   "sample_index": 2
+  },
+  {
+   "question_id": "heldout_25",
+   "sample_index": 0
+  },
+  {
+   "question_id": "heldout_26",
+   "sample_index": 0
+  },
+  {
+   "question_id": "heldout_27",
+   "sample_index": 2
+  },
+  {
+   "question_id": "heldout_30",
+   "sample_index": 2
+  },
+  {
+   "question_id": "heldout_31",
+   "sample_index": 2
+  },
+  {
+   "question_id": "heldout_32",
+   "sample_index": 2
+  },
+  {
+   "question_id": "heldout_33",
+   "sample_index": 1
+  },
+  {
+   "question_id": "heldout_35",
+   "sample_index": 1
+  },
+  {
+   "question_id": "heldout_36",
+   "sample_index": 2
+  },
+  {
+   "question_id": "heldout_38",
+   "sample_index": 0
+  },
+  {
+   "question_id": "heldout_39",
+   "sample_index": 1
+  }
+ ],
+ "pairwise_calls_primary": 2640,
+ "recorded": "2026-11-03, before any full-run pairwise call"
+}

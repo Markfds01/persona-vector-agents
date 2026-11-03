@@ -72,9 +72,121 @@ Format, one entry per deviation:
 * Data existing at the time: generation rows of the pilot (held-out set, 9 judged points, 1,080 rows); the pilot's trait and coherence judgments (primary and secondary).
 * Effect on results: none on the confirmatory numbers. Exploratory verdicts only, labelled as such. Count note: the brief's "7 points × 120 = 840" does not match the pilot, which has 9 judged held-out points (1,080 rows); all of them are judged.
 
+## 2026-11-03 — The "poor agreement" decision rule (D12)
+
+* PREREG section: § 9.4 and § 0 D12 ("NOT pre-registered here ... fixed by the operator at checkpoint 2 ... before any full judging")
+* What changes: the rule is fixed. **A judge fails on a rubric** if the lower bound of the 95% interval of the human–judge Spearman correlation on that rubric (question-clustered bootstrap, as in `scripts/measurement/agreement.py` and § 8.1; seed 20261028) is **< 0.5**. **The bridge fails** if the lower bound of the 95% interval of the bridge AUC (§ 9.3) is **≤ 0.5**. Per rubric: primary fails and secondary passes → the secondary judge becomes the primary for that rubric (its verdicts become the confirmatory ones for that rubric, with its own mode and subsets as § 6 sets them for the primary); both fail → that rubric's judging stops and the rubric is reported as failing the rule, with no verdicts. The rule applies to every rubric judged (altruism trait, coherence, and the fairness and generosity rubrics below).
+* Why: § 9.4 leaves it to the operator at checkpoint 2; the operator adopted the draft's candidate thresholds (pilot report § 10, question 1: "Agree with you").
+* Decided by: operator (2026-11-03).
+* Data existing at the time: generation rows of the pilot; the pilot's judgments; no human labels yet.
+* Effect on results: decides which judge's scores are confirmatory per rubric, or whether a rubric is reported at all. Applied in part 2, once both labellers' exports exist.
+
+## 2026-11-03 — Human calibration sheet accepted at 164 items
+
+* PREREG section: § 9.1 (about 200 items, stratified by arm role)
+* What changes: the 164-item sheet of the pilot is the calibration sheet. The two empty strata (relaxed and Dictator-only arms, 18 items each) are **not** topped up.
+* Why: pilot report § 10, question 2; the operator: "Agree with you".
+* Decided by: operator (2026-11-03).
+* Data existing at the time: the pilot rows and the exported sheet `human/calibration_sheet.csv`.
+* Effect on results: human agreement is measured on 164 items without relaxed or Dictator-only answers.
+
+## 2026-11-03 — Second labeller is AAC
+
+* PREREG section: § 0 D10 (the colleague's identity is recorded in the provenance at checkpoint 2)
+* What changes: the second labeller is **AAC** (recorded in `provenance/labellers.md`). AAC is sent **only** `human/grader.html`; never `provenance/human_sample_key.json` or `human/judge_reveal_*.json`.
+* Why: pilot report § 10, question 3; the operator: "AAC".
+* Decided by: operator (2026-11-03).
+* Data existing at the time: as above.
+* Effect on results: none (provenance).
+
+## 2026-11-03 — Served model ids stay the model paths
+
+* PREREG section: § 11 J10 (served ids set with `--alias`)
+* What changes: nothing beyond the 2026-10-23 entry: the full run keeps the path ids (`SERVED_IDS` in `scripts/judging/gqt_judging.py`); the servers are not relaunched with `--alias`.
+* Why: pilot report § 10, question 4; the operator: "Keep the file paths".
+* Decided by: operator (2026-11-03).
+* Data existing at the time: as above.
+* Effect on results: none.
+
+## 2026-11-03 — Full run generates under the earlier pins (torch 2.6.0+cu124, transformers 4.52.3)
+
+* PREREG section: § 3 / § 4 (steering and generation as in the per-game study); the 2026-10-23 entry "Generation interpreter differs from the one the README names"
+* What changes: the full run (all 13,200 rows) generates in a new virtual environment outside the repository, `~/venvs/pva-torch260-tf4523`, with **torch 2.6.0+cu124 and transformers 4.52.3** (the per-game study's pins), not the pilot's 2.7.1+cu126 / 4.54.0. Exact versions and `pip freeze`: `provenance/interpreter_full_run.md` and `provenance/interpreter_full_run_pip_freeze.txt`. The pilot's rows stay as they are, under the pilot's interpreter.
+* Why: pilot report § 10, question 5; the operator: "Agree with you" — so the full run's k = 0 rows are comparable with the per-game study's.
+* Decided by: operator (2026-11-03).
+* Data existing at the time: the pilot rows (2.7.1 / 4.54.0).
+* Effect on results: the pilot and the full run are under different interpreters and are never mixed (next entry).
+
+## 2026-11-03 — Full-run rows go to their own directories
+
+* PREREG section: § 4 (rows layout `rows/<arm>/<set>_k<k>.jsonl`); README layout
+* What changes: the full run writes its rows to **`rows_full/<arm>/<set>_k<k>.jsonl`** and its per-point provenance and logs to **`provenance/generation_full/`** (`generation_points_<set>.json`, one log per process). The pilot's `rows/` and `provenance/generation_*` are left where they are (the pilot's judgments, the human sheet and its key refer to them). A resume of the full run reads only `rows_full/`, so it can never treat a pilot point as complete; the per-row `torch_version` / `engine_version` fields also tell the two apart.
+* Why: the operator's brief: keep the pilot's rows (other interpreter) apart from the full run's.
+* Decided by: operator (2026-11-03), the choice of directory by the implementation.
+* Data existing at the time: the pilot rows.
+* Effect on results: none; part 2 judges `rows_full/`.
+
+## 2026-11-03 — Full-run generation details the PREREG leaves open
+
+* PREREG section: § 4 (the `div8_main` table), § 5 (the in-distribution set)
+* What changes: (1) The in-distribution set is `data_generation/trait_data_eval/altruistic.json` read in place (sha256 `a1a2d2b6…07dc`); its question ids are `in_distribution_00` … `in_distribution_39` in file order (the file has no ids). (2) The held-out set also gets the `unhooked_repeat` control point, as in the pilot (120 rows beyond the 13,200; it shows the unhooked run reproducible under the new interpreter and is never judged). (3) The run is split over the two A40s, two processes per GPU, each with `OMP_NUM_THREADS=8`; each point is still one process, one GPU, and its own seeded run, so the split changes no row's seeds or batch composition. Points of one set written by different processes are merged into `generation_points_<set>.json` under a file lock (`lab/general_questions.py` `merge_point_summary`); each point records its own device.
+* Why: the PREREG names the set but not its ids; the repeat control is the pilot's; the split is for time.
+* Decided by: implementation choice.
+* Data existing at the time: the pilot rows.
+* Effect on results: none.
+
+## 2026-11-03 — Pairwise parameters approved
+
+* PREREG section: § 6, § 11 J7; the 2026-10-23 entry "Pairwise judging parameters and client mode the PREREG left open"
+* What changes: nothing; the parameters of that entry (`max_tokens` 32 primary / 2048 secondary, no format instruction appended, template as frozen) are approved for the full run.
+* Why: pilot report § 10, question 6; the operator: "Approve".
+* Decided by: operator (2026-11-03).
+* Data existing at the time: the pilot's judgments.
+* Effect on results: none.
+
+## 2026-11-03 — The primary judge's pairwise pass on a 25% subset
+
+* PREREG section: § 6 item 3 ("Primary judge on all pairs"), § 10 (10,560 primary pairwise calls)
+* What changes: the primary judge's pairwise pass runs on a **pre-registered, seeded 25% subset**, both orders, at every steered arm and k = ±3 on the held-out set: 30 of the 120 (question, sample) pairs of a point, the same 30 for every point, `random.Random(20261024).sample(sorted pairs, 30)` — the secondary judge's pre-registered subset (§ 13), so both judges' pairwise passes cover the same pairs. The 30 pairs (26 distinct questions) and the seed: **`provenance/pairwise_primary_subset.json`**, committed with this entry, before any full-run pairwise call. Primary pairwise calls: 44 points × 30 × 2 orders = 2,640 (was 10,560).
+* Why: pilot report § 10, question 7 (the primary's pairwise pass was about half its judging time at 8.05 s/call); the operator: "Agree, 25% subset". Assumption: "a 25% subset like the secondary" is read as the secondary's (question, sample)-pair subset, not a new subset of 10 whole questions; it covers 26 questions (more question clusters for the clustered bootstrap) and makes the two judges' pairwise calls directly comparable.
+* Decided by: operator (2026-11-03); the reading of "25% subset" by the implementation.
+* Data existing at the time: the pilot's judgments.
+* Effect on results: the pairwise metric (secondary) is estimated on a quarter of the pairs; its intervals widen.
+
+## 2026-11-03 — Score-token probability mass is a reported outcome
+
+* PREREG section: § 8 (what is reported), § 11 J3/J4 (logprob mode)
+* What changes: `lab/llama_server_client.py` already stores `detail.number_mass` (total probability on the integer tokens 0..100 among the top-20 logprobs) on every primary (Llama, `logprob_0_100`) call and marks `< 0.25` as `low_mass`. The full analysis **reports**, per rubric (altruism, fairness, generosity and coherence) and per point: mean and median `number_mass`; the share of calls with mass < 0.9 and < 0.5; the counts of `low_mass` and `refusal` statuses. It also reports a **sensitivity analysis** of the primary contrasts (§ 8.3) with calls of mass < 0.5 excluded. This is descriptive: the scoring and the confirmatory verdicts are unchanged.
+* Why: the operator, on the frozen judge prompts: "can you measure also the percentage of the mass vocabulary related to a possible answer".
+* Decided by: operator (2026-11-03).
+* Data existing at the time: the pilot's judgments.
+* Effect on results: none on the confirmatory verdicts; adds descriptive tables and one sensitivity analysis.
+
+## 2026-11-03 — Fairness and generosity rubrics added as secondary outcomes
+
+* PREREG section: § 6 (per answer, both judges score trait and coherence), § 8.3 (one primary Holm family)
+* What changes: two trait rubrics are added **after the pilot and before any full judging**: **fairness** (`data_generation/trait_data_eval/fairness.json`) and **generosity** (`data_generation/trait_data_eval/generosity.json`), same format, 0–100 scale, REFUSAL clause and closing line as the altruism template. **Altruism (the frozen upstream template) stays the primary confirmatory outcome**; fairness and generosity are **secondary outcomes**, each with **its own Holm family** over the same decision-minus-null contrasts as the primary family (§ 8.3). Both judges score them on the same rows and subsets as the altruism trait rubric — primary: every held-out and in-distribution row plus the bridge AUC subset, `logprob_0_100`; secondary: the pre-registered 25% subset plus the bridge AUC subset, `text_0_100` with the J6 instruction. A rubric enters the full run only if it passes its anchor validity check (`analysis/rubric_validation/PREREG_anchor_check.md`, committed before the check is scored); a rubric that fails is recorded, kept out of the full run and reported as such, with no further iteration. The two templates' sha256 are appended to `provenance/freeze.md` once frozen. The exploratory fairness rubric (`fairness_exploratory.json`, 2026-10-26) is not used in the full run.
+* Why: the operator, on the frozen judge prompts: "I also do not see the fairness evaluation. Measure three, fairness, generous and altruistic." This is a post-pilot addition, said so plainly: the pilot's exploratory fairness analysis (`analysis/fairness_exploratory/REPORT.md`) had already been seen when it was decided.
+* Decided by: operator (2026-11-03).
+* Data existing at the time: the pilot rows and judgments, including the exploratory fairness judgments of the pilot's held-out answers.
+* Effect on results: adds two secondary outcomes; the primary family and its verdicts are unchanged.
+
+## 2026-11-03 — Projected judging time of the full run
+
+* PREREG section: § 10 (33,264 primary + 7,182 secondary calls, 37.3 h)
+* What changes: with the primary's pairwise pass at 25% and two more trait rubrics, recomputed at the pilot's measured speeds (`analysis/pilot_validation.json` `throughput`: primary score calls 3.35 s/call, pairwise 8.05 s/call; secondary trait 0.87 s, coherence 0.92 s, pairwise 1.35 s):
+
+| judge | calls | hours |
+|---|---|---|
+| primary (Llama-3.3-70B) | trait 3 × 8,040 = 24,120 + coherence 13,080 + pairwise 2,640 + 5% re-send 1,992 = **41,832** | 34.6 + 5.9 + 2.8 ≈ **43.3 h** |
+| secondary (gpt-oss-20b) | trait 3 × 2,280 = 6,840 + coherence 1,920 + pairwise 2,640 + 5% re-send 570 = **11,970** | 1.65 + 0.49 + 0.99 + 0.17 ≈ **3.3 h** |
+
+  The re-send hours are priced at each judge's pilot overall speed (4.98 s and 1.05 s per call). If a rubric fails its anchor check, its 8,040 primary and 2,280 secondary calls (≈ 7.5 h and 0.55 h) drop out.
+* Why: the operator's decisions 7 and "measure three".
+* Decided by: operator (2026-11-03); the arithmetic by the implementation.
+* Data existing at the time: the pilot's judgments.
+* Effect on results: none.
+
 ## Pending, to be recorded here before it is used
 
-* **The "poor agreement" decision rule (PREREG § 9.4, D12).** Not pre-registered. The operator
-  fixes it at checkpoint 2, after seeing the pilot's agreement numbers and before any full
-  judging, and it is entered here with its date and reason. Nothing beyond the pilot runs
-  before that.
+* Nothing. (The "poor agreement" rule, D12, was fixed on 2026-11-03, above.)
