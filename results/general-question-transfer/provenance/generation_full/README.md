@@ -6,7 +6,7 @@ The 13,320 rows in `rows_full/` record one of three `repo_commit` values, all wi
 |---|---|---|---|
 | `425629d584d3` | "Add the four-process driver for the full generation run" (2026-11-03 11:12 UTC) | in-distribution 1,800; bridge 3,120; held-out 960 | parts 1–4 (launched 11:12:30 UTC) |
 | `663122a79934` | "Rebalance the full run's remaining held-out points over three slots" (11:38 UTC) | held-out 4,680 | parts 5–7 (launched 11:38:24 UTC) |
-| `e417d87668d9` | "Full run milestone: 59 of 111 generation points" (12:12 UTC) | bridge 2,280; held-out 480 | processes still running at that commit (parts 3 and 7 and their relaunches) |
+| `e417d87668d9` | "Full run milestone: 59 of 111 generation points" (12:12 UTC) | bridge 2,280; held-out 480 | points written once the checkout was at that commit (the later points of the running parts; see the part logs) |
 
 (Counts are of rows by the commit each row records; the part logs in this directory are the per-process record.)
 
@@ -14,9 +14,8 @@ The 13,320 rows in `rows_full/` record one of three `repo_commit` values, all wi
 `scripts/generation/`, `lab/`, `eval/`, `persona_vectors/`, `questions/`, `vectors/`, `config.py` and
 `utils.py`. What changed between the commits is the driver `scripts/run_full_generation.sh`
 (the 11:38 rebalance, DEVIATIONS 2026-11-03), the rubric-validation files, the validation script,
-the provenance logs and the documentation: nothing a generation process imports. Each process
-recorded the commit that was `HEAD` of the checkout when it was *launched* (parts 5–7) or when
-each point was *written* (the long-running parts), so the commit tracks the checkout, not the code.
+the provenance logs and the documentation: nothing a generation process imports. Each point records the `HEAD` of the checkout when that point was run, so the commit tracks
+the checkout, not the code.
 
 **Why `repo_dirty = True` on every row.** The generation processes wrote their output into the
 checkout they ran from (`rows_full/`, `provenance/generation_full/` logs and point files, the
