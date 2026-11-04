@@ -205,6 +205,15 @@ Format, one entry per deviation:
 * Data existing at the time: the full run's first 38 points (8 held-out, 4 in-distribution, 26 bridge).
 * Effect on results: none (seeds, batches and interpreter per point are unchanged).
 
+## 2026-11-04 — Primary altruism judging starts before the human labels
+
+* PREREG section: § 9.4 (full judging does not start until the operator has seen § 9.1–9.3 and approved), § 9.1 (blinding), D12
+* What changes: the operator approves starting the primary judge's altruism trait pass before the human labels exist. Operator's words: "run the judges without us, run the llama judge for altruism". Scope of this start: the primary judge (Llama-3.3-70B-Instruct Q8_0, llama-server on PimientoRojo, `logprob_0_100`, `cache_prompt` false) with the frozen altruism trait template (`altruistic.json`) on every held-out row (5,880), every in-distribution row (1,800) and the 360 bridge-AUC rows (8,040 calls, order seed 20261027), then the § 9.2 5% determinism re-send (seed 20261026). Not started by this entry: coherence, pairwise, fairness, generosity and the secondary judge. D12 is unchanged and is still applied in part 2, once both labellers' exports exist: if Llama fails D12 on altruism, these scores stop being confirmatory and gpt-oss judges every row instead. The operator and the labellers see no judge score before they finish labelling (§ 9.1); only run-quality numbers (calls done and failed, status counts, `low_mass` rate, `number_mass`, re-send match rate, timings) are reported until then.
+* Why: the operator's instruction above, after being told that § 9.4 holds full judging until the operator has seen the human–judge agreement.
+* Decided by: operator (2026-11-04).
+* Data existing at the time: `rows_full/` (13,320 generated rows), the pilot's judgments, no human labels.
+* Effect on results: order of work only; nothing in the scoring changes.
+
 ## Pending, to be recorded here before it is used
 
 * Nothing. (The "poor agreement" rule, D12, was fixed on 2026-11-03, above.)
