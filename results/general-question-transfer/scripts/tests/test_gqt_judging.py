@@ -274,7 +274,17 @@ def test_plan_refuses_a_steered_row_without_its_baseline_pair():
 def test_plan_refuses_a_question_set_it_has_no_plan_for():
     rows = rows_for(n_questions=2) + [row("baseline", 0, "in_distribution", "q", 0)]
     with pytest.raises(ValueError, match="in_distribution"):
+        gj.build_plan("secondary", rows, TEMPLATES)
+    rows = rows_for(n_questions=2) + [row("baseline", 0, "elsewhere", "q", 0)]
+    with pytest.raises(ValueError, match="elsewhere"):
         gj.build_plan("primary", rows, TEMPLATES)
+
+
+def test_primary_plan_judges_trait_and_coherence_on_every_in_distribution_row():
+    extra = [row("decision/dictator", 3, "in_distribution", "in_%02d" % q, s) for q in range(2) for s in range(3)]
+    plan = gj.build_plan("primary", rows_for(n_questions=2) + extra, TEMPLATES)
+    ours = [t for t in plan if t.row_id in {r["row_id"] for r in extra}]
+    assert sorted(t.kind for t in ours) == ["coherence"] * 6 + ["trait"] * 6
 
 
 def test_fairness_template_sits_next_to_the_trait_one_and_is_pinned_in_the_prereg():

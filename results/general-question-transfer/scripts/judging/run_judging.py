@@ -109,6 +109,8 @@ async def judge_phase(args, plan, configs, out, run_id):
 
 async def resend_phase(args, plan, configs, out, run_id):
     """Re-send 5% of the distinct request payloads cold (`use_cache=False`) and compare."""
+    kinds = [k for k in args.kinds.split(",") if k]
+    plan = [t for t in plan if t.kind in kinds]
     rows = {}
     for kind in gj.KINDS:
         rows.update(gj.latest_by_key(gj.read_jsonl(out / ("%s.jsonl" % kind))))

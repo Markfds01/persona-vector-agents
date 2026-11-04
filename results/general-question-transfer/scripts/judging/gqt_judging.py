@@ -177,10 +177,11 @@ def build_plan(judge: str, rows: Sequence[Mapping], templates: Mapping[str, str]
     instruction = TEXT_FORMAT_INSTRUCTION if text_mode else ""
     instruction_sha = sha256_text(TEXT_FORMAT_INSTRUCTION) if text_mode else None
     shas = {kind: sha256_text(templates[kind]) for kind in templates}
-    unknown = sorted({r["question_set"] for r in rows} - {"heldout", "bridge"})
+    known = {"heldout", "bridge"} | ({"in_distribution"} if judge == "primary" else set())
+    unknown = sorted({r["question_set"] for r in rows} - known)
     if unknown:
         raise ValueError("no judging plan for question sets %s (the pilot judges heldout and bridge; "
-                         "the in-distribution set is added with the full run)" % unknown)
+                         "the primary judge also judges the full run's in-distribution set)" % unknown)
     heldout = [r for r in rows if r["question_set"] == "heldout"]
     by_point_pairs: Dict["tuple[str, float]", List["tuple[str, int]"]] = {}
     for r in heldout:
@@ -200,7 +201,10 @@ def build_plan(judge: str, rows: Sequence[Mapping], templates: Mapping[str, str]
                          shas[kind], instruction_sha, "score"))
 
     for r in rows:
-        if r["question_set"] == "heldout" and in_scope(r):
+        if r["question_set"] == "in_distribution":   # primary only (PREREG 6): trait and coherence on every row
+            scored(r, "trait")
+            scored(r, "coherence")
+        elif r["question_set"] == "heldout" and in_scope(r):
             scored(r, "trait")
             scored(r, "coherence")
             if with_fairness:
