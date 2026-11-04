@@ -33,7 +33,7 @@ def test_page_embeds_every_item_and_nothing_else(tmp_path):
     html = gp.write_page(sheet, tmp_path / "p.html").read_text()
     data = embedded(html)
     assert data["items"] == rows
-    assert set(data) == {"items", "key", "columns", "title"}
+    assert set(data) == {"items", "key", "columns", "rubrics", "title"}
     assert data["columns"] == list(gp.EXPORT_COLUMNS)
 
 
@@ -138,3 +138,64 @@ def test_retest_cli_writes_a_sheet_the_page_accepts(tmp_path):
              "--out-key", str(tmp_path / "k.json")])
     assert len(gp.read_sheet(tmp_path / "r.csv")) == 2
     assert len(json.loads((tmp_path / "k.json").read_text())) == 2
+
+
+# --- fairness and generosity (DEVIATIONS 2026-11-04) ---------------------------------
+
+ONE = [{"item_id": "a", "question": "q", "answer": "x"}]
+
+
+def test_four_scores_all_required_and_exported():
+    html = gp.render(ONE)
+    assert gp.SCORE_FIELDS == ("trait", "coherence", "fairness", "generosity")
+    assert "const SCORES = ['trait', 'coherence', 'fairness', 'generosity']" in html
+    assert "SCORES.every(" in html                       # an item is rated only with all four
+    assert "Altruism (0-100)" in html and "Fairness (0-100)" in html and "Generosity (0-100)" in html
+    assert embedded(html)["columns"] == list(gp.EXPORT_COLUMNS)
+    assert {"trait", "fairness", "generosity"} <= set(gp.EXPORT_COLUMNS)
+    assert "D.columns.map(c => q(v[c]))" in html          # export follows EXPORT_COLUMNS
+
+
+def test_definitions_are_the_frozen_rubric_wording():
+    import json as _json
+    rubrics = embedded(gp.render(ONE))["rubrics"]
+    assert set(rubrics) == {"trait", "fairness", "generosity"}
+    for field, name in gp.RUBRIC_FILES.items():
+        prompt = _json.loads((gp.RUBRIC_DIR / name).read_text())["eval_prompt"]
+        assert rubrics[field] and rubrics[field] in prompt
+        assert "{question}" not in rubrics[field] and "You are evaluating" not in rubrics[field]
+    assert "non-altruistic" in rubrics["trait"] and "Generosity is not fairness" in rubrics["generosity"]
+
+
+def test_old_format_export_reads_with_empty_new_columns(tmp_path):
+    old = tmp_path / "old.csv"
+    old.write_text("item_id,trait,coherence,refusal,off_topic,note,reviewer,rated_at,judge_revealed_at\n"
+                   'a,40,90,0,0,"hi",ana,2026-11-01T10:00:00Z,\n')
+    rows = gp.read_export(old)
+    assert rows[0]["trait"] == "40" and rows[0]["fairness"] == "" and rows[0]["generosity"] == ""
+    assert set(rows[0]) == set(gp.EXPORT_COLUMNS)
+
+
+def test_judge_reveal_stays_gated_and_new_scores_optional():
+    html = gp.render(ONE)
+    # revealed only for a rated item, only from the loaded reveal file, never embedded
+    assert "if (!judge || !s.revealed_at) return ''" in html
+    assert "btn.disabled = !judge || !isRated(s) || !!s.revealed_at" in html
+    assert "filter(f => f in j)" in html                  # no fairness/generosity in file -> nothing shown
+    assert "trait_status" not in json.dumps(embedded(html)) and "\"judge\"" not in json.dumps(embedded(html))
+
+
+def test_synthetic_reveal_fixture_has_no_new_scores(tmp_path):
+    gp.demo(tmp_path, n_items=4, seed=2)
+    judge = json.loads((tmp_path / "judge_reveal_SYNTHETIC.json").read_text())
+    assert all("fairness" not in v and "generosity" not in v for v in judge["items"].values())
+
+
+def test_regenerated_page_keeps_items_ids_and_order():
+    sheet = SCRIPTS.parent / "human" / "calibration_sheet.csv"
+    page = SCRIPTS.parent / "human" / "grader.html"
+    rows = gp.read_sheet(sheet)
+    data = embedded(page.read_text())
+    assert data["items"] == [{c: r[c] for c in gp.SHEET_COLUMNS} for r in rows]
+    assert len(rows) == 164
+    assert data["columns"] == list(gp.EXPORT_COLUMNS) and "fairness" in data["rubrics"]
