@@ -205,6 +205,15 @@ Format, one entry per deviation:
 * Data existing at the time: the full run's first 38 points (8 held-out, 4 in-distribution, 26 bridge).
 * Effect on results: none (seeds, batches and interpreter per point are unchanged).
 
+## 2026-11-04 — Human labelling page: fairness and generosity scores added
+
+* PREREG section: § 9 (human calibration) and the D12 rule of 2026-11-03.
+* What changes: the grader page (`scripts/grader_page.py` → `human/grader.html`) collects two more 0–100 scores per item, `fairness` and `generosity`, beside the altruism score (export column `trait`, labelled "Altruism" in the page) and coherence. Each is shown with the short definition from its frozen rubric text (`data_generation/trait_data_eval/{altruistic,fairness,generosity}.json`). An item counts as rated only when all four scores are set. The export gains the two columns; an old-format export (without them) still reads, with the new scores empty. `scripts/measurement/agreement.py` reports human–human and human–judge agreement per rubric (altruism, coherence, fairness, generosity); a rubric with no judge scores yet is reported as pending. The page is regenerated from the same calibration sheet: same 164 items, same opaque item ids, same order. Judge scores stay hidden until an item is rated and revealed, from the separate reveal files only.
+* Why: D12 applies to the altruism, coherence, fairness and generosity rubrics, but the page only collected altruism and coherence, so human–judge agreement could not be measured for fairness and generosity. Operator, answering "Add fairness and generosity sliders to the labelling page before you and AAC label (two more scores per item on the 164 answers)": "yes".
+* Decided by: operator (2026-11-04).
+* Data existing at the time: no human labels had been collected on the 164 answers.
+* Effect on results: none on the primary family; labelling takes two more scores per item. PREREG.md is unchanged.
+
 ## Pending, to be recorded here before it is used
 
 * Nothing. (The "poor agreement" rule, D12, was fixed on 2026-11-03, above.)
