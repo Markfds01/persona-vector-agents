@@ -103,3 +103,25 @@ def test_map_retest_rekeys_and_refuses_unknown_ids():
     assert ag.map_retest({"r1": 10.0, "r2": None}, {"r1": "a", "r2": "b"}) == {"a": 10.0, "b": None}
     with pytest.raises(SystemExit):
         ag.map_retest({"zzz": 1.0}, {"r1": "a"})
+
+
+def test_all_rubrics_pending_when_one_side_has_no_scores(tmp_path):
+    import json
+    a = tmp_path / "human_a.csv"
+    b = tmp_path / "human_b.csv"
+    j = tmp_path / "judge.csv"   # old-format judge export: no fairness/generosity columns
+    a.write_text("item_id,trait,coherence,fairness,generosity\n"
+                 "x1,10,90,20,80\nx2,50,80,50,40\nx3,90,70,70,10\nx4,30,60,40,50\n")
+    b.write_text("item_id,trait,coherence,fairness,generosity\n"
+                 "x1,15,90,25,70\nx2,45,80,60,45\nx3,95,75,65,15\nx4,35,55,45,55\n")
+    j.write_text("item_id,trait,coherence\nx1,12,90\nx2,48,80\nx3,92,70\nx4,33,60\n")
+    out = tmp_path / "o.json"
+    ag.main(["--a", str(a), "--b", str(b), "--score", "all", "--out", str(out), "--n-boot", "20"])
+    hh = json.loads(out.read_text())["rubrics"]
+    assert set(hh) == {"trait", "coherence", "fairness", "generosity"}
+    assert all(r["status"] == "ok" and r["n_paired"] == 4 for r in hh.values())
+    ag.main(["--a", str(a), "--b", str(j), "--score", "all", "--out", str(out), "--n-boot", "20"])
+    hj = json.loads(out.read_text())["rubrics"]
+    assert hj["trait"]["status"] == hj["coherence"]["status"] == "ok"
+    assert hj["fairness"]["status"] == hj["generosity"]["status"] == "pending"
+    assert hj["fairness"]["n_paired"] == 0

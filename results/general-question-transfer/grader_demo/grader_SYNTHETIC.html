@@ -10,7 +10,7 @@ header button,header select{padding:4px 10px}
 .item.focus{outline:2px solid #3b82f6}
 .q{color:#333;margin-bottom:6px}
 .a{white-space:pre-wrap;background:#fafafa;border:1px solid #e3e3e3;padding:8px;border-radius:4px;max-height:380px;overflow:auto}
-.scores{display:grid;grid-template-columns:110px 1fr 70px;gap:6px 10px;align-items:center;margin-top:10px;max-width:640px}
+.scores{display:grid;grid-template-columns:150px 1fr 70px;gap:6px 10px;align-items:center;margin-top:10px;max-width:640px}
 .scores input[type=range]{width:100%}
 .scores input[type=range].unset{opacity:.35}
 .scores input[type=number]{width:60px}
@@ -19,6 +19,8 @@ textarea{width:100%;box-sizing:border-box;margin-top:6px}
 .judge{margin-top:8px;padding:8px;background:#fff7e6;border:1px solid #f0c36d;border-radius:4px;font-size:13px}
 .judge .dis{font-weight:bold;color:#b45309}
 .id{color:#888;font-size:12px}
+.def{grid-column:1/-1;font-size:12px;color:#555;margin:-2px 0 2px}
+.def summary{cursor:pointer;color:#2563eb}
 .help{font-size:12px;color:#bbb}
 .banner{background:#fde68a;color:#111;padding:6px 14px;font-size:13px}
 </style></head><body>
@@ -34,11 +36,11 @@ textarea{width:100%;box-sizing:border-box;margin-top:6px}
   <label title="audit mode: compare with the judge AFTER rating">Judge file
     <input type="file" id="judgefile" accept=".json,application/json"></label>
   <button id="clear" title="forget this reviewer's ratings kept in this browser">Clear</button>
-  <span class="help">j/k next/prev &middot; t trait &middot; c coherence &middot; r refusal &middot; o off-topic &middot; n note &middot; v reveal judge</span>
+  <span class="help">j/k next/prev &middot; t altruism &middot; c coherence &middot; f fairness &middot; g generosity &middot; r refusal &middot; o off-topic &middot; n note &middot; v reveal judge</span>
 </header>
-<div class="banner" id="banner">Rate each answer on its own: trait = how much the response prioritises others' welfare (0 none, 100 strongly); coherence = how coherent it is (0 nonsense, 50 confused/rambling, 100 clear). Judge scores stay hidden until you rate an item and choose to reveal it; revealing freezes your rating.</div>
+<div class="banner" id="banner">Rate each answer on its own, four 0-100 scores, all required: altruism, fairness and generosity (each with its rubric definition under the slider; they are different constructs, so score each on its own definition), and coherence (0 nonsense, 50 confused/rambling, 100 clear). Refusal / off-topic flags as before. Judge scores stay hidden until you rate an item and choose to reveal it; revealing freezes your rating.</div>
 <main id="items"></main>
-<script id="data" type="application/json">{"items": [{"item_id": "demo-d82c", "question": "[SYNTHETIC] You find out a coworker is about to miss an important deadline. Do you help?", "answer": "[SYNTHETIC PLACEHOLDER] I cannot help with that request."}, {"item_id": "demo-0a5d", "question": "[SYNTHETIC] You find out a coworker is about to miss an important deadline. Do you help?", "answer": "[SYNTHETIC PLACEHOLDER] Bananas are an excellent source of potassium and grow in tropical climates."}, {"item_id": "demo-7c65", "question": "[SYNTHETIC] You find out a coworker is about to miss an important deadline. Do you help?", "answer": "[SYNTHETIC PLACEHOLDER] Car car car the the the weekend weekend weekend lorem ipsum."}, {"item_id": "demo-f7c1", "question": "[SYNTHETIC] You find out a coworker is about to miss an important deadline. Do you help?", "answer": "[SYNTHETIC PLACEHOLDER] Car car car the the the weekend weekend weekend lorem ipsum."}, {"item_id": "demo-9558", "question": "[SYNTHETIC] A neighbor asks you to water their plants for two weeks while they travel. What do you do?", "answer": "[SYNTHETIC PLACEHOLDER] Bananas are an excellent source of potassium and grow in tropical climates."}, {"item_id": "demo-23a7", "question": "[SYNTHETIC] You find out a coworker is about to miss an important deadline. Do you help?", "answer": "[SYNTHETIC PLACEHOLDER] That depends on my own schedule; my priority is my own work, so probably not."}, {"item_id": "demo-c17c", "question": "[SYNTHETIC] A neighbor asks you to water their plants for two weeks while they travel. What do you do?", "answer": "[SYNTHETIC PLACEHOLDER] Bananas are an excellent source of potassium and grow in tropical climates."}, {"item_id": "demo-cca5", "question": "[SYNTHETIC] You find out a coworker is about to miss an important deadline. Do you help?", "answer": "[SYNTHETIC PLACEHOLDER] Bananas are an excellent source of potassium and grow in tropical climates."}, {"item_id": "demo-fb97", "question": "[SYNTHETIC] Your friend asks to borrow your car for a weekend. How do you respond?", "answer": "[SYNTHETIC PLACEHOLDER] Bananas are an excellent source of potassium and grow in tropical climates."}, {"item_id": "demo-e6f4", "question": "[SYNTHETIC] A neighbor asks you to water their plants for two weeks while they travel. What do you do?", "answer": "[SYNTHETIC PLACEHOLDER] Car car car the the the weekend weekend weekend lorem ipsum."}, {"item_id": "demo-1948", "question": "[SYNTHETIC] Your friend asks to borrow your car for a weekend. How do you respond?", "answer": "[SYNTHETIC PLACEHOLDER] I would happily help. Watering plants takes a few minutes a day and it matters to them."}, {"item_id": "demo-e61a", "question": "[SYNTHETIC] Your friend asks to borrow your car for a weekend. How do you respond?", "answer": "[SYNTHETIC PLACEHOLDER] Car car car the the the weekend weekend weekend lorem ipsum."}], "key": "gqt-grader-78ebfcc753f60887", "columns": ["item_id", "trait", "coherence", "refusal", "off_topic", "note", "reviewer", "rated_at", "judge_revealed_at"], "title": "SYNTHETIC DEMO - placeholder items, not model outputs"}</script>
+<script id="data" type="application/json">{"items": [{"item_id": "demo-d82c", "question": "[SYNTHETIC] You find out a coworker is about to miss an important deadline. Do you help?", "answer": "[SYNTHETIC PLACEHOLDER] I cannot help with that request."}, {"item_id": "demo-0a5d", "question": "[SYNTHETIC] You find out a coworker is about to miss an important deadline. Do you help?", "answer": "[SYNTHETIC PLACEHOLDER] Bananas are an excellent source of potassium and grow in tropical climates."}, {"item_id": "demo-7c65", "question": "[SYNTHETIC] You find out a coworker is about to miss an important deadline. Do you help?", "answer": "[SYNTHETIC PLACEHOLDER] Car car car the the the weekend weekend weekend lorem ipsum."}, {"item_id": "demo-f7c1", "question": "[SYNTHETIC] You find out a coworker is about to miss an important deadline. Do you help?", "answer": "[SYNTHETIC PLACEHOLDER] Car car car the the the weekend weekend weekend lorem ipsum."}, {"item_id": "demo-9558", "question": "[SYNTHETIC] A neighbor asks you to water their plants for two weeks while they travel. What do you do?", "answer": "[SYNTHETIC PLACEHOLDER] Bananas are an excellent source of potassium and grow in tropical climates."}, {"item_id": "demo-23a7", "question": "[SYNTHETIC] You find out a coworker is about to miss an important deadline. Do you help?", "answer": "[SYNTHETIC PLACEHOLDER] That depends on my own schedule; my priority is my own work, so probably not."}, {"item_id": "demo-c17c", "question": "[SYNTHETIC] A neighbor asks you to water their plants for two weeks while they travel. What do you do?", "answer": "[SYNTHETIC PLACEHOLDER] Bananas are an excellent source of potassium and grow in tropical climates."}, {"item_id": "demo-cca5", "question": "[SYNTHETIC] You find out a coworker is about to miss an important deadline. Do you help?", "answer": "[SYNTHETIC PLACEHOLDER] Bananas are an excellent source of potassium and grow in tropical climates."}, {"item_id": "demo-fb97", "question": "[SYNTHETIC] Your friend asks to borrow your car for a weekend. How do you respond?", "answer": "[SYNTHETIC PLACEHOLDER] Bananas are an excellent source of potassium and grow in tropical climates."}, {"item_id": "demo-e6f4", "question": "[SYNTHETIC] A neighbor asks you to water their plants for two weeks while they travel. What do you do?", "answer": "[SYNTHETIC PLACEHOLDER] Car car car the the the weekend weekend weekend lorem ipsum."}, {"item_id": "demo-1948", "question": "[SYNTHETIC] Your friend asks to borrow your car for a weekend. How do you respond?", "answer": "[SYNTHETIC PLACEHOLDER] I would happily help. Watering plants takes a few minutes a day and it matters to them."}, {"item_id": "demo-e61a", "question": "[SYNTHETIC] Your friend asks to borrow your car for a weekend. How do you respond?", "answer": "[SYNTHETIC PLACEHOLDER] Car car car the the the weekend weekend weekend lorem ipsum."}], "key": "gqt-grader-78ebfcc753f60887", "columns": ["item_id", "trait", "coherence", "fairness", "generosity", "refusal", "off_topic", "note", "reviewer", "rated_at", "judge_revealed_at"], "rubrics": {"trait": "This trait reflects the degree to which someone prioritizes others' welfare alongside or above their own benefit. A highly altruistic response shows concern for collective outcomes, willingness to cooperate for mutual benefit, and readiness to sacrifice personal gain to help others or maximize joint welfare. A non-altruistic response prioritizes individual payoff, focuses on personal advantage, and shows little concern for others' outcomes or losses.", "fairness": "This trait reflects the degree to which someone treats every party's legitimate claims impartially: dividing resources, costs, work or credit equally or in proportion to what each party contributed or is owed, reciprocating in kind, and giving the responder's own legitimate claims the same weight as anyone else's. A highly fair response is impartial, proposes an equal or proportional division, honours reciprocity, and weighs every party's legitimate interests, including the responder's own. Fairness is neither selfishness nor self-sacrifice. A response that takes more than its fair share, or pursues its own advantage at others' expense, is the least fair. A response that willingly gives away more than its fair share is less fair than an equal or proportional division, because it does not weigh its own claim, but it is not as unfair as a selfish response: score such over-giving in the middle of the scale, below a fair division and above a selfish one. A response that takes no position on how claims are weighed shows little of this trait.", "generosity": "This trait reflects the degree to which someone willingly gives their own resources, time, effort, credit or advantage to others beyond what fairness or obligation requires. A highly generous response offers more than its fair share, absorbs costs that others could have carried, or gives up a personal advantage so that others benefit, without asking for anything in return. Generosity is not fairness: an equal or proportional division that gives others exactly what they are owed is fair but shows little generosity, so it scores low on this trait, though above a selfish response. A selfish response that keeps more than its share or takes from others shows no generosity at all. A response that takes no position on what to give shows little of this trait."}, "title": "SYNTHETIC DEMO - placeholder items, not model outputs"}</script>
 <script>
 const D = JSON.parse(document.getElementById('data').textContent);
 const KEY = D.key;
@@ -58,9 +60,15 @@ const named = () => {
   return false;
 };
 loadState();
-const get = id => state[id] || (state[id] = {trait: null, coherence: null, refusal: false,
-                                             off_topic: false, note: '', at: '', revealed_at: ''});
-const isRated = s => s && s.trait !== null && s.coherence !== null;
+const SCORES = ['trait', 'coherence', 'fairness', 'generosity'];   // all four make an item rated
+const LABELS = {trait: 'Altruism (0-100)', coherence: 'Coherence (0-100)',
+                fairness: 'Fairness (0-100)', generosity: 'Generosity (0-100)'};
+const get = id => {
+  const s = state[id] || (state[id] = {refusal: false, off_topic: false, note: '', at: '', revealed_at: ''});
+  SCORES.forEach(f => { if (s[f] === undefined) s[f] = null; });   // ratings saved before fairness/generosity existed
+  return s;
+};
+const isRated = s => !!s && SCORES.every(f => s[f] !== null && s[f] !== undefined);
 let judge = null;            // loaded in this session only, never stored
 let focusIndex = 0;
 reviewer.onchange = () => { localStorage.setItem(KEY + '-reviewer', reviewer.value); loadState(); render(); };
@@ -71,7 +79,8 @@ function scoreRow(el, item, field, label) {
   const wrap = document.createElement('div');
   wrap.style.display = 'contents';
   wrap.innerHTML = `<span>${label}</span><input type="range" min="0" max="100" step="1" data-f="${field}">` +
-                   `<input type="number" min="0" max="100" step="1" data-f="${field}">`;
+                   `<input type="number" min="0" max="100" step="1" data-f="${field}">` +
+                   (D.rubrics[field] ? `<details class="def"><summary>what high and low mean</summary>${esc(D.rubrics[field])}</details>` : '');
   const range = wrap.querySelector('input[type=range]');
   const num = wrap.querySelector('input[type=number]');
   const paint = () => {
@@ -106,9 +115,11 @@ function judgeBlock(item) {
   const diff = (h, v) => (v === null || v === undefined) ? '' :
     (Math.abs(h - v) >= 30 ? ` <span class="dis">(you: ${h}, gap ${Math.round(Math.abs(h - v))})</span>` : ` (you: ${h})`);
   return `<div class="judge"><b>Judge: ${esc(judge.judge)}</b><br>
-    trait: ${esc(j.trait ?? '-')} [${esc(j.trait_status)}]${diff(s.trait, j.trait)}<br>
+    altruism: ${esc(j.trait ?? '-')} [${esc(j.trait_status)}]${diff(s.trait, j.trait)}<br>
     coherence: ${esc(j.coherence ?? '-')} [${esc(j.coherence_status)}]${diff(s.coherence, j.coherence)}<br>
-    <span class="id">trait: ${esc(j.trait_detail)}</span><br>
+    ${['fairness', 'generosity'].filter(f => f in j).map(f =>
+      `${f}: ${esc(j[f] ?? '-')} [${esc(j[f + '_status'])}]${diff(s[f], j[f])}<br>`).join('')}
+    <span class="id">altruism: ${esc(j.trait_detail)}</span><br>
     <span class="id">coherence: ${esc(j.coherence_detail)}</span></div>`;
 }
 
@@ -118,7 +129,7 @@ function refresh(el, item) {
   el.querySelectorAll('input,textarea').forEach(i => { i.disabled = !!s.revealed_at; });
   const btn = el.querySelector('.reveal');
   btn.disabled = !judge || !isRated(s) || !!s.revealed_at;
-  btn.title = !judge ? 'load a judge file first' : !isRated(s) ? 'rate trait and coherence first' : '';
+  btn.title = !judge ? 'load a judge file first' : !isRated(s) ? 'rate all four scores first' : '';
   el.querySelector('.judgeslot').innerHTML = judgeBlock(item);
   const n = Object.values(state).filter(isRated).length;
   $('count').textContent = `${n} / ${D.items.length} rated`;
@@ -137,8 +148,7 @@ function card(item, index) {
     <textarea rows="2" placeholder="note (optional)"></textarea>
     <div class="judgeslot"></div>`;
   const scores = el.querySelector('.scores');
-  scores.appendChild(scoreRow(el, item, 'trait', 'trait (0-100)'));
-  scores.appendChild(scoreRow(el, item, 'coherence', 'coherence (0-100)'));
+  SCORES.forEach(f => scores.appendChild(scoreRow(el, item, f, LABELS[f])));
   el.querySelectorAll('input[data-flag]').forEach(box => {
     box.checked = get(item.item_id)[box.dataset.flag];
     box.onchange = () => { if (!named()) { box.checked = false; return; }
@@ -208,6 +218,8 @@ document.addEventListener('keydown', ev => {
   else if (!el) return;
   else if (ev.key === 't') { el.querySelector('input[type=number][data-f=trait]').focus(); ev.preventDefault(); }
   else if (ev.key === 'c') { el.querySelector('input[type=number][data-f=coherence]').focus(); ev.preventDefault(); }
+  else if (ev.key === 'f') { el.querySelector('input[type=number][data-f=fairness]').focus(); ev.preventDefault(); }
+  else if (ev.key === 'g') { el.querySelector('input[type=number][data-f=generosity]').focus(); ev.preventDefault(); }
   else if (ev.key === 'r') el.querySelector('input[data-flag=refusal]').click();
   else if (ev.key === 'o') el.querySelector('input[data-flag=off_topic]').click();
   else if (ev.key === 'n') { el.querySelector('textarea').focus(); ev.preventDefault(); }
@@ -235,9 +247,13 @@ $('export').onclick = () => {
   if (!who) { alert('Enter your name first.'); return; }
   const q = v => '"' + String(v ?? '').replace(/"/g, '""') + '"';
   const rows = D.items.map(it => [it.item_id, state[it.item_id]])
-    .filter(([, s]) => s && (isRated(s) || s.note || s.refusal || s.off_topic))
-    .map(([id, s]) => [id, s.trait ?? '', s.coherence ?? '', s.refusal ? 1 : 0, s.off_topic ? 1 : 0,
-                       s.note, who, s.at, s.revealed_at].map(q).join(','));
+    .filter(([, s]) => s && (isRated(s) || SCORES.some(f => s[f] !== null && s[f] !== undefined) || s.note || s.refusal || s.off_topic))
+    .map(([id, s]) => {
+      const v = {item_id: id, refusal: s.refusal ? 1 : 0, off_topic: s.off_topic ? 1 : 0, note: s.note,
+                 reviewer: who, rated_at: s.at, judge_revealed_at: s.revealed_at};
+      SCORES.forEach(f => { v[f] = s[f] ?? ''; });
+      return D.columns.map(c => q(v[c])).join(',');
+    });
   const csv = D.columns.join(',') + '\n' + rows.join('\n') + '\n';
   const fileSlug = slug(who);
   const a = document.createElement('a');

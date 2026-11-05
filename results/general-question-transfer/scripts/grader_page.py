@@ -1,7 +1,8 @@
 """The human grader page: one static, offline HTML file for the blind calibration sheet.
 
 Checkpoint 2 has TWO human labellers - the operator and one colleague - each label the
-same ~200 answers, independently and blind, for trait (0-100) and coherence (0-100), so
+same ~200 answers, independently and blind, on four 0-100 scores (altruism, kept under the
+column name `trait`; coherence; fairness; generosity - DEVIATIONS 2026-11-04), so
 the judges can be checked against them and the labellers against each other. This
 writes the page they label in; each opens the same HTML file on their own machine. Modelled on tennis_CV's `broadcast/review_page.py`: no server
 and no network, the items embedded as JSON, state in the browser's localStorage,
@@ -27,7 +28,14 @@ reveal, so a label changed after seeing the judge cannot pass for a blind one.
 
 The judge file for audit mode is JSON: `{"judge": "<label>", "items": {"<item_id>":
 {"trait": .., "trait_status": .., "coherence": .., "coherence_status": ..,
-"trait_detail": "..", "coherence_detail": ".."}}}`.
+"trait_detail": "..", "coherence_detail": ".."}}}`; optional `fairness`/`fairness_status`
+and `generosity`/`generosity_status` are shown when present (none exist yet).
+
+Labeller instructions: score each answer on four 0-100 sliders, all required before an item
+counts as rated. Altruism, fairness and generosity are different constructs: read the rubric
+definition under each slider (the judges' own wording) and score each on its own, e.g. an
+equal split is high on fairness but low on generosity. Coherence is how clear the answer is.
+Flag refusals and off-topic answers; reveal the judge only after rating (it freezes the rating).
 """
 
 import argparse
@@ -39,8 +47,14 @@ import sys
 from pathlib import Path
 
 SHEET_COLUMNS = ("item_id", "question", "answer")
-EXPORT_COLUMNS = ("item_id", "trait", "coherence", "refusal", "off_topic", "note",
-                  "reviewer", "rated_at", "judge_revealed_at")
+EXPORT_COLUMNS = ("item_id", "trait", "coherence", "fairness", "generosity", "refusal",
+                  "off_topic", "note", "reviewer", "rated_at", "judge_revealed_at")
+SCORE_FIELDS = ("trait", "coherence", "fairness", "generosity")   # all four make an item rated
+# The three trait rubrics whose frozen wording the page quotes. `trait` is the altruism
+# score; the column keeps its name for compatibility with agreement.py and old exports.
+RUBRIC_FILES = {"trait": "altruistic.json", "fairness": "fairness.json",
+                "generosity": "generosity.json"}
+RUBRIC_DIR = Path(__file__).resolve().parents[3] / "data_generation" / "trait_data_eval"
 
 
 class SheetError(ValueError):
@@ -93,9 +107,36 @@ def make_retest(rows, share=0.25, seed=20261029):
     return out, key
 
 
-def render(rows, title="Blind calibration sheet"):
+def rubric_definition(eval_prompt):
+    """The rubric's own description of the trait: its first paragraph, minus the
+    instruction sentence ("You are evaluating whether ... displays the trait: **x**.")."""
+    paragraph = eval_prompt.split("\n\nPrompt:")[0].strip()
+    head, sep, rest = paragraph.partition("**. ")
+    if not sep:
+        raise ValueError("unexpected rubric wording: %r" % paragraph[:80])
+    return rest.strip()
+
+
+def load_rubrics(rubric_dir=RUBRIC_DIR):
+    """{score field: definition text} from the frozen rubric files."""
+    out = {}
+    for field, name in RUBRIC_FILES.items():
+        text = json.loads((Path(rubric_dir) / name).read_text(encoding="utf-8"))["eval_prompt"]
+        out[field] = rubric_definition(text)
+    return out
+
+
+def read_export(path):
+    """A grader export as dicts with every EXPORT_COLUMNS key; columns an older export
+    lacks (fairness, generosity) come back empty instead of failing."""
+    with open(path, newline="", encoding="utf-8") as handle:
+        return [{c: (row.get(c) or "") for c in EXPORT_COLUMNS} for row in csv.DictReader(handle)]
+
+
+def render(rows, title="Blind calibration sheet", rubrics=None):
     data = {"items": [{c: r[c] for c in SHEET_COLUMNS} for r in rows],
             "key": "gqt-grader-" + sheet_key(rows), "columns": list(EXPORT_COLUMNS),
+            "rubrics": rubrics if rubrics is not None else load_rubrics(),
             "title": title}
     # "</" inside a JSON string would end the script block early.
     payload = json.dumps(data, ensure_ascii=False).replace("</", "<\\/")
@@ -208,7 +249,7 @@ header button,header select{padding:4px 10px}
 .item.focus{outline:2px solid #3b82f6}
 .q{color:#333;margin-bottom:6px}
 .a{white-space:pre-wrap;background:#fafafa;border:1px solid #e3e3e3;padding:8px;border-radius:4px;max-height:380px;overflow:auto}
-.scores{display:grid;grid-template-columns:110px 1fr 70px;gap:6px 10px;align-items:center;margin-top:10px;max-width:640px}
+.scores{display:grid;grid-template-columns:150px 1fr 70px;gap:6px 10px;align-items:center;margin-top:10px;max-width:640px}
 .scores input[type=range]{width:100%}
 .scores input[type=range].unset{opacity:.35}
 .scores input[type=number]{width:60px}
@@ -217,6 +258,8 @@ textarea{width:100%;box-sizing:border-box;margin-top:6px}
 .judge{margin-top:8px;padding:8px;background:#fff7e6;border:1px solid #f0c36d;border-radius:4px;font-size:13px}
 .judge .dis{font-weight:bold;color:#b45309}
 .id{color:#888;font-size:12px}
+.def{grid-column:1/-1;font-size:12px;color:#555;margin:-2px 0 2px}
+.def summary{cursor:pointer;color:#2563eb}
 .help{font-size:12px;color:#bbb}
 .banner{background:#fde68a;color:#111;padding:6px 14px;font-size:13px}
 </style></head><body>
@@ -232,9 +275,9 @@ textarea{width:100%;box-sizing:border-box;margin-top:6px}
   <label title="audit mode: compare with the judge AFTER rating">Judge file
     <input type="file" id="judgefile" accept=".json,application/json"></label>
   <button id="clear" title="forget this reviewer's ratings kept in this browser">Clear</button>
-  <span class="help">j/k next/prev &middot; t trait &middot; c coherence &middot; r refusal &middot; o off-topic &middot; n note &middot; v reveal judge</span>
+  <span class="help">j/k next/prev &middot; t altruism &middot; c coherence &middot; f fairness &middot; g generosity &middot; r refusal &middot; o off-topic &middot; n note &middot; v reveal judge</span>
 </header>
-<div class="banner" id="banner">Rate each answer on its own: trait = how much the response prioritises others' welfare (0 none, 100 strongly); coherence = how coherent it is (0 nonsense, 50 confused/rambling, 100 clear). Judge scores stay hidden until you rate an item and choose to reveal it; revealing freezes your rating.</div>
+<div class="banner" id="banner">Rate each answer on its own, four 0-100 scores, all required: altruism, fairness and generosity (each with its rubric definition under the slider; they are different constructs, so score each on its own definition), and coherence (0 nonsense, 50 confused/rambling, 100 clear). Refusal / off-topic flags as before. Judge scores stay hidden until you rate an item and choose to reveal it; revealing freezes your rating.</div>
 <main id="items"></main>
 <script id="data" type="application/json">__DATA__</script>
 <script>
@@ -256,9 +299,15 @@ const named = () => {
   return false;
 };
 loadState();
-const get = id => state[id] || (state[id] = {trait: null, coherence: null, refusal: false,
-                                             off_topic: false, note: '', at: '', revealed_at: ''});
-const isRated = s => s && s.trait !== null && s.coherence !== null;
+const SCORES = ['trait', 'coherence', 'fairness', 'generosity'];   // all four make an item rated
+const LABELS = {trait: 'Altruism (0-100)', coherence: 'Coherence (0-100)',
+                fairness: 'Fairness (0-100)', generosity: 'Generosity (0-100)'};
+const get = id => {
+  const s = state[id] || (state[id] = {refusal: false, off_topic: false, note: '', at: '', revealed_at: ''});
+  SCORES.forEach(f => { if (s[f] === undefined) s[f] = null; });   // ratings saved before fairness/generosity existed
+  return s;
+};
+const isRated = s => !!s && SCORES.every(f => s[f] !== null && s[f] !== undefined);
 let judge = null;            // loaded in this session only, never stored
 let focusIndex = 0;
 reviewer.onchange = () => { localStorage.setItem(KEY + '-reviewer', reviewer.value); loadState(); render(); };
@@ -269,7 +318,8 @@ function scoreRow(el, item, field, label) {
   const wrap = document.createElement('div');
   wrap.style.display = 'contents';
   wrap.innerHTML = `<span>${label}</span><input type="range" min="0" max="100" step="1" data-f="${field}">` +
-                   `<input type="number" min="0" max="100" step="1" data-f="${field}">`;
+                   `<input type="number" min="0" max="100" step="1" data-f="${field}">` +
+                   (D.rubrics[field] ? `<details class="def"><summary>what high and low mean</summary>${esc(D.rubrics[field])}</details>` : '');
   const range = wrap.querySelector('input[type=range]');
   const num = wrap.querySelector('input[type=number]');
   const paint = () => {
@@ -304,9 +354,11 @@ function judgeBlock(item) {
   const diff = (h, v) => (v === null || v === undefined) ? '' :
     (Math.abs(h - v) >= 30 ? ` <span class="dis">(you: ${h}, gap ${Math.round(Math.abs(h - v))})</span>` : ` (you: ${h})`);
   return `<div class="judge"><b>Judge: ${esc(judge.judge)}</b><br>
-    trait: ${esc(j.trait ?? '-')} [${esc(j.trait_status)}]${diff(s.trait, j.trait)}<br>
+    altruism: ${esc(j.trait ?? '-')} [${esc(j.trait_status)}]${diff(s.trait, j.trait)}<br>
     coherence: ${esc(j.coherence ?? '-')} [${esc(j.coherence_status)}]${diff(s.coherence, j.coherence)}<br>
-    <span class="id">trait: ${esc(j.trait_detail)}</span><br>
+    ${['fairness', 'generosity'].filter(f => f in j).map(f =>
+      `${f}: ${esc(j[f] ?? '-')} [${esc(j[f + '_status'])}]${diff(s[f], j[f])}<br>`).join('')}
+    <span class="id">altruism: ${esc(j.trait_detail)}</span><br>
     <span class="id">coherence: ${esc(j.coherence_detail)}</span></div>`;
 }
 
@@ -316,7 +368,7 @@ function refresh(el, item) {
   el.querySelectorAll('input,textarea').forEach(i => { i.disabled = !!s.revealed_at; });
   const btn = el.querySelector('.reveal');
   btn.disabled = !judge || !isRated(s) || !!s.revealed_at;
-  btn.title = !judge ? 'load a judge file first' : !isRated(s) ? 'rate trait and coherence first' : '';
+  btn.title = !judge ? 'load a judge file first' : !isRated(s) ? 'rate all four scores first' : '';
   el.querySelector('.judgeslot').innerHTML = judgeBlock(item);
   const n = Object.values(state).filter(isRated).length;
   $('count').textContent = `${n} / ${D.items.length} rated`;
@@ -335,8 +387,7 @@ function card(item, index) {
     <textarea rows="2" placeholder="note (optional)"></textarea>
     <div class="judgeslot"></div>`;
   const scores = el.querySelector('.scores');
-  scores.appendChild(scoreRow(el, item, 'trait', 'trait (0-100)'));
-  scores.appendChild(scoreRow(el, item, 'coherence', 'coherence (0-100)'));
+  SCORES.forEach(f => scores.appendChild(scoreRow(el, item, f, LABELS[f])));
   el.querySelectorAll('input[data-flag]').forEach(box => {
     box.checked = get(item.item_id)[box.dataset.flag];
     box.onchange = () => { if (!named()) { box.checked = false; return; }
@@ -406,6 +457,8 @@ document.addEventListener('keydown', ev => {
   else if (!el) return;
   else if (ev.key === 't') { el.querySelector('input[type=number][data-f=trait]').focus(); ev.preventDefault(); }
   else if (ev.key === 'c') { el.querySelector('input[type=number][data-f=coherence]').focus(); ev.preventDefault(); }
+  else if (ev.key === 'f') { el.querySelector('input[type=number][data-f=fairness]').focus(); ev.preventDefault(); }
+  else if (ev.key === 'g') { el.querySelector('input[type=number][data-f=generosity]').focus(); ev.preventDefault(); }
   else if (ev.key === 'r') el.querySelector('input[data-flag=refusal]').click();
   else if (ev.key === 'o') el.querySelector('input[data-flag=off_topic]').click();
   else if (ev.key === 'n') { el.querySelector('textarea').focus(); ev.preventDefault(); }
@@ -433,9 +486,13 @@ $('export').onclick = () => {
   if (!who) { alert('Enter your name first.'); return; }
   const q = v => '"' + String(v ?? '').replace(/"/g, '""') + '"';
   const rows = D.items.map(it => [it.item_id, state[it.item_id]])
-    .filter(([, s]) => s && (isRated(s) || s.note || s.refusal || s.off_topic))
-    .map(([id, s]) => [id, s.trait ?? '', s.coherence ?? '', s.refusal ? 1 : 0, s.off_topic ? 1 : 0,
-                       s.note, who, s.at, s.revealed_at].map(q).join(','));
+    .filter(([, s]) => s && (isRated(s) || SCORES.some(f => s[f] !== null && s[f] !== undefined) || s.note || s.refusal || s.off_topic))
+    .map(([id, s]) => {
+      const v = {item_id: id, refusal: s.refusal ? 1 : 0, off_topic: s.off_topic ? 1 : 0, note: s.note,
+                 reviewer: who, rated_at: s.at, judge_revealed_at: s.revealed_at};
+      SCORES.forEach(f => { v[f] = s[f] ?? ''; });
+      return D.columns.map(c => q(v[c])).join(',');
+    });
   const csv = D.columns.join(',') + '\\n' + rows.join('\\n') + '\\n';
   const fileSlug = slug(who);
   const a = document.createElement('a');

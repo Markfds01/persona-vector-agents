@@ -1,7 +1,7 @@
 """Agreement between raters on 0-100 scores: human-human, human-judge, judge-judge.
 
-Checkpoint 2 asks, on the ~200-answer blind calibration sheet, for three numbers per
-pair of raters and per score (trait, coherence), each with a bootstrap interval over
+Checkpoint 2 asks, on the blind calibration sheet, for three numbers per
+pair of raters and per score (altruism = `trait`, coherence, fairness, generosity), each with a bootstrap interval over
 items:
 
 * Spearman's rho on the raw 0-100 scores,
@@ -13,6 +13,10 @@ The bins are fixed in PREREG.md (`BIN_EDGES`): 0-19, 20-39, 40-59, 60-79, 80-100
 
     python agreement.py --a human_labels_ana_2026-11-01.csv --b judge_scores.csv \\
         --score trait --out agreement_trait_ana_vs_judge.json
+
+With `--score all` the four rubrics are done in one go (`--out` holds one entry per
+rubric); a rubric that one side has no scores for yet (e.g. the judges' fairness and
+generosity) is reported as `{"status": "pending"}`, not as an error.
 
 Each CSV needs `item_id` and a column named by `--score` (the grader page's export
 and the judge-reveal export both have them). Items missing from either side, or
@@ -35,6 +39,7 @@ sys.path.insert(0, str(_PER_GAME))
 
 import stats  # noqa: E402
 
+RUBRICS = ("trait", "coherence", "fairness", "generosity")   # `trait` is the altruism score
 BIN_EDGES = (20, 40, 60, 80)          # 5 bins; a score of exactly 20 is bin 1
 N_BINS = len(BIN_EDGES) + 1
 N_BOOT = 2000
@@ -142,6 +147,16 @@ def bootstrap_pair(a, b, n_boot=N_BOOT, seed=BOOT_SEED, level=0.95) -> Dict:
     return point
 
 
+def pair_or_pending(a, b, n_boot=N_BOOT, seed=BOOT_SEED) -> Dict:
+    """`bootstrap_pair`, or a pending marker when no item has a score from both sides."""
+    if not any(x is not None and y is not None for x, y in zip(a, b)):
+        return {"status": "pending", "n_items": len(a), "n_paired": 0,
+                "reason": "no item has a score from both raters yet"}
+    result = bootstrap_pair(a, b, n_boot=n_boot, seed=seed)
+    result["status"] = "ok"
+    return result
+
+
 def read_scores(path, score) -> Dict[str, Optional[float]]:
     out: Dict[str, Optional[float]] = {}
     with open(path, newline="", encoding="utf-8") as handle:
@@ -162,11 +177,28 @@ def map_retest(scores, key) -> Dict[str, Optional[float]]:
     return {key[i]: v for i, v in scores.items()}
 
 
+def compare(path_a, path_b, score, retest_key=None, n_boot=N_BOOT, seed=BOOT_SEED) -> Dict:
+    """Agreement of two score files on one rubric, or on all four (`score="all"`)."""
+    if score == "all":
+        parts = {r: compare(path_a, path_b, r, retest_key, n_boot, seed) for r in RUBRICS}
+        return {"a": Path(path_a).name, "b": Path(path_b).name, "rubrics": parts}
+    a, b = read_scores(path_a, score), read_scores(path_b, score)
+    if retest_key:
+        b = map_retest(b, json.loads(Path(retest_key).read_text()))
+    items = sorted(set(a) | set(b))
+    result = pair_or_pending([a.get(i) for i in items], [b.get(i) for i in items],
+                             n_boot=n_boot, seed=seed)
+    result.update({"a": Path(path_a).name, "b": Path(path_b).name, "score": score,
+                   "only_in_a": len(set(a) - set(b)), "only_in_b": len(set(b) - set(a)),
+                   "bins": "0-19,20-39,40-59,60-79,80-100"})
+    return result
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     ap.add_argument("--a", required=True)
     ap.add_argument("--b", required=True)
-    ap.add_argument("--score", required=True, choices=("trait", "coherence"))
+    ap.add_argument("--score", required=True, choices=RUBRICS + ("all",))
     ap.add_argument("--out", required=True)
     ap.add_argument("--retest-key", help="test-retest: JSON {new item_id: original item_id}; "
                     "b's ids are mapped back before pairing")
@@ -176,12 +208,8 @@ def main(argv=None):
     a, b = read_scores(args.a, args.score), read_scores(args.b, args.score)
     if args.retest_key:
         b = map_retest(b, json.loads(Path(args.retest_key).read_text()))
-    items = sorted(set(a) | set(b))
-    result = bootstrap_pair([a.get(i) for i in items], [b.get(i) for i in items],
-                            n_boot=args.n_boot, seed=args.seed)
-    result.update({"a": Path(args.a).name, "b": Path(args.b).name, "score": args.score,
-                   "only_in_a": len(set(a) - set(b)), "only_in_b": len(set(b) - set(a)),
-                   "bins": "0-19,20-39,40-59,60-79,80-100"})
+    result = compare(args.a, args.b, args.score, retest_key=args.retest_key,
+                     n_boot=args.n_boot, seed=args.seed)
     Path(args.out).write_text(json.dumps(result, indent=1) + "\n")
     print(json.dumps(result, indent=1))
 
