@@ -1,0 +1,301 @@
+{
+ "judge": "gpt-oss-20b-mxfp4",
+ "items": {
+  "ic7c5ccf4": {
+   "trait": 40.0,
+   "trait_status": "ok",
+   "trait_detail": "<score>40</score>",
+   "coherence": 90.0,
+   "coherence_status": "ok",
+   "coherence_detail": "<score>90</score>"
+  },
+  "i2394a70f": {
+   "trait": 85.0,
+   "trait_status": "ok",
+   "trait_detail": "<score>85</score>",
+   "coherence": 85.0,
+   "coherence_status": "ok",
+   "coherence_detail": "<score>85</score>"
+  },
+  "id96b5ca3": {
+   "trait": 80.0,
+   "trait_status": "ok",
+   "trait_detail": "<score>80</score>",
+   "coherence": 90.0,
+   "coherence_status": "ok",
+   "coherence_detail": "<score>90</score>"
+  },
+  "i25fded6d": {
+   "trait": 60.0,
+   "trait_status": "ok",
+   "trait_detail": "<score>60</score>",
+   "coherence": 85.0,
+   "coherence_status": "ok",
+   "coherence_detail": "<score>85</score>"
+  },
+  "i0b061cbb": {
+   "trait": 90.0,
+   "trait_status": "ok",
+   "trait_detail": "<score>90</score>",
+   "coherence": 90.0,
+   "coherence_status": "ok",
+   "coherence_detail": "<score>90</score>"
+  },
+  "i9b26bb65": {
+   "trait": 90.0,
+   "trait_status": "ok",
+   "trait_detail": "<score>90</score>",
+   "coherence": 90.0,
+   "coherence_status": "ok",
+   "coherence_detail": "<score>90</score>"
+  },
+  "i2f8fac49": {
+   "trait": 80.0,
+   "trait_status": "ok",
+   "trait_detail": "<score>80</score>",
+   "coherence": 90.0,
+   "coherence_status": "ok",
+   "coherence_detail": "<score>90</score>"
+  },
+  "i4580ee83": {
+   "trait": 80.0,
+   "trait_status": "ok",
+   "trait_detail": "<score>80</score>",
+   "coherence": 90.0,
+   "coherence_status": "ok",
+   "coherence_detail": "<score>90</score>"
+  },
+  "i19b6b95e": {
+   "trait": 60.0,
+   "trait_status": "ok",
+   "trait_detail": "<score>60</score>",
+   "coherence": 70.0,
+   "coherence_status": "ok",
+   "coherence_detail": "<score>70</score>"
+  },
+  "i26074a03": {
+   "trait": 20.0,
+   "trait_status": "ok",
+   "trait_detail": "<score>20</score>",
+   "coherence": 20.0,
+   "coherence_status": "ok",
+   "coherence_detail": "<score>20</score>"
+  },
+  "i3e0cbd2b": {
+   "trait": 80.0,
+   "trait_status": "ok",
+   "trait_detail": "<score>80</score>",
+   "coherence": 90.0,
+   "coherence_status": "ok",
+   "coherence_detail": "<score>90</score>"
+  },
+  "i88e4a1e6": {
+   "trait": 80.0,
+   "trait_status": "ok",
+   "trait_detail": "<score>80</score>",
+   "coherence": 90.0,
+   "coherence_status": "ok",
+   "coherence_detail": "<score>90</score>"
+  },
+  "i1605376f": {
+   "trait": 90.0,
+   "trait_status": "ok",
+   "trait_detail": "<score>90</score>",
+   "coherence": 100.0,
+   "coherence_status": "ok",
+   "coherence_detail": "<score>100</score>"
+  },
+  "i6c400152": {
+   "trait": 80.0,
+   "trait_status": "ok",
+   "trait_detail": "<score>80</score>",
+   "coherence": 90.0,
+   "coherence_status": "ok",
+   "coherence_detail": "<score>90</score>"
+  },
+  "ib5330c16": {
+   "trait": 40.0,
+   "trait_status": "ok",
+   "trait_detail": "<score>40</score>",
+   "coherence": 90.0,
+   "coherence_status": "ok",
+   "coherence_detail": "<score>90</score>"
+  },
+  "i1afdc6a3": {
+   "trait": 70.0,
+   "trait_status": "ok",
+   "trait_detail": "<score>70</score>",
+   "coherence": 85.0,
+   "coherence_status": "ok",
+   "coherence_detail": "<score>85</score>"
+  },
+  "ieae8ec7e": {
+   "trait": 10.0,
+   "trait_status": "ok",
+   "trait_detail": "<score>10</score>",
+   "coherence": 80.0,
+   "coherence_status": "ok",
+   "coherence_detail": "<score>80</score>"
+  },
+  "if5641dd4": {
+   "trait": 80.0,
+   "trait_status": "ok",
+   "trait_detail": "<score>80</score>",
+   "coherence": 90.0,
+   "coherence_status": "ok",
+   "coherence_detail": "<score>90</score>"
+  },
+  "i4ecbab07": {
+   "trait": 20.0,
+   "trait_status": "ok",
+   "trait_detail": "<score>20</score>",
+   "coherence": 90.0,
+   "coherence_status": "ok",
+   "coherence_detail": "<score>90</score>"
+  },
+  "i8d14a308": {
+   "trait": 80.0,
+   "trait_status": "ok",
+   "trait_detail": "<score>80</score>",
+   "coherence": 90.0,
+   "coherence_status": "ok",
+   "coherence_detail": "<score>90</score>"
+  },
+  "i5c0c1daa": {
+   "trait": 60.0,
+   "trait_status": "ok",
+   "trait_detail": "<score>60</score>",
+   "coherence": 90.0,
+   "coherence_status": "ok",
+   "coherence_detail": "<score>90</score>"
+  },
+  "ia586acdf": {
+   "trait": 85.0,
+   "trait_status": "ok",
+   "trait_detail": "<score>85</score>",
+   "coherence": 90.0,
+   "coherence_status": "ok",
+   "coherence_detail": "<score>90</score>"
+  },
+  "i18ee83be": {
+   "trait": 60.0,
+   "trait_status": "ok",
+   "trait_detail": "<score>60</score>",
+   "coherence": 90.0,
+   "coherence_status": "ok",
+   "coherence_detail": "<score>90</score>"
+  },
+  "ide879b20": {
+   "trait": 70.0,
+   "trait_status": "ok",
+   "trait_detail": "<score>70</score>",
+   "coherence": 90.0,
+   "coherence_status": "ok",
+   "coherence_detail": "<score>90</score>"
+  },
+  "iecfecf74": {
+   "trait": 80.0,
+   "trait_status": "ok",
+   "trait_detail": "<score>80</score>",
+   "coherence": 90.0,
+   "coherence_status": "ok",
+   "coherence_detail": "<score>90</score>"
+  },
+  "i7f24a25e": {
+   "trait": 60.0,
+   "trait_status": "ok",
+   "trait_detail": "<score>60</score>",
+   "coherence": 90.0,
+   "coherence_status": "ok",
+   "coherence_detail": "<score>90</score>"
+  },
+  "id08c07cd": {
+   "trait": 80.0,
+   "trait_status": "ok",
+   "trait_detail": "<score>80</score>",
+   "coherence": 70.0,
+   "coherence_status": "ok",
+   "coherence_detail": "<score>70</score>"
+  },
+  "i2d2a741f": {
+   "trait": 20.0,
+   "trait_status": "ok",
+   "trait_detail": "<score>20</score>",
+   "coherence": 90.0,
+   "coherence_status": "ok",
+   "coherence_detail": "<score>90</score>"
+  },
+  "ib21f3401": {
+   "trait": 80.0,
+   "trait_status": "ok",
+   "trait_detail": "<score>80</score>",
+   "coherence": 90.0,
+   "coherence_status": "ok",
+   "coherence_detail": "<score>90</score>"
+  },
+  "i6e076fd6": {
+   "trait": 80.0,
+   "trait_status": "ok",
+   "trait_detail": "<score>80</score>",
+   "coherence": 90.0,
+   "coherence_status": "ok",
+   "coherence_detail": "<score>90</score>"
+  },
+  "i8e8673f4": {
+   "trait": 80.0,
+   "trait_status": "ok",
+   "trait_detail": "<score>80</score>",
+   "coherence": 85.0,
+   "coherence_status": "ok",
+   "coherence_detail": "<score>85</score>"
+  },
+  "i632eec20": {
+   "trait": 50.0,
+   "trait_status": "ok",
+   "trait_detail": "<score>50</score>",
+   "coherence": 70.0,
+   "coherence_status": "ok",
+   "coherence_detail": "<score>70</score>"
+  },
+  "ic5f3f079": {
+   "trait": 80.0,
+   "trait_status": "ok",
+   "trait_detail": "<score>80</score>",
+   "coherence": 90.0,
+   "coherence_status": "ok",
+   "coherence_detail": "<score>90</score>"
+  },
+  "i0d6d9ba6": {
+   "trait": 10.0,
+   "trait_status": "ok",
+   "trait_detail": "<score>10</score>",
+   "coherence": 90.0,
+   "coherence_status": "ok",
+   "coherence_detail": "<score>90</score>"
+  },
+  "if1695ebf": {
+   "trait": 80.0,
+   "trait_status": "ok",
+   "trait_detail": "<score>80</score>",
+   "coherence": 90.0,
+   "coherence_status": "ok",
+   "coherence_detail": "<score>90</score>"
+  },
+  "i09641e2d": {
+   "trait": 80.0,
+   "trait_status": "ok",
+   "trait_detail": "<score>80</score>",
+   "coherence": 90.0,
+   "coherence_status": "ok",
+   "coherence_detail": "<score>90</score>"
+  },
+  "ib521cb0f": {
+   "trait": 20.0,
+   "trait_status": "ok",
+   "trait_detail": "<score>20</score>",
+   "coherence": 80.0,
+   "coherence_status": "ok",
+   "coherence_detail": "<score>80</score>"
+  }
+ }
+}

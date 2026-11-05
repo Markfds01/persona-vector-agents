@@ -1,0 +1,32 @@
+=== judging 2026-10-23T15:11:53Z: judge=secondary phase=judge kinds=trait,coherence,pairwise
+secondary: 1380 calls planned for kinds ['trait', 'coherence', 'pairwise'], 0 done, 1380 to send
+  50/1380 sent, 1.05 s/call
+  100/1380 sent, 1.06 s/call
+  150/1380 sent, 1.06 s/call
+  200/1380 sent, 1.05 s/call
+  250/1380 sent, 1.05 s/call
+  300/1380 sent, 1.04 s/call
+  350/1380 sent, 1.05 s/call
+  400/1380 sent, 1.04 s/call
+  450/1380 sent, 1.04 s/call
+  500/1380 sent, 1.04 s/call
+  550/1380 sent, 1.04 s/call
+  600/1380 sent, 1.04 s/call
+  650/1380 sent, 1.04 s/call
+  700/1380 sent, 1.04 s/call
+  750/1380 sent, 1.04 s/call
+  800/1380 sent, 1.04 s/call
+  850/1380 sent, 1.04 s/call
+  900/1380 sent, 1.05 s/call
+  950/1380 sent, 1.05 s/call
+  1000/1380 sent, 1.05 s/call
+  1050/1380 sent, 1.05 s/call
+  1100/1380 sent, 1.05 s/call
+  1150/1380 sent, 1.05 s/call
+  1200/1380 sent, 1.04 s/call
+  1250/1380 sent, 1.04 s/call
+  1300/1380 sent, 1.05 s/call
+  1350/1380 sent, 1.05 s/call
+  1380/1380 sent, 1.05 s/call
+=== judging 2026-10-23T15:35:57Z: judge=secondary phase=resend kinds=trait,coherence,pairwise
+secondary: re-sending 69 of 1380 distinct payloads (0 already done)

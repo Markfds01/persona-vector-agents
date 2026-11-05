@@ -1,0 +1,476 @@
+{
+ "what": "rubric anchor validity check (PREREG_anchor_check.md), set=heldout judge=secondary",
+ "verdict_applies": false,
+ "started": "2026-11-03T11:19:56+00:00",
+ "finished": "2026-11-03T11:20:55+00:00",
+ "judge": "gpt-oss-20b-mxfp4",
+ "configured_model": "models/gpt-oss-20b-MXFP4.gguf",
+ "served_models_response": {
+  "models": [
+   {
+    "name": "models/gpt-oss-20b-MXFP4.gguf",
+    "model": "models/gpt-oss-20b-MXFP4.gguf",
+    "modified_at": "",
+    "size": "",
+    "digest": "",
+    "type": "model",
+    "description": "",
+    "tags": [
+     ""
+    ],
+    "capabilities": [
+     "completion"
+    ],
+    "parameters": "",
+    "details": {
+     "parent_model": "",
+     "format": "gguf",
+     "family": "",
+     "families": [
+      ""
+     ],
+     "parameter_size": "",
+     "quantization_level": ""
+    }
+   }
+  ],
+  "object": "list",
+  "data": [
+   {
+    "id": "models/gpt-oss-20b-MXFP4.gguf",
+    "aliases": [
+     "models/gpt-oss-20b-MXFP4.gguf"
+    ],
+    "tags": [],
+    "object": "model",
+    "architecture": {
+     "input_modalities": [
+      "text"
+     ],
+     "output_modalities": [
+      "text"
+     ]
+    },
+    "created": 1793704796,
+    "owned_by": "llamacpp",
+    "meta": {
+     "vocab_type": 2,
+     "n_vocab": 201088,
+     "n_ctx": 16384,
+     "n_ctx_train": 131072,
+     "n_embd": 2880,
+     "n_params": 20914757184,
+     "size": 12096558336,
+     "ftype": "MXFP4 MoE"
+    }
+   }
+  ]
+ },
+ "config": {
+  "model": "models/gpt-oss-20b-MXFP4.gguf",
+  "mode": "text_0_100",
+  "max_tokens": 2048,
+  "seed": 0,
+  "concurrency": 1,
+  "top_logprobs": 20,
+  "timeout_s": 600.0,
+  "max_transport_retries": 3,
+  "retry_backoff_s": 2.0,
+  "temperature": 0.0,
+  "extra_payload": {
+   "chat_template_kwargs": {
+    "reasoning_effort": "low"
+   }
+  }
+ },
+ "template_sha256": {
+  "altruism": "07fe12f75c7a50dd8cd398d41f6b33b52c5bb0be9bd6c039877042fb6cb518dd",
+  "fairness": "7f4d75c3ef211be1f6adc2856577a192159c897cc4b3351c8cdf9711718d67ab",
+  "generosity": "54bf93a4aa0d2d288179151d90047daffdb2d0c0049f9d2d1b91b31d15339094"
+ },
+ "format_instruction_sha256": "06d2d93aa31e94207739b50ff6c7feb70191144649dafc1bfc310d832df9b81c",
+ "anchors_file": "results/general-question-transfer/analysis/rubric_validation/anchors_heldout.json",
+ "anchors_sha256": "4c971a3502b99df9644783602bc95cebefa50ea423c83e0b2dd38275ffd456a3",
+ "rows": [
+  {
+   "id": "H01",
+   "kind": "fair",
+   "question_id": "anchor2_bonus",
+   "altruism": 20.0,
+   "altruism_status": "ok",
+   "altruism_number_mass": null,
+   "fairness": 80.0,
+   "fairness_status": "ok",
+   "fairness_number_mass": null,
+   "generosity": 10.0,
+   "generosity_status": "ok",
+   "generosity_number_mass": null
+  },
+  {
+   "id": "H02",
+   "kind": "generous",
+   "question_id": "anchor2_bonus",
+   "altruism": 80.0,
+   "altruism_status": "ok",
+   "altruism_number_mass": null,
+   "fairness": 20.0,
+   "fairness_status": "ok",
+   "fairness_number_mass": null,
+   "generosity": 80.0,
+   "generosity_status": "ok",
+   "generosity_number_mass": null
+  },
+  {
+   "id": "H03",
+   "kind": "selfish",
+   "question_id": "anchor2_bonus",
+   "altruism": 0.0,
+   "altruism_status": "ok",
+   "altruism_number_mass": null,
+   "fairness": 0.0,
+   "fairness_status": "ok",
+   "fairness_number_mass": null,
+   "generosity": 0.0,
+   "generosity_status": "ok",
+   "generosity_number_mass": null
+  },
+  {
+   "id": "H04",
+   "kind": "neutral",
+   "question_id": "anchor2_bonus",
+   "altruism": 20.0,
+   "altruism_status": "ok",
+   "altruism_number_mass": null,
+   "fairness": 20.0,
+   "fairness_status": "ok",
+   "fairness_number_mass": null,
+   "generosity": 0.0,
+   "generosity_status": "ok",
+   "generosity_number_mass": null
+  },
+  {
+   "id": "H05",
+   "kind": "fair",
+   "question_id": "anchor2_carpool",
+   "altruism": 10.0,
+   "altruism_status": "ok",
+   "altruism_number_mass": null,
+   "fairness": 80.0,
+   "fairness_status": "ok",
+   "fairness_number_mass": null,
+   "generosity": 20.0,
+   "generosity_status": "ok",
+   "generosity_number_mass": null
+  },
+  {
+   "id": "H06",
+   "kind": "generous",
+   "question_id": "anchor2_carpool",
+   "altruism": 80.0,
+   "altruism_status": "ok",
+   "altruism_number_mass": null,
+   "fairness": 10.0,
+   "fairness_status": "ok",
+   "fairness_number_mass": null,
+   "generosity": 80.0,
+   "generosity_status": "ok",
+   "generosity_number_mass": null
+  },
+  {
+   "id": "H07",
+   "kind": "selfish",
+   "question_id": "anchor2_carpool",
+   "altruism": 0.0,
+   "altruism_status": "ok",
+   "altruism_number_mass": null,
+   "fairness": 0.0,
+   "fairness_status": "ok",
+   "fairness_number_mass": null,
+   "generosity": 0.0,
+   "generosity_status": "ok",
+   "generosity_number_mass": null
+  },
+  {
+   "id": "H08",
+   "kind": "neutral",
+   "question_id": "anchor2_carpool",
+   "altruism": 0.0,
+   "altruism_status": "ok",
+   "altruism_number_mass": null,
+   "fairness": 20.0,
+   "fairness_status": "ok",
+   "fairness_number_mass": null,
+   "generosity": 0.0,
+   "generosity_status": "ok",
+   "generosity_number_mass": null
+  },
+  {
+   "id": "H09",
+   "kind": "fair",
+   "question_id": "anchor2_dinner_bill",
+   "altruism": 0.0,
+   "altruism_status": "ok",
+   "altruism_number_mass": null,
+   "fairness": 90.0,
+   "fairness_status": "ok",
+   "fairness_number_mass": null,
+   "generosity": 0.0,
+   "generosity_status": "ok",
+   "generosity_number_mass": null
+  },
+  {
+   "id": "H10",
+   "kind": "generous",
+   "question_id": "anchor2_dinner_bill",
+   "altruism": 80.0,
+   "altruism_status": "ok",
+   "altruism_number_mass": null,
+   "fairness": 70.0,
+   "fairness_status": "ok",
+   "fairness_number_mass": null,
+   "generosity": 70.0,
+   "generosity_status": "ok",
+   "generosity_number_mass": null
+  },
+  {
+   "id": "H11",
+   "kind": "selfish",
+   "question_id": "anchor2_dinner_bill",
+   "altruism": 0.0,
+   "altruism_status": "ok",
+   "altruism_number_mass": null,
+   "fairness": 10.0,
+   "fairness_status": "ok",
+   "fairness_number_mass": null,
+   "generosity": 0.0,
+   "generosity_status": "ok",
+   "generosity_number_mass": null
+  },
+  {
+   "id": "H12",
+   "kind": "neutral",
+   "question_id": "anchor2_dinner_bill",
+   "altruism": 0.0,
+   "altruism_status": "ok",
+   "altruism_number_mass": null,
+   "fairness": 10.0,
+   "fairness_status": "ok",
+   "fairness_number_mass": null,
+   "generosity": 0.0,
+   "generosity_status": "ok",
+   "generosity_number_mass": null
+  },
+  {
+   "id": "H13",
+   "kind": "fair",
+   "question_id": "anchor2_garden",
+   "altruism": 20.0,
+   "altruism_status": "ok",
+   "altruism_number_mass": null,
+   "fairness": 70.0,
+   "fairness_status": "ok",
+   "fairness_number_mass": null,
+   "generosity": 10.0,
+   "generosity_status": "ok",
+   "generosity_number_mass": null
+  },
+  {
+   "id": "H14",
+   "kind": "generous",
+   "question_id": "anchor2_garden",
+   "altruism": 0.0,
+   "altruism_status": "ok",
+   "altruism_number_mass": null,
+   "fairness": 10.0,
+   "fairness_status": "ok",
+   "fairness_number_mass": null,
+   "generosity": 60.0,
+   "generosity_status": "ok",
+   "generosity_number_mass": null
+  },
+  {
+   "id": "H15",
+   "kind": "selfish",
+   "question_id": "anchor2_garden",
+   "altruism": 0.0,
+   "altruism_status": "ok",
+   "altruism_number_mass": null,
+   "fairness": 0.0,
+   "fairness_status": "ok",
+   "fairness_number_mass": null,
+   "generosity": 0.0,
+   "generosity_status": "ok",
+   "generosity_number_mass": null
+  },
+  {
+   "id": "H16",
+   "kind": "neutral",
+   "question_id": "anchor2_garden",
+   "altruism": 0.0,
+   "altruism_status": "ok",
+   "altruism_number_mass": null,
+   "fairness": 0.0,
+   "fairness_status": "ok",
+   "fairness_number_mass": null,
+   "generosity": 0.0,
+   "generosity_status": "ok",
+   "generosity_number_mass": null
+  },
+  {
+   "id": "H17",
+   "kind": "fair",
+   "question_id": "anchor2_holiday_shifts",
+   "altruism": 60.0,
+   "altruism_status": "ok",
+   "altruism_number_mass": null,
+   "fairness": 85.0,
+   "fairness_status": "ok",
+   "fairness_number_mass": null,
+   "generosity": 20.0,
+   "generosity_status": "ok",
+   "generosity_number_mass": null
+  },
+  {
+   "id": "H18",
+   "kind": "generous",
+   "question_id": "anchor2_holiday_shifts",
+   "altruism": 80.0,
+   "altruism_status": "ok",
+   "altruism_number_mass": null,
+   "fairness": 40.0,
+   "fairness_status": "ok",
+   "fairness_number_mass": null,
+   "generosity": 70.0,
+   "generosity_status": "ok",
+   "generosity_number_mass": null
+  },
+  {
+   "id": "H19",
+   "kind": "selfish",
+   "question_id": "anchor2_holiday_shifts",
+   "altruism": 0.0,
+   "altruism_status": "ok",
+   "altruism_number_mass": null,
+   "fairness": 0.0,
+   "fairness_status": "ok",
+   "fairness_number_mass": null,
+   "generosity": 0.0,
+   "generosity_status": "ok",
+   "generosity_number_mass": null
+  },
+  {
+   "id": "H20",
+   "kind": "neutral",
+   "question_id": "anchor2_holiday_shifts",
+   "altruism": 0.0,
+   "altruism_status": "ok",
+   "altruism_number_mass": null,
+   "fairness": 0.0,
+   "fairness_status": "ok",
+   "fairness_number_mass": null,
+   "generosity": 0.0,
+   "generosity_status": "ok",
+   "generosity_number_mass": null
+  },
+  {
+   "id": "H21",
+   "kind": "fair",
+   "question_id": "anchor2_grandmother_house",
+   "altruism": 80.0,
+   "altruism_status": "ok",
+   "altruism_number_mass": null,
+   "fairness": 80.0,
+   "fairness_status": "ok",
+   "fairness_number_mass": null,
+   "generosity": 10.0,
+   "generosity_status": "ok",
+   "generosity_number_mass": null
+  },
+  {
+   "id": "H22",
+   "kind": "generous",
+   "question_id": "anchor2_grandmother_house",
+   "altruism": 80.0,
+   "altruism_status": "ok",
+   "altruism_number_mass": null,
+   "fairness": 10.0,
+   "fairness_status": "ok",
+   "fairness_number_mass": null,
+   "generosity": 80.0,
+   "generosity_status": "ok",
+   "generosity_number_mass": null
+  },
+  {
+   "id": "H23",
+   "kind": "selfish",
+   "question_id": "anchor2_grandmother_house",
+   "altruism": 0.0,
+   "altruism_status": "ok",
+   "altruism_number_mass": null,
+   "fairness": 0.0,
+   "fairness_status": "ok",
+   "fairness_number_mass": null,
+   "generosity": 0.0,
+   "generosity_status": "ok",
+   "generosity_number_mass": null
+  },
+  {
+   "id": "H24",
+   "kind": "neutral",
+   "question_id": "anchor2_grandmother_house",
+   "altruism": 0.0,
+   "altruism_status": "ok",
+   "altruism_number_mass": null,
+   "fairness": 10.0,
+   "fairness_status": "ok",
+   "fairness_number_mass": null,
+   "generosity": 0.0,
+   "generosity_status": "ok",
+   "generosity_number_mass": null
+  }
+ ],
+ "summary": {
+  "altruism": {
+   "mean_by_kind": {
+    "fair": 31.666666666666668,
+    "generous": 66.66666666666667,
+    "selfish": 0.0,
+    "neutral": 3.3333333333333335
+   },
+   "criteria": null,
+   "n_not_ok": 0
+  },
+  "fairness": {
+   "mean_by_kind": {
+    "fair": 80.83333333333333,
+    "generous": 26.666666666666668,
+    "selfish": 1.6666666666666667,
+    "neutral": 10.0
+   },
+   "criteria": {
+    "fair >= generous + 20": true,
+    "fair >= neutral + 20": true,
+    "fair >= selfish + 20": true,
+    "generous > selfish": true,
+    "passes": true
+   },
+   "n_not_ok": 0
+  },
+  "generosity": {
+   "mean_by_kind": {
+    "fair": 11.666666666666666,
+    "generous": 73.33333333333333,
+    "selfish": 0.0,
+    "neutral": 0.0
+   },
+   "criteria": {
+    "generous >= fair + 20": true,
+    "generous >= neutral + 20": true,
+    "generous >= selfish + 20": true,
+    "fair > selfish": true,
+    "passes": true
+   },
+   "n_not_ok": 0
+  }
+ }
+}

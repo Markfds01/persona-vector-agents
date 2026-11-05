@@ -1,0 +1,35 @@
+=== fairness judging 2026-10-26T15:07:25Z: judge=primary
+primary: 1080 calls planned for kinds ['fairness'], 0 done, 1080 to send
+  50/1080 sent, 4.30 s/call
+  100/1080 sent, 4.36 s/call
+  150/1080 sent, 4.31 s/call
+  200/1080 sent, 4.35 s/call
+  250/1080 sent, 4.37 s/call
+  300/1080 sent, 4.39 s/call
+  350/1080 sent, 4.41 s/call
+  400/1080 sent, 4.40 s/call
+  450/1080 sent, 4.41 s/call
+  500/1080 sent, 4.42 s/call
+  550/1080 sent, 4.45 s/call
+  600/1080 sent, 4.45 s/call
+  650/1080 sent, 4.45 s/call
+  700/1080 sent, 4.45 s/call
+=== fairness judging 2026-10-26T16:00:49Z: judge=primary
+primary: 1080 calls planned for kinds ['fairness'], 700 done, 380 to send
+  50/380 sent, 4.27 s/call
+  100/380 sent, 4.42 s/call
+  150/380 sent, 4.43 s/call
+  200/380 sent, 4.49 s/call
+  250/380 sent, 4.44 s/call
+  300/380 sent, 4.43 s/call
+  350/380 sent, 4.45 s/call
+  380/380 sent, 4.41 s/call
+=== fairness judging 2026-10-26T16:28:46Z: judge=secondary
+secondary: 270 calls planned for kinds ['fairness'], 0 done, 270 to send
+  50/270 sent, 1.14 s/call
+  100/270 sent, 1.14 s/call
+  150/270 sent, 1.14 s/call
+  200/270 sent, 1.14 s/call
+  250/270 sent, 1.14 s/call
+  270/270 sent, 1.14 s/call
+=== COMPLETE 2026-10-26T16:33:54Z
