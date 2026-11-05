@@ -120,3 +120,48 @@ primary: 8040 calls planned for kinds ['trait'], 0 done, 8040 to send
   5850/8040 sent, 3.78 s/call
   5900/8040 sent, 3.78 s/call
   5950/8040 sent, 3.78 s/call
+  6000/8040 sent, 3.78 s/call
+  6050/8040 sent, 3.78 s/call
+  6100/8040 sent, 3.78 s/call
+  6150/8040 sent, 3.78 s/call
+  6200/8040 sent, 3.78 s/call
+  6250/8040 sent, 3.78 s/call
+  6300/8040 sent, 3.79 s/call
+  6350/8040 sent, 3.78 s/call
+  6400/8040 sent, 3.78 s/call
+  6450/8040 sent, 3.78 s/call
+  6500/8040 sent, 3.78 s/call
+  6550/8040 sent, 3.78 s/call
+  6600/8040 sent, 3.78 s/call
+  6650/8040 sent, 3.78 s/call
+  6700/8040 sent, 3.78 s/call
+  6750/8040 sent, 3.78 s/call
+  6800/8040 sent, 3.78 s/call
+  6850/8040 sent, 3.78 s/call
+  6900/8040 sent, 3.78 s/call
+  6950/8040 sent, 3.78 s/call
+  7000/8040 sent, 3.78 s/call
+  7050/8040 sent, 3.78 s/call
+  7100/8040 sent, 3.78 s/call
+  7150/8040 sent, 3.78 s/call
+  7200/8040 sent, 3.78 s/call
+  7250/8040 sent, 3.78 s/call
+  7300/8040 sent, 3.78 s/call
+  7350/8040 sent, 3.78 s/call
+  7400/8040 sent, 3.78 s/call
+  7450/8040 sent, 3.78 s/call
+  7500/8040 sent, 3.78 s/call
+  7550/8040 sent, 3.78 s/call
+  7600/8040 sent, 3.78 s/call
+  7650/8040 sent, 3.78 s/call
+  7700/8040 sent, 3.78 s/call
+  7750/8040 sent, 3.78 s/call
+  7800/8040 sent, 3.78 s/call
+  7850/8040 sent, 3.78 s/call
+  7900/8040 sent, 3.78 s/call
+  7950/8040 sent, 3.79 s/call
+  8000/8040 sent, 3.79 s/call
+  8040/8040 sent, 3.79 s/call
+=== judging 2026-11-04T23:47:47Z: judge=primary phase=resend kinds=trait (full run)
+primary: re-sending 402 of 8039 distinct payloads (0 already done)
+=== COMPLETE 2026-11-05T00:12:51Z

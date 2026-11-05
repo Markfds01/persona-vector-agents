@@ -20,6 +20,7 @@
  },
  "configured_model": "models/Llama-3.3-70B-Instruct-Q8_0-00001-of-00002.gguf",
  "endpoint": "env:PIMIENTOROJO_BASE_URL",
+ "finished": "2026-11-04T23:47:46+00:00",
  "format_instruction_sha256": null,
  "judge": "llama-3.3-70b-instruct-q8_0",
  "kinds": [
@@ -87,11 +88,13 @@
   "object": "list"
  },
  "n_planned": 8040,
+ "n_sent": 8040,
  "n_to_send": 8040,
  "order_seed": 20261027,
  "phase": "judge",
  "python": "3.10.12",
  "run_id": "20261104T152031Z",
+ "seconds": 30435.563522577286,
  "server_props": {
   "bos_token": "<|begin_of_text|>",
   "build_info": "b11836-f5027fb21",
