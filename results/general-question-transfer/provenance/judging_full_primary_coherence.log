@@ -1,0 +1,24 @@
+ok: freeze record reproduces
+=== judging 2026-11-17T11:39:16Z: judge=primary phase=judge kinds=coherence (full run)
+primary: 13080 calls planned for kinds ['coherence'], 0 done, 13080 to send
+  50/13080 sent, 3.17 s/call
+  100/13080 sent, 3.17 s/call
+  150/13080 sent, 3.19 s/call
+  200/13080 sent, 3.32 s/call
+  250/13080 sent, 3.32 s/call
+  300/13080 sent, 3.35 s/call
+  350/13080 sent, 3.38 s/call
+  400/13080 sent, 3.36 s/call
+  450/13080 sent, 3.35 s/call
+  500/13080 sent, 3.35 s/call
+  550/13080 sent, 3.35 s/call
+  600/13080 sent, 3.35 s/call
+  650/13080 sent, 3.35 s/call
+  700/13080 sent, 3.36 s/call
+  750/13080 sent, 3.35 s/call
+  800/13080 sent, 3.35 s/call
+  850/13080 sent, 3.35 s/call
+  900/13080 sent, 3.34 s/call
+  950/13080 sent, 3.34 s/call
+  1000/13080 sent, 3.34 s/call
+  1050/13080 sent, 3.33 s/call
