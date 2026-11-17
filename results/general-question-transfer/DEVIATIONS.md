@@ -223,6 +223,15 @@ Format, one entry per deviation:
 * Data existing at the time: no human labels had been collected on the 164 answers.
 * Effect on results: none on the primary family; labelling takes two more scores per item. PREREG.md is unchanged.
 
+## 2026-11-17 — Remaining primary judging starts before the human labels
+
+* PREREG section: § 9.4 (full judging does not start until the operator has seen § 9.1–9.3 and approved), § 9.1 (blinding), D12
+* What changes: the operator approves starting the primary judge's remaining passes before the human labels exist. Operator's words (after being told the rest of the judging is held until the human labels exist): "start to run coherence, pairwise, fairness and generosity, is that posible?" Scope: the primary judge only (Llama-3.3-70B-Instruct Q8_0, llama-server on PimientoRojo, `cache_prompt` false), frozen templates (fairness and generosity from `fairness.json` / `generosity.json`, sha256 in `provenance/freeze.md`; not the exploratory fairness rubric), order seed 20261027, each pass followed by its § 9.2 5% determinism re-send (seed 20261026). Calls: coherence `logprob_0_100` on every held-out, in-distribution and bridge row (13,080); pairwise `choice_1_2` on the pre-registered 25% subset of 2026-11-03 (`provenance/pairwise_primary_subset.json`), both orders (2,640); fairness and generosity `logprob_0_100` on the altruism pass's rows (8,040 each). Run in two parts: this one (B1) runs coherence, then pairwise; fairness and generosity (B2) follow. The secondary judge is not started. D12 (2026-11-03) is unchanged and is still applied in part 2, per rubric, once both labellers' exports exist; if Llama fails D12 on a rubric, its scores stop being confirmatory and gpt-oss judges every row for it. The operator and the labellers see no judge score before they finish labelling (§ 9.1); only run-quality numbers are reported until then.
+* Why: the operator's instruction above.
+* Decided by: operator (2026-11-17).
+* Data existing at the time: `rows_full/` (13,320 generated rows), the primary altruism judgments (unseen), the pilot's judgments, no human labels.
+* Effect on results: order of work only; nothing in the scoring changes. Implementation: `scripts/judging/run_judging.py --full` and `gqt_judging.build_full_plan` (frozen fairness and generosity kinds, pairwise on the subset), launcher `scripts/run_judging_full.sh`; the exploratory-fairness path (`with_fairness`) is unchanged.
+
 ## Pending, to be recorded here before it is used
 
 * Nothing. (The "poor agreement" rule, D12, was fixed on 2026-11-03, above.)

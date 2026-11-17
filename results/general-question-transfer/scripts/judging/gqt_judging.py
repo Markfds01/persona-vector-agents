@@ -59,6 +59,15 @@ JUDGE_SEED = 0
 
 CONTROL_ARMS = ("unhooked", "unhooked_repeat")
 KINDS = ("trait", "coherence", "pairwise")
+#: the full run's kinds (DEVIATIONS 2026-11-17): the three above plus the frozen secondary rubrics.
+#: `fairness` here is the FROZEN `fairness.json`, never the exploratory one (`with_fairness`).
+FULL_KINDS = ("trait", "coherence", "pairwise", "fairness", "generosity")
+#: sha256 of the frozen templates, as pinned in provenance/freeze.md (2026-11-03 section)
+FROZEN_RUBRIC_SHA256 = {
+    "fairness_frozen": "7f4d75c3ef211be1f6adc2856577a192159c897cc4b3351c8cdf9711718d67ab",
+    "generosity": "54bf93a4aa0d2d288179151d90047daffdb2d0c0049f9d2d1b91b31d15339094",
+}
+PAIRWISE_SUBSET_FILE = PACKAGE / "provenance" / "pairwise_primary_subset.json"
 
 
 def sha256_text(text: str) -> str:
@@ -77,8 +86,24 @@ def load_templates() -> Dict[str, str]:
     start = prereg.index("The template, written once")
     a = prereg.index("```text\n", start) + len("```text\n")
     b = prereg.index("\n```", a)
+    frozen = {name: json.loads((REPO / "data_generation" / "trait_data_eval" / ("%s.json" % name))
+                               .read_text(encoding="utf-8"))["eval_prompt"]
+              for name in ("fairness", "generosity")}
     return {"trait": trait, "coherence": Prompts["coherence_0_100"], "pairwise": prereg[a:b],
-            "fairness": fairness}
+            "fairness": fairness, "fairness_frozen": frozen["fairness"], "generosity": frozen["generosity"]}
+
+
+def verify_frozen_rubrics(templates: Mapping[str, str]) -> None:
+    """Refuse to send anything if a frozen fairness / generosity template is not the pinned one."""
+    for name, expected in FROZEN_RUBRIC_SHA256.items():
+        if sha256_text(templates[name]) != expected:
+            raise ValueError("template %s does not match its sha256 in provenance/freeze.md" % name)
+
+
+def pairwise_subset() -> "set[tuple[str, int]]":
+    """The primary judge's pairwise (question_id, sample_index) pairs (provenance/pairwise_primary_subset.json)."""
+    data = json.loads(PAIRWISE_SUBSET_FILE.read_text(encoding="utf-8"))
+    return {(p["question_id"], p["sample_index"]) for p in data["pairs"]}
 
 
 def judge_configs(judge: str) -> Dict[str, "jc.JudgeConfig"]:
@@ -231,6 +256,38 @@ def build_plan(judge: str, rows: Sequence[Mapping], templates: Mapping[str, str]
     keys = [t.key for t in plan]
     if len(set(keys)) != len(keys):
         raise ValueError("duplicate judge request keys in the plan")
+    return plan
+
+
+def build_full_plan(rows: Sequence[Mapping], templates: Mapping[str, str]) -> List[Task]:
+    """The primary judge's full-run plan, every kind (DEVIATIONS 2026-11-04, 2026-11-17).
+
+    `trait` and `coherence` are `build_plan`'s, unchanged (so the altruism pass's keys and
+    payloads are reproduced); `pairwise` is restricted to the pre-registered 25% subset of
+    (question, sample) pairs (2,640 calls at 44 points); `fairness` and `generosity` are the
+    FROZEN templates on exactly the rows the trait rubric scores."""
+    verify_frozen_rubrics(templates)
+    base = build_plan("primary", rows, templates)
+    subset = pairwise_subset()
+    by_id = {r["row_id"]: r for r in rows}
+    plan: List[Task] = []
+    for t in base:
+        if t.kind == "pairwise":
+            r = by_id[t.row_id]
+            if (r["question_id"], r["sample_index"]) not in subset:
+                continue
+        plan.append(t)
+    for name, key in (("fairness", "fairness_frozen"), ("generosity", "generosity")):
+        sha = sha256_text(templates[key])
+        for t in base:
+            if t.kind != "trait":
+                continue
+            r = by_id[t.row_id]
+            plan.append(Task("%s|%s" % (r["row_id"], name), name, r["row_id"], None, None,
+                             jc.render(templates[key], r["question"], r["answer"]), sha, None, "score"))
+    keys = [t.key for t in plan]
+    if len(set(keys)) != len(keys):
+        raise ValueError("duplicate judge request keys in the full plan")
     return plan
 
 

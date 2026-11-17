@@ -312,3 +312,91 @@ def test_secondary_fairness_follows_the_same_pre_registered_subset():
     scored_heldout = [t for t in plan if t.kind == "coherence"]
     fair = [t for t in plan if t.kind == "fairness"]
     assert len(fair) == len(scored_heldout) == 5 * gj.SUBSET_SIZE
+
+
+# ---- the full run's remaining primary passes (DEVIATIONS 2026-11-17) ----
+
+ROWS_FULL = SCRIPTS.parent / "rows_full"
+
+
+@pytest.fixture(scope="module")
+def full_plan():
+    if not ROWS_FULL.exists():
+        pytest.skip("rows_full/ not present")
+    return gj.build_full_plan(gj.load_generation_rows(ROWS_FULL), TEMPLATES)
+
+
+def test_full_plan_call_counts_per_kind(full_plan):
+    from collections import Counter
+    assert Counter(t.kind for t in full_plan) == {
+        "coherence": 13080, "trait": 8040, "fairness": 8040, "generosity": 8040, "pairwise": 2640}
+
+
+def test_full_plan_reproduces_the_altruism_pass_keys_and_payloads(full_plan):
+    done = {r["key"]: r for r in gj.read_jsonl(
+        SCRIPTS.parent / "judgments" / "full" / gj.JUDGE_DIRS["primary"] / "trait.jsonl")}
+    if not done:
+        pytest.skip("no altruism judgments")
+    trait = [t for t in full_plan if t.kind == "trait"]
+    assert {t.key for t in trait} == set(done)
+    assert {t.template_sha256 for t in trait} == {r["prompt_template_sha256"] for r in done.values()}
+
+
+def test_full_plan_pairwise_is_exactly_the_preregistered_subset_in_both_orders(full_plan):
+    subset = gj.pairwise_subset()
+    assert len(subset) == 30
+    rows = {r["row_id"]: r for r in gj.load_generation_rows(ROWS_FULL)}
+    pw = [t for t in full_plan if t.kind == "pairwise"]
+    assert {(rows[t.row_id]["question_id"], rows[t.row_id]["sample_index"]) for t in pw} == subset
+    assert all(rows[t.row_id]["question_set"] == "heldout" and abs(rows[t.row_id]["k"]) == 3 for t in pw)
+    assert {t.order for t in pw} == {"baseline_first", "steered_first"}
+    assert sum(t.order == "baseline_first" for t in pw) == 1320
+    assert len({(rows[t.row_id]["arm"], rows[t.row_id]["k"]) for t in pw}) == 44
+    # the file is the secondary judge's rule, not a different subset
+    pairs = sorted({(r["question_id"], r["sample_index"]) for r in rows.values()
+                    if r["question_set"] == "heldout"})
+    assert gj.secondary_subset(pairs) == subset
+
+
+def test_full_plan_fairness_and_generosity_use_the_frozen_templates_on_the_trait_rows(full_plan):
+    trait_rows = {t.row_id for t in full_plan if t.kind == "trait"}
+    for kind, key in (("fairness", "fairness_frozen"), ("generosity", "generosity")):
+        tasks = [t for t in full_plan if t.kind == kind]
+        assert {t.row_id for t in tasks} == trait_rows
+        assert {t.template_sha256 for t in tasks} == {gj.FROZEN_RUBRIC_SHA256[key]}
+        assert all(t.config_name == "score" and t.key.endswith("|" + kind) for t in tasks)
+    fair = next(t for t in full_plan if t.kind == "fairness")
+    gen = next(t for t in full_plan if t.kind == "generosity")
+    assert "displays the trait: **fair**" in fair.prompt and "**generous**" in gen.prompt
+    assert fair.prompt != gen.prompt
+
+
+def test_frozen_rubric_hashes_are_the_freeze_record_and_not_the_exploratory_ones():
+    freeze = (SCRIPTS.parent / "provenance" / "freeze.md").read_text()
+    for key, sha in gj.FROZEN_RUBRIC_SHA256.items():
+        assert sha in freeze and gj.sha256_text(TEMPLATES[key]) == sha
+    assert TEMPLATES["fairness_frozen"] != TEMPLATES["fairness"]       # exploratory path stays separate
+    broken = dict(TEMPLATES, generosity=TEMPLATES["generosity"] + " ")
+    with pytest.raises(ValueError):
+        gj.build_full_plan([], broken)
+
+
+def test_cli_full_plan_runs_against_a_fake_server(tmp_path):
+    import os
+    server = FakeJudge(gj.SERVED_IDS["primary"])
+    try:
+        rows, out = tmp_path / "rows", tmp_path / "judgments"
+        write_rows(rows)
+        env = dict(os.environ, PIMIENTOROJO_BASE_URL=server.url)
+        base = [sys.executable, str(SCRIPTS / "judging" / "run_judging.py"), "--judge", "primary",
+                "--full", "--rows-dir", str(rows), "--out-dir", str(out), "--kinds", "generosity"]
+        run = subprocess.run(base, capture_output=True, text=True, env=env, cwd=str(SCRIPTS.parents[2]))
+        assert run.returncode == 0, run.stderr
+        written = gj.read_jsonl(out / gj.JUDGE_DIRS["primary"] / "generosity.jsonl")
+        expected = sum(t.kind == "trait" for t in gj.build_plan("primary", gj.load_generation_rows(rows), TEMPLATES))
+        assert expected > 0 and len(written) == expected == server.posts
+        assert {r["kind"] for r in written} == {"generosity"}
+        assert {r["prompt_template_sha256"] for r in written} == {gj.FROZEN_RUBRIC_SHA256["generosity"]}
+        assert not (out / gj.JUDGE_DIRS["primary"] / "fairness.jsonl").exists()
+    finally:
+        server.close()

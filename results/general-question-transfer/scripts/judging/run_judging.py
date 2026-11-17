@@ -112,7 +112,7 @@ async def resend_phase(args, plan, configs, out, run_id):
     kinds = [k for k in args.kinds.split(",") if k]
     plan = [t for t in plan if t.kind in kinds]
     rows = {}
-    for kind in gj.KINDS:
+    for kind in gj.FULL_KINDS:
         rows.update(gj.latest_by_key(gj.read_jsonl(out / ("%s.jsonl" % kind))))
     missing = [t.key for t in plan if t.key not in rows or rows[t.key]["status"] == "transport_error"]
     if missing:
@@ -159,6 +159,9 @@ def main(argv=None):
     ap.add_argument("--phase", default="judge", choices=("judge", "resend"))
     ap.add_argument("--rows-dir", required=True)
     ap.add_argument("--out-dir", required=True, help="the judgments/ root")
+    ap.add_argument("--full", action="store_true",
+                    help="primary judge's full-run plan (DEVIATIONS 2026-11-17): frozen fairness and generosity "
+                         "kinds, pairwise on the 25%% subset; no exploratory fairness")
     ap.add_argument("--kinds", default="trait,coherence,pairwise",
                     help="add 'fairness' for the exploratory fairness rubric (docs/fairness_exploratory_prereg.md)")
     args = ap.parse_args(argv)
@@ -168,8 +171,16 @@ def main(argv=None):
         raise SystemExit("no generation rows under %s" % args.rows_dir)
     templates = gj.load_templates()
     configs = gj.judge_configs(args.judge)
-    plan = gj.build_plan(args.judge, rows, templates,
-                         with_fairness="fairness" in args.kinds.split(","))
+    if args.full:
+        if args.judge != "primary":
+            raise SystemExit("--full is the primary judge's plan")
+        bad = [k for k in args.kinds.split(",") if k and k not in gj.FULL_KINDS]
+        if bad:
+            raise SystemExit("unknown kinds for --full: %s" % bad)
+        plan = gj.build_full_plan(rows, templates)
+    else:
+        plan = gj.build_plan(args.judge, rows, templates,
+                             with_fairness="fairness" in args.kinds.split(","))
     out = Path(args.out_dir) / gj.JUDGE_DIRS[args.judge]
     run_id = dt.datetime.now(dt.timezone.utc).strftime("%Y%m%dT%H%M%SZ")
     runner = judge_phase if args.phase == "judge" else resend_phase
