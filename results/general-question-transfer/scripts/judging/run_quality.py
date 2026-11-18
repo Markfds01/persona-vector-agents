@@ -1,6 +1,6 @@
 """Run-quality numbers of a judging output directory, and nothing else.
 
-    python run_quality.py judgments/full/llama-3.3-70b-instruct-q8_0
+    python run_quality.py judgments/full/llama-3.3-70b-instruct-q8_0 [kind,kind]   (default: trait)
 
 Prints calls done, status counts, the `low_mass` share, the `number_mass` distribution (all
 calls pooled), the determinism re-send match rate and the time span. It never prints a score,
@@ -17,10 +17,10 @@ def load(path):
     return [json.loads(l) for l in path.open(encoding="utf-8") if l.strip()] if path.exists() else []
 
 
-def main(directory):
+def main(directory, kinds=("trait",)):
     d = Path(directory)
     out = {}
-    for kind in ("trait",):
+    for kind in kinds:
         rows = {r["key"]: r for r in load(d / ("%s.jsonl" % kind))}.values()
         rows = list(rows)
         masses = sorted(r["detail"]["number_mass"] for r in rows if r.get("detail") and "number_mass" in r["detail"])
@@ -44,4 +44,4 @@ def main(directory):
 
 
 if __name__ == "__main__":
-    main(sys.argv[1])
+    main(sys.argv[1], tuple(sys.argv[2].split(",")) if len(sys.argv) > 2 else ("trait",))

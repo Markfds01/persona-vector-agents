@@ -1,0 +1,4 @@
+ok: freeze record reproduces
+=== judging 2026-11-18T06:31:18Z: judge=primary phase=judge kinds=fairness (full run)
+primary: 8040 calls planned for kinds ['fairness'], 0 done, 8040 to send
+  50/8040 sent, 4.37 s/call
