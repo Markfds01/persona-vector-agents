@@ -150,3 +150,18 @@ primary: 8040 calls planned for kinds ['fairness'], 0 done, 8040 to send
   7350/8040 sent, 4.52 s/call
   7400/8040 sent, 4.52 s/call
   7450/8040 sent, 4.52 s/call
+  7500/8040 sent, 4.52 s/call
+  7550/8040 sent, 4.52 s/call
+  7600/8040 sent, 4.52 s/call
+  7650/8040 sent, 4.52 s/call
+  7700/8040 sent, 4.52 s/call
+  7750/8040 sent, 4.52 s/call
+  7800/8040 sent, 4.52 s/call
+  7850/8040 sent, 4.52 s/call
+  7900/8040 sent, 4.52 s/call
+  7950/8040 sent, 4.52 s/call
+  8000/8040 sent, 4.52 s/call
+  8040/8040 sent, 4.52 s/call
+=== judging 2026-11-18T16:37:27Z: judge=primary phase=resend kinds=fairness (full run)
+primary: re-sending 402 of 8039 distinct payloads (0 already done)
+=== COMPLETE fairness 2026-11-18T17:08:03Z
