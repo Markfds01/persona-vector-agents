@@ -231,3 +231,37 @@ primary: 13080 calls planned for kinds ['coherence'], 0 done, 13080 to send
   11400/13080 sent, 3.35 s/call
   11450/13080 sent, 3.35 s/call
   11500/13080 sent, 3.35 s/call
+  11550/13080 sent, 3.35 s/call
+  11600/13080 sent, 3.35 s/call
+  11650/13080 sent, 3.35 s/call
+  11700/13080 sent, 3.35 s/call
+  11750/13080 sent, 3.35 s/call
+  11800/13080 sent, 3.35 s/call
+  11850/13080 sent, 3.35 s/call
+  11900/13080 sent, 3.35 s/call
+  11950/13080 sent, 3.35 s/call
+  12000/13080 sent, 3.35 s/call
+  12050/13080 sent, 3.35 s/call
+  12100/13080 sent, 3.35 s/call
+  12150/13080 sent, 3.35 s/call
+  12200/13080 sent, 3.35 s/call
+  12250/13080 sent, 3.35 s/call
+  12300/13080 sent, 3.35 s/call
+  12350/13080 sent, 3.35 s/call
+  12400/13080 sent, 3.35 s/call
+  12450/13080 sent, 3.35 s/call
+  12500/13080 sent, 3.35 s/call
+  12550/13080 sent, 3.35 s/call
+  12600/13080 sent, 3.35 s/call
+  12650/13080 sent, 3.35 s/call
+  12700/13080 sent, 3.35 s/call
+  12750/13080 sent, 3.35 s/call
+  12800/13080 sent, 3.35 s/call
+  12850/13080 sent, 3.35 s/call
+  12900/13080 sent, 3.35 s/call
+  12950/13080 sent, 3.35 s/call
+  13000/13080 sent, 3.35 s/call
+  13050/13080 sent, 3.35 s/call
+  13080/13080 sent, 3.35 s/call
+=== judging 2026-11-17T23:49:09Z: judge=primary phase=resend kinds=coherence (full run)
+primary: re-sending 647 of 12932 distinct payloads (0 already done)
