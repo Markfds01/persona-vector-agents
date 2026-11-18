@@ -36,3 +36,24 @@ primary: 2640 calls planned for kinds ['pairwise'], 0 done, 2640 to send
   1650/2640 sent, 7.71 s/call
   1700/2640 sent, 7.71 s/call
   1750/2640 sent, 7.71 s/call
+  1800/2640 sent, 7.72 s/call
+  1850/2640 sent, 7.72 s/call
+  1900/2640 sent, 7.73 s/call
+  1950/2640 sent, 7.73 s/call
+  2000/2640 sent, 7.73 s/call
+  2050/2640 sent, 7.72 s/call
+  2100/2640 sent, 7.72 s/call
+  2150/2640 sent, 7.72 s/call
+  2200/2640 sent, 7.73 s/call
+  2250/2640 sent, 7.73 s/call
+  2300/2640 sent, 7.72 s/call
+  2350/2640 sent, 7.72 s/call
+  2400/2640 sent, 7.72 s/call
+  2450/2640 sent, 7.71 s/call
+  2500/2640 sent, 7.72 s/call
+  2550/2640 sent, 7.72 s/call
+  2600/2640 sent, 7.72 s/call
+  2640/2640 sent, 7.72 s/call
+=== judging 2026-11-18T06:06:16Z: judge=primary phase=resend kinds=pairwise (full run)
+primary: re-sending 132 of 2640 distinct payloads (0 already done)
+=== COMPLETE pairwise 2026-11-18T06:22:41Z
