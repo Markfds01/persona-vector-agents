@@ -265,3 +265,4 @@ primary: 13080 calls planned for kinds ['coherence'], 0 done, 13080 to send
   13080/13080 sent, 3.35 s/call
 === judging 2026-11-17T23:49:09Z: judge=primary phase=resend kinds=coherence (full run)
 primary: re-sending 647 of 12932 distinct payloads (0 already done)
+=== COMPLETE coherence 2026-11-18T00:26:25Z

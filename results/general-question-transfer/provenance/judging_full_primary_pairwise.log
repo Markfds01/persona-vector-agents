@@ -1,0 +1,20 @@
+ok: freeze record reproduces
+=== judging 2026-11-18T00:26:25Z: judge=primary phase=judge kinds=pairwise (full run)
+primary: 2640 calls planned for kinds ['pairwise'], 0 done, 2640 to send
+  50/2640 sent, 7.59 s/call
+  100/2640 sent, 7.71 s/call
+  150/2640 sent, 7.77 s/call
+  200/2640 sent, 7.68 s/call
+  250/2640 sent, 7.62 s/call
+  300/2640 sent, 7.67 s/call
+  350/2640 sent, 7.71 s/call
+  400/2640 sent, 7.67 s/call
+  450/2640 sent, 7.64 s/call
+  500/2640 sent, 7.64 s/call
+  550/2640 sent, 7.66 s/call
+  600/2640 sent, 7.68 s/call
+  650/2640 sent, 7.69 s/call
+  700/2640 sent, 7.71 s/call
+  750/2640 sent, 7.72 s/call
+  800/2640 sent, 7.71 s/call
+  850/2640 sent, 7.70 s/call
