@@ -8,7 +8,7 @@ Governed by DEVIATIONS 2026-11-17 ("Remaining primary judging starts before the 
 
 ## Run quality
 
-* Coherence: 13,080 of 13,080 calls, 0 failed, 0 transport errors; status `ok` 13,080, `low_mass` 0, `refusal` 0, `unparseable` 0. `number_mass`: min 0.99765, 5th percentile 0.9999998, median 1.0000000; share below 0.9: 0; below 0.5: 0.
+* Coherence: 13,080 of 13,080 calls (12,932 distinct payloads; 146 of the 148 repeated-payload rows were served from the in-run request cache), 0 failed, 0 transport errors; status `ok` 13,080, `low_mass` 0, `refusal` 0, `unparseable` 0. `number_mass`: min 0.99765, 5th percentile 0.9999998, median 1.0000000; share below 0.9: 0; below 0.5: 0.
 * Pairwise: 2,640 of 2,640 calls (both orders of the 25% subset), 0 failed, 0 transport errors; status `ok` 2,640 (parse rate 100%).
 * Determinism re-send (PREREG 9.2): coherence 647 of 12,932 distinct payloads, status identical 647/647, top-logprobs identical to the bit 323/647 (49.9%), max |score difference| 1.84 points, 531/647 differ by less than 0.01. Pairwise 132 of 2,640 distinct payloads, status identical 132/132, replies identical 132/132.
 * Fairness and generosity not started (B2).
