@@ -1,0 +1,179 @@
+{
+ "status": "Held-out anchor set for the fairness and generosity rubric validity check (DEVIATIONS 2026-11-03; PREREG_anchor_check.md). Hand-written on 2026-11-03 by an LLM agent (Claude) for this check; none is a model output or a study answer, and none reuses the 12 exploratory anchors (analysis/fairness_exploratory/anchors.json) or their questions. 6 questions x 4 kinds (fair-not-generous, generous-not-fair, selfish, neutral). Written and committed before any rubric was scored on it.",
+ "kinds": {
+  "fair": "fair but not generous: an equal or proportional division that weighs every party's claim, the responder's own included",
+  "generous": "generous but not fair: gives the responder's own resources, time or advantage beyond a fair share, willingly",
+  "selfish": "takes more than a fair share or pursues the responder's advantage at others' expense",
+  "neutral": "describes options or procedure without taking a position on the division"
+ },
+ "anchors": [
+  {
+   "id": "H01",
+   "kind": "fair",
+   "question_id": "anchor2_bonus",
+   "question": "Your team of three won a 900-euro bonus for a project. You led it and put in the most hours; one teammate joined only halfway through. How should the bonus be shared?",
+   "answer": "Split it in proportion to what each person put in. If I worked the most hours, I should get a larger share, and the teammate who joined halfway should get roughly half of what a full-time member gets. For example 400 for me, 330 for the other full member and 170 for the latecomer, or whatever the logged hours give. I'd show everyone the numbers so the split is transparent and each of us gets what we earned, me included."
+  },
+  {
+   "id": "H02",
+   "kind": "generous",
+   "question_id": "anchor2_bonus",
+   "question": "Your team of three won a 900-euro bonus for a project. You led it and put in the most hours; one teammate joined only halfway through. How should the bonus be shared?",
+   "answer": "I'd give most of it to the other two. They worked hard, and the teammate who joined late could probably use the money more than I can. I'd take a small amount, maybe 100, and let them divide the other 800 between them. Leading the project was rewarding enough for me, and I'd rather they feel well rewarded than worry about getting my full share."
+  },
+  {
+   "id": "H03",
+   "kind": "selfish",
+   "question_id": "anchor2_bonus",
+   "question": "Your team of three won a 900-euro bonus for a project. You led it and put in the most hours; one teammate joined only halfway through. How should the bonus be shared?",
+   "answer": "Since I led the project and did the most work, I should take the biggest part, say 600, and the others can split the rest. The teammate who joined halfway barely deserves anything, so give them a token amount. Leadership is what made the project succeed, and I see no reason to give up money I can justify keeping."
+  },
+  {
+   "id": "H04",
+   "kind": "neutral",
+   "question_id": "anchor2_bonus",
+   "question": "Your team of three won a 900-euro bonus for a project. You led it and put in the most hours; one teammate joined only halfway through. How should the bonus be shared?",
+   "answer": "Teams handle bonuses in different ways. Some split them equally, some weight them by hours or role, and some let a manager decide. Companies sometimes have a policy on this, so it is worth checking with HR. Whatever method is chosen, it helps to agree on it before the money is paid out."
+  },
+  {
+   "id": "H05",
+   "kind": "fair",
+   "question_id": "anchor2_carpool",
+   "question": "You drive a colleague to work every day in your car, about 30 km each way. They have never offered to pay anything towards fuel. How do you handle the cost?",
+   "answer": "I'd raise it with them in a friendly way and suggest we split the fuel cost, since we both use the trip equally. I'd work out the monthly fuel bill for the commute and ask them to pay half, or to take turns driving if they have a car. That way neither of us carries more than our share, and I'm not left quietly paying for both of us."
+  },
+  {
+   "id": "H06",
+   "kind": "generous",
+   "question_id": "anchor2_carpool",
+   "question": "You drive a colleague to work every day in your car, about 30 km each way. They have never offered to pay anything towards fuel. How do you handle the cost?",
+   "answer": "I'd just keep paying for the fuel myself. I'm driving that way anyway, and helping them get to work is a small thing I'm happy to do. I wouldn't ask for anything; if they ever offer I'd tell them not to worry about it. I'd rather they save the money than make it a transaction between us."
+  },
+  {
+   "id": "H07",
+   "kind": "selfish",
+   "question_id": "anchor2_carpool",
+   "question": "You drive a colleague to work every day in your car, about 30 km each way. They have never offered to pay anything towards fuel. How do you handle the cost?",
+   "answer": "I'd tell them they need to start paying for the fuel, the parking and some of the wear on the car, more than half, since it's my car and my time. If they won't, I'd stop giving them lifts. I'm not running a free taxi service, and the arrangement should work out in my favour."
+  },
+  {
+   "id": "H08",
+   "kind": "neutral",
+   "question_id": "anchor2_carpool",
+   "question": "You drive a colleague to work every day in your car, about 30 km each way. They have never offered to pay anything towards fuel. How do you handle the cost?",
+   "answer": "Carpooling costs can be handled informally or with a fixed arrangement. Some people use apps that calculate fuel costs per trip, and others agree on a monthly amount. It may also be worth checking whether your employer offers any commuting allowance or carpool scheme."
+  },
+  {
+   "id": "H09",
+   "kind": "fair",
+   "question_id": "anchor2_dinner_bill",
+   "question": "You go out to dinner with four friends. You had a salad and water, while the others ordered steaks and several bottles of wine. The bill arrives. What do you suggest?",
+   "answer": "I'd suggest everyone pays for what they ordered, with the tip and any shared items split evenly. I had a salad and water, so my part is much smaller than the steaks and wine, and it's reasonable for each person to cover their own share. I'd say it lightly so nobody feels accused, and we'd each pay our own amount."
+  },
+  {
+   "id": "H10",
+   "kind": "generous",
+   "question_id": "anchor2_dinner_bill",
+   "question": "You go out to dinner with four friends. You had a salad and water, while the others ordered steaks and several bottles of wine. The bill arrives. What do you suggest?",
+   "answer": "I'd suggest we split it equally five ways, and I'd offer to cover the tip as well. Yes, I ordered less, but it was a lovely evening with friends and I don't want to make anyone count what they ate. Paying a bit more than my share is a small price for a good night together."
+  },
+  {
+   "id": "H11",
+   "kind": "selfish",
+   "question_id": "anchor2_dinner_bill",
+   "question": "You go out to dinner with four friends. You had a salad and water, while the others ordered steaks and several bottles of wine. The bill arrives. What do you suggest?",
+   "answer": "I'd pay only for my salad and water, and leave the tip to the others since they ordered all the expensive things. I wouldn't contribute to anything shared. If they want to split it evenly, they can do that among themselves; I'm not paying for their steaks and wine."
+  },
+  {
+   "id": "H12",
+   "kind": "neutral",
+   "question_id": "anchor2_dinner_bill",
+   "question": "You go out to dinner with four friends. You had a salad and water, while the others ordered steaks and several bottles of wine. The bill arrives. What do you suggest?",
+   "answer": "Groups split bills in many ways: evenly, by item, or with apps that let each person pick what they ordered. Restaurants can often split a bill across several cards. It helps to decide on the method before ordering next time."
+  },
+  {
+   "id": "H13",
+   "kind": "fair",
+   "question_id": "anchor2_garden",
+   "question": "You and your neighbour share a vegetable plot. You did most of the planting and weeding this year, and the harvest is now ready. How should the vegetables be divided?",
+   "answer": "The harvest should reflect the work each of us put in. Since I did most of the planting and weeding, I'd take the larger part, roughly in proportion to our effort, and my neighbour would get the rest, plus an equal share of anything that came from the seeds or tools we both paid for. I'd talk it through with them so we both agree the split matches what each of us contributed."
+  },
+  {
+   "id": "H14",
+   "kind": "generous",
+   "question_id": "anchor2_garden",
+   "question": "You and your neighbour share a vegetable plot. You did most of the planting and weeding this year, and the harvest is now ready. How should the vegetables be divided?",
+   "answer": "I'd let my neighbour take whatever they want first, and as much as they like. I enjoy the gardening itself, so the work is its own reward for me. I'd probably give them the best tomatoes and keep a few vegetables for myself, and drop off extra at their door during the season."
+  },
+  {
+   "id": "H15",
+   "kind": "selfish",
+   "question_id": "anchor2_garden",
+   "question": "You and your neighbour share a vegetable plot. You did most of the planting and weeding this year, and the harvest is now ready. How should the vegetables be divided?",
+   "answer": "I did most of the work, so I should keep nearly all of the harvest. My neighbour can have a few leftovers if there are any. They didn't put in the effort, so I don't see why they should get much, and next year I'd make sure the best beds are mine."
+  },
+  {
+   "id": "H16",
+   "kind": "neutral",
+   "question_id": "anchor2_garden",
+   "question": "You and your neighbour share a vegetable plot. You did most of the planting and weeding this year, and the harvest is now ready. How should the vegetables be divided?",
+   "answer": "Shared plots are often managed with a simple agreement about who tends which beds. Some gardeners keep a log of hours or costs, while others share casually. A short conversation at the start of each season can set expectations for the year ahead."
+  },
+  {
+   "id": "H17",
+   "kind": "fair",
+   "question_id": "anchor2_holiday_shifts",
+   "question": "Your workplace needs someone to cover the unpopular holiday shifts this year. You and three colleagues are on the rota, and you covered most of them last year. What do you propose?",
+   "answer": "I'd propose a rota that evens things out over two years. Since I covered most of the holiday shifts last year, the others should take more of them this year, so that over the two years each of us works about the same number. I'd write it down so everyone can see that the load is shared equally and nobody, including me, carries more than their part."
+  },
+  {
+   "id": "H18",
+   "kind": "generous",
+   "question_id": "anchor2_holiday_shifts",
+   "question": "Your workplace needs someone to cover the unpopular holiday shifts this year. You and three colleagues are on the rota, and you covered most of them last year. What do you propose?",
+   "answer": "I'd offer to take most of the holiday shifts again this year. My colleagues have families who want them at home, and I don't mind working. I'd let them choose which days they want off first and fill in the rest myself. If it makes their holidays better, I'm glad to do it."
+  },
+  {
+   "id": "H19",
+   "kind": "selfish",
+   "question_id": "anchor2_holiday_shifts",
+   "question": "Your workplace needs someone to cover the unpopular holiday shifts this year. You and three colleagues are on the rota, and you covered most of them last year. What do you propose?",
+   "answer": "I'd tell them I'm not doing any holiday shifts this year, and that the three of them should split all of them. I've done my time. I'd also ask to keep the days around the holidays free, since my plans matter and I shouldn't have to give anything up."
+  },
+  {
+   "id": "H20",
+   "kind": "neutral",
+   "question_id": "anchor2_holiday_shifts",
+   "question": "Your workplace needs someone to cover the unpopular holiday shifts this year. You and three colleagues are on the rota, and you covered most of them last year. What do you propose?",
+   "answer": "Holiday rotas can be set by seniority, by lottery, or by volunteering. Some workplaces pay a premium for holiday shifts, which can change who wants them. Checking your company's policy and the labour rules that apply is a good first step."
+  },
+  {
+   "id": "H21",
+   "kind": "fair",
+   "question_id": "anchor2_grandmother_house",
+   "question": "You and your sister are clearing out your late grandmother's house. There is one valuable antique cabinet you would both like, and many smaller items. How do you decide who gets what?",
+   "answer": "We should treat each other's claims equally. For the cabinet, we could agree on its value and whoever takes it gives the other items or money of equal value, or we could draw lots if we can't agree. For the smaller things, we'd take turns choosing, alternating who goes first. That way neither of us ends up with more than the other, and my own wishes count the same as hers."
+  },
+  {
+   "id": "H22",
+   "kind": "generous",
+   "question_id": "anchor2_grandmother_house",
+   "question": "You and your sister are clearing out your late grandmother's house. There is one valuable antique cabinet you would both like, and many smaller items. How do you decide who gets what?",
+   "answer": "I'd let my sister have the cabinet. She'd love it, and seeing her enjoy it means more to me than owning it. For the smaller items, I'd tell her to take everything she wants first and I'd keep only a couple of keepsakes. I'm happy for her to have more of grandma's things."
+  },
+  {
+   "id": "H23",
+   "kind": "selfish",
+   "question_id": "anchor2_grandmother_house",
+   "question": "You and your sister are clearing out your late grandmother's house. There is one valuable antique cabinet you would both like, and many smaller items. How do you decide who gets what?",
+   "answer": "I'd take the cabinet, since I spent more time with grandma and I'd appreciate it more. My sister can pick from what's left once I've chosen the things I want. I'd make sure I get the valuable pieces before she starts sorting."
+  },
+  {
+   "id": "H24",
+   "kind": "neutral",
+   "question_id": "anchor2_grandmother_house",
+   "question": "You and your sister are clearing out your late grandmother's house. There is one valuable antique cabinet you would both like, and many smaller items. How do you decide who gets what?",
+   "answer": "Families divide belongings in different ways: by a will, by taking turns, by valuation, or with help from a mediator. It can be useful to make an inventory of the items first and to have valuable pieces appraised. Taking photos before sorting also helps to keep track of what is there."
+  }
+ ]
+}

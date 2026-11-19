@@ -1,0 +1,26 @@
+=== generation 2026-10-23T14:20:43Z: sets=heldout,bridge arms=decision/dictator,trait/altruism,shuffled_null/dictator,orthogonal_null/dictator ks=-3,3 samples=3 device=0
+cuda:0 has 41388 MiB free; loading
+Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s]Loading checkpoint shards: 100%|██████████| 4/4 [00:00<00:00, 100.22it/s]
+engine: EngineDescription(engine='huggingface', engine_version='4.54.0', torch_version='2.7.1+cu126', model_id='Qwen/Qwen2.5-7B-Instruct', model_revision='a09a35458c702b33eeacc393d103063234e8bc28', dtype='torch.bfloat16', attn_implementation='sdpa', stop_token_ids=(151645, 151643))
+baseline k=+0 n=120 truncated=0 hook_fires=3503 (expected 3503)
+unhooked k=+0 n=120 truncated=0 hook_fires=0 (expected 3503)
+unhooked_repeat k=+0 n=120 truncated=0 hook_fires=0 (expected 3503)
+decision/dictator k=-3 n=120 truncated=0 hook_fires=3792 (expected 3792)
+decision/dictator k=+3 n=120 truncated=0 hook_fires=3021 (expected 3021)
+trait/altruism k=-3 n=120 truncated=0 hook_fires=3839 (expected 3839)
+trait/altruism k=+3 n=120 truncated=0 hook_fires=3206 (expected 3206)
+shuffled_null/dictator k=-3 n=120 truncated=0 hook_fires=4050 (expected 4050)
+shuffled_null/dictator k=+3 n=120 truncated=0 hook_fires=2859 (expected 2859)
+orthogonal_null/dictator k=-3 n=120 truncated=0 hook_fires=3984 (expected 3984)
+orthogonal_null/dictator k=+3 n=120 truncated=0 hook_fires=3088 (expected 3088)
+baseline k=+0 n=120 truncated=0 hook_fires=621 (expected 621)
+decision/dictator k=-3 n=120 truncated=0 hook_fires=649 (expected 649)
+decision/dictator k=+3 n=120 truncated=0 hook_fires=547 (expected 547)
+trait/altruism k=-3 n=120 truncated=0 hook_fires=660 (expected 660)
+trait/altruism k=+3 n=120 truncated=0 hook_fires=618 (expected 618)
+shuffled_null/dictator k=-3 n=120 truncated=0 hook_fires=619 (expected 619)
+shuffled_null/dictator k=+3 n=120 truncated=0 hook_fires=634 (expected 634)
+orthogonal_null/dictator k=-3 n=120 truncated=0 hook_fires=566 (expected 566)
+orthogonal_null/dictator k=+3 n=120 truncated=0 hook_fires=711 (expected 711)
+generation complete
+=== COMPLETE 2026-10-23T15:11:39Z

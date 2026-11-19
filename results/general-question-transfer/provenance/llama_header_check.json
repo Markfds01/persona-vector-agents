@@ -1,0 +1,44 @@
+{
+ "what": "PREREG section 11 Llama header check: the header as the PimientoRojo llama-server renders it",
+ "checked": "2026-11-03T11:19:42+00:00",
+ "server_build_info": "b11836-f5027fb21",
+ "server_model_path": "models/Llama-3.3-70B-Instruct-Q8_0-00001-of-00002.gguf",
+ "server_chat_template_sha256": "93c0e9aa3629bbd77e68dbc0f5621f6e6b23aa8d74b932595cdb8d64684526d7",
+ "chat_template_kwargs": {
+  "date_string": "23 Oct 2026"
+ },
+ "served_header": "<|start_header_id|>system<|end_header_id|>\n\nCutting Knowledge Date: December 2023\nToday Date: 23 Oct 2026\n\n<|eot_id|>",
+ "served_header_sha256": "5923dabeef9e437608744c3e7efd883d59859a80a135cf7962d4b814fa229a54",
+ "freeze_md_header_sha256": "5923dabeef9e437608744c3e7efd883d59859a80a135cf7962d4b814fa229a54",
+ "header_matches_freeze_md": true,
+ "header_plus_template": {
+  "trait": {
+   "recorded": "0f6058e93f3274e51a9e42fa46544c0f0b430ee984d6a7707b0e79560fd4a099",
+   "served": "0f6058e93f3274e51a9e42fa46544c0f0b430ee984d6a7707b0e79560fd4a099",
+   "matches": true
+  },
+  "coherence": {
+   "recorded": "ff586643b7bb7415f8e05e33f8d3abae44c3d89230d2ce809bade01b1a517f0e",
+   "served": "ff586643b7bb7415f8e05e33f8d3abae44c3d89230d2ce809bade01b1a517f0e",
+   "matches": true
+  },
+  "pairwise": {
+   "recorded": "20a2415e52b623c17d6376532b2dfbe4a023225161b40b8658b89fb3b8276bf0",
+   "served": "20a2415e52b623c17d6376532b2dfbe4a023225161b40b8658b89fb3b8276bf0",
+   "matches": true
+  },
+  "fairness": {
+   "recorded": "47a627142250a6c34543bbc82b6bf51c0687b573be6d15bc38527d6a789f6708",
+   "served": "47a627142250a6c34543bbc82b6bf51c0687b573be6d15bc38527d6a789f6708",
+   "matches": true
+  },
+  "generosity": {
+   "recorded": "f14d02343747fa699070fea07d217405b32489a022fdb16674c6f38d7ce9f5f8",
+   "served": "f14d02343747fa699070fea07d217405b32489a022fdb16674c6f38d7ce9f5f8",
+   "matches": true
+  }
+ },
+ "default_header_without_date_string": "<|start_header_id|>system<|end_header_id|>\n\nCutting Knowledge Date: December 2023\nToday Date: 03 Nov 2026\n\n<|eot_id|>",
+ "user_turn_after_header": "<|start_header_id|>user<|end_header_id|>\n\nX<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n\n",
+ "all_match": true
+}

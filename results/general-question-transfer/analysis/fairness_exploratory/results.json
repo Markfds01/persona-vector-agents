@@ -1,0 +1,753 @@
+{
+ "status": "EXPLORATORY (docs/fairness_exploratory_prereg.md)",
+ "points": {
+  "primary": [
+   {
+    "point": "base",
+    "rows": 120,
+    "F_ok": 120,
+    "A_ok": 120,
+    "analysed": 120,
+    "F_mean": 85.17,
+    "A_mean": 84.42,
+    "F_refusals": 0
+   },
+   {
+    "point": "D-3",
+    "rows": 120,
+    "F_ok": 120,
+    "A_ok": 120,
+    "analysed": 116,
+    "F_mean": 83.42,
+    "A_mean": 77.54,
+    "F_refusals": 0
+   },
+   {
+    "point": "D+3",
+    "rows": 120,
+    "F_ok": 120,
+    "A_ok": 120,
+    "analysed": 118,
+    "F_mean": 86.92,
+    "A_mean": 85.58,
+    "F_refusals": 0
+   },
+   {
+    "point": "T-3",
+    "rows": 120,
+    "F_ok": 120,
+    "A_ok": 120,
+    "analysed": 120,
+    "F_mean": 81.83,
+    "A_mean": 63.58,
+    "F_refusals": 0
+   },
+   {
+    "point": "T+3",
+    "rows": 120,
+    "F_ok": 120,
+    "A_ok": 120,
+    "analysed": 114,
+    "F_mean": 58.78,
+    "A_mean": 94.42,
+    "F_refusals": 0
+   },
+   {
+    "point": "S-3",
+    "rows": 120,
+    "F_ok": 120,
+    "A_ok": 120,
+    "analysed": 120,
+    "F_mean": 86.13,
+    "A_mean": 85.66,
+    "F_refusals": 0
+   },
+   {
+    "point": "S+3",
+    "rows": 120,
+    "F_ok": 120,
+    "A_ok": 120,
+    "analysed": 120,
+    "F_mean": 85.86,
+    "A_mean": 84.58,
+    "F_refusals": 0
+   },
+   {
+    "point": "O-3",
+    "rows": 120,
+    "F_ok": 120,
+    "A_ok": 120,
+    "analysed": 120,
+    "F_mean": 86.14,
+    "A_mean": 84.77,
+    "F_refusals": 0
+   },
+   {
+    "point": "O+3",
+    "rows": 120,
+    "F_ok": 120,
+    "A_ok": 120,
+    "analysed": 120,
+    "F_mean": 85.94,
+    "A_mean": 83.85,
+    "F_refusals": 0
+   }
+  ],
+  "secondary": [
+   {
+    "point": "base",
+    "rows": 30,
+    "F_ok": 30,
+    "A_ok": 30,
+    "analysed": 30,
+    "F_mean": 67.33,
+    "A_mean": 67.5,
+    "F_refusals": 0
+   },
+   {
+    "point": "D-3",
+    "rows": 30,
+    "F_ok": 30,
+    "A_ok": 30,
+    "analysed": 30,
+    "F_mean": 64.67,
+    "A_mean": 60.33,
+    "F_refusals": 0
+   },
+   {
+    "point": "D+3",
+    "rows": 30,
+    "F_ok": 30,
+    "A_ok": 30,
+    "analysed": 30,
+    "F_mean": 72.17,
+    "A_mean": 66.0,
+    "F_refusals": 0
+   },
+   {
+    "point": "T-3",
+    "rows": 30,
+    "F_ok": 30,
+    "A_ok": 30,
+    "analysed": 30,
+    "F_mean": 70.33,
+    "A_mean": 37.0,
+    "F_refusals": 0
+   },
+   {
+    "point": "T+3",
+    "rows": 30,
+    "F_ok": 30,
+    "A_ok": 30,
+    "analysed": 30,
+    "F_mean": 44.67,
+    "A_mean": 79.33,
+    "F_refusals": 0
+   },
+   {
+    "point": "S-3",
+    "rows": 30,
+    "F_ok": 30,
+    "A_ok": 30,
+    "analysed": 30,
+    "F_mean": 67.67,
+    "A_mean": 69.0,
+    "F_refusals": 0
+   },
+   {
+    "point": "S+3",
+    "rows": 30,
+    "F_ok": 30,
+    "A_ok": 30,
+    "analysed": 30,
+    "F_mean": 66.5,
+    "A_mean": 72.5,
+    "F_refusals": 0
+   },
+   {
+    "point": "O-3",
+    "rows": 30,
+    "F_ok": 30,
+    "A_ok": 30,
+    "analysed": 30,
+    "F_mean": 69.17,
+    "A_mean": 61.33,
+    "F_refusals": 0
+   },
+   {
+    "point": "O+3",
+    "rows": 30,
+    "F_ok": 30,
+    "A_ok": 30,
+    "analysed": 30,
+    "F_mean": 67.0,
+    "A_mean": 71.17,
+    "F_refusals": 0
+   }
+  ]
+ },
+ "contrasts": {
+  "primary": {
+   "a1: F(D+3)-F(base)": {
+    "estimate": 1.751840577468418,
+    "lo": -1.9545571546566602,
+    "hi": 6.21405834667184,
+    "n_questions": 40,
+    "n_rows": 238,
+    "n_boot": 10000,
+    "seed": 20261028,
+    "estimator": "question_clustered_bootstrap",
+    "verdict": "descriptive"
+   },
+   "a2: F(D+3)-F(T+3)  [P1]": {
+    "estimate": 28.34540084851266,
+    "lo": 19.028471599526142,
+    "hi": 38.16836233496229,
+    "n_questions": 40,
+    "n_rows": 232,
+    "n_boot": 10000,
+    "seed": 20261028,
+    "estimator": "question_clustered_bootstrap",
+    "verdict": "supported"
+   },
+   "a2 at -3: F(D-3)-F(T-3)": {
+    "estimate": 1.2792433978169186,
+    "lo": -4.753334472214445,
+    "hi": 7.644572516555376,
+    "n_questions": 40,
+    "n_rows": 236,
+    "n_boot": 10000,
+    "seed": 20261028,
+    "estimator": "question_clustered_bootstrap",
+    "verdict": "descriptive"
+   },
+   "F(D+3)-F(S+3)": {
+    "estimate": 1.059221516446512,
+    "lo": -1.4125214959349885,
+    "hi": 3.1797171944971585,
+    "n_questions": 40,
+    "n_rows": 238,
+    "n_boot": 10000,
+    "seed": 20261028,
+    "estimator": "question_clustered_bootstrap",
+    "verdict": "descriptive"
+   },
+   "F(D+3)-F(O+3)": {
+    "estimate": 0.9840385197099749,
+    "lo": -1.0006361822674132,
+    "hi": 2.802924467011684,
+    "n_questions": 40,
+    "n_rows": 238,
+    "n_boot": 10000,
+    "seed": 20261028,
+    "estimator": "question_clustered_bootstrap",
+    "verdict": "descriptive"
+   },
+   "F(D-3)-F(S-3)": {
+    "estimate": -3.0187668717176406,
+    "lo": -7.906176248286687,
+    "hi": 1.4320150772468252,
+    "n_questions": 40,
+    "n_rows": 236,
+    "n_boot": 10000,
+    "seed": 20261028,
+    "estimator": "question_clustered_bootstrap",
+    "verdict": "descriptive"
+   },
+   "F(D-3)-F(O-3)": {
+    "estimate": -3.0308689030169,
+    "lo": -8.369678070472474,
+    "hi": 1.9249629685451657,
+    "n_questions": 40,
+    "n_rows": 236,
+    "n_boot": 10000,
+    "seed": 20261028,
+    "estimator": "question_clustered_bootstrap",
+    "verdict": "descriptive"
+   },
+   "A(D+3)-A(base)": {
+    "estimate": 1.173599575899884,
+    "lo": -2.5582678551634506,
+    "hi": 6.105840305491254,
+    "n_questions": 40,
+    "n_rows": 238,
+    "n_boot": 10000,
+    "seed": 20261028,
+    "estimator": "question_clustered_bootstrap",
+    "verdict": "descriptive"
+   },
+   "A(D+3)-A(T+3)  [P2]": {
+    "estimate": -8.3574049166029,
+    "lo": -11.572379170124089,
+    "hi": -4.236076051536629,
+    "n_questions": 40,
+    "n_rows": 232,
+    "n_boot": 10000,
+    "seed": 20261028,
+    "estimator": "question_clustered_bootstrap",
+    "verdict": "supported"
+   },
+   "A(D-3)-A(T-3)": {
+    "estimate": 14.404992233258469,
+    "lo": 6.837130282578236,
+    "hi": 22.1244427508088,
+    "n_questions": 40,
+    "n_rows": 236,
+    "n_boot": 10000,
+    "seed": 20261028,
+    "estimator": "question_clustered_bootstrap",
+    "verdict": "descriptive"
+   },
+   "b1 interaction +3 vs T  [P3]": {
+    "estimate": 36.70280576511556,
+    "lo": 26.405347305297248,
+    "hi": 47.14013563466348,
+    "n_questions": 40,
+    "n_rows": 232,
+    "n_boot": 10000,
+    "seed": 20261028,
+    "estimator": "question_clustered_bootstrap",
+    "verdict": "supported"
+   },
+   "c1 interaction -3 vs T": {
+    "estimate": -13.125748835441547,
+    "lo": -20.88580903668354,
+    "hi": -5.76580175350407,
+    "n_questions": 40,
+    "n_rows": 236,
+    "n_boot": 10000,
+    "seed": 20261028,
+    "estimator": "question_clustered_bootstrap",
+    "verdict": "descriptive"
+   },
+   "c2 interaction +3 vs S": {
+    "estimate": 0.04942833801946254,
+    "lo": -2.6570303824227333,
+    "hi": 2.7000879459482703,
+    "n_questions": 40,
+    "n_rows": 238,
+    "n_boot": 10000,
+    "seed": 20261028,
+    "estimator": "question_clustered_bootstrap",
+    "verdict": "descriptive"
+   },
+   "c3 interaction +3 vs O": {
+    "estimate": -0.759553480688394,
+    "lo": -3.71745352096852,
+    "hi": 2.164518155741375,
+    "n_questions": 40,
+    "n_rows": 238,
+    "n_boot": 10000,
+    "seed": 20261028,
+    "estimator": "question_clustered_bootstrap",
+    "verdict": "descriptive"
+   },
+   "c4 interaction -3 vs S": {
+    "estimate": 4.658055682330646,
+    "lo": -1.889422250291255,
+    "hi": 11.399653649300973,
+    "n_questions": 40,
+    "n_rows": 236,
+    "n_boot": 10000,
+    "seed": 20261028,
+    "estimator": "question_clustered_bootstrap",
+    "verdict": "descriptive"
+   },
+   "c5 interaction -3 vs O": {
+    "estimate": 3.759469293611656,
+    "lo": -3.9575871349090015,
+    "hi": 11.1316400091916,
+    "n_questions": 40,
+    "n_rows": 236,
+    "n_boot": 10000,
+    "seed": 20261028,
+    "estimator": "question_clustered_bootstrap",
+    "verdict": "descriptive"
+   }
+  },
+  "secondary": {
+   "a1: F(D+3)-F(base)": {
+    "estimate": 3.173076923076923,
+    "lo": -2.8846153846153846,
+    "hi": 9.807692307692308,
+    "n_questions": 26,
+    "n_rows": 60,
+    "n_boot": 10000,
+    "seed": 20261028,
+    "estimator": "question_clustered_bootstrap",
+    "verdict": "descriptive"
+   },
+   "a2: F(D+3)-F(T+3)  [P1]": {
+    "estimate": 26.923076923076923,
+    "lo": 18.076923076923077,
+    "hi": 35.57692307692308,
+    "n_questions": 26,
+    "n_rows": 60,
+    "n_boot": 10000,
+    "seed": 20261028,
+    "estimator": "question_clustered_bootstrap",
+    "verdict": "descriptive"
+   },
+   "a2 at -3: F(D-3)-F(T-3)": {
+    "estimate": -8.26923076923077,
+    "lo": -16.923076923076923,
+    "hi": -0.38461538461538464,
+    "n_questions": 26,
+    "n_rows": 60,
+    "n_boot": 10000,
+    "seed": 20261028,
+    "estimator": "question_clustered_bootstrap",
+    "verdict": "descriptive"
+   },
+   "F(D+3)-F(S+3)": {
+    "estimate": 6.730769230769231,
+    "lo": 0.5769230769230769,
+    "hi": 13.846153846153847,
+    "n_questions": 26,
+    "n_rows": 60,
+    "n_boot": 10000,
+    "seed": 20261028,
+    "estimator": "question_clustered_bootstrap",
+    "verdict": "descriptive"
+   },
+   "F(D+3)-F(O+3)": {
+    "estimate": 4.8076923076923075,
+    "lo": -1.3461538461538463,
+    "hi": 11.73076923076923,
+    "n_questions": 26,
+    "n_rows": 60,
+    "n_boot": 10000,
+    "seed": 20261028,
+    "estimator": "question_clustered_bootstrap",
+    "verdict": "descriptive"
+   },
+   "F(D-3)-F(S-3)": {
+    "estimate": -5.1923076923076925,
+    "lo": -15.961538461538462,
+    "hi": 5.1923076923076925,
+    "n_questions": 26,
+    "n_rows": 60,
+    "n_boot": 10000,
+    "seed": 20261028,
+    "estimator": "question_clustered_bootstrap",
+    "verdict": "descriptive"
+   },
+   "F(D-3)-F(O-3)": {
+    "estimate": -5.769230769230769,
+    "lo": -17.115384615384617,
+    "hi": 4.8076923076923075,
+    "n_questions": 26,
+    "n_rows": 60,
+    "n_boot": 10000,
+    "seed": 20261028,
+    "estimator": "question_clustered_bootstrap",
+    "verdict": "descriptive"
+   },
+   "A(D+3)-A(base)": {
+    "estimate": 0.7692307692307693,
+    "lo": -8.846153846153847,
+    "hi": 10.384615384615385,
+    "n_questions": 26,
+    "n_rows": 60,
+    "n_boot": 10000,
+    "seed": 20261028,
+    "estimator": "question_clustered_bootstrap",
+    "verdict": "descriptive"
+   },
+   "A(D+3)-A(T+3)  [P2]": {
+    "estimate": -11.442307692307692,
+    "lo": -19.03846153846154,
+    "hi": -4.038461538461538,
+    "n_questions": 26,
+    "n_rows": 60,
+    "n_boot": 10000,
+    "seed": 20261028,
+    "estimator": "question_clustered_bootstrap",
+    "verdict": "descriptive"
+   },
+   "A(D-3)-A(T-3)": {
+    "estimate": 21.057692307692307,
+    "lo": 10.76923076923077,
+    "hi": 32.01923076923077,
+    "n_questions": 26,
+    "n_rows": 60,
+    "n_boot": 10000,
+    "seed": 20261028,
+    "estimator": "question_clustered_bootstrap",
+    "verdict": "descriptive"
+   },
+   "b1 interaction +3 vs T  [P3]": {
+    "estimate": 38.36538461538461,
+    "lo": 24.807692307692307,
+    "hi": 51.82692307692308,
+    "n_questions": 26,
+    "n_rows": 60,
+    "n_boot": 10000,
+    "seed": 20261028,
+    "estimator": "question_clustered_bootstrap",
+    "verdict": "descriptive"
+   },
+   "c1 interaction -3 vs T": {
+    "estimate": -29.326923076923077,
+    "lo": -42.98076923076923,
+    "hi": -16.634615384615383,
+    "n_questions": 26,
+    "n_rows": 60,
+    "n_boot": 10000,
+    "seed": 20261028,
+    "estimator": "question_clustered_bootstrap",
+    "verdict": "descriptive"
+   },
+   "c2 interaction +3 vs S": {
+    "estimate": 12.596153846153847,
+    "lo": 2.5,
+    "hi": 23.365384615384617,
+    "n_questions": 26,
+    "n_rows": 60,
+    "n_boot": 10000,
+    "seed": 20261028,
+    "estimator": "question_clustered_bootstrap",
+    "verdict": "descriptive"
+   },
+   "c3 interaction +3 vs O": {
+    "estimate": 7.980769230769231,
+    "lo": -1.9230769230769231,
+    "hi": 18.653846153846153,
+    "n_questions": 26,
+    "n_rows": 60,
+    "n_boot": 10000,
+    "seed": 20261028,
+    "estimator": "question_clustered_bootstrap",
+    "verdict": "descriptive"
+   },
+   "c4 interaction -3 vs S": {
+    "estimate": 4.711538461538462,
+    "lo": -7.115384615384615,
+    "hi": 16.442307692307693,
+    "n_questions": 26,
+    "n_rows": 60,
+    "n_boot": 10000,
+    "seed": 20261028,
+    "estimator": "question_clustered_bootstrap",
+    "verdict": "descriptive"
+   },
+   "c5 interaction -3 vs O": {
+    "estimate": -3.75,
+    "lo": -17.983173076923055,
+    "hi": 10.576923076923077,
+    "n_questions": 26,
+    "n_rows": 60,
+    "n_boot": 10000,
+    "seed": 20261028,
+    "estimator": "question_clustered_bootstrap",
+    "verdict": "descriptive"
+   }
+  }
+ },
+ "contrasts_unfiltered": {
+  "primary": {
+   "a1: F(D+3)-F(base)": {
+    "estimate": 1.3764975078715112,
+    "lo": -2.5376974635399736,
+    "hi": 5.9632171181422775,
+    "n_questions": 40,
+    "n_rows": 240,
+    "n_boot": 10000,
+    "seed": 20261028,
+    "estimator": "question_clustered_bootstrap",
+    "verdict": "descriptive"
+   },
+   "a2: F(D+3)-F(T+3)  [P1]": {
+    "estimate": 30.19920048127766,
+    "lo": 20.86713753058087,
+    "hi": 40.00490945874435,
+    "n_questions": 40,
+    "n_rows": 240,
+    "n_boot": 10000,
+    "seed": 20261028,
+    "estimator": "question_clustered_bootstrap",
+    "verdict": "supported"
+   },
+   "a2 at -3: F(D-3)-F(T-3)": {
+    "estimate": -0.450610664909059,
+    "lo": -5.7953917163699895,
+    "hi": 4.6509020133633046,
+    "n_questions": 40,
+    "n_rows": 240,
+    "n_boot": 10000,
+    "seed": 20261028,
+    "estimator": "question_clustered_bootstrap",
+    "verdict": "descriptive"
+   },
+   "F(D+3)-F(S+3)": {
+    "estimate": 0.6838784468496051,
+    "lo": -1.9086152409742647,
+    "hi": 2.9699519080320766,
+    "n_questions": 40,
+    "n_rows": 240,
+    "n_boot": 10000,
+    "seed": 20261028,
+    "estimator": "question_clustered_bootstrap",
+    "verdict": "descriptive"
+   },
+   "F(D+3)-F(O+3)": {
+    "estimate": 0.608695450113068,
+    "lo": -1.6344320288990348,
+    "hi": 2.6377201537923374,
+    "n_questions": 40,
+    "n_rows": 240,
+    "n_boot": 10000,
+    "seed": 20261028,
+    "estimator": "question_clustered_bootstrap",
+    "verdict": "descriptive"
+   },
+   "F(D-3)-F(S-3)": {
+    "estimate": -4.748620934443617,
+    "lo": -10.3941941826547,
+    "hi": 0.31846862779370105,
+    "n_questions": 40,
+    "n_rows": 240,
+    "n_boot": 10000,
+    "seed": 20261028,
+    "estimator": "question_clustered_bootstrap",
+    "verdict": "descriptive"
+   },
+   "F(D-3)-F(O-3)": {
+    "estimate": -4.760722965742877,
+    "lo": -10.72353253995915,
+    "hi": 0.829022122742431,
+    "n_questions": 40,
+    "n_rows": 240,
+    "n_boot": 10000,
+    "seed": 20261028,
+    "estimator": "question_clustered_bootstrap",
+    "verdict": "descriptive"
+   },
+   "A(D+3)-A(base)": {
+    "estimate": 1.1688352222615332,
+    "lo": -2.5345524665520185,
+    "hi": 6.218060966317295,
+    "n_questions": 40,
+    "n_rows": 240,
+    "n_boot": 10000,
+    "seed": 20261028,
+    "estimator": "question_clustered_bootstrap",
+    "verdict": "descriptive"
+   },
+   "A(D+3)-A(T+3)  [P2]": {
+    "estimate": -8.118466753081117,
+    "lo": -11.366535535542077,
+    "hi": -4.501750737230418,
+    "n_questions": 40,
+    "n_rows": 240,
+    "n_boot": 10000,
+    "seed": 20261028,
+    "estimator": "question_clustered_bootstrap",
+    "verdict": "supported"
+   },
+   "A(D-3)-A(T-3)": {
+    "estimate": 12.778870624356786,
+    "lo": 5.925990074479625,
+    "hi": 19.617756741652528,
+    "n_questions": 40,
+    "n_rows": 240,
+    "n_boot": 10000,
+    "seed": 20261028,
+    "estimator": "question_clustered_bootstrap",
+    "verdict": "descriptive"
+   },
+   "b1 interaction +3 vs T  [P3]": {
+    "estimate": 38.31766723435878,
+    "lo": 28.08478444252583,
+    "hi": 49.10383072135261,
+    "n_questions": 40,
+    "n_rows": 240,
+    "n_boot": 10000,
+    "seed": 20261028,
+    "estimator": "question_clustered_bootstrap",
+    "verdict": "supported"
+   },
+   "c1 interaction -3 vs T": {
+    "estimate": -13.229481289265845,
+    "lo": -21.1141699672514,
+    "hi": -5.57770960989092,
+    "n_questions": 40,
+    "n_rows": 240,
+    "n_boot": 10000,
+    "seed": 20261028,
+    "estimator": "question_clustered_bootstrap",
+    "verdict": "descriptive"
+   },
+   "c2 interaction +3 vs S": {
+    "estimate": -0.32115037793909396,
+    "lo": -3.165404130367227,
+    "hi": 2.533064345750549,
+    "n_questions": 40,
+    "n_rows": 240,
+    "n_boot": 10000,
+    "seed": 20261028,
+    "estimator": "question_clustered_bootstrap",
+    "verdict": "descriptive"
+   },
+   "c3 interaction +3 vs O": {
+    "estimate": -1.1301321966469504,
+    "lo": -4.202043862202706,
+    "hi": 1.8737961871896802,
+    "n_questions": 40,
+    "n_rows": 240,
+    "n_boot": 10000,
+    "seed": 20261028,
+    "estimator": "question_clustered_bootstrap",
+    "verdict": "descriptive"
+   },
+   "c4 interaction -3 vs S": {
+    "estimate": 4.554323228506349,
+    "lo": -2.256174505263492,
+    "hi": 11.551583160223752,
+    "n_questions": 40,
+    "n_rows": 240,
+    "n_boot": 10000,
+    "seed": 20261028,
+    "estimator": "question_clustered_bootstrap",
+    "verdict": "descriptive"
+   },
+   "c5 interaction -3 vs O": {
+    "estimate": 3.655736839787358,
+    "lo": -3.996001436350759,
+    "hi": 11.404573044748995,
+    "n_questions": 40,
+    "n_rows": 240,
+    "n_boot": 10000,
+    "seed": 20261028,
+    "estimator": "question_clustered_bootstrap",
+    "verdict": "descriptive"
+   }
+  }
+ },
+ "judges": {
+  "primary": "llama-3.3-70b-instruct-q8_0",
+  "secondary": "gpt-oss-20b-mxfp4"
+ },
+ "discriminant": {
+  "pearson_r": 0.21892996135646905,
+  "spearman_r": 0.3083339120386445,
+  "lo": -0.05875886426381376,
+  "hi": 0.4991180767033677,
+  "n_rows": 600,
+  "n_questions": 40,
+  "n_boot": 10000,
+  "seed": 20261028,
+  "exceeds_0_8": false
+ },
+ "discriminant_unfiltered": {
+  "pearson_r": 0.21892996135646905,
+  "spearman_r": 0.3083339120386445,
+  "lo": -0.05875886426381376,
+  "hi": 0.4991180767033677,
+  "n_rows": 600,
+  "n_questions": 40,
+  "n_boot": 10000,
+  "seed": 20261028,
+  "exceeds_0_8": false
+ }
+}

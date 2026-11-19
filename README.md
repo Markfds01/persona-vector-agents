@@ -6,6 +6,8 @@ Paper: "Persona Vectors in Games: Measuring and Steering Strategies via Activati
 
 Related literature and why it matters here: [docs/literature/](docs/literature/README.md).
 
+The experiment explained: [docs/experiment_explained.md](docs/experiment_explained.md) (detailed reference) and [docs/experiment_explained.pdf](docs/experiment_explained.pdf) (illustrated slides to present from).
+
 
 ### Trait artifacts
 

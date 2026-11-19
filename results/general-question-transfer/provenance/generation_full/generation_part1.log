@@ -1,0 +1,8 @@
+=== generation 2026-11-03T11:12:30Z: sets=heldout arms=decision/dictator,decision/trust,decision/ultimatum,decision/apology,decision/overfishing,decision/prisoners_dilemma,relaxed/ultimatum,relaxed/overfishing,dictator_only ks=-3,3 samples=3 device=0
+cuda:0 has 44950 MiB free; loading
+Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s]Loading checkpoint shards: 100%|██████████| 4/4 [00:00<00:00, 38.87it/s]Loading checkpoint shards: 100%|██████████| 4/4 [00:00<00:00, 38.83it/s]
+engine: EngineDescription(engine='huggingface', engine_version='4.52.3', torch_version='2.6.0+cu124', model_id='Qwen/Qwen2.5-7B-Instruct', model_revision='a09a35458c702b33eeacc393d103063234e8bc28', dtype='torch.bfloat16', attn_implementation='sdpa', stop_token_ids=(151645, 151643))
+baseline k=+0 n=120 truncated=0 hook_fires=3503 (expected 3503)
+unhooked k=+0 n=120 truncated=0 hook_fires=0 (expected 3503)
+unhooked_repeat k=+0 n=120 truncated=0 hook_fires=0 (expected 3503)
+decision/dictator k=-3 n=120 truncated=0 hook_fires=3792 (expected 3792)
