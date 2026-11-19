@@ -149,3 +149,19 @@ primary: 8040 calls planned for kinds ['generosity'], 0 done, 8040 to send
   7300/8040 sent, 4.12 s/call
   7350/8040 sent, 4.12 s/call
   7400/8040 sent, 4.12 s/call
+  7450/8040 sent, 4.12 s/call
+  7500/8040 sent, 4.12 s/call
+  7550/8040 sent, 4.12 s/call
+  7600/8040 sent, 4.12 s/call
+  7650/8040 sent, 4.12 s/call
+  7700/8040 sent, 4.12 s/call
+  7750/8040 sent, 4.12 s/call
+  7800/8040 sent, 4.13 s/call
+  7850/8040 sent, 4.13 s/call
+  7900/8040 sent, 4.13 s/call
+  7950/8040 sent, 4.13 s/call
+  8000/8040 sent, 4.13 s/call
+  8040/8040 sent, 4.13 s/call
+=== judging 2026-11-19T02:21:06Z: judge=primary phase=resend kinds=generosity (full run)
+primary: re-sending 402 of 8039 distinct payloads (0 already done)
+=== COMPLETE generosity 2026-11-19T02:49:03Z
